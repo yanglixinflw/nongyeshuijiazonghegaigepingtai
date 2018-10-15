@@ -34,7 +34,6 @@ const dynamicWrapper = (app, models, component) => {
       });
     };
   }
-  // () => import('module')
   return Loadable({
     loader: () => {
       if (!routerDataCache) {

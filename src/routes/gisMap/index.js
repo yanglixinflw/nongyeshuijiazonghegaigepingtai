@@ -1,13 +1,22 @@
 import React from 'react';
-import { routerRedux, Route, Switch } from 'dva/router';
-import {getMenuData,formatter} from '../../common/menu'
-function IndexPage() {
-  // console.log(getMenuData())
-  return (
-    <div>
-      地图页
-    </div>
-  );
+import BreadcrumbView from 'components/PageHeader/breadcrumb'
+class IndexPage extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <div>
+        <div>
+          <BreadcrumbView
+            {...this.props}
+          />
+          地图页
+      </div>
+      </div>
+
+    );
+  }
 }
 
 IndexPage.propTypes = {
