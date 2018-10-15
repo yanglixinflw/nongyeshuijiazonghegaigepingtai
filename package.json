@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "start": "cross-env BROWSER=none ESLINT=none PORT=9000  roadhog  server",
+    "start:no-proxy": "cross-env NO_PROXY=true ESLINT=none roadhog dev",
     "build": "cross-env ESLINT=none NO_PROXY=true roadhog ANALYZE=1 build",
     "lint": "eslint --ext .js src test"
   },
@@ -13,6 +14,7 @@
     "dva-loading": "^2.0.5",
     "echarts": "^4.2.0-rc.1",
     "echarts-for-react": "^2.0.15-beta.0",
+    "mockjs": "^1.0.1-beta3",
     "path-to-regexp": "^2.4.0",
     "prop-types": "^15.6.2",
     "qs": "^6.5.2",
@@ -22,6 +24,7 @@
     "react-dom": "^16.2.0",
     "react-loadable": "^5.5.0",
     "react-router-dom": "^4.3.1",
+    "roadhog-api-doc": "^1.1.2",
     "webpack-bundle-analyzer": "^3.0.2"
   },
   "devDependencies": {
