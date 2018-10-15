@@ -4,14 +4,14 @@ export const LoginHandler = (req, res) => {
         res.send({
             status: '登录成功',
             massage: '登录成功',
-            code: 0,
+            ret: 1,
         })
         return;
     }
     res.send({
         status: '登录失败',
         massage: '密码错误',
-        code: -1
+        ret: -1
     })
 }
 export default LoginHandler
