@@ -97,7 +97,7 @@ export default class BasicLayout extends React.PureComponent {
                 </Sider>
                 <Layout>
                     <Header>Header</Header>
-                    <Content>
+                    <Content style={{background:'#151837'}}>
                         <Switch>
                             {redirectData.map(item => (
                                 <Redirect key={item.from} exact from={item.from} to={item.to} />

@@ -1,10 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "start": "cross-env BROWSER=none ESLINT=none roadhog server",
-    "build": "cross-env ESLINT=none roadhog build",
-    "lint": "eslint --ext .js src test",
-    "precommit": "npm run lint"
+    "start": "cross-env BROWSER=none ESLINT=none PORT=9000 roadhog  server",
+    "build": "cross-env ESLINT=none NO_PROXY=true roadhog  build",
+    "lint": "eslint --ext .js src test"
   },
   "dependencies": {
     "antd": "^3.10.0",
