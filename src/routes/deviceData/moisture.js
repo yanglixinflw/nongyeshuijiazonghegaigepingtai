@@ -3,7 +3,7 @@ import Moisture from '../../components/DeviceData/moisture';
 import { connect } from 'dva';
 @connect(({ moisture, loading }) => ({
     moisture,
-    loading: loading.models.Moisture,
+    loading: loading.models.moisture,
 }))
 export default class extends Component {
     componentDidMount() {
@@ -14,11 +14,13 @@ export default class extends Component {
     }
     render() {
         let { moisture ,loading} = this.props
-        console.log(moisture)
+        // console.log(moisture)
+        let arr = Object.keys(moisture)
+        if (arr.length === 0) return moisture = null
         return (
             <div>
-                {/* <Moisture {...{Moisture}}/> */}
-                123456
+                <Moisture {...{moisture}}/>
+                {/* 123456 */}
             </div>
         )
 
