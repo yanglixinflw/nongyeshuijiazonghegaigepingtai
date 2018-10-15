@@ -125,8 +125,8 @@ export default class extends Component {
                         searchHandler={() => this._searchTableData()}
                         resetHandler={()=>this._resetForm()}
                     />
-                    <Button icon='eye'>显示设置</Button>
-                    <Button icon='upload'>导出数据</Button>
+                    <Button icon='eye' className={styles.showSet}>显示设置</Button>
+                    <Button icon='upload' className={styles.showSet}>导出数据</Button>
                 </div>
 
             </div>

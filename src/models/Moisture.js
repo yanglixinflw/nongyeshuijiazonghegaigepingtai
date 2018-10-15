@@ -1,6 +1,6 @@
 import { queryMoisture } from '../services/api';
 export default {
-    namespace: 'Moisture',
+    namespace: 'moisture',
     state:{},
     effects: {
         *fetch({ payload }, { call, put }) {  // eslint-disable-line
