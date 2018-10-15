@@ -73,13 +73,15 @@ export default class BasicLayout extends React.PureComponent {
         // console.log(props)
         this.state = {
             // 判断是否登录
-            isLogin: false
+            isLogin: false,
+            // isLogin: true
         }
     }
     // 页面加载前获取权限列表和是否登录信息
     componentWillMount() {
         this.setState({
-            isLogin: true
+            isLogin: true,
+            // isLogin: false,
         })
     }
     render() {
@@ -97,7 +99,7 @@ export default class BasicLayout extends React.PureComponent {
                 </Sider>
                 <Layout>
                     <Header>Header</Header>
-                    <Content>
+                    <Content style={{background:'#151837'}}>
                         <Switch>
                             {redirectData.map(item => (
                                 <Redirect key={item.from} exact from={item.from} to={item.to} />

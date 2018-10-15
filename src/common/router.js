@@ -78,7 +78,9 @@ export const getRouterData = app => {
     '/gismap/gismapPage':{
       component: dynamicWrapper(app, [], () => import('../routes/gisMap')),
     },
-    
+    '/data/moisture':{
+      component: dynamicWrapper(app, [], () => import('../routes/deviceData/moisture')),
+    },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     // },
