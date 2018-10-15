@@ -5,11 +5,12 @@ const tableTitle = ['设备ID', '设备名称', '设备安装地', '关联建筑
 export default class extends Component {
     constructor(props) {
         super(props)
-
+        // const {Moisture} = props;
+        // console.log(props)
         // 获取标题和数据
         this.state = {
             title: tableTitle,
-            //data,
+            // data,
             //表头
             colums: [],
             //表单数据
@@ -19,7 +20,7 @@ export default class extends Component {
     // componentDidMount() {
     //     this._getTableData(this.state.title, this.state.data);
     // }
-    // // 获取表的数据
+    // 获取表的数据
     // _getTableData(title, data) {
     //     let colums = [];
     //     let dataIndex = [
@@ -124,9 +125,10 @@ export default class extends Component {
                         searchHandler={() => this._searchTableData()}
                         resetHandler={()=>this._resetForm()}
                     />
-                    <Button>显示设置</Button>
-                    <Button>导出数据</Button>
+                    <Button icon='eye'>显示设置</Button>
+                    <Button icon='upload'>导出数据</Button>
                 </div>
+
             </div>
         )
     }
