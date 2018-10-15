@@ -80,7 +80,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/gisMap')),
     },
     '/data/moisture':{
-      component: dynamicWrapper(app, ['Moisture'], () => import('../routes/deviceData/moisture')),
+      component: dynamicWrapper(app, ['moisture'], () => import('../routes/deviceData/moisture')),
     },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
