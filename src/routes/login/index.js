@@ -1,7 +1,6 @@
 import React from 'react';
-import {getMenuData,formatter} from '../../common/menu'
+import { routerRedux, Route, Switch } from 'dva/router';
 function IndexPage() {
-  console.log(getMenuData())
   return (
     <div>
       登录页

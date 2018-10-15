@@ -14,5 +14,5 @@ export default {
   // 路径别名
   alias: {
     components: path.resolve(__dirname, 'src/components/'),
-  },
+  }
 }
