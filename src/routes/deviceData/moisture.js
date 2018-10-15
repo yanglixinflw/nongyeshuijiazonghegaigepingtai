@@ -11,14 +11,14 @@ export default class extends Component {
         dispatch({
             type: 'moisture/fetch',
         });
-        // console.log(moisture)
     }
     render() {
         let { moisture ,loading} = this.props
         console.log(moisture)
         return (
             <div>
-                <Moisture {...{moisture}}/>
+                {/* <Moisture {...{Moisture}}/> */}
+                123456
             </div>
         )
 
