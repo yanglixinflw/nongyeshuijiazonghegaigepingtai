@@ -4,6 +4,7 @@ import pathToRegexp from 'path-to-regexp';
 import Loadable from 'react-loadable';
 import { getMenuData } from './menu';
 
+
 let routerDataCache;
 
 const modelNotExisted = (app, model) =>
@@ -79,7 +80,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/gisMap')),
     },
     '/data/moisture':{
-      component: dynamicWrapper(app, [], () => import('../routes/deviceData/moisture')),
+      component: dynamicWrapper(app, ['Moisture'], () => import('../routes/deviceData/moisture')),
     },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
