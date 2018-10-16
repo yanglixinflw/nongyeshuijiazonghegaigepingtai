@@ -19,7 +19,7 @@ for (let i = 0; i < 100; i++) {
 }
 export const Moisture = (req, res) => {
     res.json({
-        lenth:dataArr.length,
+        length: dataArr.length,
         data: dataArr
     })
 }

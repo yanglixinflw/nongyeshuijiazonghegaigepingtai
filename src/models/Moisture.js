@@ -11,8 +11,9 @@ export default {
       },
       reducers: {
         fetchOk (state, { payload }) {
-            // console.log(state)
+          // console.log(payload)
           return { ...state, ...payload }
+          
         }
       }
 }
