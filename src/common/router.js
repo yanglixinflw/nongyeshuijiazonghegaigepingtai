@@ -82,6 +82,15 @@ export const getRouterData = app => {
     '/data/moisture':{
       component: dynamicWrapper(app, ['moisture'], () => import('../routes/deviceData/moisture')),
     },
+    '/data/wells':{
+      component: dynamicWrapper(app, ['wells'], () => import('../routes/deviceData/wells')),
+    },
+    '/data/meteorology':{
+      component: dynamicWrapper(app, ['meteorology'], () => import('../routes/deviceData/meteorology')),
+    },
+    '/data/ball':{
+      component: dynamicWrapper(app, ['ball'], () => import('../routes/deviceData/ball')),
+    },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     // },

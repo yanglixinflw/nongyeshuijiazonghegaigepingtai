@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
-// const tableTitle = ['设备ID', '设备名称', '设备安装地', '关联建筑物', '土表温度', '10cm深温度', '10cm深湿度', '20cm深温度', '20cm深湿度', '30cm深温度', '30cm深湿度', '40cm深温度', '40cm深湿度', '更新时间']
 export default class extends Component {
     constructor(props) {
         super(props)
-
-        const { moisture } = props;
-        const { data ,tableTitle} = moisture.data;
+        const { meteorology } = props;
+        const { data, tableTitle } = meteorology.data;
         // console.log(tableTitle)
         // 获取标题和数据
         this.state = {
@@ -34,15 +32,14 @@ export default class extends Component {
             'DeviceName',
             'AreaName',
             'AssociatedBuilding',
-            'SurfaceTemp',
-            'UnderTenTemp',
-            'UnderTenHumidity',
-            'UnderTweTemp',
-            'UnderTweHumidity',
-            'UnderThrTemp',
-            'UnderThrHumidity',
-            'UnderForTemp',
-            'UnderForHumidity',
+            'Temperature',
+            'Humidity',
+            'Illumination',
+            'AirPressure',
+            'Evaporation',
+            'WindDirection',
+            'WindSpeed',
+            'Rainfall',
             'UpdateTime'
         ];
         title.map((v, i) => {
@@ -80,15 +77,14 @@ export default class extends Component {
                 DeviceName: v.DeviceName,
                 AreaName: v.AreaName,
                 AssociatedBuilding: v.AssociatedBuilding,
-                SurfaceTemp: v.SurfaceTemp,
-                UnderTenTemp: v.UnderTenTemp,
-                UnderTenHumidity: v.UnderTenHumidity,
-                UnderTweTemp: v.UnderTweTemp,
-                UnderTweHumidity: v.UnderTweHumidity,
-                UnderThrTemp: v.UnderThrTemp,
-                UnderThrHumidity: v.UnderThrHumidity,
-                UnderForTemp: v.UnderForTemp,
-                UnderForHumidity: v.UnderForHumidity,
+                Temperature: v.Temperature,
+                Humidity: v.Humidity,
+                Illumination: v.Illumination,
+                AirPressure: v.AirPressure,
+                Evaporation: v.Evaporation,
+                WindDirection: v.WindDirection,
+                WindSpeed: v.WindSpeed,
+                Rainfall: v.Rainfall,
                 UpdateTime: v.UpdateTime,
                 key: i,
             });
@@ -156,7 +152,7 @@ export default class extends Component {
     }
 
     render() {
-        const { columns, tableData, showSetVisible,tableTitle } = this.state;
+        const { columns, tableData, showSetVisible, tableTitle } = this.state;
         const paginationProps = {
             showQuickJumper: true,
         };
@@ -167,10 +163,10 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{tableTitle}}
+                    {...{ tableTitle }}
                 />
                 <div className={styles.header}>
-                    <span>|</span>清易墒情
+                    <span>|</span>清易气象
                 </div>
                 <div className={styles.searchForm}>
                     <SearchForm
@@ -208,9 +204,7 @@ const SearchForm = Form.create()(
             const { form, searchHandler, resetHandler } = this.props;
             const { getFieldDecorator } = form;
             return (
-                <Form 
-                layout='inline'
-                >
+                <Form layout='inline'>
                     <Form.Item>
                         {getFieldDecorator('DeviceId', {})
                             (
@@ -266,7 +260,7 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk,tableTitle } = this.props;
+            const { form, visible, onCancel, onOk, tableTitle } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;

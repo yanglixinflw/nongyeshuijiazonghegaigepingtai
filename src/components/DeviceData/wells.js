@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
-// const tableTitle = ['设备ID', '设备名称', '设备安装地', '关联建筑物', '土表温度', '10cm深温度', '10cm深湿度', '20cm深温度', '20cm深湿度', '30cm深温度', '30cm深湿度', '40cm深温度', '40cm深湿度', '更新时间']
 export default class extends Component {
     constructor(props) {
         super(props)
-
-        const { moisture } = props;
-        const { data ,tableTitle} = moisture.data;
-        // console.log(tableTitle)
-        // 获取标题和数据
+        const { wells } = props;
+        const { data, tableTitle } = wells.data;
+        //获取标题和数据
         this.state = {
             data,
             tableTitle,
@@ -34,16 +31,27 @@ export default class extends Component {
             'DeviceName',
             'AreaName',
             'AssociatedBuilding',
-            'SurfaceTemp',
-            'UnderTenTemp',
-            'UnderTenHumidity',
-            'UnderTweTemp',
-            'UnderTweHumidity',
-            'UnderThrTemp',
-            'UnderThrHumidity',
-            'UnderForTemp',
-            'UnderForHumidity',
-            'UpdateTime'
+            'MesNum',
+            'MesType',
+            'MesCode',
+            'ReportTime',
+            'TelemetryTime',
+            'WaterLevel',
+            'PipelinePressure',
+            'InstantaneousFlow',
+            'WaterYear',
+            'WaterTotal',
+            'ElectricityTotal',
+            'UserId',
+            'ThisPower',
+            'ThisWater',
+            'PumpingTime',
+            'PumpOffTime',
+            'DeviceStatus',
+            'ThreePhasePower',
+            'OperatingPower',
+            'SIMCardSignal',
+            'UpdateTime',
         ];
         title.map((v, i) => {
             columns.push({
@@ -58,6 +66,8 @@ export default class extends Component {
             title: '操作',
             key: 'action',
             align: 'center',
+            fixed:'right',
+            width:100,
             render: (record) => {
                 return (
                     <span>
@@ -80,16 +90,27 @@ export default class extends Component {
                 DeviceName: v.DeviceName,
                 AreaName: v.AreaName,
                 AssociatedBuilding: v.AssociatedBuilding,
-                SurfaceTemp: v.SurfaceTemp,
-                UnderTenTemp: v.UnderTenTemp,
-                UnderTenHumidity: v.UnderTenHumidity,
-                UnderTweTemp: v.UnderTweTemp,
-                UnderTweHumidity: v.UnderTweHumidity,
-                UnderThrTemp: v.UnderThrTemp,
-                UnderThrHumidity: v.UnderThrHumidity,
-                UnderForTemp: v.UnderForTemp,
-                UnderForHumidity: v.UnderForHumidity,
-                UpdateTime: v.UpdateTime,
+                MesNum: v.MesNum,
+                MesType: v.MesType,
+                MesCode: v.MesCode,
+                ReportTime: v.ReportTime,
+                TelemetryTime: v.TelemetryTime,
+                WaterLevel: v.WaterLevel,
+                PipelinePressure: v.PipelinePressure,
+                InstantaneousFlow: v.InstantaneousFlow,
+                WaterYear: v.WaterYear,
+                WaterTotal: v.WaterTotal,
+                ElectricityTotal: v.ElectricityTotal,
+                UserId: v.UserId,
+                ThisPower: v.ThisPower,
+                ThisWater: v.ThisWater,
+                PumpingTime: v.PumpingTime,
+                PumpOffTime: v.PumpOffTime,
+                DeviceStatus: v.DeviceStatus,
+                ThreePhasePower: v.ThreePhasePower,
+                OperatingPower: v.OperatingPower,
+                SIMCardSignal: v.SIMCardSignal,
+                UpdateTime:v.UpdateTime,
                 key: i,
             });
         })
@@ -154,9 +175,8 @@ export default class extends Component {
     _exportDataHandler() {
         console.log("导出数据")
     }
-
     render() {
-        const { columns, tableData, showSetVisible,tableTitle } = this.state;
+        const { columns, tableData, showSetVisible, tableTitle } = this.state;
         const paginationProps = {
             showQuickJumper: true,
         };
@@ -167,10 +187,10 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{tableTitle}}
+                    {...{ tableTitle }}
                 />
                 <div className={styles.header}>
-                    <span>|</span>清易墒情
+                    <span>|</span>开创井电
                 </div>
                 <div className={styles.searchForm}>
                     <SearchForm
@@ -195,12 +215,12 @@ export default class extends Component {
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableData}
+                    scroll={{ x: 2800 }}
                 />
             </div>
         )
     }
 }
-
 //搜索表单
 const SearchForm = Form.create()(
     class extends React.Component {
@@ -208,9 +228,7 @@ const SearchForm = Form.create()(
             const { form, searchHandler, resetHandler } = this.props;
             const { getFieldDecorator } = form;
             return (
-                <Form 
-                layout='inline'
-                >
+                <Form layout='inline'>
                     <Form.Item>
                         {getFieldDecorator('DeviceId', {})
                             (
