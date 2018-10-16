@@ -191,6 +191,7 @@ export default class extends Component {
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableData}
+                    scroll={{ x: 2800 }}
                 />
             </div>
         )
@@ -278,11 +279,11 @@ const ShowSetForm = Form.create()(
                             {getFieldDecorator('showSet', {})
                                 (
                                 <CheckboxGroup>
-                                     <Row>
-                                        {options.map((v,i)=>{
-                                            return(
+                                    <Row>
+                                        {options.map((v, i) => {
+                                            return (
                                                 <Col key={i} span={6}>
-                                                    <Checkbox  value={v}>{v}</Checkbox>
+                                                    <Checkbox value={v}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}

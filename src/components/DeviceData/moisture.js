@@ -195,6 +195,7 @@ export default class extends Component {
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableData}
+                    scroll={{ x: 2800 }}
                 />
             </div>
         )
