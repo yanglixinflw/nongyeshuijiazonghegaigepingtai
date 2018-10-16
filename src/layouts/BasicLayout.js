@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Layout, Icon } from 'antd';
-import {  Switch } from 'dva/router';
-import { Route ,Redirect} from 'react-router-dom';
+import { Switch } from 'dva/router';
+import { Route, Redirect } from 'react-router-dom';
 import styles from './basicLayout.less'
 // 响应式布局
 import { ContainerQuery } from 'react-container-query';
@@ -97,23 +97,23 @@ export default class BasicLayout extends React.PureComponent {
                         location={location}
                     />
                 </Sider>
-                <Layout>
+                <Layout style={{ background: '#0A0C1D' }}>
                     <Header>Header</Header>
-                    <Content style={{background:'#151837'}}>
+                    <Content style={{ background: '#151837' }}>
                         <Switch>
                             {redirectData.map(item => (
                                 <Redirect key={item.from} exact from={item.from} to={item.to} />
                             ))}
 
                             {getRoutes(match.path, routerData).map(item => {
-                            return (
-                                <Route
-                                  key={item.key}
-                                  path={item.path}
-                                  component={item.component}
-                                  exact={item.exact}
-                                />
-                              )
+                                return (
+                                    <Route
+                                        key={item.key}
+                                        path={item.path}
+                                        component={item.component}
+                                        exact={item.exact}
+                                    />
+                                )
                             }
                             )}
                             {/* 登录前跳转login页面登录后跳转主页 */}
