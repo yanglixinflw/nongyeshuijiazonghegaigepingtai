@@ -6,7 +6,6 @@ import { Link } from 'dva/router';
 export default class extends Component {
     constructor(props) {
         super(props)
-
         const { moisture } = props;
         const { data ,tableTitle} = moisture.data;
         // console.log(tableTitle)
