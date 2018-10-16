@@ -7,6 +7,7 @@
     display: flex;
     padding-left: 38px;
     margin-bottom: 20px;
+    box-shadow: 0px 0px 1px  #000  inset;
     span {
         margin-right: 10px;
     }
@@ -71,6 +72,30 @@
     .ant-table-wrapper {
         width: 98%;
         margin: auto;
+        .ant-table{
+            .ant-table-content{
+                .ant-table-scroll{
+                    .ant-table-body{
+                        &::-webkit-scrollbar {
+                            height: 10px;
+                          }
+                        &::-webkit-scrollbar-button {
+                            display: none;
+                        }
+                        &::-webkit-scrollbar-thumb {
+                            background: #3164BF ;
+                            border-radius: 4px;
+                        }
+                        &::-webkit-scrollbar-track {
+                            background: #2E3459 ;
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+        }    
         .ant-table-thead {
             tr {
                 th {
@@ -82,6 +107,7 @@
             }
         }
         .ant-table-tbody {
+            
             tr {
                 &:hover td {
                     color: #0084FF;
@@ -94,10 +120,10 @@
                     background: #1C2241;
                     color: #BBC5D2;
                     border: 1px solid #2A325E;
-                    .ant-btn{
-                        background:#1C2241;
-                        border:1px solid #327DF4;
-                        color:#327DF4;
+                    .ant-btn {
+                        background: #1C2241;
+                        border: 1px solid #327DF4;
+                        color: #327DF4;
                     }
                 }
             }
@@ -140,53 +166,58 @@
         }
     }
 }
+
+
 //大屏模式
-@media(max-width:1599px){
-    .searchForm{
-        :global{
-            .ant-form{
-                .ant-input{
-                    width:150px;
+@media(max-width:1599px) {
+    .searchForm {
+        :global {
+            .ant-form {
+                .ant-input {
+                    width: 150px;
                 }
                 .ant-cascader-picker {
-                    width:150px;
+                    width: 150px;
                 }
-                .ant-btn{
-                    width:90px;
+                .ant-btn {
+                    width: 90px;
                 }
             }
-            .ant-btn{
-                width:100px;
+            .ant-btn {
+                width: 100px;
             }
         }
     }
 }
 
 // 小屏模式
-@media(max-width:1399px){
-    .searchForm{
-        :global{
-            .ant-form{
-                .ant-input{
-                    width:100px;
+@media(max-width:1399px) {
+    .searchForm {
+        :global {
+            .ant-form {
+                .ant-input {
+                    width: 100px;
                     margin-right: 0px;
                 }
                 .ant-cascader-picker {
-                    width:100px;
-                    margin-right:0px;
-                    margin-left:0px;
+                    width: 100px;
+                    margin-right: 0px;
+                    margin-left: 0px;
                 }
-                .ant-btn{
-                    width:80px;
-                    margin-right:0px;
-                    margin-left:0px;
+                .ant-btn {
+                    width: 80px;
+                    margin-right: 0px;
+                    margin-left: 0px;
                 }
             }
-            .ant-btn{
-                width:90px;
-                margin-right:0px;
-                margin-left:0px;
+            .ant-btn {
+                width: 90px;
+                margin-right: 0px;
+                margin-left: 0px;
             }
         }
     }
 }
+
+
+   
