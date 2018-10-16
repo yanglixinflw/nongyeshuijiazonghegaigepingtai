@@ -1,0 +1,63 @@
+
+.basic{
+    background: url('../../assets/bg.png') no-repeat;
+    height: 100vh;
+    background-position: center;
+    background-size: cover;
+    min-width: 900px;
+    
+    header{
+        height: 128px;
+        .logo{
+            width: 68px;
+            height: 68px;
+            margin:30px 15px 0 40px;
+        }
+        .logoTitle{
+            margin-top:30px;
+        }
+    }
+    footer{
+        height: 190px;
+        background: red;
+    }
+    .content{
+        display: flex;
+        flex-direction:row;
+        flex-wrap: nowrap;
+        height: calc(~"100vh - 318px");
+        section,aside {
+            display: inline-block;
+        }
+        section{
+            background: blue;
+            width:57vw;
+            min-width: calc(~"900px * 0.57");
+        }
+        aside{
+            // background: green;
+            width:43vw;
+            min-width: calc(~"900px * 0.43");
+
+            .loginBox{
+                background: red;
+                min-width: 400px;
+                margin-top:66px;
+                padding-left: 8vw;
+            }
+            .boxContent{
+                
+            }
+        }
+    }
+    
+    // :global{
+    //     .ant-layout-header{
+    //         height: 70px;
+    //         background:rgba(255, 255, 255, 0.8);
+    //     }
+    //     .ant-layout-has-sider{
+    //         height: 70px;
+    //     }
+    // }
+}

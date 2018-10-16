@@ -150,7 +150,9 @@ const SearchForm = Form.create()(
             const { form, searchHandler, resetHandler } = this.props;
             const { getFieldDecorator } = form;
             return (
-                <Form layout='inline'>
+                <Form 
+                layout='inline'
+                >
                     <Form.Item>
                         {getFieldDecorator('DeviceId', {})
                             (
