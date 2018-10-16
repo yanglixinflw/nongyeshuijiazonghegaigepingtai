@@ -159,7 +159,7 @@ export default class extends Component {
                     {...{ tableTitle }}
                 />
                 <div className={styles.header}>
-                    <span>|</span>清易墒情
+                    <span>|</span>新天通球阀
                 </div>
                 <div className={styles.searchForm}>
                     <SearchForm
