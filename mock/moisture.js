@@ -1,5 +1,5 @@
 const dataArr = []
-const tableTitle = ['设备ID', '设备名称', '设备安装地', '关联建筑物', '土表温度', '10cm深温度', '10cm深湿度', '20cm深温度', '20cm深湿度', '30cm深温度', '30cm深湿度', '40cm深温度', '40cm深湿度', '更新时间']
+//const tableTitle = ['设备ID', '设备名称', '设备安装地', '关联建筑物', '土表温度', '10cm深温度', '10cm深湿度', '20cm深温度', '20cm深湿度', '30cm深温度', '30cm深湿度', '40cm深温度', '40cm深湿度', '更新时间']
 for (let i = 0; i < 100; i++) {
     dataArr.push({
         DeviceId: '1001',
@@ -22,7 +22,7 @@ export const Moisture = (req, res) => {
     res.json({
         length: dataArr.length,
         data: dataArr,
-        tableTitle
+        // tableTitle
     })
 }
 export default Moisture;

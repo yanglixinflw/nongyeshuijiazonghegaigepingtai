@@ -2,11 +2,37 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
+const tableTitle = [
+    '设备ID', 
+    '设备名称', 
+    '设备安装地', 
+    '关联建筑物', 
+    '信息条数',
+    '报文类型',
+    '报文编号',
+    '上报时间',
+    '遥测时间',
+    '水位',
+    '管道压力',
+    '瞬时流量',
+    '年累计水量',
+    '总累计水量',
+    '总累计电量',
+    '用户编号',
+    '本次用电量',
+    '本次用水量',
+    '开泵时间',
+    '关泵时间',
+    '设备状态',
+    '三相电压',
+    '工作电压',
+    'SIM卡信号',
+    '更新时间']
 export default class extends Component {
     constructor(props) {
         super(props)
         const { wells } = props;
-        const { data, tableTitle } = wells.data;
+        const { data} = wells.data;
         //获取标题和数据
         this.state = {
             data,

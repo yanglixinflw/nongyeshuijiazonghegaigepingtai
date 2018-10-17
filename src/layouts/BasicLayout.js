@@ -14,6 +14,7 @@ import NoRight from '../routes/Exception/403';
 import { getRoutes } from '../utils/utils'
 // 获取菜单列表
 import { getMenuData } from '../common/menu';
+import GlobalFooter from '../components/GlobalFooter';
 
 const { Header, Footer, Sider, Content } = Layout;
 /*
@@ -123,7 +124,17 @@ export default class BasicLayout extends React.PureComponent {
                             <Route component={NoRight} />
                         </Switch>
                     </Content>
-                    <Footer style={{ background: 'red' }}>Footer</Footer>
+                    <Footer style={{ background: '#151837' }}>
+                        <GlobalFooter
+                            links={[
+                            ]}
+                            copyright={
+                                <div style={{ color: '#95A5A6' }}>
+                                    Copyright <Icon type="copyright" /> www.dyjs.com, All Rights Reserved.
+                                </div>
+                            }
+                        />
+                    </Footer>
                 </Layout>
             </Layout>
         )
