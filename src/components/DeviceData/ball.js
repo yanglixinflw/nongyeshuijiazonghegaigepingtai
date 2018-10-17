@@ -2,11 +2,23 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
+const tableTitle = [
+    '设备ID', 
+    '设备名称', 
+    '设备安装地', 
+    '关联建筑物', 
+    '网光',
+    '管道压力',
+    '电磁压力',
+    '限时流量',
+    '累计流量',
+    '阀门状态',
+    '更新时间'];
 export default class extends Component {
     constructor(props) {
         super(props)
         const { ball } = props;
-        const { data, tableTitle } = ball.data;
+        const { data} = ball.data;
         // console.log(tableTitle)
         // 获取标题和数据
         this.state = {

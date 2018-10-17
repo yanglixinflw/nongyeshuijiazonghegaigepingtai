@@ -2,11 +2,25 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
+const tableTitle = [
+    '设备ID', 
+    '设备名称', 
+    '设备安装地', 
+    '关联建筑物', 
+    '温度',
+    '湿度',
+    '光照',
+    '大气压',
+    '蒸发量',
+    '风向',
+    '风速',
+    '雨量',
+    '更新时间'];
 export default class extends Component {
     constructor(props) {
         super(props)
         const { meteorology } = props;
-        const { data, tableTitle } = meteorology.data;
+        const { data} = meteorology.data;
         // console.log(tableTitle)
         // 获取标题和数据
         this.state = {

@@ -1,18 +1,18 @@
 const dataArr = []
-const tableTitle = [
-    '设备ID', 
-    '设备名称', 
-    '设备安装地', 
-    '关联建筑物', 
-    '温度',
-    '湿度',
-    '光照',
-    '大气压',
-    '蒸发量',
-    '风向',
-    '风速',
-    '雨量',
-    '更新时间']
+// const tableTitle = [
+//     '设备ID', 
+//     '设备名称', 
+//     '设备安装地', 
+//     '关联建筑物', 
+//     '温度',
+//     '湿度',
+//     '光照',
+//     '大气压',
+//     '蒸发量',
+//     '风向',
+//     '风速',
+//     '雨量',
+//     '更新时间'];
 for (let i = 0; i < 100; i++) {
     dataArr.push({
         DeviceId: '002342',
@@ -32,7 +32,7 @@ for (let i = 0; i < 100; i++) {
 }
 export const Meteorology = (req, res) => {
     res.json({
-        tableTitle,
+        // tableTitle,
         length: dataArr.length,
         data: dataArr
     })

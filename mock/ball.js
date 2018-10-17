@@ -1,16 +1,16 @@
 const dataArr = []
-const tableTitle = [
-    '设备ID', 
-    '设备名称', 
-    '设备安装地', 
-    '关联建筑物', 
-    '网光',
-    '管道压力',
-    '电磁压力',
-    '限时流量',
-    '累计流量',
-    '阀门状态',
-    '更新时间']
+// const tableTitle = [
+//     '设备ID', 
+//     '设备名称', 
+//     '设备安装地', 
+//     '关联建筑物', 
+//     '网光',
+//     '管道压力',
+//     '电磁压力',
+//     '限时流量',
+//     '累计流量',
+//     '阀门状态',
+//     '更新时间'];
 for (let i = 0; i < 100; i++) {
     dataArr.push({
         DeviceId: '002342',
@@ -28,7 +28,7 @@ for (let i = 0; i < 100; i++) {
 }
 export const Ball = (req, res) => {
     res.json({
-        tableTitle,
+        // tableTitle,
         length: dataArr.length,
         data: dataArr
     })
