@@ -6,7 +6,6 @@ const tableTitle = ['设备ID', '设备名称', '设备安装地', '关联建筑
 export default class extends Component {
     constructor(props) {
         super(props)
-
         const { moisture } = props;
         const { data } = moisture.data;
         // console.log(tableTitle)

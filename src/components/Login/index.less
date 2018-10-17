@@ -1,63 +1,83 @@
-
-.basic{
+.basic {
     background: url('../../assets/bg.png') no-repeat;
     height: 100vh;
     background-position: center;
     background-size: cover;
     min-width: 900px;
-    
-    header{
-        height: 128px;
-        .logo{
+    header {
+        height: 96px;
+        .logo {
             width: 68px;
             height: 68px;
-            margin:30px 15px 0 40px;
+            margin: 30px 15px 0 40px;
         }
-        .logoTitle{
-            margin-top:30px;
+        .logoTitle {
+            margin-top: 30px;
         }
     }
-    footer{
-        height: 190px;
+    footer {
+        height: 220px;
         background: red;
     }
-    .content{
+    .content {
         display: flex;
-        flex-direction:row;
+        flex-direction: row;
         flex-wrap: nowrap;
         height: calc(~"100vh - 318px");
-        section,aside {
+        section,
+        aside {
             display: inline-block;
         }
-        section{
+        section {
             background: blue;
-            width:57vw;
+            width: 57vw;
             min-width: calc(~"900px * 0.57");
         }
-        aside{
+        aside {
             // background: green;
-            width:43vw;
+            width: 43vw;
             min-width: calc(~"900px * 0.43");
-
-            .loginBox{
-                background: red;
+            .loginBox {
                 min-width: 400px;
-                margin-top:66px;
+                margin-top: 52px;
                 padding-left: 8vw;
-            }
-            .boxContent{
-                
+                .title {
+                    position: relative;
+                    left: 40px;
+                }
+                .boxContent {
+                    margin-top: 20px;
+                    border-top-left-radius: 8px;
+                    border-top-right-radius: 8px;
+                    width: 400px;
+                    color: white;
+                    background: rgba(51, 121, 215, 0.8);
+                    height: 428px;
+                    .loginTitle{
+                        font-size: 24px;
+                        padding:34px 50px;
+                    }
+                }
+                .boxFooter {
+                    position: relative;
+                    display: inline-block;
+                    .footerLeft {
+                        height: 40px;
+                        background: rgba(51, 121, 215, 0.8);
+                        width: 360px;
+                        border-bottom-left-radius: 8px;
+                    }
+                    .footerRight {
+                        position: absolute;
+                        right: -40px;
+                        width: 0;
+                        height: 0;
+                        border-top: 40px solid rgb(51, 121, 215);
+                        border-right: 40px solid transparent;
+                        top: 0;
+                    }
+                }
             }
         }
     }
-    
-    // :global{
-    //     .ant-layout-header{
-    //         height: 70px;
-    //         background:rgba(255, 255, 255, 0.8);
-    //     }
-    //     .ant-layout-has-sider{
-    //         height: 70px;
-    //     }
-    // }
 }
