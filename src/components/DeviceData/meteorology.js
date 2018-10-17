@@ -69,6 +69,8 @@ export default class extends Component {
             title: '操作',
             key: 'action',
             align: 'center',
+            fixed:'right',
+            width:100,
             render: (record) => {
                 return (
                     <span>
@@ -138,7 +140,7 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            console.log(values.showSet.length)
+            console.log(values.showSet)
             // this.setState({
             //     title:values.showSet,
             //     columns:values.showSet.length

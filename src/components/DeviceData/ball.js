@@ -65,6 +65,8 @@ export default class extends Component {
             title: '操作',
             key: 'action',
             align: 'center',
+            fixed:'right',
+            width:100,
             render: (record) => {
                 return (
                     <span>
@@ -132,7 +134,9 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            console.log(values)
+            console.log(values.showSet)
+            
+           
             
             
         })

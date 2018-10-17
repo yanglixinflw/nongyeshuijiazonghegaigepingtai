@@ -57,6 +57,8 @@ export default class extends Component {
             title: '操作',
             key: 'action',
             align: 'center',
+            fixed:'right',
+            width:100,
             render: (record) => {
                 return (
                     <span>
