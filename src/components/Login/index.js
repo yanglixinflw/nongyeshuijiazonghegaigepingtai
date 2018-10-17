@@ -2,10 +2,10 @@ import React from 'react';
 import logo from '../../assets/logo.png'
 import logoT from '../../assets/logoTitle.png'
 import loginBox from '../../assets/loginBox.png'
+import classnames from 'classnames'
 import styles from './index.less'
-import { Form,Button } from 'antd'
+import { Form, Button } from 'antd'
 export default class extends React.Component {
-
     render() {
         return (
             <div className={styles.basic}>
@@ -56,6 +56,7 @@ const LoginForm = Form.create()(
                 <div>
                     <Form>
                         <FormItem >
+                            <i className={classnames('dyhsicon', 'dyhs-weidenglu')}></i>
                             <input placeholder='请输入用户名'></input>
                         </FormItem>
                         <FormItem >

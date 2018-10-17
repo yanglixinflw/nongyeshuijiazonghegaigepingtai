@@ -9,6 +9,7 @@
   "dependencies": {
     "antd": "^3.10.0",
     "babel-plugin-import": "^1.9.1",
+    "classnames": "^2.2.6",
     "cross-env": "^5.2.0",
     "dva": "^2.4.0",
     "dva-loading": "^2.0.5",
