@@ -36,7 +36,6 @@ export function queryBallHistory(){
   });
 }
 export function queryLogin(params) {
-  debugger
   return request(`${envNet}/api/Account/login`, {
     method: 'POST',
     credentials: "include",
