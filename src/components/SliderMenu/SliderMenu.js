@@ -4,7 +4,7 @@ import pathToRegexp from 'path-to-regexp';
 import { Link } from 'dva/router';
 import styles from './index.less';
 import { urlToList } from '../_utils/pathTools';
-
+import headerlogo from '../../assets/headerlogo.png'
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -192,12 +192,9 @@ export default class SiderMenu extends PureComponent {
   };
 
   render() {
-    const { logo, collapsed } = this.props;
     const { openKeys } = this.state;
     // Don't show popup menu when it is been collapsed
-    const menuProps = collapsed
-      ? {}
-      : {
+    const menuProps =  {
           openKeys,
         };
     // if pathname can't match, use the nearest parent's key
@@ -208,14 +205,13 @@ export default class SiderMenu extends PureComponent {
     return (
       <Sider
         trigger={null}
-        collapsed={collapsed}
         breakpoint="lg"
         width={210}
         className={styles.sider}
       >
         <div className={styles.logo} key="logo">
           <Link to="/">
-            <img src={logo} alt="logo" />
+            <img src={headerlogo} alt="headerlogo" />
             {/* <span>213</span> */}
           </Link>
         </div>

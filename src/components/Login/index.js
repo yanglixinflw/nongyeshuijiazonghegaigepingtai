@@ -6,7 +6,21 @@ import classnames from 'classnames'
 import styles from './index.less'
 import { Form, Button, Input, Checkbox } from 'antd'
 export default class extends React.Component {
+    constructor(props){
+        super(props)
+    }
+    _loginSumbit() {
+        // 登录功能回交route
+        let {loginFunc} = this.props
+        const form = this.loginForm.props.form;
+        form.validateFields((err, values) => {
+            loginFunc(err, values)
+        })
+
+    }
     render() {
+        const {errorMassage}=this.props
+        console.log(errorMassage)
         return (
             <div className={styles.basic}>
                 <header>
@@ -24,6 +38,9 @@ export default class extends React.Component {
                                 <div className={styles.loginTitle}>登录</div>
                                 <LoginForm
                                     wrappedComponentRef={(loginForm) => this.loginForm = loginForm}
+                                    submitHandler={() => {
+                                        this._loginSumbit()
+                                    }}
                                 />
                             </div>
                             <div className={styles.boxFooter}>
@@ -45,58 +62,102 @@ const LoginForm = Form.create()(
         constructor(props) {
             super(props)
             this.state = {
-                // 是否勾选记住密码
-                remberPwd: false,
                 // 是否勾选自动登录
                 autoLogin: false,
                 // 是否显示验证码框
                 showYzm: true,
                 // showYzm: false,
                 // 登录载入状态
-                isLoading:false
+                isLoading: false,
+                // 提示信息
+                errorMassage: ''
             }
         }
-        _loadingLogin(){
-            
+        _loadingLogin() {
             this.setState({
-                isLoading:true
+                isLoading: true,
+                errorMassage: '密码错误'
             })
             // 模拟loading
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.setState({
-                    isLoading:false
+                    isLoading: false,
+                    errorMassage: ''
                 })
-            },2000)
+            }, 2000)
+            // 没有错误信息时消除loading并跳转
         }
         render() {
-            const { showYzm ,isLoading} = this.state
+            const { showYzm, isLoading, errorMassage } = this.state
+            const { form, submitHandler } = this.props
+            const { getFieldDecorator } = form;
             // 设置输入密码的外边距
             let passWordMargin
-            if(!showYzm){
-                 passWordMargin=0
-            }else{
-                 passWordMargin=null
+            if (!showYzm) {
+                passWordMargin = 0
+            } else {
+                passWordMargin = null
             }
             return (
                 <div>
-                    <Form>
-                        <FormItem style={{ textAlign: 'center' }}>
-                            <Input className={styles.userInput}
-                                prefix={<i className={classnames('dyhsicon', 'dyhs-weidenglu', `${styles.userIcon}`)}></i>}
-                                placeholder='请输入用户名'></Input>
+                    <Form
+                        autoComplete="off"
+                        onSubmit={submitHandler}
+                    >
+                        <FormItem style={{ marginLeft: 50 }}>
+                            {
+                                getFieldDecorator('accountName', {
+                                    initialValue: '',
+                                    rules: [{ required: true, message: '请填写账号' }],
+                                })(<Input
+                                    type='text'
+                                    autoComplete="off"
+                                    className={styles.userInput}
+                                    prefix={<i className={classnames('dyhsicon', 'dyhs-weidenglu', `${styles.userIcon}`)}></i>}
+                                    placeholder='请输入用户名'>
+                                </Input>)
+                            }
+
                         </FormItem>
-                        <FormItem style={{ textAlign: 'center', marginBottom: `${passWordMargin}` }}>
-                            <Input className={styles.userInput}
-                                prefix={<i className={classnames('dyhsicon', 'dyhs-mima', `${styles.userIcon}`)}></i>}
-                                placeholder='请输入密码'></Input>
+                        <FormItem style={{ marginLeft: 50, marginBottom: `${passWordMargin}` }}>
+
+                            {
+                                getFieldDecorator('passWord',
+                                    {
+                                        initialValue: '',
+                                        rules: [
+                                            { required: true, message: '密码不能为空' },
+                                            { max: 20, message: '密码不超过20位' }
+                                        ]
+                                    })(
+                                        <Input
+                                            className={styles.userInput}
+                                            autoComplete="off"
+                                            type="password"
+                                            prefix={<i className={classnames('dyhsicon', 'dyhs-mima', `${styles.userIcon}`)}></i>}
+                                            placeholder='请输入密码'>
+                                        </Input>
+                                    )
+                            }
+
                         </FormItem>
                         {
                             showYzm ?
                                 <FormItem className={styles.yzmGroup}>
-                                    <Input
-                                        className={styles.yzmInput}
-                                        prefix={<i className={classnames('dyhsicon', 'dyhs-safe', `${styles.yzIcon}`)}></i>}
-                                        placeholder='请输入验证码'></Input>
+                                    {
+                                        getFieldDecorator('yzm', {
+                                            initialValue: '',
+                                            rules: [
+                                                { required: true, message: '验证码不能为空' },
+                                            ]
+                                        })(
+                                            <Input
+                                                className={styles.yzmInput}
+                                                prefix={<i className={classnames('dyhsicon', 'dyhs-safe', `${styles.yzIcon}`)}></i>}
+                                                placeholder='请输入验证码'></Input>
+                                        )
+                                    }
+
                                     <div className={styles.yzmwindow}>
                                     </div>
                                 </FormItem>
@@ -104,23 +165,40 @@ const LoginForm = Form.create()(
                         }
 
                         <div className={styles.remberBox}>
-                            <FormItem>
-                                <Checkbox>记住密码</Checkbox>
-                            </FormItem>
+                            {/* <FormItem>
+                                {
+                                    getFieldDecorator('remeberPassWord', {
+                                        initialValue: false,
+                                    })(
+                                        <Checkbox>记住密码</Checkbox>
+                                    )
+                                }
+
+                            </FormItem> */}
                             <FormItem >
-                                <Checkbox>自动登录</Checkbox>
+                                {
+                                    getFieldDecorator('autoLogin', {
+                                        initialValue: false,
+                                    })(
+                                        <Checkbox>自动登录</Checkbox>
+                                    )
+                                }
+
                             </FormItem>
                         </div>
                         <FormItem className={styles.loginButton} >
                             <Button
-                            loading={isLoading}
-                            onClick={()=>this._loadingLogin()}
+                                loading={isLoading}
+                                onClick={() => this._loadingLogin()}
+                                htmlType='submit'
                             >
                                 登录
                             </Button>
                         </FormItem>
-                        <FormItem style={{marginBottom:0,marginLeft:50,color:'white'}}>
-                            <span></span>
+                        <FormItem style={{ marginBottom: 0, marginLeft: 50, color: 'white' }}>
+                            {
+                                errorMassage === '' ? null : <span>{errorMassage}</span>
+                            }
                             {/* 显示区域 */}
                         </FormItem>
                     </Form>
