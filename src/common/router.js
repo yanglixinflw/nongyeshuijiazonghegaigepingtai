@@ -94,9 +94,6 @@ export const getRouterData = app => {
     '/data/ball':{
       component: dynamicWrapper(app, ['ball'], () => import('../routes/deviceData/ball')),
     },
-    '/ball/history:id':{
-      component: dynamicWrapper(app, ['ballhistory'], () => import('../routes/deviceData/ballHistory')),
-    },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     // },
