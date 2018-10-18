@@ -5,6 +5,7 @@ import { Layout, Icon } from 'antd';
 import { Switch } from 'dva/router';
 import { Route, Redirect } from 'react-router-dom';
 import styles from './basicLayout.less'
+import GlobalHeader from '../components/GlobalHeader'
 // 响应式布局
 import { ContainerQuery } from 'react-container-query';
 // 根据菜单的内容改变标题
@@ -99,7 +100,9 @@ export default class BasicLayout extends React.PureComponent {
                     />
                 </Sider>
                 <Layout style={{ background: '#0A0C1D' }}>
-                    <Header>Header</Header>
+                    <Header>
+                    <GlobalHeader></GlobalHeader>
+                    </Header>
                     <Content style={{ background: '#151837' ,minWidth:'800px'}}>
                         <Switch>
                             {redirectData.map(item => (
