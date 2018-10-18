@@ -49,3 +49,15 @@ export function queryLogin(params) {
     )
   });
 }
+//设备井电历史数据
+export function queryWellsHistory(){
+  return request('/api/data/wells/history',{
+    method:'POST'
+  });
+}
+//设备墒情历史数据
+export function queryMoistureHistory(){
+  return request('/api/data/moisture/history',{
+    method:'POST'
+  });
+}

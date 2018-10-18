@@ -6,7 +6,7 @@ const tableTitle = ['更新时间', '温度', '湿度', '光照', '大气压', '
 export default class extends Component {
     constructor(props) {
         super(props)
-        console.log(props)
+        // console.log(props)
         const { meteorologyhistory } = props;
         const { data,total } = meteorologyhistory.data;
        
@@ -69,7 +69,6 @@ export default class extends Component {
                 WindDirection: v.WindDirection,
                 WindSpeed: v.WindSpeed,
                 Rainfall: v.Rainfall,
-                UpdateTime: v.UpdateTime,
                 key: i,
             });
         })
@@ -89,9 +88,6 @@ export default class extends Component {
         const form = this.showSetForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
-            if (err) {
-                return;
-            }
             console.log(values.showSet)
             // this.setState({
             //     title:values.showSet,

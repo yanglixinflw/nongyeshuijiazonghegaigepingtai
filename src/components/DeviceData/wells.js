@@ -97,7 +97,7 @@ export default class extends Component {
             render: (record) => {
                 return (
                     <span>
-                        <Link to={`/data/wells/history:${record.DeviceId}`}>
+                        <Link to={`/wells/history:${record.DeviceId}`}>
                             <Button
                                 icon='bar-chart'
                                 className={styles.btnhistroy}
