@@ -17,6 +17,12 @@ export function queryMeteorology(){
     method:'POST'
   });
 }
+//设备气象历史数据
+export function queryMeteorologyHistory(){
+  return request('/api/data/meteorology/history',{
+    method:'POST'
+  });
+}
 //设备智能球阀
 export function queryBall(){
   return request('/api/data/ball',{

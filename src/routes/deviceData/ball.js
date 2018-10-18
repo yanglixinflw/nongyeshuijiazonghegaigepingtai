@@ -14,7 +14,7 @@ export default class extends Component {
     }
     render() {
         let { ball ,loading} = this.props
-        // console.log(ball)
+        console.log(ball)
         let arr = Object.keys(ball)
         if (arr.length === 0) return ball = null
         return (

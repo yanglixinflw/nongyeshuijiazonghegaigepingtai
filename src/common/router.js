@@ -88,6 +88,9 @@ export const getRouterData = app => {
     '/data/meteorology':{
       component: dynamicWrapper(app, ['meteorology'], () => import('../routes/deviceData/meteorology')),
     },
+    '/meteorology/history:id':{
+      component: dynamicWrapper(app, ['meteorologyhistory'], () => import('../routes/deviceData/meteorologyHistory')),
+    },
     '/data/ball':{
       component: dynamicWrapper(app, ['ball'], () => import('../routes/deviceData/ball')),
     },
