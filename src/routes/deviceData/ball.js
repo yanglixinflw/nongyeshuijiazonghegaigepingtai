@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Ball from '../../components/DeviceData/ball';
 import { connect } from 'dva';
+import { Spin } from 'antd';
 @connect(({ ball, loading }) => ({
     ball,
     loading: loading.models.ball,
@@ -13,15 +14,20 @@ export default class extends Component {
         });
     }
     render() {
-        let { ball ,loading} = this.props
-        console.log(ball)
-        let arr = Object.keys(ball)
-        if (arr.length === 0) return ball = null
+        let { ball, loading } = this.props;
+        let arr = Object.keys(ball);
+        if (arr.length === 0) return ball = null;
+        if (typeof (loading) === 'undefined') {
+            return loading = null
+        }
+        // console.log(loading)
         return (
             <div>
-                <Ball 
-                    {...{ball}}
-                />
+                <Spin size='large' spinning={loading}>
+                    <Ball
+                        {...{ ball }}
+                    />
+                </Spin>
             </div>
         )
 

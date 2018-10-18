@@ -74,10 +74,10 @@ export default class extends Component {
             render: (record) => {
                 return (
                     <span>
-                        <Link to={`/meteotology/history:${record.DeviceId}`}>
+                        <Link to={`/meteorology/history:${record.DeviceId}`}>
                             <Button
                                 icon='bar-chart'
-                                className={styles.histroy}
+                                className={styles.btnhistroy}
                             >
                                 历史记录
                         </Button>

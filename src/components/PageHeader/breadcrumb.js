@@ -40,11 +40,11 @@ class BreadcrumbView extends PureComponent {
     }
     return (
       <Breadcrumb className={styles.breadcrum}>
-        {
+        {/* {
           <Breadcrumb.Item key={0}>
             {breadcrumbData[0].path ? (<Link to={breadcrumbData[0].path}>{breadcrumbData[0].name}</Link>) : breadcrumbData[0].name}
           </Breadcrumb.Item>
-        }
+        } */}
         {breadcrumbChildrenData ? breadcrumbChildrenData.map((v, i) => (
           <Breadcrumb.Item key={1}>
             {v.path.indexOf(pathSnippets[0]) !== -1 ? (<Link to={v.path}>{v.name}</Link>) : ''}

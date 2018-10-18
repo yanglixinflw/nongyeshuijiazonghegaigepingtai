@@ -1,4 +1,5 @@
 .header {
+    height:60px;
     line-height: 60px;
     background: #151836;
     width: 100%;
@@ -13,15 +14,27 @@
     }
     :global{
         .ant-breadcrumb{
+            height:60px;
+            line-height: 60px;
             .ant-breadcrumb-link{
                 a{
-                    color:#2961BF
+                    color:#BBC5D2
                 }
+                
             }
             .ant-breadcrumb-separator{
-                color:#2961BF
+                color:#BBC5D2
             }
             
+        }
+        .ant-btn{
+            background-color: rgba(21,24,54,0);
+            line-height: 60px;
+            border:0;
+            i{
+                color:#BBC5D2;
+                height:0px;
+            }
         }
     }
    
@@ -43,6 +56,7 @@
             line-height: 75px;
             .ant-btn {
                 width: 97px;
+                margin-right:0px;
             }
         }
         .ant-input {
@@ -51,7 +65,7 @@
             background: #141831;
             outline: 0;
             border: 0;
-            margin-right: 20px;
+            margin-right: 3px;
         }
         .ant-cascader-picker {
             height: 46px;
@@ -59,6 +73,7 @@
             background: #141831;
             outline: 0;
             border: 0;
+            margin-right:29px;
         }
         .ant-cascader-picker-arrow {
             color: #4A5A72;
@@ -67,8 +82,8 @@
             border-radius: 50px;
             height: 38px;
             width: 130px;
-            margin-left: 18px;
             background: #2E386C;
+            margin-right: 16px;
             color: #ACB5E8;
             border: 0;
             outline: 0;
@@ -164,6 +179,12 @@
                         background: #1C2241;
                         color: #BBC5D2;
                         border: 1px solid #2A325E;
+                        &:hover {
+                            color: #0084FF;
+                        }
+                        &:focus {
+                            color: #0084FF;
+                        }
                     }
                 }
             }
@@ -252,6 +273,9 @@
     .searchForm {
         :global {
             .ant-form {
+                .ant-form-item{
+                    margin-right: 10px;
+                }
                 .ant-input {
                     max-width: 160px;
                     margin-right:0px;
@@ -259,14 +283,16 @@
                 .ant-cascader-picker {
                     max-width: 160px;
                     margin-left:5px;
+                    margin-right:0px;
                 }
                 .ant-btn {
                     max-width: 80px;
-                    
+                    margin-left:0px;
+                    margin-right: 10px;
                 }
             }
             .ant-btn {
-                max-width: 120px;
+                max-width: 110px;
                 margin-left:10px;
             }
         }
@@ -336,6 +362,7 @@
             }
             .ant-btn {
                 max-width: 90px;
+                margin-left:0px;
                 position: relative;
                 .anticon{
                     position: absolute;
@@ -346,7 +373,7 @@
         }
     }
 }
-@media(max-width:1119px) {
+@media(max-width:1155px) {
     .searchForm {
         :global {
             .ant-form {
@@ -385,12 +412,12 @@
         }
     }
 }
-@media(max-width:1060px) {
+@media(max-width:1090px) {
     .searchForm {
         :global {
             .ant-form {
                 .ant-form-item{
-                    margin-right:10px;
+                    margin-right:5px;
                 }
                 .ant-input {
                     max-width: 110px;
@@ -414,6 +441,7 @@
             }
             .ant-btn {
                 max-width: 90px;
+                margin-right:5px;
                 position: relative;
                 .anticon{
                     position: absolute;
@@ -424,4 +452,44 @@
         }
     }
 }
-   
+
+//历史数据 设备信息
+.history{
+    .deviceInfo {
+        display: flex;
+        height:95px;
+        background-color: #1C2241;
+        width:95%;
+        margin:auto;
+        margin-bottom: 20px;
+        :global{
+            .ant-form-inline {
+                margin-left:16px;
+                .ant-form-item{
+                    margin-right:0px; 
+                    line-height: 95px;
+                    .ant-input{
+                        width:216px;
+                        height:64px;
+                        background: #141831;
+                        border:0px;
+                        color:#C1CBFF;
+                        cursor: pointer;
+                    }
+                }
+            }
+            
+        }
+    }
+    :global{
+        .ant-table-fixed{
+            .ant-table-tbody{
+                tr{
+                    height: 54px;
+                }
+            }
+        }
+    }
+}
+
+

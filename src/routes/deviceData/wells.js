@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Wells from '../../components/DeviceData/wells';
 import { connect } from 'dva';
+import { Spin } from 'antd'
 @connect(({ wells, loading }) => ({
     wells,
     loading: loading.models.wells,
@@ -13,16 +14,21 @@ export default class extends Component {
         });
     }
     render() {
-        let { wells ,loading} = this.props
+        let { wells, loading } = this.props
         // console.log(moisture)
         let arr = Object.keys(wells)
         if (arr.length === 0) return wells = null
+        if (typeof (loading) === 'undefined') {
+            return loading = null
+        }
+        // console.log(loading)
         return (
             <div>
-                <Wells 
-                {...{wells}}
-                />
-                
+                <Spin size='large' spinning={loading}>
+                    <Wells
+                        {...{ wells }}
+                    />
+                </Spin>
             </div>
         )
 

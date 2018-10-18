@@ -73,7 +73,7 @@ export default class extends Component {
                         <Link to={`/data/ball/history:${record.DeviceId}`}>
                             <Button
                                 icon='bar-chart'
-                                className={styles.histroy}
+                                className={styles.btnhistroy}
                             >
                                 历史记录
                         </Button>
