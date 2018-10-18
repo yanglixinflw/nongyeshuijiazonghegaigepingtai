@@ -65,8 +65,8 @@ export default class extends Component {
                 align: 'center',
             })
         })
-        columns[columns.length - 1].fixed = 'right';
-        columns[columns.length - 1].width = 100;
+        columns[columns.length - 1].fixed = columns.length>10?'right':null;
+        columns[columns.length - 1].width = columns.length>10?'right':null;
         let tableData = [];
         data.map((v, i) => {
             tableData.push({
@@ -176,7 +176,7 @@ export default class extends Component {
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableData}
-                    scroll={{ x: 2800 }}
+                    scroll={{x:columns.length>10?2800:false}}
                 />
             </div>
         )

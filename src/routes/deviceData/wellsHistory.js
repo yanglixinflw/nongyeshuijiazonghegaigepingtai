@@ -17,9 +17,6 @@ export default class extends Component {
         let { wellshistory, loading } = this.props;
         let arr = Object.keys(wellshistory);
         if (arr.length === 0) return wellshistory = null;
-        if (typeof (loading) === 'undefined') {
-            return loading = null
-        }
         // console.log(wellshistory)
         return (
             <div>

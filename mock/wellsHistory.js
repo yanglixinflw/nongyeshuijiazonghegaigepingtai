@@ -1,6 +1,5 @@
 const dataArr = []
 // const tableTitle = [
-//     '更新时间',
 //     '信息条数',
 //     '报文类型',
 //     '报文编号',
@@ -20,10 +19,10 @@ const dataArr = []
 //     '设备状态',
 //     '三相电压',
 //     '工作电压',
-//     'SIM卡信号']
+//     'SIM卡信号',
+//     '更新时间',]
 for (let i = 0; i < 100; i++) {
     dataArr.push({
-        UpdateTime:'2018-10-16 11:59:61',
         MesNum: '1232',
         MesType: '32',
         MesCode: '1232',
@@ -44,6 +43,7 @@ for (let i = 0; i < 100; i++) {
         ThreePhasePower:'220v',
         OperatingPower:'220v',
         SIMCardSignal:'4',
+        UpdateTime:'2018-10-16 11:59:61',
     })
 }
 export const WellsHistory = (req, res) => {

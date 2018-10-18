@@ -1,6 +1,5 @@
 const dataArr = []
 //const tableTitle = [ 
-// '更新时间', 
 // '土表温度', 
 // '10cm深温度', 
 // '10cm深湿度', 
@@ -9,7 +8,8 @@ const dataArr = []
 // '30cm深温度', 
 // '30cm深湿度', 
 // '40cm深温度', 
-// '40cm深湿度', ]
+// '40cm深湿度', 
+// '更新时间',]
 for (let i = 0; i < 100; i++) {
     dataArr.push({
         SurfaceTemp: '28℃',

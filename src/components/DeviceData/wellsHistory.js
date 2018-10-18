@@ -3,7 +3,6 @@ import BreadcrumbView from '../PageHeader/breadcrumb';
 import { Button, Input, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
 import styles from './common.less';
 const tableTitle = [
-    '更新时间',
     '信息条数',
     '报文类型',
     '报文编号',
@@ -23,7 +22,8 @@ const tableTitle = [
     '设备状态',
     '三相电压',
     '工作电压',
-    'SIM卡信号'
+    'SIM卡信号',
+    '更新时间',
 ];
 export default class extends Component {
     constructor(props) {
@@ -57,7 +57,6 @@ export default class extends Component {
     _getTableData(title, data) {
         let columns = [];
         let dataIndex = [
-            'UpdateTime',
             'MesNum',
             'MesType',
             'MesCode',
@@ -78,6 +77,7 @@ export default class extends Component {
             'ThreePhasePower',
             'OperatingPower',
             'SIMCardSignal',
+            'UpdateTime',
         ];
         title.map((v, i) => {
             columns.push({
@@ -87,12 +87,11 @@ export default class extends Component {
                 align: 'center',
             })
         })
-        columns[columns.length - 1].fixed = 'right';
-        columns[columns.length - 1].width = 100;
+        columns[columns.length - 1].fixed = columns.length>10?'right':null;
+        columns[columns.length - 1].width = columns.length>10?'right':null;
         let tableData = [];
         data.map((v, i) => {
             tableData.push({
-                UpdateTime: v.UpdateTime,
                 MesNum: v.MesNum,
                 MesType: v.MesType,
                 MesCode: v.MesCode,
@@ -113,6 +112,7 @@ export default class extends Component {
                 ThreePhasePower: v.ThreePhasePower,
                 OperatingPower: v.OperatingPower,
                 SIMCardSignal: v.SIMCardSignal,
+                UpdateTime: v.UpdateTime,
                 key: i,
             });
         })
@@ -212,7 +212,7 @@ export default class extends Component {
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableData}
-                    scroll={{ x: 2800 }}
+                    scroll={{x:columns.length>10?2800:false}}
                 />
             </div>
         )

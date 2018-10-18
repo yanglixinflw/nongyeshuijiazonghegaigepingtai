@@ -18,9 +18,6 @@ export default class extends Component {
         // console.log(moisturehistory)
         let arr = Object.keys(moisturehistory);
         if (arr.length === 0) return moisturehistory = null;
-        if (typeof (loading) === 'undefined') {
-            return loading = null
-        }
         // console.log(loading)
         return (
             <div>
