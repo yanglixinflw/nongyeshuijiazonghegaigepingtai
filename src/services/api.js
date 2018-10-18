@@ -29,6 +29,7 @@ export function queryBall(){
     method:'POST'
   });
 }
+
 export function queryLogin(params) {
   debugger
   return request(`${envNet}/api/Account/login`, {
