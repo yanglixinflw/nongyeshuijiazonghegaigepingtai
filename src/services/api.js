@@ -31,10 +31,17 @@ export function queryBall() {
     method: 'POST'
   });
 }
-export function queryLogin() {
+export function queryLogin(params) {
+  debugger
   return request(`${envNet}/api/Account/login`, {
     method: 'POST',
     credentials: "include",
-    mode: 'cors'
+    mode: 'cors',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+    body:JSON.stringify(
+      params
+    )
   });
 }
