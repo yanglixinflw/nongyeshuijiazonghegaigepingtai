@@ -20,7 +20,6 @@ export default class extends React.Component {
     }
     render() {
         const {errorMassage}=this.props
-        // console.log(errorMassage)
         return (
             <div className={styles.basic}>
                 <header>
@@ -41,6 +40,7 @@ export default class extends React.Component {
                                     submitHandler={() => {
                                         this._loginSumbit()
                                     }}
+                                    errorMassage={errorMassage}
                                 />
                             </div>
                             <div className={styles.boxFooter}>
@@ -69,27 +69,24 @@ const LoginForm = Form.create()(
                 // showYzm: false,
                 // 登录载入状态
                 isLoading: false,
-                // 提示信息
-                errorMassage: ''
             }
         }
         _loadingLogin() {
             this.setState({
                 isLoading: true,
-                errorMassage: '密码错误'
             })
+
             // 模拟loading
             setTimeout(() => {
                 this.setState({
                     isLoading: false,
-                    errorMassage: ''
                 })
             }, 2000)
             // 没有错误信息时消除loading并跳转
         }
         render() {
-            const { showYzm, isLoading, errorMassage } = this.state
-            const { form, submitHandler } = this.props
+            const { showYzm, isLoading } = this.state
+            const { form, submitHandler,errorMassage } = this.props
             const { getFieldDecorator } = form;
             // 设置输入密码的外边距
             let passWordMargin

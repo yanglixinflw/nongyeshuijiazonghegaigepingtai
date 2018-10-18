@@ -17,10 +17,6 @@ export default class extends Component {
         let { meteorology ,loading} = this.props
         let arr = Object.keys(meteorology)
         if (arr.length === 0) return meteorology = null
-        if(typeof(loading)==='undefined'){
-            return loading=null
-        }
-        // console.log(loading)
         return (
             <div>
                 <Spin size='large' spinning={loading}>

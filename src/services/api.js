@@ -1,4 +1,5 @@
 import request from '../utils/request';
+// 开发环境
 const envNet='http://192.168.30.127:88'
 //设备墒情
 export function queryMoisture(){
