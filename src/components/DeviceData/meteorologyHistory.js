@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import BreadcrumbView from '../PageHeader/breadcrumb';
 import styles from './common.less';
-import { Button, Input, Form,Table,Checkbox, Modal, Row, Col } from 'antd';
+import { Button, Input, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
 const tableTitle = ['更新时间', '温度', '湿度', '光照', '大气压', '蒸发量', '风向', '风速', '雨量'];
 export default class extends Component {
     constructor(props) {
         super(props)
+        console.log(props)
         const { meteorologyhistory } = props;
-        const { data} = meteorologyhistory.data;
-        // console.log(tableTitle)
+        const { data,total } = meteorologyhistory.data;
+       
         // 获取标题和数据
         this.state = {
+            total,
             data,
             tableTitle,
             title: tableTitle,
@@ -23,6 +25,12 @@ export default class extends Component {
         }
     }
     componentDidMount() {
+        let url = window.location.hash;
+        const regexHistory = /history:(.+)/gm;
+        let DeviceId = regexHistory.exec(url)[1];
+        this.setState({
+            DeviceId,
+        })
         this._getTableData(this.state.title, this.state.data);
     }
     //获取表的数据
@@ -47,8 +55,8 @@ export default class extends Component {
                 align: 'center',
             })
         })
-        columns[columns.length-1].fixed='right';
-        columns[columns.length-1].width=100;
+        columns[columns.length - 1].fixed = 'right';
+        columns[columns.length - 1].width = 100;
         let tableData = [];
         data.map((v, i) => {
             tableData.push({
@@ -110,14 +118,22 @@ export default class extends Component {
     _exportDataHandler() {
         console.log("导出数据")
     }
+    // 翻页请求数据
+    _pageChange(page){
+        const {DeviceId} = this.state;
+        let PageIndex = page-1;
+    }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle } = this.state;
+        const { columns, tableData, showSetVisible, tableTitle,total } = this.state;
         const paginationProps = {
             showQuickJumper: true,
+            total,
+            // 传递页码
+            onChange: (page) => this._pageChange(page)
         };
         return (
             <div className={styles.history}>
-                 <ShowSetForm
+                <ShowSetForm
                     wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
@@ -144,7 +160,8 @@ export default class extends Component {
                     <Button
                         icon='upload'
                         onClick={() => this._exportDataHandler()}
-                    >导出数据
+                    >
+                        导出数据
                     </Button>
                 </div>
                 <Table

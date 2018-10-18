@@ -23,7 +23,8 @@ export default class extends Component {
         return (
             <div>
                 <MeteorologyHistory
-                    {...{meteorologyhistory}}
+                    // {...meteorologyhistory}
+                    {...this.props}
                 />
                 
                 {/* 123456 */}

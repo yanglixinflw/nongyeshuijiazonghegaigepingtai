@@ -22,11 +22,11 @@ for (let i = 0; i < 100; i++) {
         Rainfall: '3.5',  
     })
 }
-export const MeteorologyHistory = (req, res) => {
+export const BallHistory = (req, res) => {
     res.json({
         // tableTitle,
         total: dataArr.length,
         data: dataArr
     })
 }
-export default MeteorologyHistory;
+export default BallHistory;
