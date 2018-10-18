@@ -4,7 +4,7 @@ import logoT from '../../assets/logoTitle.png'
 import loginBox from '../../assets/loginBox.png'
 import classnames from 'classnames'
 import styles from './index.less'
-import { Form, Button } from 'antd'
+import { Form, Button, Input, Checkbox } from 'antd'
 export default class extends React.Component {
     render() {
         return (
@@ -46,33 +46,82 @@ const LoginForm = Form.create()(
             super(props)
             this.state = {
                 // 是否勾选记住密码
-                remberPaw: false,
+                remberPwd: false,
                 // 是否勾选自动登录
                 autoLogin: false,
+                // 是否显示验证码框
+                showYzm: true,
+                // showYzm: false,
+                // 登录载入状态
+                isLoading:false
             }
         }
+        _loadingLogin(){
+            
+            this.setState({
+                isLoading:true
+            })
+            // 模拟loading
+            setTimeout(()=>{
+                this.setState({
+                    isLoading:false
+                })
+            },2000)
+        }
         render() {
+            const { showYzm ,isLoading} = this.state
+            // 设置输入密码的外边距
+            let passWordMargin
+            if(!showYzm){
+                 passWordMargin=0
+            }else{
+                 passWordMargin=null
+            }
             return (
                 <div>
                     <Form>
-                        <FormItem >
-                            <i className={classnames('dyhsicon', 'dyhs-weidenglu')}></i>
-                            <input placeholder='请输入用户名'></input>
+                        <FormItem style={{ textAlign: 'center' }}>
+                            <Input className={styles.userInput}
+                                prefix={<i className={classnames('dyhsicon', 'dyhs-weidenglu', `${styles.userIcon}`)}></i>}
+                                placeholder='请输入用户名'></Input>
                         </FormItem>
-                        <FormItem >
-                            <input placeholder='请输入密码'></input>
+                        <FormItem style={{ textAlign: 'center', marginBottom: `${passWordMargin}` }}>
+                            <Input className={styles.userInput}
+                                prefix={<i className={classnames('dyhsicon', 'dyhs-mima', `${styles.userIcon}`)}></i>}
+                                placeholder='请输入密码'></Input>
                         </FormItem>
-                        <FormItem >
-                            <input placeholder='请输入验证码'></input>
+                        {
+                            showYzm ?
+                                <FormItem className={styles.yzmGroup}>
+                                    <Input
+                                        className={styles.yzmInput}
+                                        prefix={<i className={classnames('dyhsicon', 'dyhs-safe', `${styles.yzIcon}`)}></i>}
+                                        placeholder='请输入验证码'></Input>
+                                    <div className={styles.yzmwindow}>
+                                    </div>
+                                </FormItem>
+                                : null
+                        }
+
+                        <div className={styles.remberBox}>
+                            <FormItem>
+                                <Checkbox>记住密码</Checkbox>
+                            </FormItem>
+                            <FormItem >
+                                <Checkbox>自动登录</Checkbox>
+                            </FormItem>
+                        </div>
+                        <FormItem className={styles.loginButton} >
+                            <Button
+                            loading={isLoading}
+                            onClick={()=>this._loadingLogin()}
+                            >
+                                登录
+                            </Button>
                         </FormItem>
-                        <FormItem >
-                            记住密码
-                        </FormItem>
-                        <FormItem >
-                            自动登录
-                        </FormItem>
-                        <FormItem >
-                            <Button>登录</Button>
+                        <FormItem style={{marginBottom:0,marginLeft:50,color:'white'}}>
+                            <span></span>
+                            {/* 显示区域 */}
                         </FormItem>
                     </Form>
                 </div>

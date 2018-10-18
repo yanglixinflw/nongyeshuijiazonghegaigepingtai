@@ -52,11 +52,94 @@
                     border-top-right-radius: 8px;
                     width: 400px;
                     color: white;
-                    background: rgba(51, 121, 215, 0.8);
-                    height: 428px;
-                    .loginTitle{
+                    background: rgba(51, 121, 215, 0.8); // height: 428px;
+                    .loginTitle {
                         font-size: 24px;
-                        padding:34px 50px;
+                        padding: 34px 50px;
+                    }
+                    .userInput {
+                        width: 300px;
+                        height: 50px;
+                    }
+                    .yzmGroup {
+                        margin-bottom: 0px;
+                        position: relative;
+                        top: -10px;
+                        display: flex;
+                        justify-content: space-between;
+                        .yzmInput {
+                            width: 174px;
+                            height: 50px;
+                            margin-right: 24px;
+                        }
+                        .yzmwindow {
+                            position: relative;
+                            top: 15px;
+                            display: inline-block;
+                            width: 104px;
+                            height: 40px;
+                            border: 1px #79B3F2 solid;
+                        }
+                    }
+                    .userIcon {
+                        font-size: 26px;
+                        color: #79B3F2;
+                    }
+                    .yzIcon {
+                        font-size: 34px;
+                        color: #79B3F2;
+                    }
+                    .remberBox{
+                        width: 300px;
+                        display:flex;
+                        justify-content: space-between;
+                        margin-left: 50px;
+                        height: 40px;
+                        div{
+                            display: inline-block;
+                        }
+                        span{
+                            color:#79B3F2;
+                        }
+                        :global{
+                            .ant-checkbox-checked .ant-checkbox-inner{
+                                background-color:#39CEF7;
+                            }
+                        }
+                    }
+                    .loginButton{
+                       margin-bottom:0;
+                       text-align:center;
+                       :global{
+                           .ant-btn{
+                            width: 300px;
+                            height: 50px;
+                            background: #39CEF7;
+                            color:white;
+                            border: none;
+                           }
+                       }
+                    }
+
+                    :global {
+                        .ant-input-affix-wrapper .ant-input:not(:first-child) {
+                            padding-left: 48px;
+                            color: #79B3F2;
+                        }
+                        .ant-input {
+                            margin: 0 auto;
+                            &::-webkit-input-placeholder {
+                                color: #79B3F2;
+                            }
+                            border:1px #79B3F2 solid;
+                            background: rgba(51,
+                            121,
+                            215,
+                            0.4);
+                        }
+                        // .ant-form-item{
+                        //     margin-bottom:0;
+                        // }
                     }
                 }
                 .boxFooter {
