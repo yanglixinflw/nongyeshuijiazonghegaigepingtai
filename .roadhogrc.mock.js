@@ -4,6 +4,7 @@ import Moisture from './mock/moisture';
 import Wells from './mock/wells';
 import Meteorology from './mock/meteorology';
 import Ball from './mock/ball';
+import MeteorologyHistory from './mock/meteorologyHistory';
 // 是否禁用代理
 const noProxy = process.env.NO_PROXY === 'true';
 const proxy ={
@@ -11,6 +12,7 @@ const proxy ={
     'POST /api/data/moisture':Moisture,
     'POST /api/data/wells':Wells,
     'POST /api/data/meteorology':Meteorology,
+    'POST /api/data/meteorology/history':MeteorologyHistory,
     'POST /api/data/ball':Ball,
 }
 export default (noProxy ? {} : delay(proxy, 1000));

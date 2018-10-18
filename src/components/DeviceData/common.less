@@ -7,10 +7,24 @@
     display: flex;
     padding-left: 38px;
     margin-bottom: 20px;
-    box-shadow: 0px 0px 1px  #000  inset;
+    box-shadow: 0px 5px 10px  rgba(0,0,0,0.6);
     span {
         margin-right: 10px;
     }
+    :global{
+        .ant-breadcrumb{
+            .ant-breadcrumb-link{
+                a{
+                    color:#2961BF
+                }
+            }
+            .ant-breadcrumb-separator{
+                color:#2961BF
+            }
+            
+        }
+    }
+   
 }
 
 //搜索
@@ -70,7 +84,32 @@
 
 :global {
     .ant-table-fixed-right {
-    box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
+        box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
+        .ant-table-thead{
+            tr{
+                th{
+                    border: 1px solid #2A325E;
+                    font-weight: 600;
+                    background: #2E3459;
+                    color: #DEDEE4;
+                }
+            }
+        }
+        .ant-table-tbody{
+            tr{
+                td{
+                    border: 1px solid #2A325E;
+                    font-weight: 600;
+                    background: #1C2241;
+                    color: #DEDEE4;
+                    .ant-btn {
+                        background: #1C2241;
+                        border: 1px solid #327DF4;
+                        color: #327DF4;
+                    }
+                }
+            }
+        }
     }
     .ant-table-wrapper {
         width: 95%;
@@ -97,40 +136,39 @@
                 }
                 .ant-table-fixed-right table{
                     background: #2E3459;
+                    
                 }       
             }
-        }    
-        .ant-table-thead {
-            tr {
-                th {
-                    font-weight: 600;
-                    background: #2E3459;
-                    color: #DEDEE4;
-                    border: 1px solid #2A325E;
-                }
-            }
         }
-        .ant-table-tbody {      
-            tr {
-                &:hover td {
-                    color: #0084FF;
-                }
-                &:focus td {
-                    color: #0084FF;
-                }
-                td {
-                    font-size: 12px;
-                    background: #1C2241;
-                    color: #BBC5D2;
-                    border: 1px solid #2A325E;
-                    .ant-btn {
-                        background: #1C2241;
-                        border: 1px solid #327DF4;
-                        color: #327DF4;
+        .ant-table-scroll {
+            .ant-table-thead {
+                tr {
+                    th {
+                        font-weight: 600;
+                        background: #2E3459;
+                        color: #DEDEE4;
+                        border: 1px solid #2A325E;
                     }
                 }
             }
-        }
+            .ant-table-tbody {      
+                tr {
+                    &:hover td {
+                        color: #0084FF;
+                    }
+                    &:focus td {
+                        color: #0084FF;
+                    }
+                    td {
+                        font-size: 12px;
+                        background: #1C2241;
+                        color: #BBC5D2;
+                        border: 1px solid #2A325E;
+                    }
+                }
+            }
+        }   
+        
         .ant-pagination.ant-table-pagination {
             margin-top: 24px;
             margin-bottom: 24px;
