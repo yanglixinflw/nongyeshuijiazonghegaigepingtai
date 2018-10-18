@@ -20,7 +20,7 @@ export default class extends React.Component {
     }
     render() {
         const {errorMassage}=this.props
-        console.log(errorMassage)
+        // console.log(errorMassage)
         return (
             <div className={styles.basic}>
                 <header>
@@ -106,7 +106,7 @@ const LoginForm = Form.create()(
                     >
                         <FormItem style={{ marginLeft: 50 }}>
                             {
-                                getFieldDecorator('accountName', {
+                                getFieldDecorator('userName', {
                                     initialValue: '',
                                     rules: [{ required: true, message: '请填写账号' }],
                                 })(<Input
@@ -122,7 +122,7 @@ const LoginForm = Form.create()(
                         <FormItem style={{ marginLeft: 50, marginBottom: `${passWordMargin}` }}>
 
                             {
-                                getFieldDecorator('passWord',
+                                getFieldDecorator('pwd',
                                     {
                                         initialValue: '',
                                         rules: [
@@ -145,7 +145,7 @@ const LoginForm = Form.create()(
                             showYzm ?
                                 <FormItem className={styles.yzmGroup}>
                                     {
-                                        getFieldDecorator('yzm', {
+                                        getFieldDecorator('verifyCode', {
                                             initialValue: '',
                                             rules: [
                                                 { required: true, message: '验证码不能为空' },
@@ -177,7 +177,7 @@ const LoginForm = Form.create()(
                             </FormItem> */}
                             <FormItem >
                                 {
-                                    getFieldDecorator('autoLogin', {
+                                    getFieldDecorator('rememberMe', {
                                         initialValue: false,
                                     })(
                                         <Checkbox>自动登录</Checkbox>

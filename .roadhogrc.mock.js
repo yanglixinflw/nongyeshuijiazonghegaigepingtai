@@ -8,7 +8,7 @@ import MeteorologyHistory from './mock/meteorologyHistory';
 // 是否禁用代理
 const noProxy = process.env.NO_PROXY === 'true';
 const proxy ={
-    'POST /api/login':LoginHandler,
+    'POST /api/Account/login':LoginHandler,
     'POST /api/data/moisture':Moisture,
     'POST /api/data/wells':Wells,
     'POST /api/data/meteorology':Meteorology,
