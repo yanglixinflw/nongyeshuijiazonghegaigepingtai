@@ -29,6 +29,7 @@ export function queryBall(){
     method:'POST'
   });
 }
+//设备智能球阀历史数据
 export function queryBallHistory(){
   return request('/api/data/ball/history',{
     method:'POST'
