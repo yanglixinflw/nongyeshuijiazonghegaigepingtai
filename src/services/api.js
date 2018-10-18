@@ -35,9 +35,17 @@ export function queryBallHistory(){
     method:'POST'
   });
 }
-//设备智能球阀历史数据
-export function queryLogin(){
-  return request('/api/login',{
-    method:'POST'
+export function queryLogin(params) {
+  debugger
+  return request(`${envNet}/api/Account/login`, {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+    body:JSON.stringify(
+      params
+    )
   });
 }

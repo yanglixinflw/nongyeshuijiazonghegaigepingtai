@@ -12,7 +12,7 @@ export default class extends React.Component {
     
   }
   submitHandler=(err,value)=>{
-    // console.log(this.props)
+    console.log(value)
     const {dispatch} =this.props
     // if(!err){
       dispatch({
@@ -25,7 +25,7 @@ export default class extends React.Component {
   }
   render() {
     // 返回error信息到页面内
-    console.log(this.props.login)
+    // console.log(this.props.login)
     return (
       <div>
         <Login 
