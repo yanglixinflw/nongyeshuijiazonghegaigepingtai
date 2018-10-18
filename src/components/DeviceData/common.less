@@ -522,7 +522,6 @@
                     td{
                         font-size: 12px;
                         font-weight: normal;
-                        border-left:0
                     }
                 }
             }
@@ -540,6 +539,38 @@
                     }
                 }
             }
+        }
+    }
+    @media(max-width:1310px) {
+        .deviceInfo {
+            :global {
+                .ant-form-inline {
+                    margin-right: 10px;
+                    .ant-form-item {
+                        .ant-input {
+                            width: 150px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @media(max-width:1210px) {
+        .deviceInfo {
+            :global {
+                .ant-form-inline {
+                    margin-right: 10px;
+                    .ant-form-item {
+                        .ant-input {
+                            width: 150px;
+                        }
+                    }
+                }
+                .ant-btn{
+                    width:100px;
+                }
+            }
+            
         }
     }
 }
