@@ -18,10 +18,6 @@ export default class extends Component {
         // console.log(moisture)
         let arr = Object.keys(moisture);
         if (arr.length === 0) return moisture = null;
-        if (typeof (loading) === 'undefined') {
-            return loading = null
-        }
-        // console.log(loading)
         return (
             <div>
                 <Spin size='large' spinning={loading}>
