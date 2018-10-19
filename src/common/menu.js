@@ -3,7 +3,7 @@ import { isUrl } from '../utils/utils';
 const menuData = [
   {
     name: 'Gis地图',
-    icon: 'global',
+    icon: 'weibiaoti',
     path: 'gismap',
     children: [
       {
@@ -14,7 +14,7 @@ const menuData = [
   },
   {
     name: '指挥中心',
-    icon: 'desktop',
+    icon: 'zhihui',
     path: 'command',
     children: [
       {
