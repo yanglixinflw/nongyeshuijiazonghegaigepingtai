@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import BreadcrumbView from '../PageHeader/breadcrumb';
 import { Button, Input, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
 import styles from './common.less';
+import classnames from 'classnames';
 const tableTitle = [
     '网光',
     '管道压力',
@@ -195,6 +196,7 @@ const InfoForm = Form.create()(
                             (
                             <Input
                                 disabled
+                                prefix={<i className={classnames('dyhsicon', 'dyhs-shebeiID', `${styles.deviceId}`)}></i>}
                             />
                             )
                         }

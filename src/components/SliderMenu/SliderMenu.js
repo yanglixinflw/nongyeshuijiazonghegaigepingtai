@@ -83,7 +83,7 @@ export default class SiderMenu extends PureComponent {
     const itemPath = this.conversionPath(item.path);
     const icon = getIcon(item.icon);
     const { target, name } = item;
-    const { location} = this.props;
+    const { location } = this.props;
     // console.log(item)
     return (
       <Link
@@ -108,7 +108,7 @@ export default class SiderMenu extends PureComponent {
       if (childrenItems && childrenItems.length > 0) {
         return (
           <SubMenu
-          className={styles.submenu}
+            className={styles.submenu}
             title={
               item.icon ? (
                 <span>
@@ -116,8 +116,8 @@ export default class SiderMenu extends PureComponent {
                   <span>{item.name}</span>
                 </span>
               ) : (
-                item.name
-              )
+                  item.name
+                )
             }
             key={item.path}
           >
@@ -187,16 +187,16 @@ export default class SiderMenu extends PureComponent {
     const moreThanOne = openKeys.filter(openKey => this.isMainMenu(openKey)).length > 1;
     this.setState({
       openKeys: moreThanOne ? [lastOpenKey] : [...openKeys],
-    //   openKeys:  [...openKeys],
+      //   openKeys:  [...openKeys],
     });
   };
 
   render() {
     const { openKeys } = this.state;
     // Don't show popup menu when it is been collapsed
-    const menuProps =  {
-          openKeys,
-        };
+    const menuProps = {
+      openKeys,
+    };
     // if pathname can't match, use the nearest parent's key
     let selectedKeys = this.getSelectedMenuKeys();
     if (!selectedKeys.length) {
@@ -223,7 +223,7 @@ export default class SiderMenu extends PureComponent {
           onOpenChange={this.handleOpenChange}
           selectedKeys={selectedKeys}
           className={styles.menu}
-          style={{ padding: '16px 0', width: '100%',background:'#0A0C1D'}}
+          style={{ padding: '16px 0', width: '100%', background: '#0A0C1D' }}
         >
           {this.getNavMenuItems(this.menus)}
         </Menu>
