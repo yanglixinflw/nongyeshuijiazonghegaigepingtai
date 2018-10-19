@@ -26,9 +26,16 @@ export function queryMeteorologyHistory(){
   });
 }
 //设备智能球阀
-export function queryBall(){
-  return request('/api/data/ball',{
-    method:'POST'
+export function queryBall(params){
+  return request(`${envNet}/api/DeviceData/list`,{
+    method:'POST',
+    mode: 'cors',
+    headers : new Headers({
+      'Content-Type': 'application/json',
+    }),
+    body: JSON.stringify(
+      params
+    )
   });
 }
 //设备智能球阀历史数据
@@ -61,4 +68,11 @@ export function queryMoistureHistory(){
   return request('/api/data/moisture/history',{
     method:'POST'
   });
+}
+//新天通球阀title
+export function queryBallTitle(){
+  return request (`${envNet}/api/DeviceData/columns?deviceTypeId=1`,{
+    method:'GET',
+    mode:'cors'
+  })
 }

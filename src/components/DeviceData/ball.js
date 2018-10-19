@@ -2,29 +2,54 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
+//全部的title
 const tableTitle = [
     '设备ID', 
     '设备名称', 
     '设备安装地', 
     '关联建筑物', 
-    '网光',
+    '网关地址',
     '管道压力',
-    '电磁压力',
-    '限时流量',
-    '累计流量',
+    '太阳能电压',
+    '瞬时流量',
+    '累积流量',
+    '供电电压',
     '阀门状态',
-    '更新时间'];
+    ];
+//通用title
+const currentTitle = [
+    '设备ID', 
+    '设备名称', 
+    '设备安装地', 
+    '关联建筑物', 
+]
+//更新时间title
+const updateTtile = [
+    '更新时间'
+]
 export default class extends Component {
     constructor(props) {
         super(props)
         const { ball } = props;
-        const { data} = ball.data;
-        // console.log(tableTitle)
+        const { items } = ball.data.data;
+        const titleData = ball.title.data.data;
+        //需要过滤的title
+        let filtertitle = []
+        titleData.map((v,i)=>{
+            let {displayName} = v;
+            filtertitle.push(displayName)
+        })
+        // 该显示的中间列title
+        let showTitle = [];
+        showTitle = tableTitle.filter(item => filtertitle.indexOf(item)!==-1);
+        showTitle=currentTitle.concat(showTitle).concat(updateTtile);
+        console.log(items)
         // 获取标题和数据
         this.state = {
-            data,
+            //列表数据源
+            items,
             tableTitle,
-            title: tableTitle,
+            title: showTitle,
             //表头
             columns: [],
             //表单数据
@@ -34,21 +59,22 @@ export default class extends Component {
         }
     }
     componentDidMount() {
-        this._getTableData(this.state.title, this.state.data);
+        this._getTableData(this.state.title, this.state.items);
     }
     //获取表的数据
-    _getTableData(title, data) {
+    _getTableData(title, items) {
         let columns = [];
         let dataIndex = [
             'DeviceId',
             'DeviceName',
             'AreaName',
-            'AssociatedBuilding',
-            'NetLight',
-            'PipelinePressure',
-            'ElectPressure',
-            'TimeLimitedTraffic',
-            'CumulativeFlow',
+            'installAddrId',
+            'GatewayAddr',
+            'Press',
+            'SunElecPress',
+            'InstantNumber',
+            'WaterTotalNumber',
+            'BatteryPress',
             'ValveStatus',
             'UpdateTime'
         ];
@@ -83,7 +109,7 @@ export default class extends Component {
             }
         })
         let tableData = [];
-        data.map((v, i) => {
+        items.map((v, i) => {
             tableData.push({
                 DeviceId: v.DeviceId,
                 DeviceName: v.DeviceName,
