@@ -4,23 +4,14 @@ import pathToRegexp from 'path-to-regexp';
 import { Link } from 'dva/router';
 import styles from './index.less';
 import { urlToList } from '../_utils/pathTools';
-import headerlogo from '../../assets/headerlogo.png';
-import classnames from 'classnames'
-
+import headerlogo from '../../assets/headerlogo.png'
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 const getIcon = icon => {
   // 可以自定义ICON
   if (typeof icon === 'string') {
-    // console.log(icon)
-    // return <Icon type={icon} />;
-    return (
-    <i 
-    style={{marginRight:'2px'}}
-    className={classnames('dyhsicon', `${icon}`)}>
-    </i>
-    )
+    return <Icon type={icon} />;
   }
   return icon;
 };
@@ -90,7 +81,6 @@ export default class SiderMenu extends PureComponent {
    */
   getMenuItemPath = item => {
     const itemPath = this.conversionPath(item.path);
-    // 子菜单添加icon
     const icon = getIcon(item.icon);
     const { target, name } = item;
     const { location } = this.props;
