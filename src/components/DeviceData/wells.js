@@ -55,22 +55,29 @@ export default class extends Component {
         const { wells } = props;
         const { items } = wells.data.data;
         const titleData = wells.title.data.data;
-        //需要过滤的title
-        let filtertitle = []
+        //需要过滤出来的title
+        let filterTitle = [];
+        //需要过滤出来的title Index
+        let titleIndex =[];
         titleData.map((v,i)=>{
-            let {displayName} = v;
-            filtertitle.push(displayName)
+            let {displayName,name} = v;
+            filterTitle.push(displayName);
+            titleIndex.push(name);
         })
         // 该显示的中间列title
         let showTitle = [];
-        showTitle = tableTitle.filter(item => filtertitle.indexOf(item)!==-1);
+        showTitle = tableTitle.filter(item => filterTitle.indexOf(item)!==-1);
         showTitle=currentTitle.concat(showTitle).concat(updateTtile);
         //  console.log(items)
         //获取标题和数据
         this.state = {
+            //显示列表title Index
+            titleIndex,
             //列表数据源
             items,
+            //总数据列表title
             tableTitle,
+            //显示的数据列表title中文
             title: showTitle,
             //表头
             columns: [],
@@ -86,35 +93,20 @@ export default class extends Component {
     //获取表的数据
     _getTableData(title, items) {
         let columns = [];
+        //通用title Index
         let dataIndex = [
             'deviceId',
             'name',
             'installAddr',
             'ownerBuilding',
-            'WaterLevel',
-            'Pressure',
-            'Flow',
-            'ThisSumPower',
-            'ThisSumWater',
-            'ThisStart',
-            'ThisStop',
-            'VoltageA',
-            'VoltageB',
-            'VoltageC',
-            'CurrentA',
-            'CurrentB',
-            'CurrentC',
-            'Voltage',
-            'Csq',
-            'WaterTotalYear',
-            'WaterTotal',
-            'PowerTotal',
-            'DeStateIC',
-            'DeStateMeter',
-            'DeStateGate',
-            'DeStatePump',
             'updateTime',
         ];
+        // 与显示title Index 合并 完成完整title Index
+        let titleIndexNew = this.state.titleIndex;
+        titleIndexNew.map((v,i)=>{
+            dataIndex.splice(4,0,v)
+        })
+        // console.log(dataIndex)
         title.map((v, i) => {
             columns.push({
                 title: v,
