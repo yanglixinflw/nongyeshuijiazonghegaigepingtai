@@ -3,7 +3,7 @@ import { isUrl } from '../utils/utils';
 const menuData = [
   {
     name: 'Gis地图',
-    icon: 'weibiaoti',
+    icon: 'dyhs-weibiaoti',
     path: 'gismap',
     children: [
       {
@@ -14,7 +14,7 @@ const menuData = [
   },
   {
     name: '指挥中心',
-    icon: 'zhihui',
+    icon: 'dyhs-zhihui',
     path: 'command',
     children: [
       {
@@ -29,7 +29,7 @@ const menuData = [
   },
   {
     name: '辅助决策',
-    icon: 'bulb',
+    icon: 'dyhs-fuzhujuece',
     path: 'auxiliary',
     children: [
       {
@@ -44,7 +44,7 @@ const menuData = [
   },
   {
     name: '集散控制',
-    icon: 'laptop',
+    icon: 'dyhs-jisankongzhi',
     path: 'device',
     children: [
       {
@@ -90,7 +90,7 @@ const menuData = [
   },
   {
     name: '设备管护',
-    icon: 'table',
+    icon: 'dyhs-shebeiguanhu',
     path: 'manage',
     children: [
       {
@@ -101,7 +101,7 @@ const menuData = [
   },
   {
     name: '水费收缴',
-    icon: 'table',
+    icon: 'dyhs-shuiquanjiaoyi',
     path: 'rent',
     children: [
       {
@@ -130,7 +130,7 @@ const menuData = [
   },
   {
     name: '信息管理',
-    icon: 'table',
+    icon: 'dyhs-xinxiguanli',
     path: 'messageManagement',
     children: [
       {
@@ -171,7 +171,7 @@ const menuData = [
   },
   {
     name: '系统管理',
-    icon: 'table',
+    icon: 'dyhs-xitongshezhi',
     path: 'system',
     children: [
       {
