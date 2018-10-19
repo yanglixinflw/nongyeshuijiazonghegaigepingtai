@@ -8,11 +8,11 @@ export function queryMoisture(){
   });
 }
 //设备井电
-export function queryWells(){
-  return request('/api/data/wells',{
-    method:'POST'
-  });
-}
+// export function queryWells(){
+//   return request('/api/data/wells',{
+//     method:'POST'
+//   });
+// }
 //设备气象
 export function queryMeteorology(){
   return request('/api/data/meteorology',{
@@ -25,8 +25,8 @@ export function queryMeteorologyHistory(){
     method:'POST'
   });
 }
-//设备智能球阀
-export function queryBall(params){
+//设备智能球阀/设备井电
+export function queryDevice(params){
   return request(`${envNet}/api/DeviceData/list`,{
     method:'POST',
     mode: 'cors',
@@ -72,6 +72,13 @@ export function queryMoistureHistory(){
 //新天通球阀title
 export function queryBallTitle(){
   return request (`${envNet}/api/DeviceData/columns?deviceTypeId=1`,{
+    method:'GET',
+    mode:'cors'
+  })
+}
+//开创井电title
+export function queryWellsTitle(){
+  return request (`${envNet}/api/DeviceData/columns?deviceTypeId=2`,{
     method:'GET',
     mode:'cors'
   })

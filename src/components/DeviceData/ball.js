@@ -43,7 +43,7 @@ export default class extends Component {
         let showTitle = [];
         showTitle = tableTitle.filter(item => filtertitle.indexOf(item)!==-1);
         showTitle=currentTitle.concat(showTitle).concat(updateTtile);
-        console.log(items)
+        // console.log(items)
         // 获取标题和数据
         this.state = {
             //列表数据源
@@ -65,10 +65,10 @@ export default class extends Component {
     _getTableData(title, items) {
         let columns = [];
         let dataIndex = [
-            'DeviceId',
-            'DeviceName',
-            'AreaName',
-            'installAddrId',
+            'deviceId',
+            'name',
+            'installAddr',
+            'ownerBuilding',
             'GatewayAddr',
             'Press',
             'SunElecPress',
@@ -76,7 +76,7 @@ export default class extends Component {
             'WaterTotalNumber',
             'BatteryPress',
             'ValveStatus',
-            'UpdateTime'
+            'updateTime'
         ];
         title.map((v, i) => {
             columns.push({
@@ -111,17 +111,18 @@ export default class extends Component {
         let tableData = [];
         items.map((v, i) => {
             tableData.push({
-                DeviceId: v.DeviceId,
-                DeviceName: v.DeviceName,
-                AreaName: v.AreaName,
-                AssociatedBuilding: v.AssociatedBuilding,
-                NetLight: v.NetLight,
-                PipelinePressure: v.PipelinePressure,
-                ElectPressure: v.ElectPressure,
-                TimeLimitedTraffic: v.TimeLimitedTraffic,
-                CumulativeFlow: v.CumulativeFlow,
-                ValveStatus: v.ValveStatus,
-                UpdateTime: v.UpdateTime,
+                deviceId: v.deviceId,
+                name: v.name,
+                installAddr: v.installAddr,
+                ownerBuilding: v.ownerBuilding,
+                GatewayAddr: v.realTimeData.GatewayAddr,
+                Press: v.realTimeData.Press,
+                SunElecPress: v.realTimeData.SunElecPress,
+                InstantNumber: v.realTimeData.InstantNumber,
+                WaterTotalNumber: v.realTimeData.WaterTotalNumber,
+                BatteryPress: v.realTimeData.BatteryPress,
+                ValveStatus:v.realTimeData.ValveStatus,
+                updateTime: v.updateTime,
                 key: i,
             });
         })

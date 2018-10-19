@@ -1,6 +1,6 @@
 import { queryMoistureHistory } from '../services/api';
 export default {
-    namespace: 'moisturehistory',
+    namespace: 'moistureHistory',
     state:{},
     effects: {
         *fetch({ payload }, { call, put }) {  // eslint-disable-line

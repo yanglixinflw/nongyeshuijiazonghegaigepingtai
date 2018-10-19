@@ -8,8 +8,7 @@ import { Spin } from 'antd';
 }))
 export default class extends Component {
     componentDidMount() {
-        const { dispatch } = this.props;
-        
+        const { dispatch } = this.props; 
         dispatch({
             type: 'ball/fetchTitle',
         });
@@ -25,10 +24,8 @@ export default class extends Component {
                 "pageSize": 10
             }
         });
-
     }
     render() {
-        
         let { ball, loading } = this.props;
         let arr = Object.keys(ball);
         if (arr.length<= 1) return ball = null;
