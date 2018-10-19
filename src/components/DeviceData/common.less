@@ -147,7 +147,7 @@
         .ant-table {
             background: #2E3459;
             .ant-table-content {
-                .ant-table-scroll {
+                
                     .ant-table-body {
                         &::-webkit-scrollbar {
                             height: 10px;
@@ -163,13 +163,13 @@
                             background: #2E3459;
                         }
                     }
-                }
+                
                 .ant-table-fixed-right table {
                     background: #2E3459;
                 }
             }
         }
-        .ant-table-scroll {
+        
             .ant-table-thead {
                 tr {
                     th {
@@ -202,7 +202,7 @@
                     }
                 }
             }
-        }
+        
         .ant-pagination.ant-table-pagination {
             margin-top: 24px;
             margin-bottom: 24px;
@@ -568,6 +568,37 @@
                 }
                 .ant-btn{
                     width:100px;
+                    position: relative;
+                    .anticon {
+                        position: absolute;
+                        top: 14px;
+                        left: 10px;
+                    }
+                }
+            }
+            
+        }
+    }
+    @media(max-width:1120px) {
+        .deviceInfo {
+            :global {
+                .ant-form-inline {
+                    
+                    margin-right: 0px;
+                    .ant-form-item {
+                        .ant-input {
+                            width: 130px;
+                        }
+                    }
+                }
+                .ant-btn{
+                    width:90px;
+                    position: relative;
+                    .anticon {
+                        position: absolute;
+                        top: 14px;
+                        left: 10px;
+                    }
                 }
             }
             

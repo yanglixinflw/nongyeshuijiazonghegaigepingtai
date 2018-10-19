@@ -2,11 +2,20 @@ import React, { Component } from 'react';
 import BreadcrumbView from '../PageHeader/breadcrumb';
 import styles from './common.less';
 import { Button, Input, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
-const tableTitle = ['更新时间', '温度', '湿度', '光照', '大气压', '蒸发量', '风向', '风速', '雨量'];
+const tableTitle = [
+    '温度', 
+    '湿度', 
+    '光照', 
+    '大气压', 
+    '蒸发量', 
+    '风向', 
+    '风速', 
+    '雨量',
+    '更新时间', ];
 export default class extends Component {
     constructor(props) {
         super(props)
-        console.log(props)
+        // console.log(props)
         const { meteorologyhistory } = props;
         const { data,total } = meteorologyhistory.data;
        
@@ -37,7 +46,6 @@ export default class extends Component {
     _getTableData(title, data) {
         let columns = [];
         let dataIndex = [
-            'UpdateTime',
             'Temperature',
             'Humidity',
             'Illumination',
@@ -46,6 +54,7 @@ export default class extends Component {
             'WindDirection',
             'WindSpeed',
             'Rainfall',
+            'UpdateTime',
         ];
         title.map((v, i) => {
             columns.push({
@@ -55,12 +64,11 @@ export default class extends Component {
                 align: 'center',
             })
         })
-        columns[columns.length - 1].fixed = 'right';
-        columns[columns.length - 1].width = 100;
+        columns[columns.length - 1].fixed = columns.length>10?'right':null;
+        columns[columns.length - 1].width = columns.length>10?'right':null;
         let tableData = [];
         data.map((v, i) => {
             tableData.push({
-                UpdateTime: v.UpdateTime,
                 Temperature: v.Temperature,
                 Humidity: v.Humidity,
                 Illumination: v.Illumination,
@@ -89,9 +97,6 @@ export default class extends Component {
         const form = this.showSetForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
-            if (err) {
-                return;
-            }
             console.log(values.showSet)
             // this.setState({
             //     title:values.showSet,
@@ -169,7 +174,7 @@ export default class extends Component {
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableData}
-                    scroll={{ x: 2800 }}
+                    scroll={{x:columns.length>10?2800:false}}
                 />
             </div>
         )
