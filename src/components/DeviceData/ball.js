@@ -137,7 +137,7 @@ export default class extends Component {
             if (err) {
                 return
             }
-            // console.log(values)
+            console.log(values)
         })
     }
     //重置
@@ -261,7 +261,9 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('DeviceName', {})
+                        {getFieldDecorator('AreaName', {
+                            initialValue:''
+                        })
                             (
                             <Cascader
                                 placeholder='设备安装地'

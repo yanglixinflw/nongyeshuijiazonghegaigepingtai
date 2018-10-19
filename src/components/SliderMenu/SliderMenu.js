@@ -151,12 +151,12 @@ export default class SiderMenu extends PureComponent {
   };
 
   // Get the currently selected menu
-  getSelectedMenuKeys = () => {
-    const {
-      location: { pathname },
-    } = this.props;
-    return getMenuMatchKeys(this.flatMenuKeys, urlToList(pathname));
-  };
+  // getSelectedMenuKeys = () => {
+  //   const {
+  //     location: { pathname },
+  //   } = this.props;
+  //   return getMenuMatchKeys(this.flatMenuKeys, urlToList(pathname));
+  // };
 
   // conversion Path
   // 转化路径
@@ -198,10 +198,11 @@ export default class SiderMenu extends PureComponent {
       openKeys,
     };
     // if pathname can't match, use the nearest parent's key
-    let selectedKeys = this.getSelectedMenuKeys();
-    if (!selectedKeys.length) {
-      selectedKeys = [openKeys[openKeys.length - 1]];
-    }
+    // let selectedKeys = this.getSelectedMenuKeys();
+    // if (!selectedKeys.length) {
+    //   selectedKeys = [openKeys[openKeys.length - 1]];
+    // }
+    // console.log(selectedKeys)
     return (
       <Sider
         trigger={null}
@@ -221,7 +222,7 @@ export default class SiderMenu extends PureComponent {
           mode="vertical"
           {...menuProps}
           onOpenChange={this.handleOpenChange}
-          selectedKeys={selectedKeys}
+          // selectedKeys={selectedKeys}
           className={styles.menu}
           style={{ padding: '16px 0', width: '100%', background: '#0A0C1D' }}
         >
