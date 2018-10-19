@@ -4,6 +4,7 @@ import pathToRegexp from 'path-to-regexp';
 import { Link } from 'dva/router';
 import styles from './index.less';
 import { urlToList } from '../_utils/pathTools';
+import classnames from 'classnames'
 import headerlogo from '../../assets/headerlogo.png'
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -11,7 +12,14 @@ const { SubMenu } = Menu;
 const getIcon = icon => {
   // 可以自定义ICON
   if (typeof icon === 'string') {
-    return <Icon type={icon} />;
+    // return <Icon type={icon} />;
+    return (
+      <i 
+        style={{marginRight:'4px'}}
+        className={classnames('dyhsicon', `${icon}`)}>
+      </i>
+
+    )
   }
   return icon;
 };
