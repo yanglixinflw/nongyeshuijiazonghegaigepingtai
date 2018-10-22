@@ -174,6 +174,18 @@ const SearchForm = Form.create()(
                             )
                         }
                     </Item>
+                    <Item>
+                        {getFieldDecorator('warningRules', {
+                            initialValue:''
+                        })
+                            (
+                            <Input
+                                placeholder='预警规则'
+                                type='text'
+                            />
+                            )
+                        }
+                    </Item>
                 </Form>
             )
         }
