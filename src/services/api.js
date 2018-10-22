@@ -10,38 +10,16 @@ let postOption = {
     'Content-Type': 'application/json',
   }),
 }
-//设备墒情
-export function queryMoisture() {
-  return request('/api/data/moisture', {
-    method: 'POST'
-  });
-}
-//设备井电
-// export function queryWells(){
-//   return request('/api/data/wells',{
-//     method:'POST'
-//   });
-// }
-//设备气象
-export function queryMeteorology() {
-  return request('/api/data/meteorology', {
-    method: 'POST'
-  });
-}
 //设备气象历史数据
 export function queryMeteorologyHistory() {
   return request('/api/data/meteorology/history', {
     method: 'POST'
   });
 }
-//设备智能球阀/设备井电
-export function queryDevice(params) {
-  return request(`${envNet}/api/DeviceData/list`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: new Headers({
-      'Content-Type': 'application/json',
-    }),
+//设备智能球阀/设备井电/清易墒情/气象
+export function queryDevice(params){
+  return request(`${envNet}/api/DeviceData/list`,{
+    ...postOption,
     body: JSON.stringify(
       params
     )
@@ -86,6 +64,20 @@ export function queryWellsTitle() {
   return request(`${envNet}/api/DeviceData/columns?deviceTypeId=2`, {
     method: 'GET',
     mode: 'cors'
+  })
+}
+//清易气象title
+export function queryMeteorologyTitle(){
+  return request (`${envNet}/api/DeviceData/columns?deviceTypeId=3`,{
+    method:'GET',
+    mode:'cors'
+  })
+}
+//清易墒情title
+export function queryMoistureTitle(){
+  return request (`${envNet}/api/DeviceData/columns?deviceTypeId=4`,{
+    method:'GET',
+    mode:'cors'
   })
 }
 // 设备信息获取
