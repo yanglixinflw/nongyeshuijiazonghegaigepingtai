@@ -1,7 +1,4 @@
 //引入线上图标
-
-
-
 .header {
     height: 60px;
     line-height: 60px;
@@ -17,47 +14,104 @@
         margin-right: 10px;
     }
 }
-.searchGroup{
-    margin:20px 40px;
+
+.searchGroup {
+    margin: 20px 40px;
     height: 75px;
     line-height: 75px;
     background: #1C2241;
+    :global {
+        .ant-input {
+            height: 46px;
+            max-width: 110px;
+            background: #141831;
+            outline: 0;
+            border: 0;
+            color:#4A5A72;
+        }
+        .ant-cascader-picker {
+            height: 46px;
+            width: 210px;
+            background: #141831;
+            outline: 0;
+            border: 0;
+        }
+        .ant-cascader-picker-arrow {
+            color: #4A5A72;
+        }
+        .ant-btn {
+            border-radius: 50px;
+            height: 38px;
+            background: #2E386C;
+            margin-right: 16px;
+            color: #ACB5E8;
+            border: 0;
+            outline: 0;
+            &:hover {
+                background: #327DF4
+            }
+            &:focus {
+                background: #327DF4
+            }
+        }
+        .ant-form-inline .ant-form-item {
+            margin-right: 6px
+        }
+        .ant-select-selection--single {
+            height: 44px;
+            width: 110px;
+            background: #141831;
+            outline: 0;
+            border: 0;
+            position: relative;
+            top: -4px;
+            .ant-select-arrow {
+                color: #4A5A72;
+            }
+        }
+        .ant-select-selection__placeholder {
+            top: 72%;
+        }
+        .ant-select-selection-selected-value {
+            color: white;
+            position: relative;
+            top: 8px;
+        }
+        .ant-cascader-picker {
+            height: 46px;
+            background: #141831;
+            width: auto;
+            min-width: 110px;
+            outline: 0;
+            border: 0;
+        }
+        .ant-cascader-picker-arrow {
+            color: #4A5A72;
+        }
+    }
 }
-.more{
+
+.more {
     position: relative;
     left: -25px;
-    
 }
-.moreButton{
-    :global{
-        .ant-btn{
+
+.moreButton {
+    :global {
+        .ant-btn {
             margin-top: 16px;
             margin-left: 0;
         }
-        .ant-collapse-content > .ant-collapse-content-box{
-            padding-top:0 !important;
+        .ant-collapse-content>.ant-collapse-content-box {
+            padding-top: 0 !important;
         }
     }
 }
-:global{
-    .ant-collapse-content{
+
+:global {
+    .ant-collapse-content {
         background-color: #22294E;
-        border:0;
-        color:white;
-        
-    }
-    .ant-btn {
-        border-radius: 50px;
-        height: 42px;
-        margin-left: 16px;
-        background: #2E386C;
-        color: #ACB5E8;
         border: 0;
-        &:hover {
-            background: #327DF4
-        }
-        &:focus {
-            background: #327DF4
-        }
+        color: white;
     }
 }

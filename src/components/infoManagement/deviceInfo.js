@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import styles from './index.less'
-import { Form, Button, Collapse,Input } from 'antd'
+import { Form, Button, Collapse,Input ,Select,Cascader} from 'antd'
 import more from '../../assets/more.png'
 const Panel = Collapse.Panel;
+const Item = Form.Item
+const Option=Select.Option
 const totalTitle = [
     '设备ID',
     '设备型号',
@@ -92,7 +94,7 @@ export default class extends Component {
         )
     }
 }
-const Item = Form.Item
+
 // 搜索表单
 
 const SearchForm = Form.create()(
@@ -109,11 +111,64 @@ const SearchForm = Form.create()(
                         position: 'relative'
                     }}
                 >
-                    <Item>
-                        {getFieldDecorator('DeviceId', {})
+                    <Item
+                    style={{
+                        marginLeft:'10px'
+                    }}
+                    >
+                        {getFieldDecorator('deviceId', {
+                            initialValue:''
+                        })
                             (
                             <Input
                                 placeholder='设备ID'
+                                type='text'
+                            />
+                            )
+                        }
+                    </Item>
+                    <Item>
+                        {getFieldDecorator('deviceTypeId', {
+                        })
+                            (
+                            <Select
+                            placeholder='请选择类型'
+                            >
+                            <Option value=''>全部</Option>
+                            </Select>
+                            )
+                        }
+                    </Item>
+                    <Item>
+                        {getFieldDecorator('name', {
+                            initialValue:''
+                        })
+                            (
+                            <Input
+                                placeholder='设备名称'
+                                type='text'
+                            />
+                            )
+                        }
+                    </Item>
+                    <Item>
+                    {getFieldDecorator('installAddrId', {
+                            initialValue:''
+                        })
+                            (
+                            <Cascader
+                                placeholder='设备安装地'
+                            />
+                            )
+                        }
+                    </Item>
+                    <Item>
+                        {getFieldDecorator('areaName', {
+                            initialValue:''
+                        })
+                            (
+                            <Input
+                                placeholder='关联建筑物'
                                 type='text'
                             />
                             )
