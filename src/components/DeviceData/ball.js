@@ -241,7 +241,7 @@ export default class extends Component {
         })
     }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle, itemCount } = this.state;
+        const { columns, tableData, showSetVisible, title, itemCount } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -255,7 +255,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ tableTitle }}
+                    {...{ title }}
                 />
                 <div className={styles.header}>
                     <span>|</span>新天通球阀
@@ -298,7 +298,9 @@ const SearchForm = Form.create()(
             return (
                 <Form layout='inline'>
                     <Form.Item>
-                        {getFieldDecorator('DeviceId', {})
+                        {getFieldDecorator('DeviceId', {
+                            initialValue:''
+                        })
                             (
                             <Input
                                 placeholder='设备ID'
@@ -308,7 +310,9 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('DeviceName', {})
+                        {getFieldDecorator('DeviceName', {
+                            initialValue:''
+                        })
                             (
                             <Input
                                 placeholder='设备名称'
@@ -354,11 +358,11 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, tableTitle } = this.props;
+            const { form, visible, onCancel, onOk, title } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = tableTitle
+            const options = title;
             return (
                 <Modal
                     className={styles.showSet}
@@ -366,17 +370,21 @@ const ShowSetForm = Form.create()(
                     title="显示设置"
                     onCancel={onCancel}
                     onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
                 >
                     <Form>
                         <Form.Item>
-                            {getFieldDecorator('showSet', {})
+                            {getFieldDecorator('showSet', {
+                                initialValue:title
+                            })
                                 (
                                 <CheckboxGroup >
                                     <Row>
                                         {options.map((v,i)=>{
                                             return(
-                                                <Col key={i} span={6}>
-                                                    <Checkbox  value={v}>{v}</Checkbox>
+                                                <Col key={i} span={8}>
+                                                    <Checkbox value={v}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}

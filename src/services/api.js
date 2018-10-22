@@ -89,3 +89,12 @@ export function getDeviceInfo(params) {
     )
   })
 }
+//设备历史数据
+export function queryDeviceHistory(params){
+  return request(``,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}

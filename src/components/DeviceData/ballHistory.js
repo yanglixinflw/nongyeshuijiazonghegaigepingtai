@@ -38,6 +38,7 @@ export default class extends Component {
         this.setState({
             DeviceId,
         })
+        // console.log(DeviceId)
         this._getTableData(this.state.title, this.state.data);
     }
     //获取表的数据
