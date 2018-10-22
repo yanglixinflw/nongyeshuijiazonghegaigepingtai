@@ -288,7 +288,9 @@ export default class extends Component {
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableData}
-                    scroll={{ x: 2800 }}
+                    scroll={
+                        {x:columns.length>10?2200:false}
+                    }
                 />
             </div>
         )
@@ -304,7 +306,7 @@ const SearchForm = Form.create()(
             return (
                 <Form layout='inline'>
                     <Form.Item>
-                        {getFieldDecorator('DeviceId', {
+                        {getFieldDecorator('deviceId', {
                             initialValue:''
                         })
                             (
@@ -316,7 +318,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('DeviceName', {
+                        {getFieldDecorator('name', {
                             initialValue:''
                         })
                             (
@@ -328,7 +330,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('DeviceName', {
+                        {getFieldDecorator('installAddrId', {
                             initialValue:''
                         })
                             (

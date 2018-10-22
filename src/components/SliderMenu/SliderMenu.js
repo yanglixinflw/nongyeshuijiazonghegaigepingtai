@@ -18,7 +18,6 @@ const getIcon = icon => {
         style={{marginRight:'4px'}}
         className={classnames('dyhsicon', `${icon}`)}>
       </i>
-
     )
   }
   return icon;

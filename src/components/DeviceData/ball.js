@@ -2,23 +2,24 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
+import { EventEmitter } from "events";
 // 开发环境
 const envNet='http://192.168.30.127:88';
 const dataUrl=`${envNet}/api/DeviceData/list`;
-//全部的title
-const tableTitle = [
-    '设备ID', 
-    '设备名称', 
-    '设备安装地', 
-    '关联建筑物', 
-    '网关地址',
-    '管道压力',
-    '太阳能电压',
-    '瞬时流量',
-    '累积流量',
-    '供电电压',
-    '阀门状态',
-];
+// //全部的title
+// const tableTitle = [
+//     '设备ID', 
+//     '设备名称', 
+//     '设备安装地', 
+//     '关联建筑物', 
+//     '网关地址',
+//     '管道压力',
+//     '太阳能电压',
+//     '瞬时流量',
+//     '累积流量',
+//     '供电电压',
+//     '阀门状态',
+// ];
 //通用title
 const currentTitle = [
     '设备ID', 
@@ -28,11 +29,11 @@ const currentTitle = [
     '更新时间'
 ];
 export default class extends Component {
-    constructor(props) {
-        super(props)
+    
+    constructor(props,context) {
+        super(props,context)
         const { ball } = props;
-        const { items } = ball.data.data;
-        const { itemCount } =ball.data.data;
+        const { items,itemCount } = ball.data.data;
         //标题数据
         const titleData = ball.title.data.data;
         //需要过滤的title
@@ -41,16 +42,13 @@ export default class extends Component {
             let {displayName} = v;
             filtertitle.push(displayName)
         })
-        // 该显示的中间列title
-        let showTitle = [];
-        showTitle = tableTitle.filter(item => filtertitle.indexOf(item)!==-1);
         //拼接完成全部title
         if (currentTitle.length == 5) {
-            showTitle.map((v, i) => {
+            filtertitle.map((v, i) => {
                 currentTitle.splice(4, 0, v);
             })
         };
-        // console.log(ball)
+        // console.log(items)
         // 获取标题和数据
         this.state = {
             //数据总数
@@ -58,7 +56,7 @@ export default class extends Component {
             //列表数据源
             items,
             //总数据列表title
-            tableTitle,
+            currentTitle,
             //显示的数据列表title中文
             title: currentTitle,
             //表头
@@ -71,6 +69,13 @@ export default class extends Component {
     }
     componentDidMount() {
         this._getTableData(this.state.title, this.state.items);
+        
+    }
+    //获取设备信息
+    _getDeviceInfo(deviceInfo){
+        // console.log(deviceInfo)
+        let emitter = new EventEmitter(); 
+        emitter.emit("callMe",deviceInfo)
     }
     //获取表的数据
     _getTableData(title, items) {
@@ -107,13 +112,14 @@ export default class extends Component {
             render: (record) => {
                 return (
                     <span>
-                        <Link to={`/ball/history:${record.DeviceId}`}>
+                        <Link to={`/ball/history:${record.deviceId}`}>
                             <Button
                                 icon='bar-chart'
                                 className={styles.btnhistroy}
+                                onClick={()=>this._getDeviceInfo(record)}
                             >
                                 历史记录
-                        </Button>
+                            </Button>
                         </Link>
                     </span>
                 )
@@ -149,7 +155,29 @@ export default class extends Component {
             if (err) {
                 return
             }
-            //console.log(values)
+            console.log(values)
+            return fetch(dataUrl,{
+                method:"POST",
+                mode:'cors',
+                headers:new Headers({
+                    'Content-Type': 'application/json',
+                }),
+                credentials: "include",
+                body:JSON.stringify({
+                    deviceTypeId: 1,
+                    ...values,
+                    showColumns: [],
+                    PageIndex:0,
+                    pageSize: 10
+                })
+            }).then((res)=>{
+                Promise.resolve(res.json())
+                .then((v)=>{
+                    if(v.ret==1){
+                        console.log(v)
+                    }
+                })
+            })
         })
     }
     //重置
@@ -172,11 +200,31 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            // console.log(values.showSet)
-            
-           
-            
-            
+            console.log(values.showSet)
+            return fetch(dataUrl,{
+                method:"POST",
+                mode:'cors',
+                headers:new Headers({
+                    'Content-Type': 'application/json',
+                }),
+                credentials: "include",
+                body:JSON.stringify({
+                    deviceTypeId: 1,
+                    deviceId: "",
+                    name: "",
+                    installAddrId: 0,
+                    showColumns: values.showSet,
+                    PageIndex:0,
+                    pageSize: 10
+                })
+            }).then((res)=>{
+                Promise.resolve(res.json())
+                .then((v)=>{
+                    if(v.ret==1){
+                        console.log(v)
+                    }
+                })
+            })
         })
         // 重置表单
         form.resetFields();
@@ -223,13 +271,13 @@ export default class extends Component {
                 if(v.ret==1){
                     // console.log(v);
                     // 设置页面显示的元素
-                    let items = v.data.items;
+                    const {items,itemCount} = v.data;
                     //添加key
                     items.map((v, i) => {
                         v.key = i
                     })
                     this.setState({
-                        itemCount:v.data.itemCount,
+                        itemCount,
                         items
                     })
                     this._getTableData(this.state.title, this.state.items);
@@ -241,7 +289,7 @@ export default class extends Component {
         })
     }
     render() {
-        const { columns, tableData, showSetVisible, title, itemCount } = this.state;
+        const { columns, tableData, showSetVisible, currentTitle, itemCount } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -255,7 +303,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ title }}
+                    {...{ currentTitle }}
                 />
                 <div className={styles.header}>
                     <span>|</span>新天通球阀
@@ -283,7 +331,9 @@ export default class extends Component {
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableData}
-                    scroll={{ x: 2800 }}
+                    scroll={
+                        {x:columns.length>10?2000:false}
+                    }
                 />
             </div>
         )
@@ -298,7 +348,7 @@ const SearchForm = Form.create()(
             return (
                 <Form layout='inline'>
                     <Form.Item>
-                        {getFieldDecorator('DeviceId', {
+                        {getFieldDecorator('deviceId', {
                             initialValue:''
                         })
                             (
@@ -310,7 +360,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('DeviceName', {
+                        {getFieldDecorator('name', {
                             initialValue:''
                         })
                             (
@@ -322,8 +372,8 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('AreaName', {
-                            initialValue:''
+                        {getFieldDecorator('installAddrId', {
+                            initialValue:0
                         })
                             (
                             <Cascader
@@ -358,11 +408,11 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, title } = this.props;
+            const { form, visible, onCancel, onOk, currentTitle } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = title;
+            const options = currentTitle;
             return (
                 <Modal
                     className={styles.showSet}
@@ -376,7 +426,7 @@ const ShowSetForm = Form.create()(
                     <Form>
                         <Form.Item>
                             {getFieldDecorator('showSet', {
-                                initialValue:title
+                                initialValue:currentTitle
                             })
                                 (
                                 <CheckboxGroup >
