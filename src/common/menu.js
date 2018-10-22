@@ -18,27 +18,8 @@ const menuData = [
     path: 'command',
     children: [
       {
-        name: '项目概况',
-        path: 'itemIntroduction',
-      },
-      {
         name: '视频监控',
         path: 'videoMonitoring',
-      },
-    ],
-  },
-  {
-    name: '辅助决策',
-    icon: 'dyhs-fuzhujuece',
-    path: 'auxiliary',
-    children: [
-      {
-        name: '数据分析',
-        path: 'analysis',
-      },
-      {
-        name: '运行总览',
-        path: 'operation',
       },
     ],
   },
@@ -52,14 +33,6 @@ const menuData = [
         path: 'remote',
       },
       {
-        name: '用水限额',
-        path: 'limit',
-      },
-      {
-        name: '设备授权',
-        path: 'authorize',
-      },
-      {
         name: '自动化控制',
         path: 'automation',
       },
@@ -67,7 +40,7 @@ const menuData = [
   },
   {
     name: '设备数据',
-    icon: 'table',
+    icon: 'dyhs-shebeishuju',
     path: 'data',
     children: [
       {
@@ -105,27 +78,13 @@ const menuData = [
     path: 'rent',
     children: [
       {
-        name: '水价制定',
-        path: 'price',
-      },
-      {
         name: '计费设施',
         path: 'device',
       },
       {
-        name: '水费账户',
-        path: 'account',
-        children:[
-          {
-            name:'小组账户',
-            path:'groupAccount'
-          },
-          {
-            name:'农户账户',
-            path:'farmerAccount'
-          }
-        ]
-      }
+        name:'小组账户',
+        path:'groupAccount'
+      },
     ],
   },
   {
@@ -134,30 +93,8 @@ const menuData = [
     path: 'messageManagement',
     children: [
       {
-        name: '设备型号信息',
-        path: 'modelInformation',
-      },
-      {
         name: '设备信息',
         path: 'deviceInformation',
-      },
-      {
-        name: '建筑信息',
-        path: 'buildInformation',
-        children:[
-          {
-            name:'灌区管道',
-            path:'IrrigationPipe'
-          },
-          {
-            name:'上游建筑',
-            path:'upBuild'
-          },
-          {
-            name:'下游建筑',
-            path:'downBuild'
-          },
-        ]
       },
       {
         name: '农户信息',
@@ -175,24 +112,8 @@ const menuData = [
     path: 'system',
     children: [
       {
-        name: '系统规则',
-        path: 'systemRules',
-      },
-      {
         name: '用户管理',
         path: 'userManagement',
-      },
-      {
-        name: '部门组织架构',
-        path: 'organizational',
-      },
-      {
-        name: '角色权限',
-        path: 'roleRight',
-      },
-      {
-        name: '日志管理',
-        path: 'systemHistory',
       },
     ],
   },

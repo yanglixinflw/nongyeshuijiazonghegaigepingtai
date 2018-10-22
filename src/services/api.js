@@ -1,13 +1,16 @@
 import request from '../utils/request';
 // 开发环境
 const envNet='http://192.168.30.127:88'
-
-//设备气象
-export function queryMeteorology(){
-  return request('/api/data/meteorology',{
-    method:'POST'
-  });
+// post通用设置
+let postOption={
+  method: 'POST',
+  credentials: "include",
+  mode: 'cors',
+  headers: new Headers({
+    'Content-Type': 'application/json',
+  }),
 }
+
 //设备气象历史数据
 export function queryMeteorologyHistory(){
   return request('/api/data/meteorology/history',{
@@ -17,11 +20,7 @@ export function queryMeteorologyHistory(){
 //设备智能球阀/设备井电/清易墒情/气象
 export function queryDevice(params){
   return request(`${envNet}/api/DeviceData/list`,{
-    method:'POST',
-    mode: 'cors',
-    headers : new Headers({
-      'Content-Type': 'application/json',
-    }),
+    ...postOption,
     body: JSON.stringify(
       params
     )
@@ -33,14 +32,10 @@ export function queryBallHistory(){
     method:'POST'
   });
 }
+// 登录逻辑
 export function queryLogin(params) {
   return request(`${envNet}/api/Account/login`, {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-      'Content-Type': 'application/json',
-    }),
+    ...postOption,
     body:JSON.stringify(
       params
     )
@@ -84,5 +79,11 @@ export function queryMoistureTitle(){
   return request (`${envNet}/api/DeviceData/columns?deviceTypeId=4`,{
     method:'GET',
     mode:'cors'
+  })
+}
+// 设备信息获取
+export function getDeviceInfo(){
+  return request(`${envNet}/api/Device/list`,{
+
   })
 }
