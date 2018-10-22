@@ -212,7 +212,7 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            console.log(values.showSet.length)
+            console.log(values.showSet)
             // this.setState({
             //     title:values.showSet,
             //     columns:values.showSet.length
@@ -238,6 +238,7 @@ export default class extends Component {
     _exportDataHandler() {
         console.log("导出数据")
     }
+    //翻页
     _pageChange(page){
         let PageIndex = page - 1;
         return fetch(dataUrl,{
@@ -280,7 +281,7 @@ export default class extends Component {
         })
     }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle,itemCount } = this.state;
+        const { columns, tableData, showSetVisible, title, itemCount } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -294,7 +295,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ tableTitle }}
+                    {...{ title }}
                 />
                 <div className={styles.header}>
                     <span>|</span>开创井电
@@ -337,7 +338,9 @@ const SearchForm = Form.create()(
             return (
                 <Form layout='inline'>
                     <Form.Item>
-                        {getFieldDecorator('DeviceId', {})
+                        {getFieldDecorator('DeviceId', {
+                            initialValue:''
+                        })
                             (
                             <Input
                                 placeholder='设备ID'
@@ -347,7 +350,9 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('DeviceName', {})
+                        {getFieldDecorator('DeviceName', {
+                            initialValue:''
+                        })
                             (
                             <Input
                                 placeholder='设备名称'
@@ -357,7 +362,9 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('DeviceName', {})
+                        {getFieldDecorator('DeviceName', {
+                            initialValue:''
+                        })
                             (
                             <Cascader
                                 placeholder='设备安装地'
@@ -391,11 +398,11 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, tableTitle } = this.props;
-            // console.log(this.props)
+            const { form, visible, onCancel, onOk, title } = this.props;
+            // console.log(title)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = tableTitle
+            const options = title
             return (
                 <Modal
                     className={styles.showSet}
@@ -403,16 +410,20 @@ const ShowSetForm = Form.create()(
                     title="显示设置"
                     onCancel={onCancel}
                     onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
                 >
                     <Form>
                         <Form.Item>
-                            {getFieldDecorator('showSet', {})
+                            {getFieldDecorator('showSet', {
+                                initialValue:title
+                            })
                                 (
                                 <CheckboxGroup>
                                     <Row>
                                         {options.map((v, i) => {
                                             return (
-                                                <Col key={i} span={6}>
+                                                <Col key={i} span={8}>
                                                     <Checkbox value={v}>{v}</Checkbox>
                                                 </Col>
                                             )
