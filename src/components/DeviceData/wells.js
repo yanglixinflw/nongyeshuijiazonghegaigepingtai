@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
+// 开发环境
+const envNet='http://192.168.30.127:88';
+const dataUrl=`${envNet}/api/DeviceData/list`;
 //全部的title
 const tableTitle = [
     '设备ID',
@@ -236,7 +239,45 @@ export default class extends Component {
         console.log("导出数据")
     }
     _pageChange(page){
-        
+        let PageIndex = page - 1;
+        return fetch(dataUrl,{
+            method:'POST',
+            mode:'cors',
+            headers:new Headers({
+                'Content-Type': 'application/json',
+            }),
+            credentials: "include",
+            body:JSON.stringify({
+                deviceTypeId: 2,
+                deviceId: "",
+                name: "",
+                installAddrId: 0,
+                showColumns: [],
+                PageIndex,
+                pageSize: 10
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+            .then((v)=>{
+                if(v.ret==1){
+                    // console.log(v);
+                    // 设置页面显示的元素
+                    let items = v.data.items;
+                    //添加key
+                    items.map((v, i) => {
+                        v.key = i
+                    })
+                    this.setState({
+                        itemCount:v.data.itemCount,
+                        items
+                    })
+                    this._getTableData(this.state.title, this.state.items);
+                }
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        })
     }
     render() {
         const { columns, tableData, showSetVisible, tableTitle,itemCount } = this.state;
