@@ -15,23 +15,21 @@ const tableTitle = [
     '累积流量',
     '供电电压',
     '阀门状态',
-    ];
+];
 //通用title
 const currentTitle = [
     '设备ID', 
     '设备名称', 
     '设备安装地', 
     '关联建筑物', 
-]
-//更新时间title
-const updateTtile = [
     '更新时间'
-]
+];
 export default class extends Component {
     constructor(props) {
         super(props)
         const { ball } = props;
         const { items } = ball.data.data;
+        //标题数据
         const titleData = ball.title.data.data;
         //需要过滤的title
         let filtertitle = []
@@ -42,14 +40,21 @@ export default class extends Component {
         // 该显示的中间列title
         let showTitle = [];
         showTitle = tableTitle.filter(item => filtertitle.indexOf(item)!==-1);
-        showTitle=currentTitle.concat(showTitle).concat(updateTtile);
+        //拼接完成全部title
+        if (currentTitle.length == 5) {
+            showTitle.map((v, i) => {
+                currentTitle.splice(4, 0, v);
+            })
+        };
         // console.log(items)
         // 获取标题和数据
         this.state = {
             //列表数据源
             items,
+            //总数据列表title
             tableTitle,
-            title: showTitle,
+            //显示的数据列表title中文
+            title: currentTitle,
             //表头
             columns: [],
             //表单数据
@@ -138,7 +143,7 @@ export default class extends Component {
             if (err) {
                 return
             }
-            console.log(values)
+            //console.log(values)
         })
     }
     //重置

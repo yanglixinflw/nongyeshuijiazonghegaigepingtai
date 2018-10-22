@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Menu} from 'antd';
 import pathToRegexp from 'path-to-regexp';
 import { Link } from 'dva/router';
 import styles from './index.less';
@@ -159,12 +159,13 @@ export default class SiderMenu extends PureComponent {
   };
 
   // Get the currently selected menu
-  // getSelectedMenuKeys = () => {
-  //   const {
-  //     location: { pathname },
-  //   } = this.props;
-  //   return getMenuMatchKeys(this.flatMenuKeys, urlToList(pathname));
-  // };
+  getSelectedMenuKeys = () => {
+    const {
+      location: { pathname },
+    } = this.props;
+    // console.log(this.props.location)
+    return getMenuMatchKeys(this.flatMenuKeys, urlToList(pathname));
+  };
 
   // conversion Path
   // 转化路径
@@ -206,10 +207,10 @@ export default class SiderMenu extends PureComponent {
       openKeys,
     };
     // if pathname can't match, use the nearest parent's key
-    // let selectedKeys = this.getSelectedMenuKeys();
-    // if (!selectedKeys.length) {
-    //   selectedKeys = [openKeys[openKeys.length - 1]];
-    // }
+    let selectedKeys = this.getSelectedMenuKeys();
+    if (!selectedKeys.length) {
+      selectedKeys = [openKeys[openKeys.length - 1]];
+    }
     // console.log(selectedKeys)
     return (
       <Sider

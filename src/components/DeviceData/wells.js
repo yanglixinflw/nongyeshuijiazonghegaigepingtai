@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
+// 开发环境
+const envNet='http://192.168.30.127:88';
+const dataUrl=`${envNet}/api/DeviceData/list`;
 //全部的title
 const tableTitle = [
-    '设备ID', 
-    '设备名称', 
-    '设备安装地', 
-    '关联建筑物', 
-    '水位',
+    '设备ID',
+    '设备名称',
+    '设备安装地',
+    '关联建筑物',
     '报文类型',
     '报文编号',
     '上报时间',
@@ -40,13 +42,10 @@ const tableTitle = [
     '更新时间'];
 //通用title
 const currentTitle = [
-    '设备ID', 
-    '设备名称', 
-    '设备安装地', 
-    '关联建筑物', 
-]
-//更新时间title
-const updateTtile = [
+    '设备ID',
+    '设备名称',
+    '设备安装地',
+    '关联建筑物',
     '更新时间'
 ]
 export default class extends Component {
@@ -54,23 +53,32 @@ export default class extends Component {
         super(props)
         const { wells } = props;
         const { items } = wells.data.data;
+        const { itemCount } = wells.data.data;
+        //标题数据
         const titleData = wells.title.data.data;
         //需要过滤出来的title
         let filterTitle = [];
         //需要过滤出来的title Index
-        let titleIndex =[];
-        titleData.map((v,i)=>{
-            let {displayName,name} = v;
+        let titleIndex = [];
+        titleData.map((v, i) => {
+            let { displayName, name } = v;
             filterTitle.push(displayName);
             titleIndex.push(name);
         })
         // 该显示的中间列title
         let showTitle = [];
-        showTitle = tableTitle.filter(item => filterTitle.indexOf(item)!==-1);
-        showTitle=currentTitle.concat(showTitle).concat(updateTtile);
-        //  console.log(items)
+        showTitle = tableTitle.filter(item => filterTitle.indexOf(item) !== -1);
+        //拼接完成全部title
+        if (currentTitle.length == 5) {
+            showTitle.map((v, i) => {
+                currentTitle.splice(4, 0, v);
+            })
+        };
+        // console.log(wells.data)
         //获取标题和数据
         this.state = {
+            //数据总数
+            itemCount,
             //显示列表title Index
             titleIndex,
             //列表数据源
@@ -78,7 +86,7 @@ export default class extends Component {
             //总数据列表title
             tableTitle,
             //显示的数据列表title中文
-            title: showTitle,
+            title: currentTitle,
             //表头
             columns: [],
             //表单数据
@@ -102,9 +110,8 @@ export default class extends Component {
             'updateTime',
         ];
         // 与显示title Index 合并 完成完整title Index
-        let titleIndexNew = this.state.titleIndex;
-        titleIndexNew.map((v,i)=>{
-            dataIndex.splice(4,0,v)
+        this.state.titleIndex.map((v, i) => {
+            dataIndex.splice(4, 0, v)
         })
         // console.log(dataIndex)
         title.map((v, i) => {
@@ -120,8 +127,8 @@ export default class extends Component {
             title: '操作',
             key: 'action',
             align: 'center',
-            fixed:'right',
-            width:100,
+            fixed: 'right',
+            width: 100,
             render: (record) => {
                 return (
                     <span>
@@ -164,9 +171,9 @@ export default class extends Component {
                 PowerTotal: v.realTimeData.PowerTotal,
                 DeStateIC: v.realTimeData.DeStateIC,
                 DeStateMeter: v.realTimeData.DeStateMeter,
-                DeStateGate:v.realTimeData.DeStateGate,
-                DeStatePump:v.realTimeData.DeStatePump,
-                updateTime:v.updateTime,
+                DeStateGate: v.realTimeData.DeStateGate,
+                DeStatePump: v.realTimeData.DeStatePump,
+                updateTime: v.updateTime,
                 key: i,
             });
         })
@@ -231,10 +238,54 @@ export default class extends Component {
     _exportDataHandler() {
         console.log("导出数据")
     }
+    _pageChange(page){
+        let PageIndex = page - 1;
+        return fetch(dataUrl,{
+            method:'POST',
+            mode:'cors',
+            headers:new Headers({
+                'Content-Type': 'application/json',
+            }),
+            credentials: "include",
+            body:JSON.stringify({
+                deviceTypeId: 2,
+                deviceId: "",
+                name: "",
+                installAddrId: 0,
+                showColumns: [],
+                PageIndex,
+                pageSize: 10
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+            .then((v)=>{
+                if(v.ret==1){
+                    // console.log(v);
+                    // 设置页面显示的元素
+                    let items = v.data.items;
+                    //添加key
+                    items.map((v, i) => {
+                        v.key = i
+                    })
+                    this.setState({
+                        itemCount:v.data.itemCount,
+                        items
+                    })
+                    this._getTableData(this.state.title, this.state.items);
+                }
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        })
+    }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle } = this.state;
+        const { columns, tableData, showSetVisible, tableTitle,itemCount } = this.state;
         const paginationProps = {
             showQuickJumper: true,
+            total:itemCount,
+            // 传递页码
+            onChange: (page) => this._pageChange(page)
         };
         return (
             <div>
@@ -340,7 +391,7 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk,tableTitle } = this.props;
+            const { form, visible, onCancel, onOk, tableTitle } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
@@ -358,11 +409,11 @@ const ShowSetForm = Form.create()(
                             {getFieldDecorator('showSet', {})
                                 (
                                 <CheckboxGroup>
-                                     <Row>
-                                        {options.map((v,i)=>{
-                                            return(
+                                    <Row>
+                                        {options.map((v, i) => {
+                                            return (
                                                 <Col key={i} span={6}>
-                                                    <Checkbox  value={v}>{v}</Checkbox>
+                                                    <Checkbox value={v}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}

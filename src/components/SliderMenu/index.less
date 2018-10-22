@@ -1,6 +1,6 @@
 @import '~antd/lib/style/themes/default.less';
 // 引入线上图标
-@import 'http://at.alicdn.com/t/font_869092_w6tanf4eeh9.css';
+@import 'http://at.alicdn.com/t/font_869092_omr92e2ha9.css';
 @ease-in-out-circ: cubic-bezier(0.78, 0.14, 0.15, 0.86);
 .logo {
     height: 70px;
@@ -42,6 +42,11 @@
             }
         }
     }
+    :global{
+        .ant-menu-dark .ant-menu-submenu-selected{
+            color:#1890ff !important;
+        }
+    }
 }
 
 .menu {
@@ -56,7 +61,6 @@
          .ant-menu-dark,.ant-menu-sub{
            background: #232C3C
          }
-        
     }
 }
 
