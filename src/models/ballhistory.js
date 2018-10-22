@@ -1,6 +1,6 @@
 import { queryBallHistory } from '../services/api';
 export default {
-    namespace: 'ballhistory',
+    namespace: 'ballHistory',
     state:{},
     effects: {
         *fetch({ payload }, { call, put }) {  // eslint-disable-line

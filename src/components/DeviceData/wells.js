@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
+//全部的title
 const tableTitle = [
     '设备ID', 
     '设备名称', 
     '设备安装地', 
     '关联建筑物', 
-    '信息条数',
+    '水位',
     '报文类型',
     '报文编号',
     '上报时间',
@@ -15,29 +16,69 @@ const tableTitle = [
     '水位',
     '管道压力',
     '瞬时流量',
-    '年累计水量',
-    '总累计水量',
-    '总累计电量',
+    '年用水量',
+    '累计用水量',
+    '累计用电量',
     '用户编号',
     '本次用电量',
     '本次用水量',
-    '开泵时间',
-    '关泵时间',
+    '本次开泵时间',
+    '本次关泵时间',
     '设备状态',
-    '三相电压',
+    '三相电压A',
+    '三相电压B',
+    '三相电压C',
+    '三相电流A',
+    '三相电流B',
+    '三相电流C',
     '工作电压',
-    'SIM卡信号',
-    '更新时间']
+    'SIM卡信号强度',
+    '设备IC状态',
+    '设备仪表状态',
+    '设备网关状态',
+    '设备状态(泵)',
+    '更新时间'];
+//通用title
+const currentTitle = [
+    '设备ID', 
+    '设备名称', 
+    '设备安装地', 
+    '关联建筑物', 
+]
+//更新时间title
+const updateTtile = [
+    '更新时间'
+]
 export default class extends Component {
     constructor(props) {
         super(props)
         const { wells } = props;
-        const { data} = wells.data;
+        const { items } = wells.data.data;
+        const titleData = wells.title.data.data;
+        //需要过滤出来的title
+        let filterTitle = [];
+        //需要过滤出来的title Index
+        let titleIndex =[];
+        titleData.map((v,i)=>{
+            let {displayName,name} = v;
+            filterTitle.push(displayName);
+            titleIndex.push(name);
+        })
+        // 该显示的中间列title
+        let showTitle = [];
+        showTitle = tableTitle.filter(item => filterTitle.indexOf(item)!==-1);
+        showTitle=currentTitle.concat(showTitle).concat(updateTtile);
+        //  console.log(items)
         //获取标题和数据
         this.state = {
-            data,
+            //显示列表title Index
+            titleIndex,
+            //列表数据源
+            items,
+            //总数据列表title
             tableTitle,
-            title: tableTitle,
+            //显示的数据列表title中文
+            title: showTitle,
             //表头
             columns: [],
             //表单数据
@@ -47,38 +88,25 @@ export default class extends Component {
         }
     }
     componentDidMount() {
-        this._getTableData(this.state.title, this.state.data);
+        this._getTableData(this.state.title, this.state.items);
     }
     //获取表的数据
-    _getTableData(title, data) {
+    _getTableData(title, items) {
         let columns = [];
+        //通用title Index
         let dataIndex = [
-            'DeviceId',
-            'DeviceName',
-            'AreaName',
-            'AssociatedBuilding',
-            'MesNum',
-            'MesType',
-            'MesCode',
-            'ReportTime',
-            'TelemetryTime',
-            'WaterLevel',
-            'PipelinePressure',
-            'InstantaneousFlow',
-            'WaterYear',
-            'WaterTotal',
-            'ElectricityTotal',
-            'UserId',
-            'ThisPower',
-            'ThisWater',
-            'PumpingTime',
-            'PumpOffTime',
-            'DeviceStatus',
-            'ThreePhasePower',
-            'OperatingPower',
-            'SIMCardSignal',
-            'UpdateTime',
+            'deviceId',
+            'name',
+            'installAddr',
+            'ownerBuilding',
+            'updateTime',
         ];
+        // 与显示title Index 合并 完成完整title Index
+        let titleIndexNew = this.state.titleIndex;
+        titleIndexNew.map((v,i)=>{
+            dataIndex.splice(4,0,v)
+        })
+        // console.log(dataIndex)
         title.map((v, i) => {
             columns.push({
                 title: v,
@@ -110,33 +138,35 @@ export default class extends Component {
             }
         })
         let tableData = [];
-        data.map((v, i) => {
+        items.map((v, i) => {
             tableData.push({
-                DeviceId: v.DeviceId,
-                DeviceName: v.DeviceName,
-                AreaName: v.AreaName,
-                AssociatedBuilding: v.AssociatedBuilding,
-                MesNum: v.MesNum,
-                MesType: v.MesType,
-                MesCode: v.MesCode,
-                ReportTime: v.ReportTime,
-                TelemetryTime: v.TelemetryTime,
-                WaterLevel: v.WaterLevel,
-                PipelinePressure: v.PipelinePressure,
-                InstantaneousFlow: v.InstantaneousFlow,
-                WaterYear: v.WaterYear,
-                WaterTotal: v.WaterTotal,
-                ElectricityTotal: v.ElectricityTotal,
-                UserId: v.UserId,
-                ThisPower: v.ThisPower,
-                ThisWater: v.ThisWater,
-                PumpingTime: v.PumpingTime,
-                PumpOffTime: v.PumpOffTime,
-                DeviceStatus: v.DeviceStatus,
-                ThreePhasePower: v.ThreePhasePower,
-                OperatingPower: v.OperatingPower,
-                SIMCardSignal: v.SIMCardSignal,
-                UpdateTime:v.UpdateTime,
+                deviceId: v.deviceId,
+                name: v.name,
+                installAddr: v.installAddr,
+                ownerBuilding: v.ownerBuilding,
+                WaterLevel: v.realTimeData.WaterLevel,
+                Pressure: v.realTimeData.Pressure,
+                Flow: v.realTimeData.Flow,
+                ThisSumPower: v.realTimeData.ThisSumPower,
+                ThisSumWater: v.realTimeData.ThisSumWater,
+                ThisStart: v.realTimeData.ThisStart,
+                ThisStop: v.realTimeData.ThisStop,
+                VoltageA: v.realTimeData.VoltageA,
+                VoltageB: v.realTimeData.VoltageB,
+                VoltageC: v.realTimeData.VoltageC,
+                CurrentA: v.realTimeData.CurrentA,
+                CurrentB: v.realTimeData.CurrentB,
+                CurrentC: v.realTimeData.CurrentC,
+                Voltage: v.realTimeData.Voltage,
+                Csq: v.realTimeData.Csq,
+                WaterTotalYear: v.realTimeData.WaterTotalYear,
+                WaterTotal: v.realTimeData.WaterTotal,
+                PowerTotal: v.realTimeData.PowerTotal,
+                DeStateIC: v.realTimeData.DeStateIC,
+                DeStateMeter: v.realTimeData.DeStateMeter,
+                DeStateGate:v.realTimeData.DeStateGate,
+                DeStatePump:v.realTimeData.DeStatePump,
+                updateTime:v.updateTime,
                 key: i,
             });
         })

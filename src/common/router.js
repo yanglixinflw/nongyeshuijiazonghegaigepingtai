@@ -83,25 +83,25 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['moisture'], () => import('../routes/deviceData/moisture')),
     },
     '/moisture/history:id':{
-      component: dynamicWrapper(app, ['moisturehistory'], () => import('../routes/deviceData/moistureHistory')),
+      component: dynamicWrapper(app, ['moistureHistory'], () => import('../routes/deviceData/moistureHistory')),
     },
     '/data/wells':{
       component: dynamicWrapper(app, ['wells'], () => import('../routes/deviceData/wells')),
     },
     '/wells/history:id':{
-      component: dynamicWrapper(app, ['wellshistory'], () => import('../routes/deviceData/wellsHistory')),
+      component: dynamicWrapper(app, ['wellsHistory'], () => import('../routes/deviceData/wellsHistory')),
     },
     '/data/meteorology':{
       component: dynamicWrapper(app, ['meteorology'], () => import('../routes/deviceData/meteorology')),
     },
     '/meteorology/history:id':{
-      component: dynamicWrapper(app, ['meteorologyhistory'], () => import('../routes/deviceData/meteorologyHistory')),
+      component: dynamicWrapper(app, ['meteorologyHistory'], () => import('../routes/deviceData/meteorologyHistory')),
     },
     '/data/ball':{
       component: dynamicWrapper(app, ['ball'], () => import('../routes/deviceData/ball')),
     },
     '/ball/history:id':{
-      component: dynamicWrapper(app, ['ballhistory'], () => import('../routes/deviceData/ballHistory')),
+      component: dynamicWrapper(app, ['ballHistory'], () => import('../routes/deviceData/ballHistory')),
     },
     '/messageManagement/deviceInformation':{
       component: dynamicWrapper(app, [], () => import('../routes/messageManagement/deviceInfo')),

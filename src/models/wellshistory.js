@@ -1,6 +1,6 @@
 import { queryWellsHistory } from '../services/api';
 export default {
-    namespace: 'wellshistory',
+    namespace: 'wellsHistory',
     state:{},
     effects: {
         *fetch({ payload }, { call, put }) {  // eslint-disable-line

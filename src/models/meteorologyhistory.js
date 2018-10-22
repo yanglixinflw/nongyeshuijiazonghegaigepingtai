@@ -1,6 +1,6 @@
 import { queryMeteorologyHistory } from '../services/api';
 export default {
-  namespace: 'meteorologyhistory',
+  namespace: 'meteorologyHistory',
   state: {},
   effects: {
     *fetch({ payload }, { call, put }) {  // eslint-disable-line
