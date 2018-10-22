@@ -1,6 +1,15 @@
 import request from '../utils/request';
 // 开发环境
 const envNet='http://192.168.30.127:88'
+// post通用设置
+let postOption={
+  method: 'POST',
+  credentials: "include",
+  mode: 'cors',
+  headers: new Headers({
+    'Content-Type': 'application/json',
+  }),
+}
 //设备墒情
 export function queryMoisture(){
   return request('/api/data/moisture',{
@@ -44,14 +53,10 @@ export function queryBallHistory(){
     method:'POST'
   });
 }
+// 登录逻辑
 export function queryLogin(params) {
   return request(`${envNet}/api/Account/login`, {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-      'Content-Type': 'application/json',
-    }),
+    ...postOption,
     body:JSON.stringify(
       params
     )
@@ -81,5 +86,11 @@ export function queryWellsTitle(){
   return request (`${envNet}/api/DeviceData/columns?deviceTypeId=2`,{
     method:'GET',
     mode:'cors'
+  })
+}
+// 设备信息获取
+export function getDeviceInfo(){
+  return request(`${envNet}/api/Device/list`,{
+
   })
 }
