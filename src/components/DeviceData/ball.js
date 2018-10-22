@@ -167,10 +167,6 @@ export default class extends Component {
                 return;
             }
             console.log(values.showSet)
-            
-           
-            
-            
         })
         // 重置表单
         form.resetFields();

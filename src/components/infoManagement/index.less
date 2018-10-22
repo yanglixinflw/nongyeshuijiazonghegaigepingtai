@@ -1,0 +1,63 @@
+//引入线上图标
+
+
+
+.header {
+    height: 60px;
+    line-height: 60px;
+    background: #151836;
+    width: 100%;
+    font-size: 18px;
+    color: #2C6CD4;
+    display: flex;
+    padding-left: 38px;
+    margin-bottom: 20px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.6);
+    span {
+        margin-right: 10px;
+    }
+}
+.searchGroup{
+    margin:20px 40px;
+    height: 75px;
+    line-height: 75px;
+    background: #1C2241;
+}
+.more{
+    position: relative;
+    left: -25px;
+    
+}
+.moreButton{
+    :global{
+        .ant-btn{
+            margin-top: 16px;
+            margin-left: 0;
+        }
+        .ant-collapse-content > .ant-collapse-content-box{
+            padding-top:0 !important;
+        }
+    }
+}
+:global{
+    .ant-collapse-content{
+        background-color: #22294E;
+        border:0;
+        color:white;
+        
+    }
+    .ant-btn {
+        border-radius: 50px;
+        height: 42px;
+        margin-left: 16px;
+        background: #2E386C;
+        color: #ACB5E8;
+        border: 0;
+        &:hover {
+            background: #327DF4
+        }
+        &:focus {
+            background: #327DF4
+        }
+    }
+}
