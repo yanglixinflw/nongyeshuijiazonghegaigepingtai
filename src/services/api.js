@@ -1,6 +1,15 @@
 import request from '../utils/request';
 // 开发环境
 const envNet='http://192.168.30.127:88'
+// post通用设置
+let postOption={
+  method:'POST',
+  credentials:"include",
+  mode:'cros',
+  headers:new Headers({
+    'content-type':'application/json'
+  })
+}
 //设备墒情
 export function queryMoisture(){
   return request('/api/data/moisture',{
