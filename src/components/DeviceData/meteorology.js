@@ -2,31 +2,62 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
+//全部的title
 const tableTitle = [
-    '设备ID', 
-    '设备名称', 
-    '设备安装地', 
-    '关联建筑物', 
-    '温度',
-    '湿度',
+    '设备ID',
+    '设备名称',
+    '设备安装地',
+    '关联建筑物',
+    '空气温度',
+    '空气湿度',
     '光照',
-    '大气压',
-    '蒸发量',
+    '大气压力',
+    '蒸发',
     '风向',
     '风速',
     '雨量',
-    '更新时间'];
+    '更新时间'
+];
+//通用title
+const currentTitle = [
+    '设备ID',
+    '设备名称',
+    '设备安装地',
+    '关联建筑物',
+    '更新时间'
+]
+
 export default class extends Component {
     constructor(props) {
         super(props)
         const { meteorology } = props;
-        const { data} = meteorology.data;
-        // console.log(tableTitle)
+        const { items } = meteorology.data.data;
+        //标题数据
+        const titleData = meteorology.title.data.data;
+        //需要过滤的title
+        let filtertitle = []
+        titleData.map((v, i) => {
+            let { displayName } = v;
+            filtertitle.push(displayName)
+        })
+        // 该显示的中间列title
+        let showTitle = [];
+        showTitle = tableTitle.filter(item => filtertitle.indexOf(item) !== -1);
+        //拼接完成全部title
+        if (currentTitle.length == 5) {
+            showTitle.map((v, i) => {
+                currentTitle.splice(4, 0, v);
+            })
+        };
+        // console.log(currentTitle)
         // 获取标题和数据
         this.state = {
-            data,
+            //列表数据源
+            items,
+            //总数据列表title
             tableTitle,
-            title: tableTitle,
+            //显示的数据列表title中文
+            title: currentTitle,
             //表头
             columns: [],
             //表单数据
@@ -36,25 +67,25 @@ export default class extends Component {
         }
     }
     componentDidMount() {
-        this._getTableData(this.state.title, this.state.data);
+        this._getTableData(this.state.title, this.state.items);
     }
     //获取表的数据
-    _getTableData(title, data) {
+    _getTableData(title, items) {
         let columns = [];
         let dataIndex = [
-            'DeviceId',
-            'DeviceName',
-            'AreaName',
-            'AssociatedBuilding',
-            'Temperature',
-            'Humidity',
+            'deviceId',
+            'name',
+            'installAddr',
+            'ownerBuilding',
+            'AirTemperature',
+            'AirHumidity',
             'Illumination',
-            'AirPressure',
-            'Evaporation',
+            'Pressure',
+            'Evaporate',
             'WindDirection',
             'WindSpeed',
             'Rainfall',
-            'UpdateTime'
+            'updateTime'
         ];
         title.map((v, i) => {
             columns.push({
@@ -69,8 +100,8 @@ export default class extends Component {
             title: '操作',
             key: 'action',
             align: 'center',
-            fixed:'right',
-            width:100,
+            fixed: 'right',
+            width: 100,
             render: (record) => {
                 return (
                     <span>
@@ -87,21 +118,21 @@ export default class extends Component {
             }
         })
         let tableData = [];
-        data.map((v, i) => {
+        items.map((v, i) => {
             tableData.push({
-                DeviceId: v.DeviceId,
-                DeviceName: v.DeviceName,
-                AreaName: v.AreaName,
-                AssociatedBuilding: v.AssociatedBuilding,
-                Temperature: v.Temperature,
-                Humidity: v.Humidity,
-                Illumination: v.Illumination,
-                AirPressure: v.AirPressure,
-                Evaporation: v.Evaporation,
-                WindDirection: v.WindDirection,
-                WindSpeed: v.WindSpeed,
-                Rainfall: v.Rainfall,
-                UpdateTime: v.UpdateTime,
+                deviceId: v.deviceId,
+                name: v.name,
+                installAddr: v.installAddr,
+                ownerBuilding: v.ownerBuilding,
+                AirTemperature: v.realTimeData.AirTemperature,
+                AirHumidity: v.realTimeData.AirHumidity,
+                Illumination: v.realTimeData.Illumination,
+                Pressure: v.realTimeData.Pressure,
+                Evaporate: v.realTimeData.Evaporate,
+                WindDirection: v.realTimeData.WindDirection,
+                WindSpeed: v.realTimeData.WindSpeed,
+                Rainfall: v.realTimeData.Rainfall,
+                updateTime: v.updateTime,
                 key: i,
             });
         })
@@ -140,7 +171,7 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            console.log(values.showSet)
+            // console.log(values.showSet)
             // this.setState({
             //     title:values.showSet,
             //     columns:values.showSet.length

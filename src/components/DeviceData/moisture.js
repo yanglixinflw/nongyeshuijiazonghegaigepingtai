@@ -2,18 +2,63 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
-const tableTitle = ['设备ID', '设备名称', '设备安装地', '关联建筑物', '土表温度', '10cm深温度', '10cm深湿度', '20cm深温度', '20cm深湿度', '30cm深温度', '30cm深湿度', '40cm深温度', '40cm深湿度', '更新时间']
+//全部的title
+const tableTitle = [
+    '设备ID',
+    '设备名称', 
+    '设备安装地', 
+    '关联建筑物', 
+    '土表温度', 
+    '土壤温度10cm', 
+    '土壤湿度10cm', 
+    '土壤温度20cm', 
+    '土壤湿度20cm', 
+    '土壤温度30cm', 
+    '土壤湿度30cm', 
+    '土壤温度40cm', 
+    '土壤湿度40cm', 
+    '更新时间'
+];
+//通用title
+const currentTitle = [
+    '设备ID', 
+    '设备名称', 
+    '设备安装地', 
+    '关联建筑物',
+    '更新时间' 
+]
+
 export default class extends Component {
     constructor(props) {
         super(props)
         const { moisture } = props;
-        const { data } = moisture.data;
-        // console.log(tableTitle)
+        const { items } = moisture.data.data;
+        //标题数据
+        const titleData = moisture.title.data.data;
+        //需要过滤的title
+        let filtertitle = []
+        titleData.map((v,i)=>{
+            let {displayName} = v;
+            filtertitle.push(displayName)
+        })
+        // 该显示的中间列title
+        let showTitle = [];
+        showTitle = tableTitle.filter(item => filtertitle.indexOf(item)!==-1);
+        //拼接完成全部title
+        if (currentTitle.length == 5) {
+            showTitle.map((v, i) => {
+                currentTitle.splice(4, 0, v);
+            })
+        };
+        // console.log(items)
         // 获取标题和数据
         this.state = {
-            data,
-            tableTitle,
-            title: tableTitle,
+           //列表数据源
+           items,
+           //总数据列表title
+           tableTitle,
+           //显示的数据列表title中文
+           title: currentTitle,
             //表头
             columns: [],
             //表单数据
@@ -23,26 +68,26 @@ export default class extends Component {
         }
     }
     componentDidMount() {
-        this._getTableData(this.state.title, this.state.data);
+        this._getTableData(this.state.title, this.state.items);
     }
     //获取表的数据
-    _getTableData(title, data) {
+    _getTableData(title, items) {
         let columns = [];
         let dataIndex = [
-            'DeviceId',
-            'DeviceName',
-            'AreaName',
-            'AssociatedBuilding',
-            'SurfaceTemp',
-            'UnderTenTemp',
-            'UnderTenHumidity',
-            'UnderTweTemp',
-            'UnderTweHumidity',
-            'UnderThrTemp',
-            'UnderThrHumidity',
-            'UnderForTemp',
-            'UnderForHumidity',
-            'UpdateTime'
+            'deviceId',
+            'name',
+            'installAddr',
+            'ownerBuilding',
+            'SurfaceTemperature',
+            'SoilTemperature1',
+            'SoilHumidity1',
+            'SoilTemperature2',
+            'SoilHumidity2',
+            'SoilTemperature3',
+            'SoilHumidity3',
+            'SoilTemperature4',
+            'SoilHumidity4',
+            'updateTime'
         ];
         title.map((v, i) => {
             columns.push({
@@ -75,22 +120,22 @@ export default class extends Component {
             }
         })
         let tableData = [];
-        data.map((v, i) => {
+        items.map((v, i) => {
             tableData.push({
-                DeviceId: v.DeviceId,
-                DeviceName: v.DeviceName,
-                AreaName: v.AreaName,
-                AssociatedBuilding: v.AssociatedBuilding,
-                SurfaceTemp: v.SurfaceTemp,
-                UnderTenTemp: v.UnderTenTemp,
-                UnderTenHumidity: v.UnderTenHumidity,
-                UnderTweTemp: v.UnderTweTemp,
-                UnderTweHumidity: v.UnderTweHumidity,
-                UnderThrTemp: v.UnderThrTemp,
-                UnderThrHumidity: v.UnderThrHumidity,
-                UnderForTemp: v.UnderForTemp,
-                UnderForHumidity: v.UnderForHumidity,
-                UpdateTime: v.UpdateTime,
+                deviceId: v.deviceId,
+                name: v.name,
+                installAddr: v.installAddr,
+                ownerBuilding: v.ownerBuilding,
+                SurfaceTemperature: v.realTimeData.SurfaceTemperature,
+                SoilTemperature1: v.realTimeData.SoilTemperature1,
+                SoilHumidity1: v.realTimeData.SoilHumidity1,
+                SoilTemperature2: v.realTimeData.SoilTemperature2,
+                SoilHumidity2: v.realTimeData.SoilHumidity2,
+                SoilTemperature3: v.realTimeData.SoilTemperature3,
+                SoilHumidity3: v.realTimeData.SoilHumidity3,
+                SoilTemperature4: v.realTimeData.SoilTemperature4,
+                SoilHumidity4: v.realTimeData.SoilHumidity4,
+                updateTime: v.updateTime,
                 key: i,
             });
         })

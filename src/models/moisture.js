@@ -1,12 +1,17 @@
-import { queryMoisture } from '../services/api';
+import { queryDevice } from '../services/api';
+import { queryMoistureTitle } from '../services/api';
 export default {
     namespace: 'moisture',
     state:{},
     effects: {
         *fetch({ payload }, { call, put }) {  // eslint-disable-line
-          const data = yield call(queryMoisture, payload)
+          const data = yield call(queryDevice, payload)
           yield put({ type: 'fetchOk', payload: data })
           // console.log('connect成功')
+        },
+        *fetchTitle({ payload }, { call, put }) {  // eslint-disable-line
+          const Title = yield call(queryMoistureTitle, payload)
+          yield put({ type: 'fetchTitleOk', payload: Title })
         }
       },
       reducers: {
@@ -14,6 +19,12 @@ export default {
           // console.log(payload)
           return { ...state, ...payload }
           
+        },
+        fetchTitleOk (state, { payload }) {
+          state={
+            'title':payload
+          }
+          return { ...state } 
         }
       }
 }
