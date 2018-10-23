@@ -2,29 +2,47 @@ import React, { Component } from 'react';
 import BreadcrumbView from '../PageHeader/breadcrumb';
 import styles from './common.less';
 import { Button, Input, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
-const tableTitle = [
-'土表温度', 
-'10cm深温度', 
-'10cm深湿度', 
-'20cm深温度', 
-'20cm深湿度', 
-'30cm深温度', 
-'30cm深湿度', 
-'40cm深温度', 
-'40cm深湿度', 
-'更新时间',];
+// 开发环境
+const envNet = 'http://192.168.30.127:88';
+const dataUrl = `${envNet}/api/DeviceData/historyData`;
+//通用title
+const currentTitle = [
+    '更新时间'
+];
 export default class extends Component {
     constructor(props) {
         super(props)
-        const { moisturehistory } = props;
-        const { data, total } = moisturehistory.data;
-        // console.log(data)
+        const { moistureHistory } = props;
+        console.log()
+        const { items, itemCount } = moistureHistory.data.data;
+        //标题数据
+        const titleData = moistureHistory.title.data.data;
+        //需要过滤的title
+        let filtertitle = []
+        titleData.map((v, i) => {
+            let { displayName } = v;
+            filtertitle.push(displayName)
+        })
+        //拼接完成全部title  //显示设置
+        if (currentTitle.length == 1) {
+            filtertitle.map((v, i) => {
+                currentTitle.splice(0, 0, v);
+            })
+        };
+        //获取设备信息
+        let deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'))
         // 获取标题和数据
         this.state = {
-            total,
-            data,
-            tableTitle,
-            title: tableTitle,
+            //设备信息
+            deviceInfo,
+            //数据总数
+            itemCount,
+            //列表数据源
+            items,
+            //显示设置
+            currentTitle,
+            //列表title
+            title: currentTitle,
             //表头
             columns: [],
             //表单数据
@@ -34,28 +52,23 @@ export default class extends Component {
         }
     }
     componentDidMount() {
-        let url = window.location.hash;
-        const regexHistory = /history:(.+)/gm;
-        let DeviceId = regexHistory.exec(url)[1];
-        this.setState({
-            DeviceId,
-        })
-        this._getTableData(this.state.title, this.state.data);
+        this._getTableData();
     }
     //获取表的数据
-    _getTableData(title, data) {
+    _getTableData() {
+        const {title, items} = this.state
         let columns = [];
         let dataIndex = [
-            'SurfaceTemp',
-            'UnderTenTemp',
-            'UnderTenHumidity',
-            'UnderTweTemp',
-            'UnderTweHumidity',
-            'UnderThrTemp',
-            'UnderThrHumidity',
-            'UnderForTemp',
-            'UnderForHumidity',
-            'UpdateTime',
+            'SurfaceTemperature',
+            'SoilTemperature1',
+            'SoilHumidity1',
+            'SoilTemperature2',
+            'SoilHumidity2',
+            'SoilTemperature3',
+            'SoilHumidity3',
+            'SoilTemperature4',
+            'SoilHumidity4',
+            'updateTime'
         ];
         title.map((v, i) => {
             columns.push({
@@ -65,21 +78,21 @@ export default class extends Component {
                 align: 'center',
             })
         })
-        columns[columns.length - 1].fixed = columns.length>10?'right':null;
-        columns[columns.length - 1].width = columns.length>10?'right':null;
+        columns[columns.length - 1].fixed = columns.length > 10 ? 'right' : null;
+        columns[columns.length - 1].width = columns.length > 10 ? 'right' : null;
         let tableData = [];
-        data.map((v, i) => {
+        items.map((v, i) => {
             tableData.push({
-                SurfaceTemp: v.SurfaceTemp,
-                UnderTenTemp: v.UnderTenTemp,
-                UnderTenHumidity: v.UnderTenHumidity,
-                UnderTweTemp: v.UnderTweTemp,
-                UnderTweHumidity: v.UnderTweHumidity,
-                UnderThrTemp: v.UnderThrTemp,
-                UnderThrHumidity: v.UnderThrHumidity,
-                UnderForTemp: v.UnderForTemp,
-                UnderForHumidity: v.UnderForHumidity,
-                UpdateTime: v.UpdateTime,
+                SurfaceTemperature: v.SurfaceTemperature,
+                SoilTemperature1: v.SoilTemperature1,
+                SoilHumidity1: v.SoilHumidity1,
+                SoilTemperature2: v.SoilTemperature2,
+                SoilHumidity2: v.SoilHumidity2,
+                SoilTemperature3: v.SoilTemperature3,
+                SoilHumidity3: v.SoilHumidity3,
+                SoilTemperature4: v.SoilTemperature4,
+                SoilHumidity4: v.SoilHumidity4,
+                updateTime: v.updateTime,
                 key: i,
             });
         })
@@ -127,14 +140,52 @@ export default class extends Component {
     }
     // 翻页请求数据
     _pageChange(page) {
-        const { DeviceId } = this.state;
+        const { deviceInfo } = this.state;
+        let deviceId = deviceInfo.deviceId;
         let PageIndex = page - 1;
+        return fetch(dataUrl,{
+            method:'POST',
+            mode:'cors',
+            headers:new Headers({
+                'Content-Type': 'application/json',
+            }),
+            credentials: "include",
+            body:JSON.stringify({
+                deviceId,
+                deviceTypeId:4,
+                PageIndex,
+                pageSize: 10
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+            .then((v)=>{
+                if(v.ret==1){
+                    const {items,itemCount} = v.data;
+                    items.map((v,i)=>{
+                        v.key = i
+                    })
+                    this.setState({
+                        itemCount,
+                        items
+                    })
+                    this._getTableData(this.state.title, this.state.items);
+                }
+            })
+        }).catch((err)=>{
+            console.log(err)
+        })
     }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle, total } = this.state;
+        const { 
+            columns, 
+            tableData, 
+            showSetVisible, 
+            currentTitle,
+            itemCount,
+            deviceInfo } = this.state;
         const paginationProps = {
             showQuickJumper: true,
-            total,
+            total: itemCount,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
@@ -145,7 +196,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ tableTitle }}
+                    {...{ currentTitle }}
                 />
                 <div className={styles.header}>
                     <Button icon="arrow-left"></Button>
@@ -156,7 +207,7 @@ export default class extends Component {
                 </div>
                 <div className={styles.deviceInfo}>
                     <InfoForm
-
+                        {...{ deviceInfo }}
                     />
                     <Button
                         icon='eye'
@@ -176,7 +227,7 @@ export default class extends Component {
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableData}
-                    scroll={{x:columns.length>10?2800:false}}
+                    scroll={{ x: columns.length > 10 ? 2800 : false }}
                 />
             </div>
         )
@@ -186,13 +237,13 @@ export default class extends Component {
 const InfoForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form } = this.props;
+            const { form, deviceInfo } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Form layout='inline'>
                     <Form.Item>
-                        {getFieldDecorator('DeviceId', {
-                            initialValue: '003242'
+                        {getFieldDecorator('deviceId', {
+                             initialValue: deviceInfo.deviceId
                         })
                             (
                             <Input
@@ -202,8 +253,8 @@ const InfoForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('DeviceName', {
-                            initialValue: '宁圩村气象站'
+                        {getFieldDecorator('name', {
+                            initialValue: deviceInfo.name
                         })
                             (
                             <Input
@@ -213,8 +264,8 @@ const InfoForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('AreaName', {
-                            initialValue: '杭州市-萧山区-宁围街道'
+                        {getFieldDecorator('installAddr', {
+                            initialValue: deviceInfo.installAddr
                         })
                             (
                             <Input
@@ -224,8 +275,8 @@ const InfoForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('AssociatedBuilding', {
-                            initialValue: '三号气象点'
+                        {getFieldDecorator('ownerBuilding', {
+                            initialValue: deviceInfo.ownerBuilding
                         })
                             (
                             <Input
@@ -243,11 +294,11 @@ const InfoForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, tableTitle } = this.props;
+            const { form, visible, onCancel, onOk, currentTitle } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = tableTitle
+            const options = currentTitle
             return (
                 <Modal
                     className={styles.showSet}
@@ -258,13 +309,15 @@ const ShowSetForm = Form.create()(
                 >
                     <Form>
                         <Form.Item>
-                            {getFieldDecorator('showSet', {})
+                            {getFieldDecorator('showSet', {
+                                initialValue: currentTitle
+                            })
                                 (
                                 <CheckboxGroup>
                                     <Row>
                                         {options.map((v, i) => {
                                             return (
-                                                <Col key={i} span={6}>
+                                                <Col key={i} span={8}>
                                                     <Checkbox value={v}>{v}</Checkbox>
                                                 </Col>
                                             )

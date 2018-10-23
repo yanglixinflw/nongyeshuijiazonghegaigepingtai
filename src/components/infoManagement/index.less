@@ -1,0 +1,147 @@
+//引入线上图标
+.header {
+    height: 60px;
+    line-height: 60px;
+    background: #151836;
+    width: 100%;
+    font-size: 18px;
+    color: #2C6CD4;
+    display: flex;
+    padding-left: 38px;
+    margin-bottom: 20px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.6);
+    span {
+        margin-right: 10px;
+    }
+}
+
+.searchGroup {
+    padding-left: 10px;
+    margin: 20px 40px;
+    height: 75px;
+    line-height: 75px;
+    background: #1C2241;
+    display: flex;
+    justify-content:space-between;
+    .buttonGroup{
+        display: inline;
+    }
+    :global {
+        .ant-input {
+            height: 46px;
+            min-width: 150px;
+            background: #141831;
+            outline: 0;
+            border: 0;
+            color:#4A5A72;
+        }
+        .ant-cascader-picker {
+            height: 46px;
+            width: 210px;
+            background: #141831;
+            outline: 0;
+            border: 0;
+        }
+        .ant-cascader-picker-arrow {
+            color: #4A5A72;
+        }
+        .ant-btn {
+            border-radius: 50px;
+            height: 38px;
+            background: #2E386C;
+            margin-right: 8px;
+            color: #ACB5E8;
+            border: 0;
+            outline: 0;
+            &:hover {
+                background: #327DF4
+            }
+            &:focus {
+                background: #327DF4
+            }
+        }
+        .ant-form-inline .ant-form-item {
+            margin-right: 6px
+        }
+        .ant-select-selection--single {
+            height: 46px;
+            width: 150px;
+            background: #141831;
+            outline: 0;
+            border: 0;
+            position: relative;
+            top: -2px;
+            .ant-select-arrow {
+                color: #4A5A72;
+            }
+        }
+        .ant-select-selection__placeholder {
+            top: 72%;
+        }
+        .ant-select-selection-selected-value {
+            color: white;
+            position: relative;
+            top: 8px;
+        }
+        .ant-cascader-picker {
+            height: 46px;
+            background: #141831;
+            width: auto;
+            min-width: 110px;
+            outline: 0;
+            border: 0;
+        }
+        .ant-cascader-picker-arrow {
+            color: #4A5A72;
+        }
+    }
+}
+
+.more {
+    position: relative;
+    left: -25px;
+}
+
+.moreButton {
+    :global {
+        .ant-btn {
+            margin-top: 16px;
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .ant-collapse-content>.ant-collapse-content-box {
+            padding-top: 0 !important;
+        }
+    }
+}
+
+:global {
+    .ant-collapse-content {
+        background-color: #22294E;
+        border: 0;
+        color: white;
+    }
+}
+@media(max-width:1820px){
+    .searchGroup{
+        height: 150px;
+        // :global{
+        //     .ant-input{
+        //         min-width: 105px;
+        //         width: 105px;
+        //     }
+        // }
+        
+    }
+}
+@media(max-width:1090px){
+    .searchGroup{
+        height: 150px;
+        :global{
+            .ant-input{
+                min-width: 105px;
+                width: 105px;
+            }
+        }
+    }
+}

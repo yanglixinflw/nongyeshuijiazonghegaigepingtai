@@ -2,40 +2,48 @@ import React, { Component } from 'react';
 import BreadcrumbView from '../PageHeader/breadcrumb';
 import { Button, Input, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
 import styles from './common.less';
-const tableTitle = [
-    '信息条数',
-    '报文类型',
-    '报文编号',
-    '上报时间',
-    '遥测时间',
-    '水位',
-    '管道压力',
-    '瞬时流量',
-    '年累计水量',
-    '总累计水量',
-    '总累计电量',
-    '用户编号',
-    '本次用电量',
-    '本次用水量',
-    '开泵时间',
-    '关泵时间',
-    '设备状态',
-    '三相电压',
-    '工作电压',
-    'SIM卡信号',
-    '更新时间',
+// 开发环境
+const envNet='http://192.168.30.127:88';
+const dataUrl=`${envNet}/api/DeviceData/historyData`;
+//通用title
+const currentTitle = [
+    '更新时间'
 ];
 export default class extends Component {
     constructor(props) {
         super(props)
-        const { wellshistory } = props;
-        const { data, total } = wellshistory.data;
+        const { wellsHistory } = props;
+        const { items, itemCount } = wellsHistory.data.data;
+        //标题数据
+        const titleData = wellsHistory.title.data.data;
+        //需要过滤的title
+        let filtertitle = []
+        titleData.map((v, i) => {
+            let { displayName } = v;
+            filtertitle.push(displayName)
+        })
+        //拼接完成全部title  //显示设置
+        if (currentTitle.length == 1) {
+            filtertitle.map((v, i) => {
+                currentTitle.splice(0, 0, v);
+            })
+        };
+        //获取设备信息
+        let deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'))
+        // console.log(deviceInfo)
+        // console.log(filtertitle);
         // 获取标题和数据
         this.state = {
-            total,
-            data,
-            tableTitle,
-            title: tableTitle,
+            //设备信息
+            deviceInfo,
+            //数据总数
+            itemCount,
+            //列表数据源
+            items,
+            //显示设置
+            currentTitle,
+            //列表title
+            title: currentTitle,
             //表头
             columns: [],
             //表单数据
@@ -45,39 +53,35 @@ export default class extends Component {
         }
     }
     componentDidMount() {
-        let url = window.location.hash;
-        const regexHistory = /history:(.+)/gm;
-        let DeviceId = regexHistory.exec(url)[1];
-        this.setState({
-            DeviceId,
-        })
-        this._getTableData(this.state.title, this.state.data);
+        this._getTableData(this.state.title, this.state.items);
     }
     //获取表的数据
-    _getTableData(title, data) {
+    _getTableData(title, items) {
         let columns = [];
         let dataIndex = [
-            'MesNum',
-            'MesType',
-            'MesCode',
-            'ReportTime',
-            'TelemetryTime',
             'WaterLevel',
-            'PipelinePressure',
-            'InstantaneousFlow',
-            'WaterYear',
+            'Pressure',
+            'Flow',
+            'ThisSumPower',
+            'ThisSumWater',
+            'ThisStart',
+            'ThisStop',
+            'VoltageA',
+            'VoltageB',
+            'VoltageC',
+            'CurrentA',
+            'CurrentB',
+            'CurrentC',
+            'Voltage',
+            'Csq',
+            'WaterTotalYear',
             'WaterTotal',
-            'ElectricityTotal',
-            'UserId',
-            'ThisPower',
-            'ThisWater',
-            'PumpingTime',
-            'PumpOffTime',
-            'DeviceStatus',
-            'ThreePhasePower',
-            'OperatingPower',
-            'SIMCardSignal',
-            'UpdateTime',
+            'PowerTotal',
+            'DeStateIC',
+            'DeStateMeter',
+            'DeStateGate',
+            'DeStatePump',
+            'updateTime',
         ];
         title.map((v, i) => {
             columns.push({
@@ -90,29 +94,31 @@ export default class extends Component {
         columns[columns.length - 1].fixed = columns.length>10?'right':null;
         columns[columns.length - 1].width = columns.length>10?'right':null;
         let tableData = [];
-        data.map((v, i) => {
+        items.map((v, i) => {
             tableData.push({
-                MesNum: v.MesNum,
-                MesType: v.MesType,
-                MesCode: v.MesCode,
-                ReportTime: v.ReportTime,
-                TelemetryTime: v.TelemetryTime,
                 WaterLevel: v.WaterLevel,
-                PipelinePressure: v.PipelinePressure,
-                InstantaneousFlow: v.InstantaneousFlow,
-                WaterYear: v.WaterYear,
+                Pressure: v.Pressure,
+                Flow: v.Flow,
+                ThisSumPower: v.ThisSumPower,
+                ThisSumWater: v.ThisSumWater,
+                ThisStart: v.ThisStart,
+                ThisStop: v.ThisStop,
+                VoltageA: v.VoltageA,
+                VoltageB: v.VoltageB,
+                VoltageC: v.VoltageC,
+                CurrentA: v.CurrentA,
+                CurrentB: v.CurrentB,
+                CurrentC: v.CurrentC,
+                Voltage: v.Voltage,
+                Csq: v.Csq,
+                WaterTotalYear: v.WaterTotalYear,
                 WaterTotal: v.WaterTotal,
-                ElectricityTotal: v.ElectricityTotal,
-                UserId: v.UserId,
-                ThisPower: v.ThisPower,
-                ThisWater: v.ThisWater,
-                PumpingTime: v.PumpingTime,
-                PumpOffTime: v.PumpOffTime,
-                DeviceStatus: v.DeviceStatus,
-                ThreePhasePower: v.ThreePhasePower,
-                OperatingPower: v.OperatingPower,
-                SIMCardSignal: v.SIMCardSignal,
-                UpdateTime: v.UpdateTime,
+                PowerTotal: v.PowerTotal,
+                DeStateIC: v.DeStateIC,
+                DeStateMeter: v.DeStateMeter,
+                DeStateGate: v.DeStateGate,
+                DeStatePump: v.DeStatePump,
+                updateTime: v.updateTime,
                 key: i,
             });
         })
@@ -163,14 +169,52 @@ export default class extends Component {
     }
     // 翻页请求数据
     _pageChange(page) {
-        const { DeviceId } = this.state;
+        const { deviceInfo } = this.state;
+        let deviceId = deviceInfo.deviceId;
         let PageIndex = page - 1;
+        return fetch(dataUrl,{
+            method:'POST',
+            mode:'cors',
+            headers:new Headers({
+                'Content-Type': 'application/json',
+            }),
+            credentials: "include",
+            body:JSON.stringify({
+                deviceId,
+                deviceTypeId:2,
+                PageIndex,
+                pageSize: 10
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+            .then((v)=>{
+                if(v.ret==1){
+                    const {items,itemCount} = v.data;
+                    items.map((v,i)=>{
+                        v.key = i
+                    })
+                    this.setState({
+                        itemCount,
+                        items
+                    })
+                    this._getTableData(this.state.title, this.state.items);
+                }
+            })
+        }).catch((err)=>{
+            console.log(err)
+        })
     }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle, total } = this.state;
+        const { 
+            columns, 
+            tableData, 
+            showSetVisible, 
+            currentTitle, 
+            itemCount,
+            deviceInfo } = this.state;
         const paginationProps = {
             showQuickJumper: true,
-            total,
+            total:itemCount,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
@@ -181,7 +225,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ tableTitle }}
+                    {...{ currentTitle }}
                 />
                 <div className={styles.header}>
                     <Button icon="arrow-left"></Button>
@@ -192,7 +236,7 @@ export default class extends Component {
                 </div>
                 <div className={styles.deviceInfo}>
                     <InfoForm
-
+                        {...{deviceInfo}}
                     />
                     <Button
                         icon='eye'
@@ -222,13 +266,13 @@ export default class extends Component {
 const InfoForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form } = this.props;
+            const { form,deviceInfo } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Form layout='inline'>
                     <Form.Item>
-                        {getFieldDecorator('DeviceId', {
-                            initialValue: '003242'
+                        {getFieldDecorator('deviceId', {
+                            initialValue: deviceInfo.deviceId
                         })
                             (
                             <Input
@@ -238,8 +282,8 @@ const InfoForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('DeviceName', {
-                            initialValue: '1#阀'
+                        {getFieldDecorator('name', {
+                            initialValue: deviceInfo.name
                         })
                             (
                             <Input
@@ -249,8 +293,8 @@ const InfoForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('AreaName', {
-                            initialValue: '杭州市-萧山区-宁围街道'
+                        {getFieldDecorator('installAddr', {
+                            initialValue: deviceInfo.installAddr
                         })
                             (
                             <Input
@@ -260,8 +304,8 @@ const InfoForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('AssociatedBuilding', {
-                            initialValue: '1号闸阀井'
+                        {getFieldDecorator('ownerBuilding', {
+                            initialValue: deviceInfo.ownerBuilding
                         })
                             (
                             <Input
@@ -279,11 +323,11 @@ const InfoForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, tableTitle } = this.props;
+            const { form, visible, onCancel, onOk, currentTitle } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = tableTitle
+            const options = currentTitle
             return (
                 <Modal
                     className={styles.showSet}
@@ -294,13 +338,15 @@ const ShowSetForm = Form.create()(
                 >
                     <Form>
                         <Form.Item>
-                            {getFieldDecorator('showSet', {})
+                            {getFieldDecorator('showSet', {
+                                initialValue: currentTitle
+                            })
                                 (
                                 <CheckboxGroup>
                                     <Row>
                                         {options.map((v, i) => {
                                             return (
-                                                <Col key={i} span={6}>
+                                                <Col key={i} span={8}>
                                                     <Checkbox value={v}>{v}</Checkbox>
                                                 </Col>
                                             )
