@@ -12,7 +12,6 @@ export default {
                 type:'fetchOk',
                 payload:res
             })
-            console.log(123)
         }
     },
     reducers:{

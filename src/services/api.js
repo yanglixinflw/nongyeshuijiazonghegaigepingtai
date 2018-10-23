@@ -89,3 +89,12 @@ export function getDeviceInfo(params) {
     )
   })
 }
+//农户信息管理
+export function getFarmersInfo(params) {
+  return request(`${envNet}/api/PeasantMgr/list`, {
+    ...postOption,
+    body: JSON.stringify(
+      params
+    )
+  })
+}

@@ -52,10 +52,12 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { wells } = props;
+        // console.log(props)
         const { items } = wells.data.data;
         const { itemCount } = wells.data.data;
         //标题数据
         const titleData = wells.title.data.data;
+        // console.log(titleData)
         //需要过滤出来的title
         let filterTitle = [];
         //需要过滤出来的title Index
@@ -65,6 +67,7 @@ export default class extends Component {
             filterTitle.push(displayName);
             titleIndex.push(name);
         })
+        console.log(filterTitle)
         // 该显示的中间列title
         let showTitle = [];
         showTitle = tableTitle.filter(item => filterTitle.indexOf(item) !== -1);

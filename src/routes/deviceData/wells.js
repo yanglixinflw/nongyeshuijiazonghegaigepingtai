@@ -30,7 +30,6 @@ export default class extends Component {
         let { wells, loading } = this.props;
         let arr = Object.keys(wells);
         if (arr.length <= 1) return wells = null;
-        //  console.log(wells)
         return (
             <div>
                 <Spin size='large' spinning={loading}>
