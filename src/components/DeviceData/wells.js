@@ -20,6 +20,7 @@ export default class extends Component {
         const { items,itemCount } = wells.data.data;
         //标题数据
         const titleData = wells.title.data.data;
+        // console.log(titleData)
         //需要过滤出来的title
         let filterTitle = [];
         //需要过滤出来的title Index

@@ -9,6 +9,7 @@ import { Spin } from 'antd'
 export default class extends Component {
     componentDidMount() {
         const { dispatch } = this.props;
+        console.log(this.props)
         dispatch({
             type: 'wells/fetchTitle',
         });
@@ -29,7 +30,6 @@ export default class extends Component {
         let { wells, loading } = this.props;
         let arr = Object.keys(wells);
         if (arr.length <= 1) return wells = null;
-        //  console.log(wells)
         return (
             <div>
                 <Spin size='large' spinning={loading}>
