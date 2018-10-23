@@ -18,6 +18,25 @@ const totalTitle = [
     '预警规则',
     '更新时间'
 ]
+// 全部dataindex
+const dataIndex = [
+    'deviceId',
+    'deviceTypeName',
+    'name',
+    'installAddr',
+    // 地理坐标
+    'IP',
+    // 启用日期
+    'enableTime',
+    // 运维公司
+    'opsCompony',
+    'managerName',
+    'gatewayAddr',
+    'factoryNumber',
+    'warningRules',
+    'lastRequestTime'
+
+]
 export default class extends Component {
     constructor(props) {
         super(props)
@@ -32,32 +51,103 @@ export default class extends Component {
             // 标题
             title: totalTitle,
             // 表格数据源
-            data: props.data.data.items
+            data: props.data.data.items,
+            // 表格数据
+            tableData:[],
         }
         console.log(this.state.data)
 
     }
     componentDidMount() {
-        // 处理表单数据
-        this._getTableData()
+        // 初始化处理表单数据
+        this._getTableData(this.state.title, this.state.data, dataIndex)
     }
     // 获取表单数据
-    _getTableData() {
-        let { title, data } = this.state
+    _getTableData(title, data, dataIndex) {
         let columns = []
-        let dataIndex = [
-            'deviceId',
-            'deviceTypeName',
-            'name',
-            'installAddr',
-            'IP',
-        ]
+
+        // 设置columns
+        title.map((v, i) => {
+            columns.push({
+                title: v,
+                // 表头添加字段
+                dataIndex: dataIndex[i],
+                align: 'center'
+            })
+        })
+        // console.log(columns)
+        //操作列
+        columns.push({
+            title: '操作',
+            key: 'action',
+            align: 'center',
+            fixed: 'right',
+            width: 410,
+            render: (record) => {
+                return (
+                    <span>
+                        <Button
+                            className={styles.scan}
+                            icon='scan'
+                        >
+                            生成二维码
+                        </Button>
+                        <Button
+                            className={styles.warn}
+                            icon='exception'
+                        >
+                            预警机制
+                        </Button>
+                        <Button
+                            className={styles.edit}
+                            icon='edit'
+                        >
+                            修改
+                        </Button>
+                        <Button
+                            className={styles.delete}
+                            icon='delete'
+                        >
+                            删除
+                        </Button>
+                    </span>
+                )
+            }
+        })
+        let tableData=[]
+        // 表单数据
+        data.map((v,i)=>{
+            tableData.push({
+                deviceId:v.deviceId,
+                deviceTypeName:v.deviceTypeName,
+                name:v.name,
+                installAddr:v.installAddr,
+                IP:`(${v.latitude},${v.longitude})`,
+                enableTime:v.enableTime,
+                opsCompony:v.opsCompony,
+                managerName:v.managerName,
+                gatewayAddr:v.gatewayAddr,
+                factoryNumber:v.factoryNumber,
+                warningRules:v.warningRules,
+                lastRequestTime:v.lastRequestTime,
+                key:i
+            })
+        })
+        this.setState({
+            columns,
+            tableData,
+        })
+
     }
     //点击显示设置
     _showSetHandler() {
         this.setState({
             showSetVisible: true
         })
+    }
+    // 翻页
+    _pageChange(page){
+        console.log(page)
     }
     // 重置搜索表单
     _resetForm() {
@@ -68,9 +158,16 @@ export default class extends Component {
         console.log(456)
     }
     render() {
-        const { columns, showSetVisible } = this.state
+        const { columns, showSetVisible ,tableData,itemCount} = this.state
+        const paginationProps = {
+            showQuickJumper: true,
+            total:itemCount,
+            // 传递页码
+            onChange: (page) => this._pageChange(page)
+        };
         return (
             <div>
+
                 <div className={styles.header}>
                     <span>|</span>设备信息
                 </div>
@@ -113,8 +210,9 @@ export default class extends Component {
                     </div>
                 </div>
                 <Table
-                    className={styles.table}
                     columns={columns}
+                    dataSource={tableData}
+                    pagination={paginationProps}
                     scroll={
                         { x: columns.length > 10 ? 2000 : false }
                     }
