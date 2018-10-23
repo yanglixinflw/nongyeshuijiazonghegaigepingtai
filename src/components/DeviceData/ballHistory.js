@@ -2,23 +2,10 @@ import React, { Component } from 'react';
 import BreadcrumbView from '../PageHeader/breadcrumb';
 import { Button, Input, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
 import styles from './common.less';
-import store from '../../index'
 import classnames from 'classnames';
-import { EventEmitter } from "events";
 // 开发环境
-const envNet='http://192.168.30.127:88';
-const dataUrl=`${envNet}/api/DeviceData/historyData`;
-// //全部的title
-// const tableTitle = [
-//     '网关地址',
-//     '管道压力',
-//     '太阳能电压',
-//     '瞬时流量',
-//     '累积流量',
-//     '供电电压',
-//     '阀门状态',
-//     '更新时间',
-// ];
+const envNet = 'http://192.168.30.127:88';
+const dataUrl = `${envNet}/api/DeviceData/historyData`;
 //通用title
 const currentTitle = [
     '更新时间'
@@ -42,18 +29,14 @@ export default class extends Component {
                 currentTitle.splice(0, 0, v);
             })
         };
-        // console.log(ballHistory)
+        //获取设备信息
+        let deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'))
+        // console.log(deviceInfo)
         // console.log(filtertitle);
         // 获取标题和数据
         this.state = {
-            //设备ID
-            deviceId:'',
-            //设备名称
-            name:'',
-            //设备安装地
-            installAddr:'',
-            //关联建筑
-            ownerBuilding:'',
+            //设备信息
+            deviceInfo,
             //数据总数
             itemCount,
             //列表数据源
@@ -72,31 +55,6 @@ export default class extends Component {
     }
     componentDidMount() {
         this._getTableData(this.state.title, this.state.items);
-        // 声明一个自定义事件
-        // 在组件装载完成以后
-        const emitter = new EventEmitter();
-        emitter.addListener("callMe", (deviceInfo) => {
-            // this.setState({
-            //     deviceId:deviceInfo.deviceId,
-            //     name:deviceInfo.name,
-            //     installAddr:deviceInfo.installAddr,
-            //     ownerBuilding:deviceInfo.ownerBuilding
-            // })
-            console.log(123)
-        });
-    }
-    // 组件销毁前移除事件监听
-    componentWillUnmount() {
-        const emitter = new EventEmitter();
-        emitter.removeListener("callMe", (deviceInfo) => {
-            // this.setState({
-            //     deviceId:deviceInfo.deviceId,
-            //     name:deviceInfo.name,
-            //     installAddr:deviceInfo.installAddr,
-            //     ownerBuilding:deviceInfo.ownerBuilding
-            // })
-            console.log(deviceInfo)
-        });
     }
     //获取表的数据
     _getTableData(title, items) {
@@ -182,48 +140,57 @@ export default class extends Component {
     }
     // 翻页请求数据
     _pageChange(page) {
-        const { deviceId } = this.state;
-        console.log(deviceId)
+        const { deviceInfo } = this.state;
+        let deviceId = deviceInfo.deviceId;
+        // console.log(deviceId)
         let PageIndex = page - 1;
-        return fetch(dataUrl,{
-            method:'POST',
-            mode:'cors',
-            headers:new Headers({
+        return fetch(dataUrl, {
+            method: 'POST',
+            mode: 'cors',
+            headers: new Headers({
                 'Content-Type': 'application/json',
             }),
             credentials: "include",
-            body:JSON.stringify({
+            body: JSON.stringify({
                 deviceId,
-                deviceTypeId:1,
+                deviceTypeId: 1,
                 PageIndex,
                 pageSize: 10
             })
-        }).then((res)=>{
+        }).then((res) => {
             Promise.resolve(res.json())
-            .then((v)=>{
-                if(v.ret==1){
-                    const {items,itemCount} = v.data;
-                    items.map((v,i)=>{
-                        v.key = i
-                    })
-                    this.setState({
-                        itemCount,
-                        items
-                    })
-                    this._getTableData(this.state.title, this.state.items);
-                }
-            })
+                .then((v) => {
+                    if (v.ret == 1) {
+                        const { items, itemCount } = v.data;
+                        items.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            itemCount,
+                            items
+                        })
+                        this._getTableData(this.state.title, this.state.items);
+                    }
+                })
+        }).catch((err) => {
+            console.log(err)
         })
     }
     render() {
-        const { columns, tableData, showSetVisible, currentTitle, itemCount } = this.state;
+        const {
+            columns,
+            tableData,
+            showSetVisible,
+            currentTitle,
+            itemCount,
+            deviceInfo } = this.state;
         const paginationProps = {
             showQuickJumper: true,
-            total:itemCount,
+            total: itemCount,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
-        // console.log(store)
+        // console.log(deviceInfo)
         return (
             <div className={styles.history}>
                 <ShowSetForm
@@ -242,7 +209,7 @@ export default class extends Component {
                 </div>
                 <div className={styles.deviceInfo}>
                     <InfoForm
-
+                        {...{ deviceInfo }}
                     />
                     <Button
                         icon='eye'
@@ -276,13 +243,13 @@ export default class extends Component {
 const InfoForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form } = this.props;
+            const { form, deviceInfo } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Form layout='inline'>
                     <Form.Item>
-                        {getFieldDecorator('DeviceId', {
-                            initialValue: '003242'
+                        {getFieldDecorator('deviceId', {
+                            initialValue: deviceInfo.deviceId
                         })
                             (
                             <Input
@@ -293,8 +260,8 @@ const InfoForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('DeviceName', {
-                            initialValue: '1#阀'
+                        {getFieldDecorator('name', {
+                            initialValue: deviceInfo.name
                         })
                             (
                             <Input
@@ -304,8 +271,8 @@ const InfoForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('AreaName', {
-                            initialValue: '杭州市-萧山区-宁围街道'
+                        {getFieldDecorator('installAddr', {
+                            initialValue: deviceInfo.installAddr
                         })
                             (
                             <Input
@@ -315,8 +282,8 @@ const InfoForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('AssociatedBuilding', {
-                            initialValue: '1号闸阀井'
+                        {getFieldDecorator('ownerBuilding', {
+                            initialValue: deviceInfo.ownerBuilding
                         })
                             (
                             <Input
@@ -357,7 +324,7 @@ const ShowSetForm = Form.create()(
                                     <Row>
                                         {options.map((v, i) => {
                                             return (
-                                                <Col key={i} span={6}>
+                                                <Col key={i} span={8}>
                                                     <Checkbox value={v}>{v}</Checkbox>
                                                 </Col>
                                             )

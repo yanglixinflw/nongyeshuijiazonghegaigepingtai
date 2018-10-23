@@ -75,6 +75,11 @@ export default class extends Component {
     componentDidMount() {
         this._getTableData(this.state.title, this.state.items);
     }
+    //获取设备信息 此时使用localStorage
+    _getDeviceInfo(value){
+        let deviceInfo = JSON.stringify(value);
+        localStorage.setItem('deviceInfo',deviceInfo)
+    }
     //获取表的数据
     _getTableData(title, items) {
         let columns = [];
@@ -111,10 +116,11 @@ export default class extends Component {
             render: (record) => {
                 return (
                     <span>
-                        <Link to={`/meteorology/history:${record.DeviceId}`}>
+                        <Link to={`/meteorology/history:${record.deviceId}`}>
                             <Button
                                 icon='bar-chart'
                                 className={styles.btnhistroy}
+                                onClick={()=>this._getDeviceInfo(record)}
                             >
                                 历史记录
                         </Button>
@@ -228,13 +234,13 @@ export default class extends Component {
                 if(v.ret==1){
                     // console.log(v);
                     // 设置页面显示的元素
-                    let items = v.data.items;
+                    const {items,itemCount} = v.data;
                     //添加key
                     items.map((v, i) => {
                         v.key = i
                     })
                     this.setState({
-                        itemCount:v.data.itemCount,
+                        itemCount,
                         items
                     })
                     this._getTableData(this.state.title, this.state.items);

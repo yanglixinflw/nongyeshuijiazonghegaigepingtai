@@ -1,33 +1,52 @@
 import React, { Component } from 'react';
 import MeteorologyHistory from '../../components/DeviceData/meteorologyHistory';
 import { connect } from 'dva';
-@connect(({ meteorologyhistory, loading }) => ({
-    meteorologyhistory,
-    loading: loading.models.meteorologyhistory,
+import { Spin } from 'antd';
+@connect(({ meteorologyHistory, loading }) => ({
+    meteorologyHistory,
+    loading: loading.models.meteorologyHistory,
 }))
 export default class extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
+        this.state = {
+            deviceId: ''
+        }
     }
     componentDidMount() {
+        let url = window.location.hash;
+        const regexHistory = /history:(.+)/gm;
+        let deviceId = regexHistory.exec(url)[1];
+        // console.log(deviceId)
+        this.setState({
+            deviceId,
+        })
         const { dispatch } = this.props;
         dispatch({
-            type: 'meteorologyhistory/fetch',
+            type: 'meteorologyHistory/fetch',
+            payload: {
+                deviceId,
+                deviceTypeId: 3,
+                pageIndex: 0,
+                pageSize: 10
+            }
+        });
+        dispatch({
+            type: 'meteorologyHistory/fetchTitle',
         });
     }
     render() {
-        let { meteorologyhistory ,loading} = this.props
+        let { meteorologyHistory, loading } = this.props
         // console.log(meteorologyhistory)
-        let arr = Object.keys(meteorologyhistory)
-        if (arr.length === 0) return meteorologyhistory = null
+        let arr = Object.keys(meteorologyHistory)
+        if (arr.length <= 1) return meteorologyHistory = null
         return (
             <div>
-                <MeteorologyHistory
-                    // {...meteorologyhistory}
-                    {...this.props}
-                />
-                
-                {/* 123456 */}
+                <Spin size='large' spinning={loading}>
+                    <MeteorologyHistory
+                        {...this.props}
+                    />
+                </Spin>
             </div>
         )
 

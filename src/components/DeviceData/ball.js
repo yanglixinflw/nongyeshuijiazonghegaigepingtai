@@ -2,24 +2,10 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
-import { EventEmitter } from "events";
 // 开发环境
 const envNet='http://192.168.30.127:88';
 const dataUrl=`${envNet}/api/DeviceData/list`;
-// //全部的title
-// const tableTitle = [
-//     '设备ID', 
-//     '设备名称', 
-//     '设备安装地', 
-//     '关联建筑物', 
-//     '网关地址',
-//     '管道压力',
-//     '太阳能电压',
-//     '瞬时流量',
-//     '累积流量',
-//     '供电电压',
-//     '阀门状态',
-// ];
+
 //通用title
 const currentTitle = [
     '设备ID', 
@@ -37,14 +23,14 @@ export default class extends Component {
         //标题数据
         const titleData = ball.title.data.data;
         //需要过滤的title
-        let filtertitle = []
+        let filterTitle = []
         titleData.map((v,i)=>{
             let {displayName} = v;
-            filtertitle.push(displayName)
+            filterTitle.push(displayName)
         })
         //拼接完成全部title
         if (currentTitle.length == 5) {
-            filtertitle.map((v, i) => {
+            filterTitle.map((v, i) => {
                 currentTitle.splice(4, 0, v);
             })
         };
@@ -70,11 +56,10 @@ export default class extends Component {
     componentDidMount() {
         this._getTableData(this.state.title, this.state.items);
     }
-    //获取设备信息
-    _getDeviceInfo(deviceInfo){
-        // console.log(deviceInfo)
-        let emitter = new EventEmitter(); 
-        emitter.emit("callMe",deviceInfo)
+    //获取设备信息 此时使用localStorage
+    _getDeviceInfo(value){
+        let deviceInfo = JSON.stringify(value);
+        localStorage.setItem('deviceInfo',deviceInfo)
     }
     //获取表的数据
     _getTableData(title, items) {
@@ -154,7 +139,7 @@ export default class extends Component {
             if (err) {
                 return
             }
-            console.log(values)
+            //console.log(values)
             return fetch(dataUrl,{
                 method:"POST",
                 mode:'cors',
@@ -176,6 +161,8 @@ export default class extends Component {
                         console.log(v)
                     }
                 })
+            }).catch((err)=>{
+                console.log(err)
             })
         })
     }
@@ -223,6 +210,8 @@ export default class extends Component {
                         console.log(v)
                     }
                 })
+            }).catch((err)=>{
+                console.log(err)
             })
         })
         // 重置表单
