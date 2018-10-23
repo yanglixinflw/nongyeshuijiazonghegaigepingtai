@@ -10,12 +10,6 @@ let postOption = {
     'Content-Type': 'application/json',
   }),
 }
-//设备气象历史数据
-export function queryMeteorologyHistory() {
-  return request('/api/data/meteorology/history', {
-    method: 'POST'
-  });
-}
 //设备智能球阀/设备井电/清易墒情/气象
 export function queryDevice(params){
   return request(`${envNet}/api/DeviceData/list`,{
@@ -23,12 +17,6 @@ export function queryDevice(params){
     body: JSON.stringify(
       params
     )
-  });
-}
-//设备智能球阀历史数据
-export function queryBallHistory() {
-  return request('/api/data/ball/history', {
-    method: 'POST'
   });
 }
 // 登录逻辑
@@ -40,12 +28,7 @@ export function queryLogin(params) {
     )
   });
 }
-//设备井电历史数据
-export function queryWellsHistory() {
-  return request('/api/data/wells/history', {
-    method: 'POST'
-  });
-}
+
 //设备墒情历史数据
 export function queryMoistureHistory() {
   return request('/api/data/moisture/history', {

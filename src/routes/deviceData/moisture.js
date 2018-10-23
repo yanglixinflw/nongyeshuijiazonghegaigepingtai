@@ -34,7 +34,6 @@ export default class extends Component {
             <div>
                 <Spin size='large' spinning={loading}>
                     <Moisture {...{ moisture }} />
-                    {/* 123456 */}
                 </Spin>
             </div>
         )
