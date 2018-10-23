@@ -69,7 +69,6 @@ export default class extends Component {
     }
     componentDidMount() {
         this._getTableData(this.state.title, this.state.items);
-        
     }
     //获取设备信息
     _getDeviceInfo(deviceInfo){
@@ -388,7 +387,8 @@ const SearchForm = Form.create()(
                             className={styles.searchButton}
                             onClick={() => searchHandler()}
                         >
-                            搜索</Button>
+                        搜索
+                        </Button>
                     </Form.Item>
                     <Form.Item>
                         <Button

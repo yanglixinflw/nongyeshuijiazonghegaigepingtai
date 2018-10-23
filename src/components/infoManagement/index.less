@@ -16,14 +16,20 @@
 }
 
 .searchGroup {
+    padding-left: 10px;
     margin: 20px 40px;
     height: 75px;
     line-height: 75px;
     background: #1C2241;
+    display: flex;
+    justify-content:space-between;
+    .buttonGroup{
+        display: inline;
+    }
     :global {
         .ant-input {
             height: 46px;
-            max-width: 110px;
+            min-width: 150px;
             background: #141831;
             outline: 0;
             border: 0;
@@ -58,13 +64,13 @@
             margin-right: 6px
         }
         .ant-select-selection--single {
-            height: 44px;
-            width: 110px;
+            height: 46px;
+            width: 150px;
             background: #141831;
             outline: 0;
             border: 0;
             position: relative;
-            top: -4px;
+            top: -2px;
             .ant-select-arrow {
                 color: #4A5A72;
             }
@@ -114,5 +120,28 @@
         background-color: #22294E;
         border: 0;
         color: white;
+    }
+}
+@media(max-width:1820px){
+    .searchGroup{
+        height: 150px;
+        // :global{
+        //     .ant-input{
+        //         min-width: 105px;
+        //         width: 105px;
+        //     }
+        // }
+        
+    }
+}
+@media(max-width:1090px){
+    .searchGroup{
+        height: 150px;
+        :global{
+            .ant-input{
+                min-width: 105px;
+                width: 105px;
+            }
+        }
     }
 }

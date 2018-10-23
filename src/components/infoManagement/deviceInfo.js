@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import styles from './index.less'
-import { Form, Button, Collapse,Input ,Select,Cascader} from 'antd'
-import more from '../../assets/more.png'
-const Panel = Collapse.Panel;
+import { Form, Button, Input, Select, Cascader, Table } from 'antd'
 const Item = Form.Item
-const Option=Select.Option
+const Option = Select.Option
+// 全部title
 const totalTitle = [
     '设备ID',
     '设备型号',
     '设备名称',
     '设备安装地',
-    '关联建筑物',
     '地理坐标',
     '启用日期',
     '运维公司',
@@ -23,13 +21,37 @@ const totalTitle = [
 export default class extends Component {
     constructor(props) {
         super(props)
-        console.log(props)
+        // console.log(props)
         this.state = {
             // 显示设置可见
             showSetVisible: false,
-            // 放入按钮组--默认导出数据置于按钮组中
-            buttonARR: [3]
+            // 表头
+            columns: [],
+            // 数据总数
+            itemCount: props.data.data.itemCount,
+            // 标题
+            title: totalTitle,
+            // 表格数据源
+            data: props.data.data.items
         }
+        console.log(this.state.data)
+
+    }
+    componentDidMount() {
+        // 处理表单数据
+        this._getTableData()
+    }
+    // 获取表单数据
+    _getTableData() {
+        let { title, data } = this.state
+        let columns = []
+        let dataIndex = [
+            'deviceId',
+            'deviceTypeName',
+            'name',
+            'installAddr',
+            'IP',
+        ]
     }
     //点击显示设置
     _showSetHandler() {
@@ -37,45 +59,16 @@ export default class extends Component {
             showSetVisible: true
         })
     }
+    // 重置搜索表单
+    _resetForm() {
+        console.log(123)
+    }
+    // 搜索功能
+    _searchTableData() {
+        console.log(456)
+    }
     render() {
-        let InsideButton =
-            <Collapse
-                className={styles.collapse}
-                style={{ display: 'inline-block', position: 'relative', border: '0' }}>
-                <Panel
-                    header={<img src={more} className={styles.more} />}
-                    key="1"
-                    className={styles.moreButton}
-                    style={{ position: 'absolute', border: '0', top: '-38px' }}>
-                    <Button
-                        icon='download'
-                    >
-                        导入数据
-                    </Button>
-                    <Button
-                        icon='upload'
-
-                    >
-                        导出数据
-                    </Button>
-                </Panel>
-            </Collapse >
-
-        let OutsideButton =
-            <span>
-                <Button
-                    icon='plus'
-                >
-                    添加
-                </Button>
-                <Button
-                    icon='eye'
-                    onClick={() => this._showSetHandler()}
-                >
-                    显示设置
-                </Button>
-
-            </span>
+        const { columns, showSetVisible } = this.state
         return (
             <div>
                 <div className={styles.header}>
@@ -84,12 +77,48 @@ export default class extends Component {
                 <div className={styles.searchGroup}>
                     <SearchForm
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        searchHandler={() => this._searchTableData()}
-                        resetHandler={() => this._resetForm()}
                     />
-                    {OutsideButton}
-                    {InsideButton}
+                    <div className={styles.buttonGroup}
+                    >
+                        <Button
+                            className={styles.searchButton}
+                            icon="search"
+                            onClick={() => this._searchTableData()}
+                        >
+                            搜索
+                    </Button>
+                        <Button
+                            icon='reload'
+                            className={styles.searchButton}
+                            onClick={() => this._resetForm()}
+                        >
+                            重置</Button>
+                        <Button
+                            icon='plus'
+                        >
+                            添加
+                    </Button>
+                        <Button
+                            icon='eye'
+                            onClick={() => this._showSetHandler()}
+                        >
+                            显示设置
+                    </Button>
+                        <Button
+                            icon='upload'
+
+                        >
+                            导出数据
+                    </Button>
+                    </div>
                 </div>
+                <Table
+                    className={styles.table}
+                    columns={columns}
+                    scroll={
+                        { x: columns.length > 10 ? 2000 : false }
+                    }
+                />
             </div>
         )
     }
@@ -100,24 +129,21 @@ export default class extends Component {
 const SearchForm = Form.create()(
     class extends Component {
         render() {
-            const { form, searchHandler, resetHandler } = this.props;
+            const { form } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Form
                     layout='inline'
                     style={{
-                        display: 'inline-block',
-                        top: '-9px',
-                        position: 'relative'
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexWrap: 'wrap'
                     }}
                 >
                     <Item
-                    style={{
-                        marginLeft:'10px'
-                    }}
                     >
                         {getFieldDecorator('deviceId', {
-                            initialValue:''
+                            initialValue: ''
                         })
                             (
                             <Input
@@ -132,16 +158,16 @@ const SearchForm = Form.create()(
                         })
                             (
                             <Select
-                            placeholder='请选择类型'
+                                placeholder='设备类型'
                             >
-                            <Option value=''>全部</Option>
+                                <Option value=''>全部</Option>
                             </Select>
                             )
                         }
                     </Item>
                     <Item>
                         {getFieldDecorator('name', {
-                            initialValue:''
+                            initialValue: ''
                         })
                             (
                             <Input
@@ -152,19 +178,20 @@ const SearchForm = Form.create()(
                         }
                     </Item>
                     <Item>
-                    {getFieldDecorator('installAddrId', {
-                            initialValue:''
+                        {getFieldDecorator('installAddrId', {
+                            initialValue: ''
                         })
                             (
                             <Cascader
                                 placeholder='设备安装地'
-                            />
+                            >
+                            </Cascader>
                             )
                         }
                     </Item>
                     <Item>
                         {getFieldDecorator('areaName', {
-                            initialValue:''
+                            initialValue: ''
                         })
                             (
                             <Input
@@ -176,7 +203,7 @@ const SearchForm = Form.create()(
                     </Item>
                     <Item>
                         {getFieldDecorator('warningRules', {
-                            initialValue:''
+                            initialValue: ''
                         })
                             (
                             <Input
