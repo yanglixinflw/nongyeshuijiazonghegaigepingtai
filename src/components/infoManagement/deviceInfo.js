@@ -63,18 +63,18 @@ const dataIndex = [
 ]
 // 源columns拥有编号
 const sourceColumns = [
-    { title: "设备ID", dataIndex: "deviceId" ,number:0},
-    { title: "设备型号", dataIndex: "deviceTypeName" ,number:1},
-    { title: "设备名称", dataIndex: "name" ,number:2},
-    { title: "设备安装地", dataIndex: "installAddr" ,number:3},
-    { title: "地理坐标", dataIndex: "IP" ,number:4},
-    { title: "启用日期", dataIndex: "enableTime",number:5 },
-    { title: "运维公司", dataIndex: "opsCompony",number:6 },
-    { title: "管护人员", dataIndex: "managerName",number:7 },
-    { title: "网关地址", dataIndex: "gatewayAddr" ,number:8 },
-    { title: "出厂编号", dataIndex: "factoryNumber" ,number:9 },
-    { title: "预警规则", dataIndex: "warningRules",number:10  },
-    { title: "更新时间", dataIndex: "lastRequestTime" ,number:11 }
+    { title: "设备ID", dataIndex: "deviceId", number: 0 },
+    { title: "设备型号", dataIndex: "deviceTypeName", number: 1 },
+    { title: "设备名称", dataIndex: "name", number: 2 },
+    { title: "设备安装地", dataIndex: "installAddr", number: 3 },
+    { title: "地理坐标", dataIndex: "IP", number: 4 },
+    { title: "启用日期", dataIndex: "enableTime", number: 5 },
+    { title: "运维公司", dataIndex: "opsCompony", number: 6 },
+    { title: "管护人员", dataIndex: "managerName", number: 7 },
+    { title: "网关地址", dataIndex: "gatewayAddr", number: 8 },
+    { title: "出厂编号", dataIndex: "factoryNumber", number: 9 },
+    { title: "预警规则", dataIndex: "warningRules", number: 10 },
+    { title: "更新时间", dataIndex: "lastRequestTime", number: 11 }
 ]
 export default class extends Component {
     constructor(props) {
@@ -94,7 +94,15 @@ export default class extends Component {
             data: props.data.data.items,
             // 表格数据
             tableData: [],
-            // 翻页携带查询条件
+            // 搜索框默认值
+            searchValue: {
+                "deviceId": "",
+                "name": "",
+                "deviceTypeId": 0,
+                "installAddrId": "",
+                "warningRules": "",
+                "areaName": "",
+            }
         }
         // console.log(this.state.data)
 
@@ -113,6 +121,7 @@ export default class extends Component {
                 // 表头添加字段
                 dataIndex: dataIndex[i],
                 align: 'center',
+                className: `${styles.tbw}`
             })
         })
         // console.log(columns)
@@ -187,15 +196,29 @@ export default class extends Component {
     }
     // 翻页
     _pageChange(page) {
-        console.log(page)
+        let {searchValue}=this.state
+        searchValue.pageIndex=page-1
+        // console.log(searchValue)
     }
     // 重置搜索表单
     _resetForm() {
+        const form =this.searchForm.props.form;
         console.log(123)
     }
     // 搜索功能
     _searchTableData() {
-        console.log(456)
+        const form =this.searchForm.props.form;
+        form.validateFields((err, values) => {
+            // values即为表单数据
+            if (err) {
+                return;
+            }
+            values.pageIndex=0
+            values.pageSize=10
+            this.setState({
+                searchValue:values
+            })
+        })
     }
     // 导出数据
     _uploadHandler() {
@@ -203,9 +226,6 @@ export default class extends Component {
     }
     //取消显示设置 
     _setShowCancel() {
-        const form = this.showSetForm.props.form;
-        // 重置表单
-        form.resetFields();
         this.setState({
             showSetVisible: false
         })
@@ -227,14 +247,27 @@ export default class extends Component {
             dataIndex.map((v, i) => {
                 filterColumns.push(...sourceColumns.filter(item => item.dataIndex === v))
             })
-
+            // 排序函数
+            let compare = function (prop) {
+                return function (obj1, obj2) {
+                    let val1 = obj1[prop];
+                    let val2 = obj2[prop];
+                    if (val1 < val2) {
+                        return -1;
+                    } else if (val1 > val2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+            // 排序
+            filterColumns.sort(compare('number'))
+            // 保存标题
             filterColumns.map((v, i) => {
-                console.log(v.number)
+                title.push(v.title)
             })
-            // columns
-            // console.log(this.state.columns)
-            console.log(filterColumns)
-            // this._getTableData(title, this.state.data,dataIndex)
+            this._getTableData(title, this.state.data, dataIndex)
         })
         this.setState({
             showSetVisible: false
@@ -431,6 +464,7 @@ const ShowSetForm = Form.create()(
                                 (
                                 <CheckboxGroup>
                                     <Row>
+                                        {/* <Col><Checkbox value='q'>q</Checkbox></Col> */}
                                         {totalTitle.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>

@@ -26,7 +26,7 @@ const menuData = [
   {
     name: '集散控制',
     icon: 'dyhs-jisankongzhi',
-    path: 'device',
+    path: 'dcs',
     children: [
       {
         name: '远程控制',
