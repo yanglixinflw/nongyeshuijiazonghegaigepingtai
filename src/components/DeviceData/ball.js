@@ -5,7 +5,7 @@ import { Link } from 'dva/router';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
 const dataUrl = `${envNet}/api/DeviceData/list`;
-// 全部title tableData
+// 全部title tableTitle
 const tableTitle = [
     "设备ID",
     "设备名称",
@@ -19,7 +19,7 @@ const tableTitle = [
     "网关地址",
     "更新时间"
 ];
-// 全部title Index
+
 const dataIndex = [
     'deviceId',
     'name',
@@ -33,35 +33,11 @@ const dataIndex = [
     'ValveStatus',
     'updateTime'
 ]
-//通用title
-const currentTitle = [
-    '设备ID',
-    '设备名称',
-    '设备安装地',
-    '更新时间'
-];
 export default class extends Component {
-
-    constructor(props, context) {
-        super(props, context)
+    constructor(props) {
+        super(props)
         const { ball } = props;
         const { items, itemCount } = ball.data.data;
-        //标题数据
-        const titleData = ball.title.data.data;
-        //需要过滤的title
-        let filterTitle = [];
-        let titleIndex = []
-        titleData.map((v, i) => {
-            let { displayName, name } = v;
-            filterTitle.push(displayName);
-            titleIndex.push(name)
-        })
-        //拼接完成全部title
-        if (currentTitle.length == 4    ) {
-            filterTitle.map((v, i) => {
-                currentTitle.splice(4, 0, v);
-            })
-        };
         // console.log(items)
         // 获取标题和数据
         this.state = {
@@ -71,16 +47,14 @@ export default class extends Component {
             items,
             //数据列表所有title
             tableTitle,
-            //显示的数据列表title中文
-            title: currentTitle,
+            //显示的数据列表title
+            title: tableTitle,
             //表头
             columns: [],
             //表单数据
             tableData: [],
             //显示设置弹窗可见性
             showSetVisible: false,
-            //标题数据
-            titleData,
             //title Index
             dataIndex,
             //搜索信息栏
@@ -101,7 +75,6 @@ export default class extends Component {
     //获取表的数据
     _getTableData(title, items, dataIndex) {
         let columns = [];
-        // console.log(dataIndex)
         title.map((v, i) => {
             columns.push({
                 title: v,
@@ -187,7 +160,13 @@ export default class extends Component {
                 Promise.resolve(res.json())
                     .then((v) => {
                         if (v.ret == 1) {
-                            // console.log(v)
+                            // 设置页面显示的元素
+                            let { items, itemCount } = v.data;
+                            this.setState({
+                                itemCount,
+                                items
+                            })
+                            this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
                         }
                     })
             }).catch((err) => {
@@ -210,17 +189,15 @@ export default class extends Component {
     //显示设置点击确定
     _showSetOkHandler() {
         const form = this.showSetForm.props.form;
-        const { titleData } = this.state;
         form.validateFields((err, values) => {
             // values即为表单数据
             if (err) {
                 return;
             }
-            // console.log(values.showSet);
-            this.setState({
-                dataIndex:values.showSet
-            })
-            this._getTableData(this.state.title,this.state.items,this.state.dataIndex)
+            // console.log(values);
+            let {dataIndex} = values
+            //显示确定空出
+            
         })
         // 重置表单
         form.resetFields();
@@ -244,7 +221,7 @@ export default class extends Component {
     }
     //翻页
     _pageChange(page) {
-        const { deviceId, name,installAddrId} = this.state;
+        const { deviceId, name, installAddrId } = this.state;
         let PageIndex = page - 1;
         return fetch(dataUrl, {
             method: 'POST',
@@ -268,7 +245,7 @@ export default class extends Component {
                     if (v.ret == 1) {
                         // console.log(v);
                         // 设置页面显示的元素
-                        const { items, itemCount } = v.data;
+                        let { items, itemCount } = v.data;
                         //添加key
                         items.map((v, i) => {
                             v.key = i
@@ -277,7 +254,7 @@ export default class extends Component {
                             itemCount,
                             items
                         })
-                        this._getTableData(this.state.title, this.state.items,this.state.dataIndex);
+                        this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
                     }
                 })
         }).catch((err) => {
@@ -285,7 +262,7 @@ export default class extends Component {
         })
     }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle, itemCount,dataIndex } = this.state;
+        const { columns, tableData, showSetVisible, tableTitle, itemCount, dataIndex } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -299,7 +276,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ tableTitle,dataIndex }}
+                    {...{ tableTitle, dataIndex }}
                 />
                 <div className={styles.header}>
                     <span>|</span>新天通球阀
@@ -385,7 +362,7 @@ const SearchForm = Form.create()(
                             onClick={() => searchHandler()}
                             htmlType='submit'
                         >
-                        搜索
+                            搜索
                         </Button>
                     </Form.Item>
                     <Form.Item>
@@ -406,7 +383,7 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, tableTitle,dataIndex } = this.props;
+            const { form, visible, onCancel, onOk, tableTitle, dataIndex } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
@@ -423,11 +400,12 @@ const ShowSetForm = Form.create()(
                 >
                     <Form>
                         <Form.Item>
-                            {getFieldDecorator('showSet', {
+                            {getFieldDecorator('dataIndex', {
                                 initialValue: dataIndex
                             })
                                 (
                                 <CheckboxGroup >
+                                    {/* 全选空出 */}
                                     <Row>
                                         {options.map((v, i) => {
                                             return (

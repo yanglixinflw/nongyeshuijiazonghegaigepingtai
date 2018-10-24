@@ -1,33 +1,67 @@
 import React, { Component } from 'react';
 import BreadcrumbView from '../PageHeader/breadcrumb';
-import { Button, Input, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
+import { Button,  Form, Table, Checkbox, Modal, Row, Col } from 'antd';
 import styles from './common.less';
+import classnames from 'classnames';
 // 开发环境
-const envNet='http://192.168.30.127:88';
-const dataUrl=`${envNet}/api/DeviceData/historyData`;
-//通用title
-const currentTitle = [
-    '更新时间'
+const envNet = 'http://192.168.30.127:88';
+const dataUrl = `${envNet}/api/DeviceData/historyData`;
+//全部title tableTitle
+const tableTitle = [
+    '水位',
+    '管道压力',
+    '瞬时流量',
+    '本次用电量',
+    '本次用水量',
+    '本次开泵时间',
+    '本次关泵时间',
+    '三相电压A',
+    '三相电压B',
+    '三相电压C',
+    '三相电流A',
+    '三相电流B',
+    '三相电流C',
+    '工作电压',
+    'SIM卡信号强度',
+    '年用水量',
+    '累计用水量',
+    '累计用电量',
+    '设备IC状态',
+    '设备仪表状态',
+    '设备网关状态',
+    '设备状态(泵)',
+    '更新时间',
+]
+let dataIndex = [
+    'WaterLevel',
+    'Pressure',
+    'Flow',
+    'ThisSumPower',
+    'ThisSumWater',
+    'ThisStart',
+    'ThisStop',
+    'VoltageA',
+    'VoltageB',
+    'VoltageC',
+    'CurrentA',
+    'CurrentB',
+    'CurrentC',
+    'Voltage',
+    'Csq',
+    'WaterTotalYear',
+    'WaterTotal',
+    'PowerTotal',
+    'DeStateIC',
+    'DeStateMeter',
+    'DeStateGate',
+    'DeStatePump',
+    'updateTime',
 ];
 export default class extends Component {
     constructor(props) {
         super(props)
         const { wellsHistory } = props;
         const { items, itemCount } = wellsHistory.data.data;
-        //标题数据
-        const titleData = wellsHistory.title.data.data;
-        //需要过滤的title
-        let filtertitle = []
-        titleData.map((v, i) => {
-            let { displayName } = v;
-            filtertitle.push(displayName)
-        })
-        //拼接完成全部title  //显示设置
-        if (currentTitle.length == 1) {
-            filtertitle.map((v, i) => {
-                currentTitle.splice(0, 0, v);
-            })
-        };
         //获取设备信息
         let deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'))
         // console.log(deviceInfo)
@@ -40,49 +74,30 @@ export default class extends Component {
             itemCount,
             //列表数据源
             items,
-            //显示设置
-            currentTitle,
+            //全部title 显示设置
+            tableTitle,
             //列表title
-            title: currentTitle,
+            title: tableTitle,
             //表头
             columns: [],
             //表单数据
             tableData: [],
             //显示设置弹窗可见性
             showSetVisible: false,
+            //title index
+            dataIndex,
         }
     }
     componentDidMount() {
-        this._getTableData(this.state.title, this.state.items);
+        this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
     }
+     // componentWillUnmount(){
+    //     //移除localStorange
+    //     localStorage.removeItem('deviceInfo')
+    // }
     //获取表的数据
-    _getTableData(title, items) {
+    _getTableData(title, items, dataIndex) {
         let columns = [];
-        let dataIndex = [
-            'WaterLevel',
-            'Pressure',
-            'Flow',
-            'ThisSumPower',
-            'ThisSumWater',
-            'ThisStart',
-            'ThisStop',
-            'VoltageA',
-            'VoltageB',
-            'VoltageC',
-            'CurrentA',
-            'CurrentB',
-            'CurrentC',
-            'Voltage',
-            'Csq',
-            'WaterTotalYear',
-            'WaterTotal',
-            'PowerTotal',
-            'DeStateIC',
-            'DeStateMeter',
-            'DeStateGate',
-            'DeStatePump',
-            'updateTime',
-        ];
         title.map((v, i) => {
             columns.push({
                 title: v,
@@ -91,8 +106,8 @@ export default class extends Component {
                 align: 'center',
             })
         })
-        columns[columns.length - 1].fixed = columns.length>10?'right':null;
-        columns[columns.length - 1].width = columns.length>10?'right':null;
+        columns[columns.length - 1].fixed = columns.length > 10 ? 'right' : null;
+        columns[columns.length - 1].width = columns.length > 10 ? 300 : null;
         let tableData = [];
         items.map((v, i) => {
             tableData.push({
@@ -141,11 +156,8 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            console.log(values.showSet)
-            // this.setState({
-            //     title:values.showSet,
-            //     columns:values.showSet.length
-            // })
+            let { dataIndex } = values;
+            //显示确定空出
         })
         // 重置表单
         form.resetFields();
@@ -172,49 +184,50 @@ export default class extends Component {
         const { deviceInfo } = this.state;
         let deviceId = deviceInfo.deviceId;
         let PageIndex = page - 1;
-        return fetch(dataUrl,{
-            method:'POST',
-            mode:'cors',
-            headers:new Headers({
+        return fetch(dataUrl, {
+            method: 'POST',
+            mode: 'cors',
+            headers: new Headers({
                 'Content-Type': 'application/json',
             }),
             credentials: "include",
-            body:JSON.stringify({
+            body: JSON.stringify({
                 deviceId,
-                deviceTypeId:2,
+                deviceTypeId: 2,
                 PageIndex,
                 pageSize: 10
             })
-        }).then((res)=>{
+        }).then((res) => {
             Promise.resolve(res.json())
-            .then((v)=>{
-                if(v.ret==1){
-                    const {items,itemCount} = v.data;
-                    items.map((v,i)=>{
-                        v.key = i
-                    })
-                    this.setState({
-                        itemCount,
-                        items
-                    })
-                    this._getTableData(this.state.title, this.state.items);
-                }
-            })
-        }).catch((err)=>{
+                .then((v) => {
+                    if (v.ret == 1) {
+                        const { items, itemCount } = v.data;
+                        items.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            itemCount,
+                            items
+                        })
+                        this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
+                    }
+                })
+        }).catch((err) => {
             console.log(err)
         })
     }
     render() {
-        const { 
-            columns, 
-            tableData, 
-            showSetVisible, 
-            currentTitle, 
+        const {
+            columns,
+            tableData,
+            showSetVisible,
+            tableTitle,
             itemCount,
-            deviceInfo } = this.state;
+            deviceInfo,
+            dataIndex } = this.state;
         const paginationProps = {
             showQuickJumper: true,
-            total:itemCount,
+            total: itemCount,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
@@ -225,7 +238,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ currentTitle }}
+                    {...{ tableTitle, dataIndex }}
                 />
                 <div className={styles.header}>
                     <Button icon="arrow-left"></Button>
@@ -235,9 +248,12 @@ export default class extends Component {
                     />
                 </div>
                 <div className={styles.deviceInfo}>
-                    <InfoForm
-                        {...{deviceInfo}}
-                    />
+                    <div className={styles.info}>
+                        <i className={classnames('dyhsicon', 'dyhs-shebeiID', `${styles.deviceId}`)}></i>
+                        {deviceInfo.deviceId}
+                    </div>
+                    <div className={styles.info}>{deviceInfo.name}</div>
+                    <div className={styles.info}>{deviceInfo.installAddr}</div>
                     <Button
                         icon='eye'
                         onClick={() => this._showSetHandler()}
@@ -256,78 +272,22 @@ export default class extends Component {
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableData}
-                    scroll={{x:columns.length>10?2800:false}}
+                    scroll={{ x: columns.length > 10 ? 2800 : false }}
                 />
             </div>
         )
     }
 }
-//设备信息表单
-const InfoForm = Form.create()(
-    class extends React.Component {
-        render() {
-            const { form,deviceInfo } = this.props;
-            const { getFieldDecorator } = form;
-            return (
-                <Form layout='inline'>
-                    <Form.Item>
-                        {getFieldDecorator('deviceId', {
-                            initialValue: deviceInfo.deviceId
-                        })
-                            (
-                            <Input
-                                disabled
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('name', {
-                            initialValue: deviceInfo.name
-                        })
-                            (
-                            <Input
-                                disabled
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('installAddr', {
-                            initialValue: deviceInfo.installAddr
-                        })
-                            (
-                            <Input
-                                disabled
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('ownerBuilding', {
-                            initialValue: deviceInfo.ownerBuilding
-                        })
-                            (
-                            <Input
-                                disabled
-                            />
-                            )
-                        }
-                    </Form.Item>
-                </Form>
-            )
-        }
-    }
-)
+
 //显示设置弹窗表单
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, currentTitle } = this.props;
+            const { form, visible, onCancel, onOk, tableTitle, dataIndex } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = currentTitle
+            const options = tableTitle
             return (
                 <Modal
                     className={styles.showSet}
@@ -335,19 +295,22 @@ const ShowSetForm = Form.create()(
                     title="显示设置"
                     onCancel={onCancel}
                     onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
                 >
                     <Form>
                         <Form.Item>
-                            {getFieldDecorator('showSet', {
-                                initialValue: currentTitle
+                            {getFieldDecorator('dataIndex', {
+                                initialValue: dataIndex
                             })
                                 (
                                 <CheckboxGroup>
+                                    {/* 全选空出 */}
                                     <Row>
                                         {options.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>
-                                                    <Checkbox value={v}>{v}</Checkbox>
+                                                    <Checkbox value={dataIndex[i]}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}
