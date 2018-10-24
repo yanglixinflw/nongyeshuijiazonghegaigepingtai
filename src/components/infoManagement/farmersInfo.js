@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from './common.less';
-import { Input, Button, Form, Cascader, Table,} from 'antd';
+import { Input, Button, Form, Cascader, Table, Modal,Radio} from 'antd';
 // 开发环境用以翻页调用
 const envNet='http://192.168.30.127:88';
 const dataUrl=`${envNet}/api/PeasantMgr/list`;
@@ -13,6 +13,8 @@ const tableTitle=[
     {index:"userType",item:"用户类型"},
     {index:"orgId",item:"所属机构"}
 ]
+//表单弹窗
+const FormItem = Form.Item;
 export default class extends Component{
     constructor(props) {
         super(props)
@@ -62,6 +64,7 @@ export default class extends Component{
                     <span className={styles.option}>
                         <Button
                             className={styles.edit}
+                            onClick={() => this._editFarmerInfo()}
                             icon='edit'
                         >
                             修改
@@ -98,6 +101,10 @@ export default class extends Component{
             columns,
             tableDatas,
         });
+    }
+    //修改功能
+    _editFarmerInfo(){
+        console.log("修改")
     }
     // 搜索功能
     _searchTableDatas() {
