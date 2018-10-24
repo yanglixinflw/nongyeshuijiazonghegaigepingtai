@@ -75,7 +75,7 @@ export default class extends Component{
                     <span className={styles.option}>
                         <Button
                             className={styles.set}
-                            onClick={() => this._set()}
+                            // onClick={() => this._set()}
                             icon='edit'
                         >
                             设置自动化规则
@@ -103,6 +103,22 @@ export default class extends Component{
             }
         })
     }
+    //搜索功能
+    _searchTableDatas() {
+        const form = this.searchForm.props.form;
+        form.validateFields((err, values) => {
+            if (err) {
+                return
+            }
+            // console.log(values)
+        })
+    }
+    //重置
+    _resetForm() {
+        const form = this.searchForm.props.form;
+        // 重置表单
+        form.resetFields();
+    }
     render(){
         const { columns, tableDatas } = this.state;
         const paginationProps = {
@@ -124,7 +140,7 @@ export default class extends Component{
                         <Button
                             className={styles.fnButton}
                             icon="search"
-                            onClick={() => this._searchTableData()}
+                            onClick={() => this._searchTableDatas()}
                         >
                             搜索
                         </Button>

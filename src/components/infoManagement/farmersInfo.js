@@ -62,7 +62,7 @@ export default class extends Component{
                     <span className={styles.option}>
                         <Button
                             className={styles.edit}
-                            onClick={() => this._editFarmerInfo()}
+                            // onClick={() => this._editFarmerInfo()}
                             icon='edit'
                         >
                             修改
