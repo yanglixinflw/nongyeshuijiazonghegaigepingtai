@@ -4,6 +4,7 @@ import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 
 import { Link } from 'dva/router';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
+//搜索 翻页
 const dataUrl = `${envNet}/api/DeviceData/list`;
 //全部的title
 const tableTitle = [
@@ -58,8 +59,6 @@ export default class extends Component {
             tableData: [],
             //显示设置弹窗可见性
             showSetVisible: false,
-            //title Index
-            dataIndex,
             // 搜索框默认值
             searchValue: {
                 "deviceTypeId": 3,
@@ -67,7 +66,9 @@ export default class extends Component {
                 "name": "",
                 "installAddrId": 0,
                 "showColumns": [],
-            }
+            },
+            // 设置过滤后的表头
+            filterColumns:sourceColumns
         }
     }
     componentDidMount() {
@@ -170,7 +171,7 @@ export default class extends Component {
                                 itemCount,
                                 items
                             })
-                            this._getTableData(this.state.title, this.state.items, sourceColumns);
+                            this._getTableData(this.state.title, this.state.items, this.state.filterColumns);
                         }
                     })
             }).catch((err) => {
@@ -228,10 +229,13 @@ export default class extends Component {
                 title.push(v.title)
             })
             this._getTableData(title, this.state.items, filterColumns)
+            this.setState({
+                showSetVisible: false,
+                title,
+                filterColumns
+            })
         })
-        this.setState({
-            showSetVisible: false
-        })
+        
     }
     //显示设置点击取消
     _showSetCancelHandler() {
@@ -272,7 +276,7 @@ export default class extends Component {
                             itemCount,
                             items
                         })
-                        this._getTableData(this.state.title, this.state.items, sourceColumns);
+                        this._getTableData(this.state.title, this.state.items, this.state.filterColumns);
                     }
                 })
                 .catch((err) => {
@@ -281,7 +285,7 @@ export default class extends Component {
         })
     }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle, itemCount, dataIndex } = this.state;
+        const { columns, tableData, showSetVisible, itemCount } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -295,7 +299,6 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ tableTitle, dataIndex }}
                 />
                 <div className={styles.header}>
                     <span>|</span>清易气象
@@ -366,7 +369,7 @@ const SearchForm = Form.create()(
                     </Form.Item>
                     <Form.Item>
                         {getFieldDecorator('installAddrId', {
-                            initialValue: ''
+                            initialValue: 0
                         })
                             (
                             <Cascader
@@ -380,6 +383,7 @@ const SearchForm = Form.create()(
                             icon='search'
                             className={styles.searchButton}
                             onClick={() => searchHandler()}
+                            htmlType='submit'
                         >
                             搜索</Button>
                     </Form.Item>
@@ -401,11 +405,10 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, tableTitle, dataIndex } = this.props;
+            const { form, visible, onCancel, onOk } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = tableTitle;
             return (
                 <Modal
                     className={styles.showSet}
@@ -419,16 +422,16 @@ const ShowSetForm = Form.create()(
                     <Form>
                         <Form.Item>
                             {getFieldDecorator('dataIndex', {
-                                initialValue: dataIndex
+                                initialValue: sourceColumns
                             })
                                 (
                                 <CheckboxGroup>
                                     {/* 全选空出 */}
                                     <Row>
-                                        {options.map((v, i) => {
+                                        {tableTitle.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>
-                                                    <Checkbox value={dataIndex[i]}>{v}</Checkbox>
+                                                    <Checkbox value={sourceColumns[i]}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}

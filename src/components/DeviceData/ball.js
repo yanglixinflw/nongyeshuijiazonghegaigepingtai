@@ -4,6 +4,7 @@ import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 
 import { Link } from 'dva/router';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
+//搜索 翻页
 const dataUrl = `${envNet}/api/DeviceData/list`;
 // 全部title tableTitle
 const tableTitle = [
@@ -38,14 +39,13 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { ball } = props;
-        const { items, itemCount } = ball.data.data;
         // console.log(items)
         // 获取标题和数据
         this.state = {
             //数据总数
-            itemCount,
+            itemCount:ball.data.data.itemCount,
             //列表数据源
-            items,
+            items:ball.data.data.items,
             //数据列表所有title
             tableTitle,
             //显示的数据列表title
@@ -58,11 +58,9 @@ export default class extends Component {
             showSetVisible: false,
             // 搜索框默认值
             searchValue: {
-                "deviceTypeId": 1,
                 "deviceId": "",
                 "name": "",
                 "installAddrId": 0,
-                "showColumns": [],
             },
             // 设置过滤后的表头
             filterColumns:sourceColumns
@@ -138,14 +136,18 @@ export default class extends Component {
     }
     // 搜索功能
     _searchTableData() {
+        const {title ,  filterColumns} = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
                 return
             }
+            // 未定义时给空值
+            values.deviceTypeId=undefined||1
+            values.showColumns=undefined||[]
             values.pageIndex=0;
             values.pageSize=10;
-            // console.log(values)
+            console.log(values)
             // 保存搜索信息 翻页
             this.setState({
                 searchValue:values
@@ -165,13 +167,14 @@ export default class extends Component {
                     .then((v) => {
                         if (v.ret == 1) {
                             // 设置页面显示的元素
-                            let { items, itemCount } = v.data;
+                            let items = v.data.items;
+                            let itemCount = v.data.itemCount;
                             this.setState({
                                 itemCount,
                                 items
                             })
                             
-                            this._getTableData(this.state.title, this.state.items, this.state.filterColumns);
+                            this._getTableData(title, this.state.items, filterColumns);
                         }
                     })
             }).catch((err) => {
@@ -249,6 +252,7 @@ export default class extends Component {
     }
     //翻页
     _pageChange(page) {
+        const {title ,  filterColumns} = this.state;
         const { searchValue } = this.state;
         searchValue.pageIndex=page-1;
         return fetch(dataUrl, {
@@ -267,7 +271,8 @@ export default class extends Component {
                     if (v.ret == 1) {
                         // console.log(v);
                         // 设置页面显示的元素
-                        let { items, itemCount } = v.data;
+                        let items = v.data.items;
+                        let itemCount = v.data.itemCount;
                         //添加key
                         items.map((v, i) => {
                             v.key = i
@@ -276,7 +281,7 @@ export default class extends Component {
                             itemCount,
                             items
                         })
-                        this._getTableData(this.state.title, this.state.items,this.state.filterColumns);
+                        this._getTableData(title, this.state.items, filterColumns);
                     }
                 })
         }).catch((err) => {
