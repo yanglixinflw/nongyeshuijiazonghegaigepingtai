@@ -9,7 +9,10 @@ import { Spin } from 'antd'
 export default class extends Component {
     componentDidMount() {
         const { dispatch } = this.props;
+<<<<<<< HEAD
         // console.log(this.props)
+=======
+>>>>>>> 690a9d949581ddea082307db69f9d302ee90d8c1
         dispatch({
             type: 'wells/fetchTitle',
         });

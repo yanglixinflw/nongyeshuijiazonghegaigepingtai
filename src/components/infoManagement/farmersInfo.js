@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from './common.less';
-import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col  } from 'antd';
+import { Input, Button, Form, Cascader, Table,} from 'antd';
 // 开发环境
 const envNet='http://192.168.30.127:88';
 const dataUrl=`${envNet}/api/PeasantMgr/list`;
@@ -59,8 +59,25 @@ export default class extends Component{
             width: 100,
             render: (record) => {
                 return (
-                    <span>
-                        delete
+                    <span className={styles.option}>
+                        <Button
+                            className={styles.edit}
+                            icon='edit'
+                        >
+                            修改
+                        </Button>
+                        <Button
+                            className={styles.delete}
+                            icon='delete'
+                        >
+                            删除
+                        </Button>
+                        <Button
+                            className={styles.editPsw}
+                            icon='edit'
+                        >
+                            修改密码
+                        </Button>
                     </span>
                 )
             }
@@ -187,7 +204,7 @@ export default class extends Component{
                         </Button>
                         <Button
                              icon='download'
-                             className={styles.fnhButton}
+                             className={styles.fnButton}
                         >
                                 数据导入
                         </Button>
@@ -221,7 +238,9 @@ const SearchForm = Form.create()(
                 <Form 
                     layout='inline'
                     style={{
-                        display: 'inlineBlock',
+                        display: 'flex',
+                        alignItems:"center",
+                        flexWrap:"wrap"
                     }}>
                     <Form.Item>
                         {getFieldDecorator('realName', {})
