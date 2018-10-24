@@ -105,7 +105,7 @@ export default class extends Component{
         console.log("修改")
     }
     // 搜索功能
-    _searchTableDatas() {
+    _searchTableData() {
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
@@ -183,7 +183,7 @@ export default class extends Component{
                     {/* 表单信息 */}
                     <SearchForm
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        searchHandler={() => this._searchTableDatas()}
+                        searchHandler={() => this._searchTableData()}
                         resetHandler={() => this._resetForm()}
                     />
                     <div className={styles.buttonGroup}>
