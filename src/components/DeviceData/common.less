@@ -38,14 +38,17 @@
         }
     }
 }
-
+// 表格单元最小宽度
+.tbw{
+    min-width: 100px;
+}
 //搜索
 .searchForm {
     height: 75px;
     line-height: 75px;
-    width: 95%;
+    margin-left: 35px;
+    margin-right:35px;
     display: flex;
-    margin: auto;
     background: #1C2241;
     padding-top: 15px;
     padding-left: 21px;
@@ -107,7 +110,6 @@
             tr {
                 th {
                     border: 1px solid #2A325E;
-                    
                     font-weight: 600;
                     background: #2E3459;
                     color: #DEDEE4;
@@ -148,10 +150,10 @@
         }
     }
     .ant-table-wrapper {
-        width: 95%;
-        margin: auto;
         .ant-table {
             background: #2E3459;
+            margin-left: 35px;
+            margin-right:35px;
             .ant-table-content {
                 
                     .ant-table-body {

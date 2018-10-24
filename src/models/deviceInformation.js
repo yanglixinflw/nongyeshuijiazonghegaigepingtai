@@ -1,4 +1,4 @@
-import {getDeviceInfo} from '../services/api';
+import {getDeviceInfo,getInstallAddrList} from '../services/api';
 
 export default {
     namespace:'deviceInformation',
@@ -12,11 +12,24 @@ export default {
                 type:'fetchOk',
                 payload:res
             })
+        },
+        *getInstallAddrList({payload},{call,put}){
+            const list =yield call(getInstallAddrList,payload)
+            yield put ({
+                type:'fetchInstallList',
+                payload:list
+            })
         }
     },
     reducers:{
         fetchOk(state,{payload}){
             return {...state,...payload}
+        },
+        fetchInstallList(state,{payload}){
+            state={
+                list:payload
+            }
+            return {...state}
         }
     }
 }

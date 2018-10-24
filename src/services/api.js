@@ -96,3 +96,11 @@ export function getUserManagement(params){
     )
   })
 }
+// 获取设备安装地列表
+export function getInstallAddrList(){
+  return request(`${envNet}/api/Device/installAddrList`,{
+    method:'GET',
+    mode:'cors',
+    credentials: "include",
+  })
+}

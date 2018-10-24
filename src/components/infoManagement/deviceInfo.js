@@ -43,38 +43,20 @@ const totalTitle = [
     '预警规则',
     '更新时间'
 ]
-// 全部dataindex
-const dataIndex = [
-    'deviceId',
-    'deviceTypeName',
-    'name',
-    'installAddr',
-    // 地理坐标
-    'IP',
-    // 启用日期
-    'enableTime',
-    // 运维公司
-    'opsCompony',
-    'managerName',
-    'gatewayAddr',
-    'factoryNumber',
-    'warningRules',
-    'lastRequestTime'
-]
 // 源columns拥有编号
 const sourceColumns = [
-    { title: "设备ID", dataIndex: "deviceId" ,number:0},
-    { title: "设备型号", dataIndex: "deviceTypeName" ,number:1},
-    { title: "设备名称", dataIndex: "name" ,number:2},
-    { title: "设备安装地", dataIndex: "installAddr" ,number:3},
-    { title: "地理坐标", dataIndex: "IP" ,number:4},
-    { title: "启用日期", dataIndex: "enableTime",number:5 },
-    { title: "运维公司", dataIndex: "opsCompony",number:6 },
-    { title: "管护人员", dataIndex: "managerName",number:7 },
-    { title: "网关地址", dataIndex: "gatewayAddr" ,number:8 },
-    { title: "出厂编号", dataIndex: "factoryNumber" ,number:9 },
-    { title: "预警规则", dataIndex: "warningRules",number:10  },
-    { title: "更新时间", dataIndex: "lastRequestTime" ,number:11 }
+    { title: "设备ID", dataIndex: "deviceId", number: 0 },
+    { title: "设备型号", dataIndex: "deviceTypeName", number: 1 },
+    { title: "设备名称", dataIndex: "name", number: 2 },
+    { title: "设备安装地", dataIndex: "installAddr", number: 3 },
+    { title: "地理坐标", dataIndex: "IP", number: 4 },
+    { title: "启用日期", dataIndex: "enableTime", number: 5 },
+    { title: "运维公司", dataIndex: "opsCompony", number: 6 },
+    { title: "管护人员", dataIndex: "managerName", number: 7 },
+    { title: "网关地址", dataIndex: "gatewayAddr", number: 8 },
+    { title: "出厂编号", dataIndex: "factoryNumber", number: 9 },
+    { title: "预警规则", dataIndex: "warningRules", number: 10 },
+    { title: "更新时间", dataIndex: "lastRequestTime", number: 11 }
 ]
 export default class extends Component {
     constructor(props) {
@@ -94,26 +76,34 @@ export default class extends Component {
             data: props.data.data.items,
             // 表格数据
             tableData: [],
-            // 翻页携带查询条件
+            // 搜索框默认值
+            searchValue: {
+                "deviceId": "",
+                "name": "",
+                "deviceTypeId": 0,
+                "installAddrId": "",
+                "warningRules": "",
+                "areaName": "",
+            },
+            // 设备安装地列表
+            installAddress:props.list.data.data
         }
-        // console.log(this.state.data)
-
     }
     componentDidMount() {
         // 初始化处理表单数据
-        this._getTableData(this.state.title, this.state.data, dataIndex)
+        this._getTableData(this.state.title, this.state.data, sourceColumns)
     }
     // 获取表单数据
-    _getTableData(title, data, dataIndex) {
+    _getTableData(title, data, sourceColumns) {
         let columns = []
         // 设置columns
         title.map((v, i) => {
             columns.push({
                 title: v,
                 // 表头添加字段
-                dataIndex: dataIndex[i],
+                dataIndex: sourceColumns[i].dataIndex,
                 align: 'center',
-                className:`${styles.tbw}`
+                className: `${styles.tbw}`
             })
         })
         // console.log(columns)
@@ -188,15 +178,33 @@ export default class extends Component {
     }
     // 翻页
     _pageChange(page) {
-        console.log(page)
+        let {searchValue}=this.state
+        searchValue.pageIndex=page-1
+        // console.log(searchValue)
     }
     // 重置搜索表单
     _resetForm() {
-        console.log(123)
+        const form =this.searchForm.props.form;
+        // 重置表单
+        form.resetFields();
     }
     // 搜索功能
     _searchTableData() {
-        console.log(456)
+        const form =this.searchForm.props.form;
+        form.validateFields((err, values) => {
+            // values即为表单数据
+            if (err) {
+                return;
+            }
+            // 未定义时给空值
+            values.deviceTypeId=undefined||''
+            values.installAddrId=undefined||''
+            values.pageIndex=0
+            values.pageSize=10
+            this.setState({
+                searchValue:values
+            })
+        })
     }
     // 导出数据
     _uploadHandler() {
@@ -223,7 +231,7 @@ export default class extends Component {
             let title = []
             // 比对dataIndex
             dataIndex.map((v, i) => {
-                filterColumns.push(...sourceColumns.filter(item => item.dataIndex === v))
+                filterColumns.push(...sourceColumns.filter(item => item === v))
             })
             // 排序函数
             let compare = function (prop) {
@@ -236,8 +244,8 @@ export default class extends Component {
                         return 1;
                     } else {
                         return 0;
-                    }            
-                } 
+                    }
+                }
             }
             // 排序
             filterColumns.sort(compare('number'))
@@ -245,14 +253,14 @@ export default class extends Component {
             filterColumns.map((v, i) => {
                 title.push(v.title)
             })
-            this._getTableData(title, this.state.data,dataIndex)
+            this._getTableData(title, this.state.data, filterColumns)
         })
         this.setState({
             showSetVisible: false
         })
     }
     render() {
-        const { columns, showSetVisible, tableData, itemCount } = this.state
+        const { columns, showSetVisible, tableData, itemCount ,installAddress} = this.state
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -266,6 +274,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._setShowCancel()}
                     onOk={() => this._setShowOk()}
+                    
                 />
 
                 <div className={styles.header}>
@@ -274,7 +283,7 @@ export default class extends Component {
                 <div className={styles.searchGroup}>
                     <SearchForm
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-
+                        installAddress={installAddress}
                     />
                     <div className={styles.buttonGroup}
                     >
@@ -327,7 +336,7 @@ export default class extends Component {
 const SearchForm = Form.create()(
     class extends Component {
         render() {
-            const { form } = this.props;
+            const { form ,installAddress} = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Form
@@ -377,13 +386,13 @@ const SearchForm = Form.create()(
                     </Item>
                     <Item>
                         {getFieldDecorator('installAddrId', {
-                            initialValue: ''
                         })
                             (
-                            <Cascader
+                            <Select
                                 placeholder='设备安装地'
                             >
-                            </Cascader>
+                                <Option value=''>全部</Option>
+                            </Select>
                             )
                         }
                     </Item>
@@ -423,8 +432,6 @@ const ShowSetForm = Form.create()(
             const { visible, form, onOk, onCancel } = this.props
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            // console.log(totalTitle)
-            // console.log(dataIndex)
             return (
                 <Modal
                     visible={visible}
@@ -437,16 +444,16 @@ const ShowSetForm = Form.create()(
                     <Form>
                         <Form.Item>
                             {getFieldDecorator('dataIndex', {
-                                initialValue: dataIndex
+                                initialValue: sourceColumns
                             })
                                 (
                                 <CheckboxGroup>
                                     <Row>
-                                    {/* <Col><Checkbox value='q'>q</Checkbox></Col> */}
+                                        {/* <Col><Checkbox value='q'>q</Checkbox></Col> */}
                                         {totalTitle.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>
-                                                    <Checkbox value={dataIndex[i]}>{v}</Checkbox>
+                                                    <Checkbox value={sourceColumns[i]}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}
