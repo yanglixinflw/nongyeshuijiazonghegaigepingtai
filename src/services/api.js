@@ -69,7 +69,16 @@ export function getDeviceInfo(params) {
     )
   })
 }
-//设备数据 历史数据
+//农户信息管理
+export function getFarmersInfo(params) {
+  return request(`${envNet}/api/PeasantMgr/list`, {
+    ...postOption,
+    body: JSON.stringify(  params
+      )
+    })
+  }
+
+//设备历史数据
 export function queryDeviceHistory(params){
   return request(`${envNet}/api/DeviceData/historyData`,{
     ...postOption,

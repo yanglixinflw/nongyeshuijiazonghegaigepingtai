@@ -385,7 +385,8 @@ const SearchForm = Form.create()(
                             onClick={() => searchHandler()}
                             htmlType='submit'
                         >
-                            搜索</Button>
+                        搜索
+                        </Button>
                     </Form.Item>
                     <Form.Item>
                         <Button

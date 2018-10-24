@@ -14,20 +14,25 @@
         margin-right: 10px;
     }
 }
-
 .searchGroup {
+    padding-left: 10px;
     margin: 20px 40px;
     height: 75px;
     line-height: 75px;
     background: #1C2241;
+    display: flex;
+    justify-content: space-between;
+    .buttonGroup {
+        display: inline;
+    }
     :global {
         .ant-input {
             height: 46px;
-            max-width: 110px;
+            min-width: 150px;
             background: #141831;
             outline: 0;
             border: 0;
-            color:#4A5A72;
+            color: #4A5A72;
         }
         .ant-cascader-picker {
             height: 46px;
@@ -58,13 +63,13 @@
             margin-right: 6px
         }
         .ant-select-selection--single {
-            height: 44px;
-            width: 110px;
+            height: 46px;
+            width: 150px;
             background: #141831;
             outline: 0;
             border: 0;
             position: relative;
-            top: -4px;
+            top: -2px;
             .ant-select-arrow {
                 color: #4A5A72;
             }
@@ -91,28 +96,184 @@
     }
 }
 
-.more {
-    position: relative;
-    left: -25px;
-}
-
-.moreButton {
-    :global {
-        .ant-btn {
-            margin-top: 16px;
-            margin-left: 0;
-            margin-right: 0;
+:global {
+    .ant-table-fixed-right {
+        box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
+        .ant-table-thead {
+            tr {
+                th {
+                    border: 1px solid #2A325E;
+                    font-weight: 600;
+                    background: #2E3459;
+                    color: #DEDEE4;
+                }
+            }
         }
-        .ant-collapse-content>.ant-collapse-content-box {
-            padding-top: 0 !important;
+        .ant-table-tbody {
+            tr {
+                &:hover td {
+                    background: #1C2241;
+                    color: #0084FF;
+                }
+                &:focus td {
+                    background: #1C2241;
+                    color: #0084FF;
+                }
+                td {
+                    border-left: 0;
+                    border: 1px solid #2A325E;
+                    font-weight: 600;
+                    background: #1C2241;
+                    color: #DEDEE4;
+                    &:hover {
+                        background: #1C2241;
+                        color: #0084FF;
+                    }
+                    &:focus {
+                        background: #1C2241;
+                        color: #0084FF;
+                    }
+                    .ant-btn {
+                        background: #1C2241;
+                        margin-right: 14px;
+                    }
+                }
+            }
+        }
+    }
+    .ant-table-wrapper {
+        width: 95%;
+        margin: auto;
+        .ant-table {
+            background: #2E3459;
+            .ant-table-content {
+                .ant-table-body {
+                    &::-webkit-scrollbar {
+                        height: 10px;
+                    }
+                    &::-webkit-scrollbar-button {
+                        display: none;
+                    }
+                    &::-webkit-scrollbar-thumb {
+                        background: #3164BF;
+                        border-radius: 2px;
+                    }
+                    &::-webkit-scrollbar-track {
+                        background: #2E3459;
+                    }
+                }
+                .ant-table-fixed-right table {
+                    background: #2E3459;
+                }
+            }
+        }
+        .ant-table-thead {
+            tr {
+                th {
+                    font-weight: 600;
+                    background: #2E3459;
+                    color: #DEDEE4;
+                    border: 1px solid #2A325E;
+                }
+            }
+        }
+        .ant-table-tbody {
+            tr {
+                &:hover td {
+                    color: #0084FF;
+                }
+                &:focus td {
+                    color: #0084FF;
+                }
+                td {
+                    font-size: 12px;
+                    background: #1C2241;
+                    color: #BBC5D2;
+                    border: 1px solid #2A325E;
+                    &:hover {
+                        color: #0084FF;
+                    }
+                    &:focus {
+                        color: #0084FF;
+                    }
+                }
+            }
+        }
+        .ant-pagination.ant-table-pagination {
+            margin-top: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            float: none;
+            color: #637890;
+            .ant-pagination-prev .ant-pagination-item-link,
+            .ant-pagination-next .ant-pagination-item-link {
+                background: #151836;
+                border: 1px solid #637890;
+                color: #637890;
+            }
+            .ant-pagination-item {
+                border: 1px solid #637890;
+                color: #637890;
+                background: #151836;
+                a {
+                    color: #637890;
+                }
+            }
+            .ant-pagination-item-active {
+                border: 0;
+                background: #327DF4;
+                a {
+                    color: #fff;
+                }
+            }
+            .ant-pagination-item-ellipsis {
+                color: #637890;
+            }
+            .ant-pagination-options-quick-jumper input {
+                background: #151836;
+                border: 1px solid #637890;
+                color: #637890;
+            }
         }
     }
 }
 
-:global {
-    .ant-collapse-content {
-        background-color: #22294E;
-        border: 0;
-        color: white;
+.scan {
+    color: #19cf86;
+    border: 1px solid #19CF86;
+}
+
+.warn {
+    border: 1px solid #327DF4;
+    color: #327DF4;
+}
+.edit{
+    border: 1px solid #e87848;
+    color: #e87848;
+}
+.delete{
+    border: 1px solid #fb3b4f;
+    color: #fb3b4f;
+}
+@media(max-width:1820px) {
+    .searchGroup {
+        height: 150px; // :global{
+        //     .ant-input{
+        //         min-width: 105px;
+        //         width: 105px;
+        //     }
+        // }
+    }
+}
+
+@media(max-width:1090px) {
+    .searchGroup {
+        height: 150px;
+        :global {
+            .ant-input {
+                min-width: 105px;
+                width: 105px;
+            }
+        }
     }
 }

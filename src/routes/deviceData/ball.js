@@ -29,7 +29,6 @@ export default class extends Component {
         let { ball, loading } = this.props;
         let arr = Object.keys(ball);
         if (arr.length<= 1) return ball = null;
-        // console.log(this.props)
         return (
             <div>
                 <Spin size='large' spinning={loading}>
