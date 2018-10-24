@@ -112,6 +112,9 @@ export const getRouterData = app => {
     '/system/userManagement':{
       component: dynamicWrapper(app, ['userManagement'], () => import('../routes/systemManagement/userManagement')),
     },
+    '/dcs/automation':{
+      component: dynamicWrapper(app, [], () => import('../routes/distributedControl/autoControl')),
+    },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     // },
