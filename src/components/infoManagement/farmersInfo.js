@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table,} from 'antd';
-// 开发环境
+// 开发环境用以翻页调用
 const envNet='http://192.168.30.127:88';
 const dataUrl=`${envNet}/api/PeasantMgr/list`;
 //头信息
@@ -201,12 +201,6 @@ export default class extends Component{
                             className={styles.fnButton}
                         >
                             添加
-                        </Button>
-                        <Button
-                             icon='download'
-                             className={styles.fnButton}
-                        >
-                                数据导入
                         </Button>
                         <Button
                             icon='upload'
