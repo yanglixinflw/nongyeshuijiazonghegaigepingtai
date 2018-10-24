@@ -32,10 +32,8 @@ export default class extends React.Component {
   }
   render() {
     let { deviceInformation ,loading} = this.props
-    
     let arr = Object.keys(deviceInformation)
     if (arr.length <=1) return deviceInformation = null
-    console.log( {...deviceInformation})
     return (
       <div>
         <Spin size='large' spinning={loading}>
