@@ -1,8 +1,29 @@
 import React, { Component } from 'react';
 import styles from './index.less'
-import { Form, Button, Input, Select, Cascader, Table } from 'antd'
+import { Form, 
+    Button, 
+    Input, 
+    Select, 
+    Cascader, 
+    Table ,
+    Modal,
+    Checkbox} from 'antd'
 const Item = Form.Item
 const Option = Select.Option
+
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+}
+
+// 开发环境
+const envNet = 'http://192.168.30.127:88'
+
 // 全部title
 const totalTitle = [
     '设备ID',
@@ -35,7 +56,6 @@ const dataIndex = [
     'factoryNumber',
     'warningRules',
     'lastRequestTime'
-
 ]
 export default class extends Component {
     constructor(props) {
@@ -54,8 +74,9 @@ export default class extends Component {
             data: props.data.data.items,
             // 表格数据
             tableData:[],
+            // 翻页携带查询条件
         }
-        console.log(this.state.data)
+        // console.log(this.state.data)
 
     }
     componentDidMount() {
@@ -65,7 +86,6 @@ export default class extends Component {
     // 获取表单数据
     _getTableData(title, data, dataIndex) {
         let columns = []
-
         // 设置columns
         title.map((v, i) => {
             columns.push({
@@ -157,6 +177,10 @@ export default class extends Component {
     _searchTableData() {
         console.log(456)
     }
+    // 导出数据
+    _uploadHandler(){
+        console.log('导出数据')
+    }
     render() {
         const { columns, showSetVisible ,tableData,itemCount} = this.state
         const paginationProps = {
@@ -167,7 +191,11 @@ export default class extends Component {
         };
         return (
             <div>
-
+                <ShowSetForm
+                wrappedComponentRef={(showSetForm)=>this.showSetForm=showSetForm}
+                visible={showSetVisible}
+                />
+                
                 <div className={styles.header}>
                     <span>|</span>设备信息
                 </div>
@@ -203,7 +231,7 @@ export default class extends Component {
                     </Button>
                         <Button
                             icon='upload'
-
+                            onClick={()=>this._uploadHandler()}
                         >
                             导出数据
                     </Button>
@@ -223,7 +251,6 @@ export default class extends Component {
 }
 
 // 搜索表单
-
 const SearchForm = Form.create()(
     class extends Component {
         render() {
@@ -316,6 +343,22 @@ const SearchForm = Form.create()(
         }
     }
 )
-
+// 显示设置弹窗表单
+const ShowSetForm =Form.create()(
+    class extends React.Component{
+        render(){
+            const {visible,form}=this.props
+            const { getFieldDecorator } = form;
+            const CheckboxGroup = Checkbox.Group;
+            // console.log(totalTitle)
+            // console.log(dataIndex)
+            return(
+                <Modal>
+                    
+                </Modal>
+            )
+        }
+    }
+)
 
 

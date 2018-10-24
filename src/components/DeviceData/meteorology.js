@@ -183,7 +183,7 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            // console.log(values.showSet)
+            console.log(values.showSet)
             // this.setState({
             //     title:values.showSet,
             //     columns:values.showSet.length
