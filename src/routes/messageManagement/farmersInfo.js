@@ -1,5 +1,5 @@
 import React from "react";
-import FarmersInfo from '../../components/InfoMessage/farmersInfo';
+import FarmersInfo from '../../components/infoManagement/farmersInfo';
 import { connect } from 'dva';
 // import { Table } from 'antd'
 @connect(({ farmersInfo, loading }) => ({

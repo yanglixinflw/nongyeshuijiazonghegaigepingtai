@@ -102,6 +102,7 @@ export default class extends Component{
     _exportDataHandler() {
         console.log("导出数据")
     }
+    //换页
     _pageChange(page){
         let PageIndex = page - 1;
         return fetch(dataUrl,{
@@ -157,23 +158,54 @@ export default class extends Component{
                     <span>|</span>农户信息
                 </div>
                 <div className={styles.searchForm}>
+                    {/* 表单信息 */}
                     <SearchForm
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
                         searchHandler={() => this._searchTableDatas()}
                         resetHandler={() => this._resetForm()}
                     />
-                    <Button
-                        icon='upload'
-                        onClick={() => this._exportDataHandler()}
-                    >导出数据
-                    </Button>
+                    <div className={styles.buttonGroup}>
+                        <Button
+                            className={styles.fnButton}
+                            icon="search"
+                            onClick={() => this._searchTableData()}
+                        >
+                            搜索
+                        </Button>
+                        <Button
+                            icon='reload'
+                            className={styles.fnButton}
+                            onClick={() => this._resetForm()}
+                        >
+                            重置
+                        </Button>
+                        <Button
+                            icon='plus'
+                            className={styles.fnButton}
+                        >
+                            添加
+                        </Button>
+                        <Button
+                             icon='download'
+                             className={styles.fnhButton}
+                        >
+                                数据导入
+                        </Button>
+                        <Button
+                            icon='upload'
+                            className={styles.fnButton}
+                            onClick={() => this._exportDataHandler()}
+                        >
+                            导出数据
+                        </Button>
+                    </div> 
                 </div>
                 <Table
                     columns={columns}
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableDatas}
-                    scroll={{ x: 1800 }}
+                    // scroll={{ x: 1300 }}
                 />
             </div>
         )
@@ -186,7 +218,11 @@ const SearchForm = Form.create()(
             const { form, searchHandler, resetHandler } = this.props;
             const { getFieldDecorator } = form;
             return (
-                <Form layout='inline'>
+                <Form 
+                    layout='inline'
+                    style={{
+                        display: 'inlineBlock',
+                    }}>
                     <Form.Item>
                         {getFieldDecorator('realName', {})
                             (
@@ -228,20 +264,14 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        <Button
-                            icon='search'
-                            className={styles.searchButton}
-                            onClick={() => searchHandler()}
-                        >
-                            搜索</Button>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button
-                            icon='reload'
-                            className={styles.searchButton}
-                            onClick={() => resetHandler()}
-                        >
-                            重置</Button>
+                        {getFieldDecorator('areaId', {})
+                            (
+                            <Cascader
+                                placeholder='全部状态'
+                                type='text'
+                            />
+                            )
+                        }
                     </Form.Item>
                 </Form>
             )
