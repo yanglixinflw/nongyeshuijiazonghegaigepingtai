@@ -19,20 +19,7 @@ const tableTitle = [
     "阀门状态",
     "更新时间"
 ];
-// 全部dataindex
-const dataIndex = [
-    'deviceId',
-    'name',
-    'installAddr',
-    'GatewayAddr',
-    'Press',
-    'SunElecPress',
-    'InstantNumber',
-    'WaterTotalNumber',
-    'BatteryPress',
-    'ValveStatus',
-    'updateTime'
-]
+
 // 源columns拥有编号
 const sourceColumns =[
     { title: "设备ID", dataIndex: "deviceId", number: 0 },
@@ -76,11 +63,13 @@ export default class extends Component {
                 "name": "",
                 "installAddrId": 0,
                 "showColumns": [],
-            }
+            },
+            // 设置过滤后的表头
+            filterColumns:sourceColumns
         }
     }
     componentDidMount() {
-        this._getTableData(this.state.title, this.state.items, dataIndex);
+        this._getTableData(this.state.title, this.state.items, sourceColumns);
 
     }
     //获取设备信息 此时使用localStorage
@@ -96,7 +85,7 @@ export default class extends Component {
             columns.push({
                 title: v,
                 // 给表头添加字段名 必须一一对应
-                dataIndex: dataIndex[i],
+                dataIndex: dataIndex[i].dataIndex,
                 align: 'center',
                 className: `${styles.tbw}`
             })
@@ -181,7 +170,8 @@ export default class extends Component {
                                 itemCount,
                                 items
                             })
-                            this._getTableData(this.state.title, this.state.items, dataIndex);
+                            
+                            this._getTableData(this.state.title, this.state.items, this.state.filterColumns);
                         }
                     })
             }).catch((err) => {
@@ -216,7 +206,7 @@ export default class extends Component {
             let title = []
             // 比对dataIndex
             dataIndex.map((v, i) => {
-                filterColumns.push(...sourceColumns.filter(item => item.dataIndex === v))
+                filterColumns.push(...sourceColumns.filter(item => item === v))
             })
             // 排序函数
             let compare = function (prop) {
@@ -238,12 +228,14 @@ export default class extends Component {
             filterColumns.map((v, i) => {
                 title.push(v.title)
             })
-            console.log(filterColumns)
-            this._getTableData(title, this.state.items, dataIndex)
+            this._getTableData(title, this.state.items, filterColumns)
+            this.setState({
+                showSetVisible: false,
+                title,
+                filterColumns
+            })
         })
-        this.setState({
-            showSetVisible: false
-        })
+        
     }
     //显示设置点击取消
     _showSetCancelHandler() {
@@ -284,7 +276,7 @@ export default class extends Component {
                             itemCount,
                             items
                         })
-                        this._getTableData(this.state.title, this.state.items,dataIndex);
+                        this._getTableData(this.state.title, this.state.items,this.state.filterColumns);
                     }
                 })
         }).catch((err) => {
@@ -429,7 +421,7 @@ const ShowSetForm = Form.create()(
                     <Form>
                         <Form.Item>
                             {getFieldDecorator('dataIndex', {
-                                initialValue: dataIndex
+                                initialValue: sourceColumns
                             })
                                 (
                                 <CheckboxGroup >
@@ -438,7 +430,7 @@ const ShowSetForm = Form.create()(
                                         {tableTitle.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>
-                                                    <Checkbox value={dataIndex[i]}>{v}</Checkbox>
+                                                    <Checkbox value={sourceColumns[i]}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}
