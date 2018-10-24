@@ -13,7 +13,7 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { moistureHistory } = props;
-        console.log()
+        // console.log(props)
         const { items, itemCount } = moistureHistory.data.data;
         //标题数据
         const titleData = moistureHistory.title.data.data;
@@ -266,17 +266,6 @@ const InfoForm = Form.create()(
                     <Form.Item>
                         {getFieldDecorator('installAddr', {
                             initialValue: deviceInfo.installAddr
-                        })
-                            (
-                            <Input
-                                disabled
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('ownerBuilding', {
-                            initialValue: deviceInfo.ownerBuilding
                         })
                             (
                             <Input

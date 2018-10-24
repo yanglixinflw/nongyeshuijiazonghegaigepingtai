@@ -3,33 +3,61 @@ import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
 // 开发环境
-const envNet='http://192.168.30.127:88';
-const dataUrl=`${envNet}/api/DeviceData/list`;
-
+const envNet = 'http://192.168.30.127:88';
+const dataUrl = `${envNet}/api/DeviceData/list`;
+// 全部title tableData
+const tableTitle = [
+    "设备ID",
+    "设备名称",
+    "设备安装地",
+    "阀门状态",
+    "供电电压",
+    "累积流量",
+    "瞬时流量",
+    "太阳能电压",
+    "管道压力",
+    "网关地址",
+    "更新时间"
+];
+// 全部title Index
+const dataIndex = [
+    'deviceId',
+    'name',
+    'installAddr',
+    'GatewayAddr',
+    'Press',
+    'SunElecPress',
+    'InstantNumber',
+    'WaterTotalNumber',
+    'BatteryPress',
+    'ValveStatus',
+    'updateTime'
+]
 //通用title
 const currentTitle = [
-    '设备ID', 
-    '设备名称', 
-    '设备安装地', 
-    '关联建筑物', 
+    '设备ID',
+    '设备名称',
+    '设备安装地',
     '更新时间'
 ];
 export default class extends Component {
-    
-    constructor(props,context) {
-        super(props,context)
+
+    constructor(props, context) {
+        super(props, context)
         const { ball } = props;
-        const { items,itemCount } = ball.data.data;
+        const { items, itemCount } = ball.data.data;
         //标题数据
         const titleData = ball.title.data.data;
         //需要过滤的title
-        let filterTitle = []
-        titleData.map((v,i)=>{
-            let {displayName} = v;
-            filterTitle.push(displayName)
+        let filterTitle = [];
+        let titleIndex = []
+        titleData.map((v, i) => {
+            let { displayName, name } = v;
+            filterTitle.push(displayName);
+            titleIndex.push(name)
         })
         //拼接完成全部title
-        if (currentTitle.length == 5) {
+        if (currentTitle.length == 4    ) {
             filterTitle.map((v, i) => {
                 currentTitle.splice(4, 0, v);
             })
@@ -41,8 +69,8 @@ export default class extends Component {
             itemCount,
             //列表数据源
             items,
-            //总数据列表title
-            currentTitle,
+            //数据列表所有title
+            tableTitle,
             //显示的数据列表title中文
             title: currentTitle,
             //表头
@@ -51,34 +79,29 @@ export default class extends Component {
             tableData: [],
             //显示设置弹窗可见性
             showSetVisible: false,
+            //标题数据
+            titleData,
+            //title Index
+            dataIndex,
+            //搜索信息栏
+            deviceId: '',
+            name: '',
+            installAddrId: 0
         }
     }
     componentDidMount() {
-        this._getTableData(this.state.title, this.state.items);
-        
+        this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
+
     }
     //获取设备信息 此时使用localStorage
-    _getDeviceInfo(value){
+    _getDeviceInfo(value) {
         let deviceInfo = JSON.stringify(value);
-        localStorage.setItem('deviceInfo',deviceInfo)
+        localStorage.setItem('deviceInfo', deviceInfo)
     }
     //获取表的数据
-    _getTableData(title, items) {
+    _getTableData(title, items, dataIndex) {
         let columns = [];
-        let dataIndex = [
-            'deviceId',
-            'name',
-            'installAddr',
-            'ownerBuilding',
-            'GatewayAddr',
-            'Press',
-            'SunElecPress',
-            'InstantNumber',
-            'WaterTotalNumber',
-            'BatteryPress',
-            'ValveStatus',
-            'updateTime'
-        ];
+        // console.log(dataIndex)
         title.map((v, i) => {
             columns.push({
                 title: v,
@@ -92,8 +115,8 @@ export default class extends Component {
             title: '操作',
             key: 'action',
             align: 'center',
-            fixed:'right',
-            width:100,
+            fixed: 'right',
+            width: 100,
             render: (record) => {
                 return (
                     <span>
@@ -101,7 +124,7 @@ export default class extends Component {
                             <Button
                                 icon='bar-chart'
                                 className={styles.btnhistroy}
-                                onClick={()=>this._getDeviceInfo(record)}
+                                onClick={() => this._getDeviceInfo(record)}
                             >
                                 历史记录
                             </Button>
@@ -116,14 +139,13 @@ export default class extends Component {
                 deviceId: v.deviceId,
                 name: v.name,
                 installAddr: v.installAddr,
-                ownerBuilding: v.ownerBuilding,
                 GatewayAddr: v.realTimeData.GatewayAddr,
                 Press: v.realTimeData.Press,
                 SunElecPress: v.realTimeData.SunElecPress,
                 InstantNumber: v.realTimeData.InstantNumber,
                 WaterTotalNumber: v.realTimeData.WaterTotalNumber,
                 BatteryPress: v.realTimeData.BatteryPress,
-                ValveStatus:v.realTimeData.ValveStatus,
+                ValveStatus: v.realTimeData.ValveStatus,
                 updateTime: v.updateTime,
                 key: i,
             });
@@ -140,29 +162,35 @@ export default class extends Component {
             if (err) {
                 return
             }
-            //console.log(values)
-            return fetch(dataUrl,{
-                method:"POST",
-                mode:'cors',
-                headers:new Headers({
+            // console.log(values)
+            // 保存搜索信息 翻页
+            this.setState({
+                deviceId: values.deviceId,
+                name: values.name,
+                installAddrId: values.installAddrId
+            })
+            return fetch(dataUrl, {
+                method: "POST",
+                mode: 'cors',
+                headers: new Headers({
                     'Content-Type': 'application/json',
                 }),
                 credentials: "include",
-                body:JSON.stringify({
+                body: JSON.stringify({
                     deviceTypeId: 1,
                     ...values,
                     showColumns: [],
-                    PageIndex:0,
+                    PageIndex: 0,
                     pageSize: 10
                 })
-            }).then((res)=>{
+            }).then((res) => {
                 Promise.resolve(res.json())
-                .then((v)=>{
-                    if(v.ret==1){
-                        console.log(v)
-                    }
-                })
-            }).catch((err)=>{
+                    .then((v) => {
+                        if (v.ret == 1) {
+                            // console.log(v)
+                        }
+                    })
+            }).catch((err) => {
                 console.log(err)
             })
         })
@@ -182,38 +210,17 @@ export default class extends Component {
     //显示设置点击确定
     _showSetOkHandler() {
         const form = this.showSetForm.props.form;
+        const { titleData } = this.state;
         form.validateFields((err, values) => {
             // values即为表单数据
             if (err) {
                 return;
             }
-            console.log(values.showSet)
-            return fetch(dataUrl,{
-                method:"POST",
-                mode:'cors',
-                headers:new Headers({
-                    'Content-Type': 'application/json',
-                }),
-                credentials: "include",
-                body:JSON.stringify({
-                    deviceTypeId: 1,
-                    deviceId: "",
-                    name: "",
-                    installAddrId: 0,
-                    showColumns: values.showSet,
-                    PageIndex:0,
-                    pageSize: 10
-                })
-            }).then((res)=>{
-                Promise.resolve(res.json())
-                .then((v)=>{
-                    if(v.ret==1){
-                        console.log(v)
-                    }
-                })
-            }).catch((err)=>{
-                console.log(err)
+            // console.log(values.showSet);
+            this.setState({
+                dataIndex:values.showSet
             })
+            this._getTableData(this.state.title,this.state.items,this.state.dataIndex)
         })
         // 重置表单
         form.resetFields();
@@ -236,52 +243,52 @@ export default class extends Component {
         console.log("导出数据")
     }
     //翻页
-    _pageChange(page){
+    _pageChange(page) {
+        const { deviceId, name,installAddrId} = this.state;
         let PageIndex = page - 1;
-        return fetch(dataUrl,{
-            method:'POST',
-            mode:'cors',
-            headers:new Headers({
+        return fetch(dataUrl, {
+            method: 'POST',
+            mode: 'cors',
+            headers: new Headers({
                 'Content-Type': 'application/json',
             }),
             credentials: "include",
-            body:JSON.stringify({
+            body: JSON.stringify({
                 deviceTypeId: 1,
-                deviceId: "",
-                name: "",
-                installAddrId: 0,
+                deviceId,
+                name,
+                installAddrId,
                 showColumns: [],
                 PageIndex,
                 pageSize: 10
             })
-        }).then((res)=>{
+        }).then((res) => {
             Promise.resolve(res.json())
-            .then((v)=>{
-                if(v.ret==1){
-                    // console.log(v);
-                    // 设置页面显示的元素
-                    const {items,itemCount} = v.data;
-                    //添加key
-                    items.map((v, i) => {
-                        v.key = i
-                    })
-                    this.setState({
-                        itemCount,
-                        items
-                    })
-                    this._getTableData(this.state.title, this.state.items);
-                }
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v);
+                        // 设置页面显示的元素
+                        const { items, itemCount } = v.data;
+                        //添加key
+                        items.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            itemCount,
+                            items
+                        })
+                        this._getTableData(this.state.title, this.state.items,this.state.dataIndex);
+                    }
+                })
+        }).catch((err) => {
+            console.log(err)
         })
     }
     render() {
-        const { columns, tableData, showSetVisible, currentTitle, itemCount } = this.state;
+        const { columns, tableData, showSetVisible, tableTitle, itemCount,dataIndex } = this.state;
         const paginationProps = {
             showQuickJumper: true,
-            total:itemCount,
+            total: itemCount,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
@@ -292,7 +299,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ currentTitle }}
+                    {...{ tableTitle,dataIndex }}
                 />
                 <div className={styles.header}>
                     <span>|</span>新天通球阀
@@ -321,7 +328,7 @@ export default class extends Component {
                     pagination={paginationProps}
                     dataSource={tableData}
                     scroll={
-                        {x:columns.length>10?2000:false}
+                        { x: columns.length > 10 ? 2000 : false }
                     }
                 />
             </div>
@@ -338,7 +345,7 @@ const SearchForm = Form.create()(
                 <Form layout='inline'>
                     <Form.Item>
                         {getFieldDecorator('deviceId', {
-                            initialValue:''
+                            initialValue: ''
                         })
                             (
                             <Input
@@ -350,7 +357,7 @@ const SearchForm = Form.create()(
                     </Form.Item>
                     <Form.Item>
                         {getFieldDecorator('name', {
-                            initialValue:''
+                            initialValue: ''
                         })
                             (
                             <Input
@@ -362,7 +369,7 @@ const SearchForm = Form.create()(
                     </Form.Item>
                     <Form.Item>
                         {getFieldDecorator('installAddrId', {
-                            initialValue:0
+                            initialValue: 0
                         })
                             (
                             <Cascader
@@ -376,6 +383,7 @@ const SearchForm = Form.create()(
                             icon='search'
                             className={styles.searchButton}
                             onClick={() => searchHandler()}
+                            htmlType='submit'
                         >
                             搜索</Button>
                     </Form.Item>
@@ -397,11 +405,11 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, currentTitle } = this.props;
+            const { form, visible, onCancel, onOk, tableTitle,dataIndex } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = currentTitle;
+            const options = tableTitle;
             return (
                 <Modal
                     className={styles.showSet}
@@ -415,15 +423,15 @@ const ShowSetForm = Form.create()(
                     <Form>
                         <Form.Item>
                             {getFieldDecorator('showSet', {
-                                initialValue:currentTitle
+                                initialValue: dataIndex
                             })
                                 (
                                 <CheckboxGroup >
                                     <Row>
-                                        {options.map((v,i)=>{
-                                            return(
+                                        {options.map((v, i) => {
+                                            return (
                                                 <Col key={i} span={8}>
-                                                    <Checkbox value={v}>{v}</Checkbox>
+                                                    <Checkbox value={dataIndex[i]}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}

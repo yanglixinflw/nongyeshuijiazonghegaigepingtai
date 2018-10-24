@@ -30,7 +30,7 @@ export default class extends Component {
             })
         };
         //获取设备信息
-        let deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'))
+        let deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'));
         // console.log(deviceInfo)
         // console.log(filtertitle);
         // 获取标题和数据
@@ -54,7 +54,12 @@ export default class extends Component {
         }
     }
     componentDidMount() {
+        //初始化数据
         this._getTableData(this.state.title, this.state.items);
+    }
+    componentWillUnmount(){
+        //移除localStorange
+        localStorage.removeItem('deviceInfo')
     }
     //获取表的数据
     _getTableData(title, items) {
@@ -208,9 +213,9 @@ export default class extends Component {
                     />
                 </div>
                 <div className={styles.deviceInfo}>
-                    <InfoForm
-                        {...{ deviceInfo }}
-                    />
+                    <div className={styles.info}>{deviceInfo.deviceId}</div>
+                    <div className={styles.info}>{deviceInfo.name}</div>
+                    <div className={styles.info}>{deviceInfo.installAddr}</div>
                     <Button
                         icon='eye'
                         onClick={() => this._showSetHandler()}
@@ -273,17 +278,6 @@ const InfoForm = Form.create()(
                     <Form.Item>
                         {getFieldDecorator('installAddr', {
                             initialValue: deviceInfo.installAddr
-                        })
-                            (
-                            <Input
-                                disabled
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('ownerBuilding', {
-                            initialValue: deviceInfo.ownerBuilding
                         })
                             (
                             <Input

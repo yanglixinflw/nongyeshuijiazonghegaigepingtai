@@ -10,7 +10,7 @@ let postOption = {
     'Content-Type': 'application/json',
   }),
 }
-//设备智能球阀/设备井电/清易墒情/气象
+//设备数据 智能球阀/设备井电/清易气象/清易墒情
 export function queryDevice(params){
   return request(`${envNet}/api/DeviceData/list`,{
     ...postOption,
@@ -28,39 +28,36 @@ export function queryLogin(params) {
     )
   });
 }
-
-//设备墒情历史数据
-export function queryMoistureHistory() {
-  return request('/api/data/moisture/history', {
-    method: 'POST'
-  });
-}
 //新天通球阀title
 export function queryBallTitle() {
   return request(`${envNet}/api/DeviceData/columns?deviceTypeId=1`, {
     method: 'GET',
-    mode: 'cors'
+    mode: 'cors',
+    credentials: "include",
   })
 }
 //开创井电title
 export function queryWellsTitle() {
   return request(`${envNet}/api/DeviceData/columns?deviceTypeId=2`, {
     method: 'GET',
-    mode: 'cors'
+    mode: 'cors',
+    credentials: "include",
   })
 }
 //清易气象title
 export function queryMeteorologyTitle(){
   return request (`${envNet}/api/DeviceData/columns?deviceTypeId=3`,{
     method:'GET',
-    mode:'cors'
+    mode:'cors',
+    credentials: "include",
   })
 }
 //清易墒情title
 export function queryMoistureTitle(){
   return request (`${envNet}/api/DeviceData/columns?deviceTypeId=4`,{
     method:'GET',
-    mode:'cors'
+    mode:'cors',
+    credentials: "include",
   })
 }
 // 设备信息获取
@@ -72,7 +69,7 @@ export function getDeviceInfo(params) {
     )
   })
 }
-//设备历史数据
+//设备数据 历史数据
 export function queryDeviceHistory(params){
   return request(`${envNet}/api/DeviceData/historyData`,{
     ...postOption,
