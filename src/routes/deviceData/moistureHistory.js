@@ -18,9 +18,12 @@ export default class extends Component {
         const regexHistory = /history:(.+)/gm;
         let deviceId = regexHistory.exec(url)[1];
         // console.log(deviceId)
+        this.setState({
+            deviceId,
+        })
         const { dispatch } = this.props;
         dispatch({
-            type: 'moisturehistory/fetch',
+            type: 'moistureHistory/fetch',
             payload:{
                 deviceId,
                 deviceTypeId:4,
@@ -29,7 +32,7 @@ export default class extends Component {
             }
         });
         dispatch({
-            type: 'moisturehistory/fetchTitle',
+            type: 'moistureHistory/fetchTitle',
         });
     }
     render() {
@@ -43,11 +46,9 @@ export default class extends Component {
                 <Spin size='large' spinning={loading}>
                     <MoistureHistory 
                         {...this.props} 
-                    />
-                    
+                    />     
                 </Spin>
             </div>
         )
-
     }
 }
