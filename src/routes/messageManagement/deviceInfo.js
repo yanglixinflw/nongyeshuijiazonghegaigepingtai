@@ -15,21 +15,27 @@ export default class extends React.Component {
     dispatch({
       type: 'deviceInformation/getInfo',
       payload: {
-        "deviceId": "string",
-        "name": "string",
+        "deviceId": "",
+        "name": "",
         "deviceTypeId": 0,
-        "installAddrId": "string",
-        "warningRules": "string",
-        "areaName": "string",
+        "installAddrId": "",
+        "warningRules": "",
+        "areaName": "",
         "pageIndex": 0,
         "pageSize": 10
       }
     })
+    // 获取安装地列表
+    dispatch({
+      type: 'deviceInformation/getInstallAddrList',
+    })
   }
   render() {
     let { deviceInformation ,loading} = this.props
+    
     let arr = Object.keys(deviceInformation)
-    if (arr.length < 1) return deviceInformation = null
+    if (arr.length <=1) return deviceInformation = null
+    console.log( {...deviceInformation})
     return (
       <div>
         <Spin size='large' spinning={loading}>
