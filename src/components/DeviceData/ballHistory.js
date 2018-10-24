@@ -1,34 +1,38 @@
 import React, { Component } from 'react';
 import BreadcrumbView from '../PageHeader/breadcrumb';
-import { Button, Input, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
+import { Button, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
 import styles from './common.less';
 import classnames from 'classnames';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
 const dataUrl = `${envNet}/api/DeviceData/historyData`;
-//通用title
-const currentTitle = [
+//全部title
+const tableTitle = [
+    "网关地址",
+    "管道压力",
+    "太阳能电压",
+    "瞬时流量",
+    "累积流量",
+    "供电电压",
+    "阀门状态",
     '更新时间'
 ];
+let dataIndex = [
+    'GatewayAddr',
+    'Press',
+    'SunElecPress',
+    'InstantNumber',
+    'WaterTotalNumber',
+    'BatteryPress',
+    'ValveStatus',
+    'updateTime',
+];
+
 export default class extends Component {
     constructor(props) {
         super(props)
         const { ballHistory } = props;
         const { items, itemCount } = ballHistory.data.data;
-        //标题数据
-        const titleData = ballHistory.title.data.data;
-        //需要过滤的title
-        let filtertitle = []
-        titleData.map((v, i) => {
-            let { displayName } = v;
-            filtertitle.push(displayName)
-        })
-        //拼接完成全部title  //显示设置
-        if (currentTitle.length == 1) {
-            filtertitle.map((v, i) => {
-                currentTitle.splice(0, 0, v);
-            })
-        };
         //获取设备信息
         let deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'));
         // console.log(deviceInfo)
@@ -41,39 +45,32 @@ export default class extends Component {
             itemCount,
             //列表数据源
             items,
-            //显示设置
-            currentTitle,
+            // 全部title 显示设置
+            tableTitle,
             //列表title
-            title: currentTitle,
+            title: tableTitle,
             //表头
             columns: [],
             //表单数据
             tableData: [],
             //显示设置弹窗可见性
             showSetVisible: false,
+            //title index
+            dataIndex,
         }
     }
     componentDidMount() {
         //初始化数据
-        this._getTableData(this.state.title, this.state.items);
+        this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
     }
-    componentWillUnmount(){
-        //移除localStorange
-        localStorage.removeItem('deviceInfo')
-    }
+    // componentWillUnmount(){
+    //     //移除localStorange
+    //     localStorage.removeItem('deviceInfo')
+    // }
     //获取表的数据
-    _getTableData(title, items) {
+    _getTableData(title, items, dataIndex) {
         let columns = [];
-        let dataIndex = [
-            'GatewayAddr',
-            'Press',
-            'SunElecPress',
-            'InstantNumber',
-            'WaterTotalNumber',
-            'BatteryPress',
-            'ValveStatus',
-            'updateTime',
-        ];
+        // console.log(dataIndex)
         title.map((v, i) => {
             columns.push({
                 title: v,
@@ -83,7 +80,7 @@ export default class extends Component {
             })
         })
         columns[columns.length - 1].fixed = columns.length > 10 ? 'right' : null;
-        columns[columns.length - 1].width = columns.length > 10 ? 'right' : null;
+        columns[columns.length - 1].width = columns.length > 10 ? 300 : null;
         let tableData = [];
         items.map((v, i) => {
             tableData.push({
@@ -117,11 +114,8 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            console.log(values.showSet)
-            // this.setState({
-            //     title:values.showSet,
-            //     columns:values.showSet.length
-            // })
+            let { dataIndex } = values;
+            //显示确定空出
         })
         // 重置表单
         form.resetFields();
@@ -174,7 +168,7 @@ export default class extends Component {
                             itemCount,
                             items
                         })
-                        this._getTableData(this.state.title, this.state.items);
+                        this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
                     }
                 })
         }).catch((err) => {
@@ -186,9 +180,10 @@ export default class extends Component {
             columns,
             tableData,
             showSetVisible,
-            currentTitle,
+            tableTitle,
             itemCount,
-            deviceInfo } = this.state;
+            deviceInfo,
+            dataIndex } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -203,7 +198,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ currentTitle }}
+                    {...{ tableTitle, dataIndex }}
                 />
                 <div className={styles.header}>
                     <Button icon="arrow-left"></Button>
@@ -213,7 +208,10 @@ export default class extends Component {
                     />
                 </div>
                 <div className={styles.deviceInfo}>
-                    <div className={styles.info}>{deviceInfo.deviceId}</div>
+                    <div className={styles.info}>
+                        <i className={classnames('dyhsicon', 'dyhs-shebeiID', `${styles.deviceId}`)}></i>
+                        {deviceInfo.deviceId}
+                    </div>
                     <div className={styles.info}>{deviceInfo.name}</div>
                     <div className={styles.info}>{deviceInfo.installAddr}</div>
                     <Button
@@ -244,62 +242,15 @@ export default class extends Component {
 
     }
 }
-//设备信息表单
-const InfoForm = Form.create()(
-    class extends React.Component {
-        render() {
-            const { form, deviceInfo } = this.props;
-            const { getFieldDecorator } = form;
-            return (
-                <Form layout='inline'>
-                    <Form.Item>
-                        {getFieldDecorator('deviceId', {
-                            initialValue: deviceInfo.deviceId
-                        })
-                            (
-                            <Input
-                                disabled
-                                prefix={<i className={classnames('dyhsicon', 'dyhs-shebeiID', `${styles.deviceId}`)}></i>}
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('name', {
-                            initialValue: deviceInfo.name
-                        })
-                            (
-                            <Input
-                                disabled
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('installAddr', {
-                            initialValue: deviceInfo.installAddr
-                        })
-                            (
-                            <Input
-                                disabled
-                            />
-                            )
-                        }
-                    </Form.Item>
-                </Form>
-            )
-        }
-    }
-)
 //显示设置弹窗表单
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, currentTitle } = this.props;
+            const { form, visible, onCancel, onOk, tableTitle, dataIndex } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = currentTitle
+            const options = tableTitle
             return (
                 <Modal
                     className={styles.showSet}
@@ -307,19 +258,22 @@ const ShowSetForm = Form.create()(
                     title="显示设置"
                     onCancel={onCancel}
                     onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
                 >
                     <Form>
                         <Form.Item>
-                            {getFieldDecorator('showSet', {
-                                initialValue: currentTitle
+                            {getFieldDecorator('dataIndex', {
+                                initialValue: dataIndex
                             })
                                 (
                                 <CheckboxGroup>
+                                    {/* 全选空出 */}
                                     <Row>
                                         {options.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>
-                                                    <Checkbox value={v}>{v}</Checkbox>
+                                                    <Checkbox value={dataIndex[i]}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}
