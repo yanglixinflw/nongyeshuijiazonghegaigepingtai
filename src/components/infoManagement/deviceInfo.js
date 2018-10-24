@@ -113,6 +113,7 @@ export default class extends Component {
                 // 表头添加字段
                 dataIndex: dataIndex[i],
                 align: 'center',
+                className:`${styles.tbw}`
             })
         })
         // console.log(columns)
@@ -203,9 +204,6 @@ export default class extends Component {
     }
     //取消显示设置 
     _setShowCancel() {
-        const form = this.showSetForm.props.form;
-        // 重置表单
-        form.resetFields();
         this.setState({
             showSetVisible: false
         })
@@ -227,14 +225,27 @@ export default class extends Component {
             dataIndex.map((v, i) => {
                 filterColumns.push(...sourceColumns.filter(item => item.dataIndex === v))
             })
-
+            // 排序函数
+            let compare = function (prop) {
+                return function (obj1, obj2) {
+                    let val1 = obj1[prop];
+                    let val2 = obj2[prop];
+                    if (val1 < val2) {
+                        return -1;
+                    } else if (val1 > val2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }            
+                } 
+            }
+            // 排序
+            filterColumns.sort(compare('number'))
+            // 保存标题
             filterColumns.map((v, i) => {
-                console.log(v.number)
+                title.push(v.title)
             })
-            // columns
-            // console.log(this.state.columns)
-            console.log(filterColumns)
-            // this._getTableData(title, this.state.data,dataIndex)
+            this._getTableData(title, this.state.data,dataIndex)
         })
         this.setState({
             showSetVisible: false
@@ -431,6 +442,7 @@ const ShowSetForm = Form.create()(
                                 (
                                 <CheckboxGroup>
                                     <Row>
+                                    {/* <Col><Checkbox value='q'>q</Checkbox></Col> */}
                                         {totalTitle.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>
