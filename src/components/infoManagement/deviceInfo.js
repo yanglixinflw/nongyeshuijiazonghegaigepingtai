@@ -27,7 +27,8 @@ let postOption = {
 
 // 开发环境
 const envNet = 'http://192.168.30.127:88'
-
+// 搜索、翻页接口
+const getDataUrl=`${envNet}/api/Device/list`
 // 全部title
 const totalTitle = [
     '设备ID',
@@ -192,6 +193,7 @@ export default class extends Component {
     }
     // 搜索功能
     _searchTableData() {
+        const{title,data,filterColumns}=this.state
         const form =this.searchForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
@@ -205,6 +207,27 @@ export default class extends Component {
             values.pageSize=10
             this.setState({
                 searchValue:values
+            })
+            return fetch(getDataUrl,{
+                ...postOption,
+                body:JSON.stringify({
+                    ...values
+                })
+            }).then((res)=>{
+                Promise.resolve(res.json())
+                .then((v)=>{
+                    if(v.ret==1){
+                        console.log(v)
+                        let {items,itemCount}=v.data
+                        this.setState({
+                            itemCount,
+                            data:items
+                        })
+                        this._getTableData(title,data,filterColumns)
+                    }
+                })
+            }).catch((err)=>{
+                console.log(err)
             })
         })
     }
