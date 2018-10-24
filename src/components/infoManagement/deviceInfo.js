@@ -86,7 +86,9 @@ export default class extends Component {
                 "areaName": "",
             },
             // 设备安装地列表
-            installAddress:props.list.data.data
+            installAddress:props.list.data.data,
+            // 过滤后的表头
+            filterColumns:sourceColumns
         }
     }
     componentDidMount() {
@@ -254,10 +256,13 @@ export default class extends Component {
                 title.push(v.title)
             })
             this._getTableData(title, this.state.data, filterColumns)
+            this.setState({
+                showSetVisible: false,
+                title,
+                filterColumns
+            })
         })
-        this.setState({
-            showSetVisible: false
-        })
+        
     }
     render() {
         const { columns, showSetVisible, tableData, itemCount ,installAddress} = this.state
