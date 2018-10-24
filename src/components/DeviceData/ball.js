@@ -10,28 +10,29 @@ const tableTitle = [
     "设备ID",
     "设备名称",
     "设备安装地",
-    "阀门状态",
-    "供电电压",
-    "累积流量",
-    "瞬时流量",
-    "太阳能电压",
-    "管道压力",
     "网关地址",
+    "管道压力",
+    "太阳能电压",
+    "瞬时流量",
+    "累积流量",
+    "供电电压",
+    "阀门状态",
     "更新时间"
 ];
 
-const dataIndex = [
-    'deviceId',
-    'name',
-    'installAddr',
-    'GatewayAddr',
-    'Press',
-    'SunElecPress',
-    'InstantNumber',
-    'WaterTotalNumber',
-    'BatteryPress',
-    'ValveStatus',
-    'updateTime'
+// 源columns拥有编号
+const sourceColumns =[
+    { title: "设备ID", dataIndex: "deviceId", number: 0 },
+    { title: "设备名称", dataIndex: "name", number: 1 },
+    { title: "设备安装地", dataIndex: "installAddr", number: 2 },
+    { title: "网关地址", dataIndex: "GatewayAddr", number: 3 },
+    { title: "管道压力", dataIndex: "Press", number: 4 },
+    { title: "太阳能电压", dataIndex: "SunElecPress", number: 5 },
+    { title: "瞬时流量", dataIndex: "InstantNumber", number: 6 },
+    { title: "累积流量", dataIndex: "WaterTotalNumber", number: 7 },
+    { title: "供电电压", dataIndex: "BatteryPress", number: 8 },
+    { title: "阀门状态", dataIndex: "ValveStatus", number: 9 },
+    { title: "更新时间", dataIndex: "updateTime", number: 10 }
 ]
 export default class extends Component {
     constructor(props) {
@@ -55,16 +56,20 @@ export default class extends Component {
             tableData: [],
             //显示设置弹窗可见性
             showSetVisible: false,
-            //title Index
-            dataIndex,
-            //搜索信息栏
-            deviceId: '',
-            name: '',
-            installAddrId: 0
+            // 搜索框默认值
+            searchValue: {
+                "deviceTypeId": 1,
+                "deviceId": "",
+                "name": "",
+                "installAddrId": 0,
+                "showColumns": [],
+            },
+            // 设置过滤后的表头
+            filterColumns:sourceColumns
         }
     }
     componentDidMount() {
-        this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
+        this._getTableData(this.state.title, this.state.items, sourceColumns);
 
     }
     //获取设备信息 此时使用localStorage
@@ -75,12 +80,14 @@ export default class extends Component {
     //获取表的数据
     _getTableData(title, items, dataIndex) {
         let columns = [];
+        // 设置columns
         title.map((v, i) => {
             columns.push({
                 title: v,
                 // 给表头添加字段名 必须一一对应
-                dataIndex: dataIndex[i],
+                dataIndex: dataIndex[i].dataIndex,
                 align: 'center',
+                className: `${styles.tbw}`
             })
         })
         //操作列
@@ -107,6 +114,7 @@ export default class extends Component {
             }
         })
         let tableData = [];
+        // 表单数据
         items.map((v, i) => {
             tableData.push({
                 deviceId: v.deviceId,
@@ -135,12 +143,12 @@ export default class extends Component {
             if (err) {
                 return
             }
+            values.pageIndex=0;
+            values.pageSize=10;
             // console.log(values)
             // 保存搜索信息 翻页
             this.setState({
-                deviceId: values.deviceId,
-                name: values.name,
-                installAddrId: values.installAddrId
+                searchValue:values
             })
             return fetch(dataUrl, {
                 method: "POST",
@@ -150,11 +158,7 @@ export default class extends Component {
                 }),
                 credentials: "include",
                 body: JSON.stringify({
-                    deviceTypeId: 1,
-                    ...values,
-                    showColumns: [],
-                    PageIndex: 0,
-                    pageSize: 10
+                    ...values
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
@@ -166,7 +170,8 @@ export default class extends Component {
                                 itemCount,
                                 items
                             })
-                            this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
+                            
+                            this._getTableData(this.state.title, this.state.items, this.state.filterColumns);
                         }
                     })
             }).catch((err) => {
@@ -194,23 +199,46 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            // console.log(values);
-            let {dataIndex} = values
-            //显示确定空出
-            
+            let { dataIndex } = values
+            // 过滤后的columns
+            let filterColumns = []
+            // 定义一个title
+            let title = []
+            // 比对dataIndex
+            dataIndex.map((v, i) => {
+                filterColumns.push(...sourceColumns.filter(item => item === v))
+            })
+            // 排序函数
+            let compare = function (prop) {
+                return function (obj1, obj2) {
+                    let val1 = obj1[prop];
+                    let val2 = obj2[prop];
+                    if (val1 < val2) {
+                        return -1;
+                    } else if (val1 > val2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+            // 排序
+            filterColumns.sort(compare('number'))
+            // 保存标题
+            filterColumns.map((v, i) => {
+                title.push(v.title)
+            })
+            this._getTableData(title, this.state.items, filterColumns)
+            this.setState({
+                showSetVisible: false,
+                title,
+                filterColumns
+            })
         })
-        // 重置表单
-        form.resetFields();
-        this.setState({
-            showSetVisible: false
-        })
+        
     }
     //显示设置点击取消
     _showSetCancelHandler() {
-        // console.log('点击取消按钮');
-        const form = this.showSetForm.props.form;
-        // 重置表单
-        form.resetFields();
         this.setState({
             showSetVisible: false
         })
@@ -221,8 +249,8 @@ export default class extends Component {
     }
     //翻页
     _pageChange(page) {
-        const { deviceId, name, installAddrId } = this.state;
-        let PageIndex = page - 1;
+        const { searchValue } = this.state;
+        searchValue.pageIndex=page-1;
         return fetch(dataUrl, {
             method: 'POST',
             mode: 'cors',
@@ -231,13 +259,7 @@ export default class extends Component {
             }),
             credentials: "include",
             body: JSON.stringify({
-                deviceTypeId: 1,
-                deviceId,
-                name,
-                installAddrId,
-                showColumns: [],
-                PageIndex,
-                pageSize: 10
+                ...searchValue
             })
         }).then((res) => {
             Promise.resolve(res.json())
@@ -254,7 +276,7 @@ export default class extends Component {
                             itemCount,
                             items
                         })
-                        this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
+                        this._getTableData(this.state.title, this.state.items,this.state.filterColumns);
                     }
                 })
         }).catch((err) => {
@@ -262,7 +284,7 @@ export default class extends Component {
         })
     }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle, itemCount, dataIndex } = this.state;
+        const { columns, tableData, showSetVisible, itemCount } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -276,7 +298,6 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ tableTitle, dataIndex }}
                 />
                 <div className={styles.header}>
                     <span>|</span>新天通球阀
@@ -383,11 +404,10 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, tableTitle, dataIndex } = this.props;
+            const { form, visible, onCancel, onOk } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = tableTitle;
             return (
                 <Modal
                     className={styles.showSet}
@@ -401,16 +421,16 @@ const ShowSetForm = Form.create()(
                     <Form>
                         <Form.Item>
                             {getFieldDecorator('dataIndex', {
-                                initialValue: dataIndex
+                                initialValue: sourceColumns
                             })
                                 (
                                 <CheckboxGroup >
                                     {/* 全选空出 */}
                                     <Row>
-                                        {options.map((v, i) => {
+                                        {tableTitle.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>
-                                                    <Checkbox value={dataIndex[i]}>{v}</Checkbox>
+                                                    <Checkbox value={sourceColumns[i]}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}

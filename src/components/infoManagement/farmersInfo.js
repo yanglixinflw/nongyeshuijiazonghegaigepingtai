@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from './common.less';
-import { Input, Button, Form, Cascader, Table, Modal,Radio} from 'antd';
+import { Input, Button, Form, Cascader, Table} from 'antd';
 // 开发环境用以翻页调用
 const envNet='http://192.168.30.127:88';
 const dataUrl=`${envNet}/api/PeasantMgr/list`;
@@ -13,14 +13,12 @@ const tableTitle=[
     {index:"userType",item:"用户类型"},
     {index:"orgId",item:"所属机构"}
 ]
-//表单弹窗
-const FormItem = Form.Item;
 export default class extends Component{
     constructor(props) {
         super(props)
         const { farmersInfo } = props;
         const { items } = farmersInfo.data.data;
-        const { itemCount } = farmersInfo.data.data;
+        const { itemCount } = farmersInfo.data.data;//用来翻页
         let tableData=[],tableIndex=[];
         tableTitle.map(v=>{
             tableData.push(v.item);
@@ -64,7 +62,7 @@ export default class extends Component{
                     <span className={styles.option}>
                         <Button
                             className={styles.edit}
-                            onClick={() => this._editFarmerInfo()}
+                            // onClick={() => this._editFarmerInfo()}
                             icon='edit'
                         >
                             修改
@@ -107,7 +105,7 @@ export default class extends Component{
         console.log("修改")
     }
     // 搜索功能
-    _searchTableDatas() {
+    _searchTableData() {
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
@@ -185,7 +183,7 @@ export default class extends Component{
                     {/* 表单信息 */}
                     <SearchForm
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        searchHandler={() => this._searchTableDatas()}
+                        searchHandler={() => this._searchTableData()}
                         resetHandler={() => this._resetForm()}
                     />
                     <div className={styles.buttonGroup}>

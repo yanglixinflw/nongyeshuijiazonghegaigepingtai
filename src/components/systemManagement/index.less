@@ -21,8 +21,8 @@
     padding-top: 15px;
     padding-left: 21px;
     margin-bottom: 20px;
-    margin-left: 20px;
-    margin-right:20px;
+    margin-left: 35px;
+    margin-right:35px;
     :global{
         .ant-form{
             .ant-input{
@@ -47,10 +47,9 @@
         }
         .ant-btn{
             border-radius: 50px;
-            height: 38px;
+            height: 46px;
             width: 130px;
             background: #2E386C;
-            margin-right: 16px;
             color: #ACB5E8;
             border: 0;
             outline: 0;
@@ -66,8 +65,8 @@
 :global{
     .ant-table{
         background:#1C2241;
-        margin-left: 20px;
-        margin-right:20px;
+        margin-left: 35px;
+        margin-right:35px;
         .ant-table-content{
             .ant-table-body{
                 .ant-table-thead{
@@ -137,5 +136,52 @@
                 border: 1px solid #637890;
                 color: #637890;
             }
+    }
+}
+//媒体查询 自适应
+@media(max-width:1699px){
+    .searchForm {
+        :global{
+            .ant-input {
+                max-width: 160px;
+            }
+            .ant-cascader-picker{
+                max-width: 160px;
+            }
+        }
+    }
+}
+@media(max-width:1499px){
+    .searchForm {
+        :global{
+            .ant-input {
+                max-width: 150px;
+            }
+            .ant-cascader-picker{
+                max-width: 150px;
+            }
+            .ant-btn{
+                max-width: 90px;
+            }
+        }
+    }
+}
+@media(max-width:1299px){
+    .searchForm {
+        :global{
+            .ant-form-item{
+                margin-right:6px;
+                .ant-input {
+                    max-width: 150px;
+                }
+                .ant-cascader-picker{
+                    max-width: 150px;
+                }
+            }
+            
+            .ant-btn{
+                max-width: 80px;
+            }
+        }
     }
 }

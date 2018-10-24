@@ -3,14 +3,13 @@ import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
 // 开发环境
-const envNet='http://192.168.30.127:88';
-const dataUrl=`${envNet}/api/DeviceData/list`;
+const envNet = 'http://192.168.30.127:88';
+const dataUrl = `${envNet}/api/DeviceData/list`;
 //全部的title
 const tableTitle = [
     '设备ID',
     '设备名称',
     '设备安装地',
-    '关联建筑物',
     '空气温度',
     '空气湿度',
     '光照',
@@ -21,21 +20,20 @@ const tableTitle = [
     '雨量',
     '更新时间'
 ];
-// 全部title Index
-let dataIndex = [
-    'deviceId',
-    'name',
-    'installAddr',
-    'ownerBuilding',
-    'AirTemperature',
-    'AirHumidity',
-    'Illumination',
-    'Pressure',
-    'Evaporate',
-    'WindDirection',
-    'WindSpeed',
-    'Rainfall',
-    'updateTime'
+// 源columns拥有编号
+const sourceColumns = [
+    { title: "设备ID", dataIndex: "deviceId", number: 0 },
+    { title: "设备名称", dataIndex: "name", number: 1 },
+    { title: "设备安装地", dataIndex: "installAddr", number: 2 },
+    { title: "空气温度", dataIndex: "AirTemperature", number: 3 },
+    { title: "空气湿度", dataIndex: "AirHumidity", number: 4 },
+    { title: "光照", dataIndex: "Illumination", number: 5 },
+    { title: "大气压力", dataIndex: "Pressure", number: 6 },
+    { title: "蒸发", dataIndex: "Evaporate", number: 7 },
+    { title: "风向", dataIndex: "WindDirection", number: 8 },
+    { title: "风速", dataIndex: "WindSpeed", number: 9 },
+    { title: "雨量", dataIndex: "Rainfall", number: 10 },
+    { title: "更新时间", dataIndex: "updateTime", number: 11 }
 ];
 export default class extends Component {
     constructor(props) {
@@ -60,21 +58,25 @@ export default class extends Component {
             tableData: [],
             //显示设置弹窗可见性
             showSetVisible: false,
-             //title Index
-             dataIndex,
-             //搜索信息栏
-             deviceId: '',
-             name: '',
-             installAddrId: 0
+            //title Index
+            dataIndex,
+            // 搜索框默认值
+            searchValue: {
+                "deviceTypeId": 3,
+                "deviceId": "",
+                "name": "",
+                "installAddrId": 0,
+                "showColumns": [],
+            }
         }
     }
     componentDidMount() {
-        this._getTableData(this.state.title, this.state.items,this.state.dataIndex);
+        this._getTableData(this.state.title, this.state.items, sourceColumns);
     }
     //获取设备信息 此时使用localStorage
-    _getDeviceInfo(value){
+    _getDeviceInfo(value) {
         let deviceInfo = JSON.stringify(value);
-        localStorage.setItem('deviceInfo',deviceInfo)
+        localStorage.setItem('deviceInfo', deviceInfo)
     }
     //获取表的数据
     _getTableData(title, items, dataIndex) {
@@ -83,8 +85,9 @@ export default class extends Component {
             columns.push({
                 title: v,
                 // 给表头添加字段名 必须一一对应
-                dataIndex: dataIndex[i],
+                dataIndex: dataIndex[i].dataIndex,
                 align: 'center',
+                className: `${styles.tbw}`
             })
         })
         //操作列
@@ -101,7 +104,7 @@ export default class extends Component {
                             <Button
                                 icon='bar-chart'
                                 className={styles.btnhistroy}
-                                onClick={()=>this._getDeviceInfo(record)}
+                                onClick={() => this._getDeviceInfo(record)}
                             >
                                 历史记录
                         </Button>
@@ -116,7 +119,6 @@ export default class extends Component {
                 deviceId: v.deviceId,
                 name: v.name,
                 installAddr: v.installAddr,
-                ownerBuilding: v.ownerBuilding,
                 AirTemperature: v.realTimeData.AirTemperature,
                 AirHumidity: v.realTimeData.AirHumidity,
                 Illumination: v.realTimeData.Illumination,
@@ -141,12 +143,12 @@ export default class extends Component {
             if (err) {
                 return
             }
+            values.pageIndex=0;
+            values.pageSize=10;
             // console.log(values)
             // 保存搜索信息 翻页
             this.setState({
-                deviceId: values.deviceId,
-                name: values.name,
-                installAddrId: values.installAddrId
+                searchValue:values
             })
             return fetch(dataUrl, {
                 method: "POST",
@@ -156,23 +158,19 @@ export default class extends Component {
                 }),
                 credentials: "include",
                 body: JSON.stringify({
-                    deviceTypeId: 3,
                     ...values,
-                    showColumns: [],
-                    PageIndex: 0,
-                    pageSize: 10
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
                         if (v.ret == 1) {
                             // 设置页面显示的元素
-                            let {items,itemCount} = v.data;
+                            let { items, itemCount } = v.data;
                             this.setState({
                                 itemCount,
                                 items
                             })
-                            this._getTableData(this.state.title, this.state.items,this.state.dataIndex);
+                            this._getTableData(this.state.title, this.state.items, sourceColumns);
                         }
                     })
             }).catch((err) => {
@@ -200,22 +198,43 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            // console.log(values)
-            let {dataIndex} = values
-            //显示确定空出
+            let { dataIndex } = values
+            // 过滤后的columns
+            let filterColumns = []
+            // 定义一个title
+            let title = []
+            // 比对dataIndex
+            dataIndex.map((v, i) => {
+                filterColumns.push(...sourceColumns.filter(item => item === v))
+            })
+            // 排序函数
+            let compare = function (prop) {
+                return function (obj1, obj2) {
+                    let val1 = obj1[prop];
+                    let val2 = obj2[prop];
+                    if (val1 < val2) {
+                        return -1;
+                    } else if (val1 > val2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+            // 排序
+            filterColumns.sort(compare('number'))
+            // 保存标题
+            filterColumns.map((v, i) => {
+                title.push(v.title)
+            })
+            this._getTableData(title, this.state.items, filterColumns)
         })
-        // 重置表单
-        form.resetFields();
         this.setState({
             showSetVisible: false
         })
     }
     //显示设置点击取消
     _showSetCancelHandler() {
-        // console.log('点击取消按钮');
-        const form = this.showSetForm.props.form;
-        // 重置表单
-        form.resetFields();
         this.setState({
             showSetVisible: false
         })
@@ -225,53 +244,47 @@ export default class extends Component {
         console.log("导出数据")
     }
     //翻页
-    _pageChange(page){
-        const { deviceId, name,installAddrId} = this.state;
-        let PageIndex = page - 1;
-        return fetch(dataUrl,{
-            method:'POST',
-            mode:'cors',
-            headers:new Headers({
+    _pageChange(page) {
+        const { searchValue } = this.state;
+        searchValue.pageIndex=page-1;
+        return fetch(dataUrl, {
+            method: 'POST',
+            mode: 'cors',
+            headers: new Headers({
                 'Content-Type': 'application/json',
             }),
             credentials: "include",
-            body:JSON.stringify({
-                deviceTypeId: 3,
-                deviceId,
-                name,
-                installAddrId,
-                showColumns: [],
-                PageIndex,
-                pageSize: 10
+            body: JSON.stringify({
+                ...searchValue
             })
-        }).then((res)=>{
+        }).then((res) => {
             Promise.resolve(res.json())
-            .then((v)=>{
-                if(v.ret==1){
-                    // console.log(v);
-                    // 设置页面显示的元素
-                    const {items,itemCount} = v.data;
-                    //添加key
-                    items.map((v, i) => {
-                        v.key = i
-                    })
-                    this.setState({
-                        itemCount,
-                        items
-                    })
-                    this._getTableData(this.state.title, this.state.items,this.state.dataIndex);
-                }
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v);
+                        // 设置页面显示的元素
+                        const { items, itemCount } = v.data;
+                        //添加key
+                        items.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            itemCount,
+                            items
+                        })
+                        this._getTableData(this.state.title, this.state.items, sourceColumns);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         })
     }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle, itemCount,dataIndex } = this.state;
+        const { columns, tableData, showSetVisible, tableTitle, itemCount, dataIndex } = this.state;
         const paginationProps = {
             showQuickJumper: true,
-            total:itemCount,
+            total: itemCount,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
@@ -282,7 +295,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ tableTitle,dataIndex }}
+                    {...{ tableTitle, dataIndex }}
                 />
                 <div className={styles.header}>
                     <span>|</span>清易气象
@@ -311,7 +324,7 @@ export default class extends Component {
                     pagination={paginationProps}
                     dataSource={tableData}
                     scroll={
-                        {x:columns.length>10?2200:false}
+                        { x: columns.length > 10 ? 2200 : false }
                     }
                 />
             </div>
@@ -329,7 +342,7 @@ const SearchForm = Form.create()(
                 <Form layout='inline'>
                     <Form.Item>
                         {getFieldDecorator('deviceId', {
-                            initialValue:''
+                            initialValue: ''
                         })
                             (
                             <Input
@@ -341,7 +354,7 @@ const SearchForm = Form.create()(
                     </Form.Item>
                     <Form.Item>
                         {getFieldDecorator('name', {
-                            initialValue:''
+                            initialValue: ''
                         })
                             (
                             <Input
@@ -353,7 +366,7 @@ const SearchForm = Form.create()(
                     </Form.Item>
                     <Form.Item>
                         {getFieldDecorator('installAddrId', {
-                            initialValue:''
+                            initialValue: ''
                         })
                             (
                             <Cascader
@@ -388,7 +401,7 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, tableTitle,dataIndex } = this.props;
+            const { form, visible, onCancel, onOk, tableTitle, dataIndex } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
@@ -406,7 +419,7 @@ const ShowSetForm = Form.create()(
                     <Form>
                         <Form.Item>
                             {getFieldDecorator('dataIndex', {
-                                initialValue:dataIndex
+                                initialValue: dataIndex
                             })
                                 (
                                 <CheckboxGroup>
