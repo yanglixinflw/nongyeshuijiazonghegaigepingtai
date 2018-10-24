@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from './common.less';
-import { Input, Button, Form, Cascader, Table, Modal,Radio} from 'antd';
+import { Input, Button, Form, Cascader, Table} from 'antd';
 // 开发环境用以翻页调用
 const envNet='http://192.168.30.127:88';
 const dataUrl=`${envNet}/api/PeasantMgr/list`;
@@ -13,14 +13,12 @@ const tableTitle=[
     {index:"userType",item:"用户类型"},
     {index:"orgId",item:"所属机构"}
 ]
-//表单弹窗
-const FormItem = Form.Item;
 export default class extends Component{
     constructor(props) {
         super(props)
         const { farmersInfo } = props;
         const { items } = farmersInfo.data.data;
-        const { itemCount } = farmersInfo.data.data;
+        const { itemCount } = farmersInfo.data.data;//用来翻页
         let tableData=[],tableIndex=[];
         tableTitle.map(v=>{
             tableData.push(v.item);
