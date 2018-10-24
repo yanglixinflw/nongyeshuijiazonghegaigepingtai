@@ -87,3 +87,12 @@ export function queryDeviceHistory(params){
     )
   })
 }
+//用户管理
+export function getUserManagement(params){
+  return request(`${envNet}/api/UserMgr/list`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}

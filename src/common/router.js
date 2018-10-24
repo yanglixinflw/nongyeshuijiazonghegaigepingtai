@@ -109,6 +109,9 @@ export const getRouterData = app => {
     '/messageManagement/farmerInfor':{
       component: dynamicWrapper(app, ['farmersInfo'], () => import('../routes/messageManagement/farmersInfo')),
     },
+    '/system/userManagement':{
+      component: dynamicWrapper(app, ['userManagement'], () => import('../routes/systemManagement/userManagement')),
+    },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     // },

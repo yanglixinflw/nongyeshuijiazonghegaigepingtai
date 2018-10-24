@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from './common.less';
-import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col  } from 'antd';
+import { Input, Button, Form, Cascader, Table,} from 'antd';
 // 开发环境
 const envNet='http://192.168.30.127:88';
 const dataUrl=`${envNet}/api/PeasantMgr/list`;
