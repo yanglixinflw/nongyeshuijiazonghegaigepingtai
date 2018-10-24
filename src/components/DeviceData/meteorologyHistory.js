@@ -80,7 +80,7 @@ export default class extends Component {
             })
         })
         columns[columns.length - 1].fixed = columns.length > 10 ? 'right' : null;
-        columns[columns.length - 1].width = columns.length > 10 ? 'right' : null;
+        columns[columns.length - 1].width = columns.length > 10 ? 300 : null;
         let tableData = [];
         items.map((v, i) => {
             tableData.push({
