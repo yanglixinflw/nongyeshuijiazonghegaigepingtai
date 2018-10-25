@@ -4,8 +4,17 @@ import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 
 import { Link } from 'dva/router';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
-//搜索 翻页
+//搜索 翻页url
 const dataUrl = `${envNet}/api/DeviceData/list`;
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+};
 // 全部title tableTitle
 const tableTitle = [
     "设备ID",
@@ -20,9 +29,8 @@ const tableTitle = [
     "阀门状态",
     "更新时间"
 ];
-
 // 源columns拥有编号
-const sourceColumns =[
+const sourceColumns = [
     { title: "设备ID", dataIndex: "deviceId", number: 0 },
     { title: "设备名称", dataIndex: "name", number: 1 },
     { title: "设备安装地", dataIndex: "installAddr", number: 2 },
@@ -34,18 +42,18 @@ const sourceColumns =[
     { title: "供电电压", dataIndex: "BatteryPress", number: 8 },
     { title: "阀门状态", dataIndex: "ValveStatus", number: 9 },
     { title: "更新时间", dataIndex: "updateTime", number: 10 }
-]
+];
 export default class extends Component {
     constructor(props) {
         super(props)
         const { ball } = props;
-        // console.log(items)
+        // console.log(props)
         // 获取标题和数据
         this.state = {
             //数据总数
-            itemCount:ball.data.data.itemCount,
+            itemCount: ball.data.data.itemCount,
             //列表数据源
-            items:ball.data.data.items,
+            items: ball.data.data.items,
             //数据列表所有title
             tableTitle,
             //显示的数据列表title
@@ -58,12 +66,16 @@ export default class extends Component {
             showSetVisible: false,
             // 搜索框默认值
             searchValue: {
+                "deviceTypeId": 1,
                 "deviceId": "",
                 "name": "",
                 "installAddrId": 0,
+                "showColumns": [],
+                "pageIndex": 0,
+                "pageSize": 10
             },
             // 设置过滤后的表头
-            filterColumns:sourceColumns
+            filterColumns: sourceColumns
         }
     }
     componentDidMount() {
@@ -101,7 +113,6 @@ export default class extends Component {
                         <Link to={`/ball/history:${record.deviceId}`}>
                             <Button
                                 icon='bar-chart'
-                                className={styles.btnhistroy}
                                 onClick={() => this._getDeviceInfo(record)}
                             >
                                 历史记录
@@ -136,29 +147,24 @@ export default class extends Component {
     }
     // 搜索功能
     _searchTableData() {
-        const {title ,  filterColumns} = this.state;
+        const { title, filterColumns } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
                 return
             }
             // 未定义时给空值
-            values.deviceTypeId=undefined||1
-            values.showColumns=undefined||[]
-            values.pageIndex=0;
-            values.pageSize=10;
-            console.log(values)
+            values.deviceTypeId = undefined || 1
+            values.showColumns = undefined || []
+            values.pageIndex = 0;
+            values.pageSize = 10;
+            // console.log(values)
             // 保存搜索信息 翻页
             this.setState({
-                searchValue:values
+                searchValue: values
             })
             return fetch(dataUrl, {
-                method: "POST",
-                mode: 'cors',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                }),
-                credentials: "include",
+                ...postOption,
                 body: JSON.stringify({
                     ...values
                 })
@@ -173,8 +179,8 @@ export default class extends Component {
                                 itemCount,
                                 items
                             })
-                            
-                            this._getTableData(title, this.state.items, filterColumns);
+
+                            this._getTableData(title, items, filterColumns);
                         }
                     })
             }).catch((err) => {
@@ -196,6 +202,7 @@ export default class extends Component {
     }
     //显示设置点击确定
     _showSetOkHandler() {
+        const { items } = this.state
         const form = this.showSetForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
@@ -231,14 +238,13 @@ export default class extends Component {
             filterColumns.map((v, i) => {
                 title.push(v.title)
             })
-            this._getTableData(title, this.state.items, filterColumns)
+            this._getTableData(title, items, filterColumns)
             this.setState({
                 showSetVisible: false,
                 title,
                 filterColumns
             })
         })
-        
     }
     //显示设置点击取消
     _showSetCancelHandler() {
@@ -252,16 +258,11 @@ export default class extends Component {
     }
     //翻页
     _pageChange(page) {
-        const {title ,  filterColumns} = this.state;
-        const { searchValue } = this.state;
-        searchValue.pageIndex=page-1;
+        const { searchValue, title, filterColumns } = this.state;
+        // console.log(searchValue)
+        searchValue.pageIndex = page - 1;
         return fetch(dataUrl, {
-            method: 'POST',
-            mode: 'cors',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-            }),
-            credentials: "include",
+            ...postOption,
             body: JSON.stringify({
                 ...searchValue
             })
@@ -281,7 +282,7 @@ export default class extends Component {
                             itemCount,
                             items
                         })
-                        this._getTableData(title, this.state.items, filterColumns);
+                        this._getTableData(title, items, filterColumns);
                     }
                 })
         }).catch((err) => {
@@ -430,7 +431,6 @@ const ShowSetForm = Form.create()(
                             })
                                 (
                                 <CheckboxGroup >
-                                    {/* 全选空出 */}
                                     <Row>
                                         {tableTitle.map((v, i) => {
                                             return (
