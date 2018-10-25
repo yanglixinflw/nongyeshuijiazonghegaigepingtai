@@ -4,7 +4,17 @@ import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 
 import { Link } from 'dva/router';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
+//搜索 翻页url
 const dataUrl = `${envNet}/api/DeviceData/list`;
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+};
 //全部title tableTitle
 const tableTitle = [
     '设备ID',
@@ -34,49 +44,49 @@ const tableTitle = [
     '设备状态(泵)',
     '更新时间',
 ]
-let dataIndex = [
-    'deviceId',
-    'name',
-    'installAddr',
-    'WaterLevel',
-    'Pressure',
-    'Flow',
-    'ThisSumPower',
-    'ThisSumWater',
-    'ThisStart',
-    'ThisStop',
-    'VoltageA',
-    'VoltageB',
-    'VoltageC',
-    'CurrentA',
-    'CurrentB',
-    'CurrentC',
-    'Voltage',
-    'Csq',
-    'WaterTotalYear',
-    'WaterTotal',
-    'PowerTotal',
-    'DeStateIC',
-    'DeStateMeter',
-    'DeStateGate',
-    'DeStatePump',
-    'updateTime',
+// 源columns拥有编号
+const sourceColumns = [
+    { title: "设备ID", dataIndex: "deviceId", number: 0 },
+    { title: "设备名称", dataIndex: "name", number: 1 },
+    { title: "设备安装地", dataIndex: "installAddr", number: 2 },
+    { title: "水位", dataIndex: "WaterLevel", number: 3 },
+    { title: "管道压力", dataIndex: "Pressure", number: 4 },
+    { title: "瞬时流量", dataIndex: "Flow", number: 5 },
+    { title: "本次用电量", dataIndex: "ThisSumPower", number: 6 },
+    { title: "本次用水量", dataIndex: "ThisSumWater", number: 7 },
+    { title: "本次开泵时间", dataIndex: "ThisStart", number: 8 },
+    { title: "本次关泵时间", dataIndex: "ThisStop", number: 9 },
+    { title: "三相电压A", dataIndex: "VoltageA", number: 10 },
+    { title: "三相电压B", dataIndex: "VoltageB", number: 11 },
+    { title: "三相电压C", dataIndex: "VoltageC", number: 12 },
+    { title: "三相电流A", dataIndex: "CurrentA", number: 13 },
+    { title: "三相电流B", dataIndex: "CurrentB", number: 14 },
+    { title: "三相电流C", dataIndex: "CurrentC", number: 15 },
+    { title: "工作电压", dataIndex: "Voltage", number: 16 },
+    { title: "SIM卡信号强度", dataIndex: "Csq", number: 17 },
+    { title: "年用水量", dataIndex: "WaterTotalYear", number: 18 },
+    { title: "累计用水量", dataIndex: "WaterTotal", number: 19 },
+    { title: "累计用电量", dataIndex: "PowerTotal", number: 20 },
+    { title: "设备IC状态", dataIndex: "DeStateIC", number: 21 },
+    { title: "设备仪表状态", dataIndex: "DeStateMeter", number: 22 },
+    { title: "设备网关状态", dataIndex: "DeStateGate", number: 23 },
+    { title: "设备状态(泵)", dataIndex: "DeStatePump", number: 24 },
+    { title: "更新时间", dataIndex: "updateTime", number: 25 }
 ];
 export default class extends Component {
     constructor(props) {
         super(props)
         const { wells } = props;
-        const { items, itemCount } = wells.data.data;
-        // console.log(items)
+        // console.log(props)
         //获取标题和数据
         this.state = {
             //数据总数
-            itemCount,
+            itemCount:wells.data.data.itemCount,
             //列表数据源
-            items,
+            items:wells.data.data.items,
             //总数据列表title
             tableTitle,
-            //显示的数据列表title中文
+            //显示的数据列表title
             title: tableTitle,
             //表头
             columns: [],
@@ -84,16 +94,22 @@ export default class extends Component {
             tableData: [],
             //显示设置弹窗可见性
             showSetVisible: false,
-            //title Index
-            dataIndex,
-            //搜索信息栏
-            deviceId: '',
-            name: '',
-            installAddrId: 0
+            // 搜索框默认值
+            searchValue: {
+                "deviceTypeId": 2,
+                "deviceId": "",
+                "name": "",
+                "installAddrId": 0,
+                "showColumns": [],
+                "pageIndex": 0,
+                "pageSize": 10
+            },
+            // 设置过滤后的表头
+            filterColumns: sourceColumns
         }
     }
     componentDidMount() {
-        this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
+        this._getTableData(this.state.title, this.state.items, sourceColumns);
     }
     //获取设备信息 此时使用localStorage
     _getDeviceInfo(value) {
@@ -107,8 +123,9 @@ export default class extends Component {
             columns.push({
                 title: v,
                 // 给表头添加字段名 必须一一对应
-                dataIndex: dataIndex[i],
+                dataIndex: dataIndex[i].dataIndex,
                 align: 'center',
+                className: `${styles.tbw}`
             })
         })
         //操作列
@@ -124,7 +141,6 @@ export default class extends Component {
                         <Link to={`/wells/history:${record.deviceId}`}>
                             <Button
                                 icon='bar-chart'
-                                className={styles.btnhistroy}
                                 onClick={() => this._getDeviceInfo(record)}
                             >
                                 历史记录
@@ -173,31 +189,26 @@ export default class extends Component {
     }
     // 搜索功能
     _searchTableData() {
+        const { title, filterColumns } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
                 return
             }
-            // console.log(values)
-            // 保存搜索信息 翻页
-            this.setState({
-                deviceId: values.deviceId,
-                name: values.name,
-                installAddrId: values.installAddrId
-            })
+             // 未定义时给空值
+             values.deviceTypeId = undefined || 2
+             values.showColumns = undefined || []
+             values.pageIndex = 0;
+             values.pageSize = 10;
+             // console.log(values)
+             // 保存搜索信息 翻页
+             this.setState({
+                 searchValue: values
+             })
             return fetch(dataUrl, {
-                method: "POST",
-                mode: 'cors',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                }),
-                credentials: "include",
+                ...postOption,
                 body: JSON.stringify({
-                    deviceTypeId: 2,
-                    ...values,
-                    showColumns: [],
-                    PageIndex: 0,
-                    pageSize: 10
+                    ...values
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
@@ -209,9 +220,11 @@ export default class extends Component {
                                 itemCount,
                                 items
                             })
-                            this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
+                            this._getTableData(title, items, filterColumns);
                         }
                     })
+            }).catch((err) => {
+                console.log(err)
             })
         })
     }
@@ -229,28 +242,52 @@ export default class extends Component {
     }
     //显示设置点击确定
     _showSetOkHandler() {
+        const { items } = this.state;
         const form = this.showSetForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
             if (err) {
                 return;
             }
-            // console.log(values)
-            let {dataIndex} = values
-            //显示确定空出
-        })
-        // 重置表单
-        form.resetFields();
-        this.setState({
-            showSetVisible: false
+            let { dataIndex } = values
+            // 过滤后的columns
+            let filterColumns = []
+            // 定义一个title
+            let title = []
+            // 比对dataIndex
+            dataIndex.map((v, i) => {
+                filterColumns.push(...sourceColumns.filter(item => item === v))
+            })
+            // 排序函数
+            let compare = function (prop) {
+                return function (obj1, obj2) {
+                    let val1 = obj1[prop];
+                    let val2 = obj2[prop];
+                    if (val1 < val2) {
+                        return -1;
+                    } else if (val1 > val2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+            // 排序
+            filterColumns.sort(compare('number'))
+            // 保存标题
+            filterColumns.map((v, i) => {
+                title.push(v.title)
+            })
+            this._getTableData(title, items, filterColumns)
+            this.setState({
+                showSetVisible: false,
+                title,
+                filterColumns
+            })
         })
     }
     //显示设置点击取消
     _showSetCancelHandler() {
-        // console.log('点击取消按钮');
-        const form = this.showSetForm.props.form;
-        // 重置表单
-        form.resetFields();
         this.setState({
             showSetVisible: false
         })
@@ -261,23 +298,12 @@ export default class extends Component {
     }
     //翻页
     _pageChange(page) {
-        const { deviceId, name, installAddrId } = this.state;
-        let PageIndex = page - 1;
+        const { searchValue, title, filterColumns } = this.state;
+        searchValue.pageIndex = page - 1;
         return fetch(dataUrl, {
-            method: 'POST',
-            mode: 'cors',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-            }),
-            credentials: "include",
+            ...postOption,
             body: JSON.stringify({
-                deviceTypeId: 2,
-                deviceId,
-                name,
-                installAddrId,
-                showColumns: [],
-                PageIndex,
-                pageSize: 10
+                ...searchValue
             })
         }).then((res) => {
             Promise.resolve(res.json())
@@ -285,7 +311,8 @@ export default class extends Component {
                     if (v.ret == 1) {
                         // console.log(v);
                         // 设置页面显示的元素
-                        const { items, itemCount } = v.data;
+                        let items = v.data.items;
+                        let itemCount = v.data.itemCount;
                         //添加key
                         items.map((v, i) => {
                             v.key = i
@@ -294,16 +321,15 @@ export default class extends Component {
                             itemCount,
                             items
                         })
-                        this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
+                        this._getTableData(itle, items, filterColumns);
                     }
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+                })  
+        }).catch((err) => {
+            console.log(err)
         })
     }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle, itemCount, dataIndex } = this.state;
+        const { columns, tableData, showSetVisible, itemCount } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -317,7 +343,6 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ tableTitle, dataIndex }}
                 />
                 <div className={styles.header}>
                     <span>|</span>开创井电
@@ -387,7 +412,7 @@ const SearchForm = Form.create()(
                     </Form.Item>
                     <Form.Item>
                         {getFieldDecorator('installAddrId', {
-                            initialValue: ''
+                            initialValue: 0
                         })
                             (
                             <Cascader
@@ -409,6 +434,7 @@ const SearchForm = Form.create()(
                             icon='reload'
                             className={styles.searchButton}
                             onClick={() => resetHandler()}
+                            htmlType='submit'
                         >
                             重置</Button>
                     </Form.Item>
@@ -422,11 +448,10 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, tableTitle, dataIndex } = this.props;
+            const { form, visible, onCancel, onOk } = this.props;
             // console.log(title)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = tableTitle
             return (
                 <Modal
                     className={styles.showSet}
@@ -440,15 +465,15 @@ const ShowSetForm = Form.create()(
                     <Form>
                         <Form.Item>
                             {getFieldDecorator('dataIndex', {
-                                initialValue: dataIndex
+                                initialValue: sourceColumns
                             })
                                 (
                                 <CheckboxGroup>
                                     <Row>
-                                        {options.map((v, i) => {
+                                        {tableTitle.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>
-                                                    <Checkbox value={dataIndex[i]}>{v}</Checkbox>
+                                                    <Checkbox value={sourceColumns[i]}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}

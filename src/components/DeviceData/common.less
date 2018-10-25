@@ -46,13 +46,11 @@
 .searchForm {
     height: 75px;
     line-height: 75px;
-    margin-left: 35px;
-    margin-right:35px;
+    margin:0 40px 20px 40px;
     display: flex;
     background: #1C2241;
     padding-top: 15px;
     padding-left: 21px;
-    margin-bottom: 20px;
     :global {
         .ant-form {
             line-height: 75px;
@@ -152,8 +150,7 @@
     .ant-table-wrapper {
         .ant-table {
             background: #2E3459;
-            margin-left: 35px;
-            margin-right:35px;
+            margin:0 40px;
             .ant-table-content {
                 
                     .ant-table-body {
@@ -323,7 +320,7 @@
     }
 }
 
-@media(max-width:1295px) {
+@media(max-width:1305px) {
     .searchForm {
         :global {
             .ant-form {
@@ -358,7 +355,7 @@
     }
 }
 
-@media(max-width:1230px) {
+@media(max-width:1240px) {
     .searchForm {
         :global {
             .ant-form {
@@ -398,7 +395,7 @@
     }
 }
 
-@media(max-width:1175px) {
+@media(max-width:1190px) {
     .searchForm {
         :global {
             .ant-form {
@@ -436,8 +433,7 @@
         }
     }
 }
-
-@media(max-width:1120px) {
+@media(max-width:1130px) {
     .searchForm {
         :global {
             .ant-form {
@@ -471,6 +467,45 @@
                     position: absolute;
                     top: 12px;
                     left: 5px;
+                }
+            }
+        }
+    }
+}
+@media(max-width:1130px) {
+    .searchForm {
+        :global {
+            .ant-form {
+                .ant-form-item {
+                    margin-right: 5px;
+                }
+                .ant-input {
+                    max-width: 110px;
+                    margin-right: 0px;
+                }
+                .ant-cascader-picker {
+                    max-width: 110px;
+                    margin-left: 0px;
+                }
+                .ant-btn {
+                    max-width: 70px;
+                    margin-left: 0px;
+                    position: relative;
+                    .anticon {
+                        position: absolute;
+                        top: 12px;
+                        left: 8px;
+                    }
+                }
+            }
+            .ant-btn {
+                max-width: 80px;
+                margin-right: 5px;
+                position: relative;
+                .anticon {
+                    position: absolute;
+                    top: 12px;
+                    left: 3px;
                 }
             }
         }
