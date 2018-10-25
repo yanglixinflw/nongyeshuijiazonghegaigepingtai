@@ -4,8 +4,16 @@ import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 
 import { Link } from 'dva/router';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
-//搜索 翻页
+//搜索 翻页url
 const dataUrl = `${envNet}/api/DeviceData/list`;
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+}
 //全部的title
 const tableTitle = [
     '设备ID',
@@ -40,15 +48,13 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { meteorology } = props;
-        const { items } = meteorology.data.data;
-        const { itemCount } = meteorology.data.data;
         // console.log(currentTitle)
         // 获取标题和数据
         this.state = {
             //数据总数
-            itemCount,
+            itemCount: meteorology.data.data.itemCount,
             //列表数据源
-            items,
+            items: meteorology.data.data.items,
             //总数据列表title
             tableTitle,
             //显示的数据列表title中文
@@ -66,9 +72,11 @@ export default class extends Component {
                 "name": "",
                 "installAddrId": 0,
                 "showColumns": [],
+                "pageIndex": 0,
+                "pageSize": 10
             },
             // 设置过滤后的表头
-            filterColumns:sourceColumns
+            filterColumns: sourceColumns
         }
     }
     componentDidMount() {
@@ -104,7 +112,6 @@ export default class extends Component {
                         <Link to={`/meteorology/history:${record.deviceId}`}>
                             <Button
                                 icon='bar-chart'
-                                className={styles.btnhistroy}
                                 onClick={() => this._getDeviceInfo(record)}
                             >
                                 历史记录
@@ -139,25 +146,24 @@ export default class extends Component {
     }
     // 搜索功能
     _searchTableData() {
+        const { title, filterColumns } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
                 return
             }
-            values.pageIndex=0;
-            values.pageSize=10;
+            // 未定义时给空值
+            values.deviceTypeId = undefined || 3
+            values.showColumns = undefined || []
+            values.pageIndex = 0;
+            values.pageSize = 10;
             // console.log(values)
             // 保存搜索信息 翻页
             this.setState({
-                searchValue:values
+                searchValue: values
             })
             return fetch(dataUrl, {
-                method: "POST",
-                mode: 'cors',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                }),
-                credentials: "include",
+                ...postOption,
                 body: JSON.stringify({
                     ...values,
                 })
@@ -166,12 +172,14 @@ export default class extends Component {
                     .then((v) => {
                         if (v.ret == 1) {
                             // 设置页面显示的元素
-                            let { items, itemCount } = v.data;
+                            // 设置页面显示的元素
+                            let items = v.data.items;
+                            let itemCount = v.data.itemCount;
                             this.setState({
                                 itemCount,
                                 items
                             })
-                            this._getTableData(this.state.title, this.state.items, this.state.filterColumns);
+                            this._getTableData(title, items, filterColumns);
                         }
                     })
             }).catch((err) => {
@@ -193,6 +201,7 @@ export default class extends Component {
     }
     //显示设置点击确定
     _showSetOkHandler() {
+        const { items } = this.state;
         const form = this.showSetForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
@@ -228,14 +237,14 @@ export default class extends Component {
             filterColumns.map((v, i) => {
                 title.push(v.title)
             })
-            this._getTableData(title, this.state.items, filterColumns)
+            this._getTableData(title, items, filterColumns)
             this.setState({
                 showSetVisible: false,
                 title,
                 filterColumns
             })
         })
-        
+
     }
     //显示设置点击取消
     _showSetCancelHandler() {
@@ -249,15 +258,10 @@ export default class extends Component {
     }
     //翻页
     _pageChange(page) {
-        const { searchValue } = this.state;
-        searchValue.pageIndex=page-1;
+        const { searchValue, title, filterColumns } = this.state;
+        searchValue.pageIndex = page - 1;
         return fetch(dataUrl, {
-            method: 'POST',
-            mode: 'cors',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-            }),
-            credentials: "include",
+            ...postOption,
             body: JSON.stringify({
                 ...searchValue
             })
@@ -267,7 +271,8 @@ export default class extends Component {
                     if (v.ret == 1) {
                         // console.log(v);
                         // 设置页面显示的元素
-                        const { items, itemCount } = v.data;
+                        let items = v.data.items;
+                        let itemCount = v.data.itemCount;
                         //添加key
                         items.map((v, i) => {
                             v.key = i
@@ -276,7 +281,7 @@ export default class extends Component {
                             itemCount,
                             items
                         })
-                        this._getTableData(this.state.title, this.state.items, this.state.filterColumns);
+                        this._getTableData(title, items, filterColumns);
                     }
                 })
                 .catch((err) => {
@@ -426,7 +431,6 @@ const ShowSetForm = Form.create()(
                             })
                                 (
                                 <CheckboxGroup>
-                                    {/* 全选空出 */}
                                     <Row>
                                         {tableTitle.map((v, i) => {
                                             return (

@@ -4,13 +4,22 @@ import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 
 import { Link } from 'dva/router';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
+//搜索 翻页url
 const dataUrl = `${envNet}/api/DeviceData/list`;
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+};
 //全部的title
 const tableTitle = [
     '设备ID',
     '设备名称',
     '设备安装地',
-    '关联建筑物',
     '土表温度',
     '土壤温度10cm',
     '土壤湿度10cm',
@@ -22,36 +31,34 @@ const tableTitle = [
     '土壤湿度40cm',
     '更新时间'
 ];
-let dataIndex = [
-    'deviceId',
-    'name',
-    'installAddr',
-    'ownerBuilding',
-    'SurfaceTemperature',
-    'SoilTemperature1',
-    'SoilHumidity1',
-    'SoilTemperature2',
-    'SoilHumidity2',
-    'SoilTemperature3',
-    'SoilHumidity3',
-    'SoilTemperature4',
-    'SoilHumidity4',
-    'updateTime'
+// 源columns拥有编号
+const sourceColumns = [
+    { title: "设备ID", dataIndex: "deviceId", number: 0 },
+    { title: "设备名称", dataIndex: "name", number: 1 },
+    { title: "设备安装地", dataIndex: "installAddr", number: 2 },
+    { title: "土表温度", dataIndex: "SurfaceTemperature", number: 3 },
+    { title: "土壤温度10cm", dataIndex: "SoilTemperature1", number: 4 },
+    { title: "土壤湿度10cm", dataIndex: "SoilHumidity1", number: 5 },
+    { title: "土壤温度20cm", dataIndex: "SoilTemperature2", number: 6 },
+    { title: "土壤湿度20cm", dataIndex: "SoilHumidity2", number: 7 },
+    { title: "土壤温度30cm", dataIndex: "SoilTemperature3", number: 8 },
+    { title: "土壤湿度30cm", dataIndex: "SoilHumidity3", number: 9 },
+    { title: "土壤温度40cm", dataIndex: "SoilTemperature4", number: 10 },
+    { title: "土壤湿度40cm", dataIndex: "SoilHumidity4", number: 11 },
+    { title: "更新时间", dataIndex: "updateTime", number: 12 }
 ];
+
 export default class extends Component {
     constructor(props) {
         super(props)
         const { moisture } = props;
         // console.log(props)
-        const { items, itemCount } = moisture.data.data;
-
-        // console.log(items)
         // 获取标题和数据
         this.state = {
             //数据总数
-            itemCount,
+            itemCount: moisture.data.data.itemCount,
             //列表数据源
-            items,
+            items: moisture.data.data.items,
             //总数据列表title
             tableTitle,
             //显示的数据列表title中文
@@ -62,17 +69,23 @@ export default class extends Component {
             tableData: [],
             //显示设置弹窗可见性
             showSetVisible: false,
-            //title Index
-            dataIndex,
-            //搜索信息栏
-            deviceId: '',
-            name: '',
-            installAddrId: 0
+            // 搜索框默认值
+            searchValue: {
+                "deviceTypeId": 4,
+                "deviceId": "",
+                "name": "",
+                "installAddrId": 0,
+                "showColumns": [],
+                "pageIndex": 0,
+                "pageSize": 10
+            },
+            // 设置过滤后的表头
+            filterColumns: sourceColumns
         }
         // this._getTableData();
     }
     componentDidMount() {
-        this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
+        this._getTableData(this.state.title, this.state.items, sourceColumns);
 
     }
     //获取设备信息 此时使用localStorage
@@ -87,8 +100,9 @@ export default class extends Component {
             columns.push({
                 title: v,
                 // 给表头添加字段名 必须一一对应
-                dataIndex: dataIndex[i],
+                dataIndex: dataIndex[i].dataIndex,
                 align: 'center',
+                className: `${styles.tbw}`
             })
         })
         //操作列
@@ -104,7 +118,6 @@ export default class extends Component {
                         <Link to={`/moisture/history:${record.deviceId}`}>
                             <Button
                                 icon='bar-chart'
-                                className={styles.btnhistroy}
                                 onClick={() => this._getDeviceInfo(record)}
                             >
                                 历史记录
@@ -120,7 +133,6 @@ export default class extends Component {
                 deviceId: v.deviceId,
                 name: v.name,
                 installAddr: v.installAddr,
-                ownerBuilding: v.ownerBuilding,
                 SurfaceTemperature: v.realTimeData.SurfaceTemperature,
                 SoilTemperature1: v.realTimeData.SoilTemperature1,
                 SoilHumidity1: v.realTimeData.SoilHumidity1,
@@ -141,31 +153,26 @@ export default class extends Component {
     }
     // 搜索功能
     _searchTableData() {
+        const { title, filterColumns } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
                 return
             }
+            // 未定义时给空值
+            values.deviceTypeId = undefined || 4
+            values.showColumns = undefined || []
+            values.pageIndex = 0;
+            values.pageSize = 10;
             // console.log(values)
-             // 保存搜索信息 翻页
-             this.setState({
-                deviceId: values.deviceId,
-                name: values.name,
-                installAddrId: values.installAddrId
+            // 保存搜索信息 翻页
+            this.setState({
+                searchValue: values
             })
             return fetch(dataUrl, {
-                method: "POST",
-                mode: 'cors',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                }),
-                credentials: "include",
+                ...postOption,
                 body: JSON.stringify({
-                    deviceTypeId: 4,
-                    ...values,
-                    showColumns: [],
-                    PageIndex: 0,
-                    pageSize: 10
+                    ...values
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
@@ -176,7 +183,7 @@ export default class extends Component {
                                 itemCount,
                                 items
                             })
-                            this._getTableData(this.state.title, this.state.items, this.state.dataIndex);
+                            this._getTableData(title, items, filterColumns);
                         }
                     })
             }).catch((err) => {
@@ -198,15 +205,48 @@ export default class extends Component {
     }
     //显示设置点击确定
     _showSetOkHandler() {
+        const { items } = this.state
         const form = this.showSetForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
             if (err) {
                 return;
             }
-            //console.log(values)
-            let {dataIndex} = values
-             //显示确定空出
+            let { dataIndex } = values
+            // 过滤后的columns
+            let filterColumns = []
+            // 定义一个title
+            let title = []
+            // 比对dataIndex
+            dataIndex.map((v, i) => {
+                filterColumns.push(...sourceColumns.filter(item => item === v))
+            })
+            // 排序函数
+            let compare = function (prop) {
+                return function (obj1, obj2) {
+                    let val1 = obj1[prop];
+                    let val2 = obj2[prop];
+                    if (val1 < val2) {
+                        return -1;
+                    } else if (val1 > val2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+            // 排序
+            filterColumns.sort(compare('number'))
+            // 保存标题
+            filterColumns.map((v, i) => {
+                title.push(v.title)
+            })
+            this._getTableData(title, items, filterColumns)
+            this.setState({
+                showSetVisible: false,
+                title,
+                filterColumns
+            })
 
         })
         // 重置表单
@@ -217,10 +257,6 @@ export default class extends Component {
     }
     //显示设置点击取消
     _showSetCancelHandler() {
-        // console.log('点击取消按钮');
-        const form = this.showSetForm.props.form;
-        // 重置表单
-        form.resetFields();
         this.setState({
             showSetVisible: false
         })
@@ -231,23 +267,12 @@ export default class extends Component {
     }
     //翻页
     _pageChange(page) {
-        const { deviceId, name, installAddrId } = this.state;
-        let PageIndex = page - 1;
+        const { searchValue, title, filterColumns } = this.state;
+        searchValue.pageIndex = page - 1;
         return fetch(dataUrl, {
-            method: 'POST',
-            mode: 'cors',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-            }),
-            credentials: "include",
+            ...postOption,
             body: JSON.stringify({
-                deviceTypeId: 4,
-                deviceId,
-                name,
-                installAddrId,
-                showColumns: [],
-                PageIndex,
-                pageSize: 10
+                ...searchValue
             })
         }).then((res) => {
             Promise.resolve(res.json())
@@ -264,16 +289,15 @@ export default class extends Component {
                             itemCount: v.data.itemCount,
                             items
                         })
-                        this._getTableData(this.state.title, this.state.items,this.state.dataIndex);
+                        this._getTableData(title, items, filterColumns);
                     }
                 })
-                .catch((err) => {
-                    console.log(err)
-                })
+        }).catch((err) => {
+            console.log(err)
         })
     }
     render() {
-        const { columns, tableData, showSetVisible, tableTitle, itemCount, dataIndex } = this.state;
+        const { columns, tableData, showSetVisible, itemCount } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -287,7 +311,6 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
-                    {...{ tableTitle, dataIndex }}
                 />
                 <div className={styles.header}>
                     <span>|</span>清易墒情
@@ -374,6 +397,7 @@ const SearchForm = Form.create()(
                             icon='search'
                             className={styles.searchButton}
                             onClick={() => searchHandler()}
+                            htmlType='submit'
                         >
                             搜索</Button>
                     </Form.Item>
@@ -395,11 +419,10 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk, tableTitle, dataIndex } = this.props;
+            const { form, visible, onCancel, onOk } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
-            const options = tableTitle
             return (
                 <Modal
                     className={styles.showSet}
@@ -413,16 +436,16 @@ const ShowSetForm = Form.create()(
                     <Form>
                         <Form.Item>
                             {getFieldDecorator('dataIndex', {
-                                initialValue: dataIndex
+                                initialValue: sourceColumns
                             })
                                 (
                                 <CheckboxGroup>
-                                     {/* 全选空出 */}
+                                    {/* 全选空出 */}
                                     <Row>
-                                        {options.map((v, i) => {
+                                        {tableTitle.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>
-                                                    <Checkbox value={dataIndex[i]}>{v}</Checkbox>
+                                                    <Checkbox value={sourceColumns[i]}>{v}</Checkbox>
                                                 </Col>
                                             )
                                         })}

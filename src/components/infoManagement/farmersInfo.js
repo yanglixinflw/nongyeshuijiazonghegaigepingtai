@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import styles from './common.less';
+import styles from './farmersInfo.less';
 import { Input, Button, Form, Cascader, Table} from 'antd';
 // 开发环境用以翻页调用
 const envNet='http://192.168.30.127:88';
