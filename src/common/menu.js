@@ -119,6 +119,7 @@ const menuData = [
   },
   
 ];
+
 function formatter(data, parentPath = '/') {
   return data.map(item => {
     let { path } = item;

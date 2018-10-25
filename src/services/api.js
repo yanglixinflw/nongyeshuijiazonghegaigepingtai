@@ -73,7 +73,7 @@ export function getDeviceInfo(params) {
 export function getFarmersInfo(params) {
   return request(`${envNet}/api/PeasantMgr/list`, {
     ...postOption,
-    body: JSON.stringify(  params
+    body: JSON.stringify(params
       )
     })
   }
@@ -102,14 +102,5 @@ export function getInstallAddrList(){
     method:'GET',
     mode:'cors',
     credentials: "include",
-  })
-}
-//预警规则列表
-export function getWarningRule(){
-  return request(`${envNet}/api/DeviceWaringRule/ruleList`,{
-    ...postOption,
-    body:JSON.stringify(
-      params
-    )
   })
 }
