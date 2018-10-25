@@ -57,9 +57,29 @@
 .option{
     display: flex;
     justify-content: space-around;
-    .edit{margin-right: 10px;}
-    .set{margin-right: 10px;}
-    .stop{margin-right: 10px;}
+    .edit{
+        margin-right: 10px;
+        border: 1px solid rgba(232,120,72,1);
+        color:rgba(232,120,72,1);
+        background: #1C2241;
+    }
+    .set{
+        margin-right: 10px;
+        background: #1C2241;
+        border: 1px solid #327DF4;
+        color: #327DF4;
+    }
+    .stop{
+        margin-right: 10px;
+        border: 1px solid rgba(255,80,98,1);
+        color:rgba(255,80,98,1);
+        background: #1C2241;
+    }
+    .delete{
+        border: 1px solid rgba(255,80,98,1);
+        color:rgba(255,80,98,1);
+        background: #1C2241;
+    }
 }
 :global {
     .ant-cascader-picker-arrow {
@@ -102,11 +122,6 @@
                     &:focus {
                         background: #1C2241;
                         color: #0084FF;
-                    }
-                    .ant-btn {
-                        background: #1C2241;
-                        border: 1px solid #327DF4;
-                        color: #327DF4;
                     }
                 }
             }

@@ -1,30 +1,30 @@
 import React from "react";
-import AutoControl from '../../components/distributedControl/autoControl';
+import GroupAccount from '../../components/waterRate/groupAccount';
 // import { connect } from 'dva';
 // import { Spin } from 'antd'
-// @connect(({ autoControl, loading }) => ({
-//     autoControl,
-//     loading: loading.models.autoControl
+// @connect(({ groupAccount, loading }) => ({
+//     groupAccount,
+//     loading: loading.models.groupAccount
 // }))
 export default class extends React.Component{
     componentDidMount() {
         // const { dispatch } = this.props;
         // dispatch({
-        //     type: 'autoControl/fetch',
+        //     type: 'groupAccount/fetch',
         //     payload:{
-   
+
         //       }
         // });//type来选择请求的接口，payload为传给后台的参数
         // console.log(this.props)
     }
     render(){
-        // let { autoControl, loading } = this.props;
-        // let arr = Object.keys(autoControl);
-        // if (arr.length === 0) return autoControl = null;
+        // let { groupAccount, loading } = this.props;
+        // let arr = Object.keys(groupAccount);
+        // if (arr.length === 0) return groupAccount = null;
         return (
             <div>
                 {/* <Spin size='large' spinning={loading}> */}
-                    <AutoControl
+                    <GroupAccount
                         // {...this.props}
                     /> 
                 {/* </Spin> */}
