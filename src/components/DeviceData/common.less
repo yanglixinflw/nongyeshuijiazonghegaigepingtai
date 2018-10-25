@@ -1,5 +1,5 @@
 //引入线上图标
-@import 'http://at.alicdn.com/t/font_869092_lzfptbjsxoa.css';
+@import 'http://at.alicdn.com/t/font_869092_8a2wfaaqc9t.css';
 .header {
     height: 60px;
     line-height: 60px;
@@ -38,15 +38,17 @@
         }
     }
 }
+
 // 表格单元最小宽度
-.tbw{
+.tbw {
     min-width: 100px;
 }
+
 //搜索
 .searchForm {
     height: 75px;
     line-height: 75px;
-    margin:0 38px 20px;
+    margin: 0 38px 20px;
     display: flex;
     background: #1C2241;
     padding-top: 15px;
@@ -66,7 +68,7 @@
             outline: 0;
             border: 0;
             margin-right: 3px;
-            color:#ACB5E8;
+            color: #ACB5E8;
         }
         .ant-cascader-picker {
             height: 46px;
@@ -99,8 +101,8 @@
 }
 
 :global {
-    .ant-modal-content{
-        top:250px;
+    .ant-modal-content {
+        top: 250px;
     }
     .ant-table-fixed-right {
         box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
@@ -125,7 +127,7 @@
                     color: #0084FF;
                 }
                 td {
-                    border-left:0;
+                    border-left: 0;
                     border: 1px solid #2A325E;
                     font-weight: 600;
                     background: #1C2241;
@@ -150,64 +152,60 @@
     .ant-table-wrapper {
         .ant-table {
             background: #2E3459;
-            margin:0 38px;
+            margin: 0 38px;
             .ant-table-content {
-                
-                    .ant-table-body {
-                        &::-webkit-scrollbar {
-                            height: 10px;
-                        }
-                        &::-webkit-scrollbar-button {
-                            display: none;
-                        }
-                        &::-webkit-scrollbar-thumb {
-                            background: #3164BF;
-                            border-radius: 2px;
-                        }
-                        &::-webkit-scrollbar-track {
-                            background: #2E3459;
-                        }
+                .ant-table-body {
+                    &::-webkit-scrollbar {
+                        height: 10px;
                     }
-                
+                    &::-webkit-scrollbar-button {
+                        display: none;
+                    }
+                    &::-webkit-scrollbar-thumb {
+                        background: #3164BF;
+                        border-radius: 2px;
+                    }
+                    &::-webkit-scrollbar-track {
+                        background: #2E3459;
+                    }
+                }
                 .ant-table-fixed-right table {
                     background: #2E3459;
                 }
             }
         }
-        
-            .ant-table-thead {
-                tr {
-                    th {
-                        font-weight: 600;
-                        background: #2E3459;
-                        color: #DEDEE4;
-                        border: 1px solid #2A325E;
+        .ant-table-thead {
+            tr {
+                th {
+                    font-weight: 600;
+                    background: #2E3459;
+                    color: #DEDEE4;
+                    border: 1px solid #2A325E;
+                }
+            }
+        }
+        .ant-table-tbody {
+            tr {
+                &:hover td {
+                    color: #0084FF;
+                }
+                &:focus td {
+                    color: #0084FF;
+                }
+                td {
+                    font-size: 12px;
+                    background: #1C2241;
+                    color: #BBC5D2;
+                    border: 1px solid #2A325E;
+                    &:hover {
+                        color: #0084FF;
+                    }
+                    &:focus {
+                        color: #0084FF;
                     }
                 }
             }
-            .ant-table-tbody {
-                tr {
-                    &:hover td {
-                        color: #0084FF;
-                    }
-                    &:focus td {
-                        color: #0084FF;
-                    }
-                    td {
-                        font-size: 12px;
-                        background: #1C2241;
-                        color: #BBC5D2;
-                        border: 1px solid #2A325E;
-                        &:hover {
-                            color: #0084FF;
-                        }
-                        &:focus {
-                            color: #0084FF;
-                        }
-                    }
-                }
-            }
-        
+        }
         .ant-pagination.ant-table-pagination {
             margin-top: 24px;
             margin-bottom: 24px;
@@ -433,6 +431,7 @@
         }
     }
 }
+
 @media(max-width:1130px) {
     .searchForm {
         :global {
@@ -460,52 +459,13 @@
                 }
             }
             .ant-btn {
-                max-width: 90px;
-                margin-right: 5px;
-                position: relative;
-                .anticon {
-                    position: absolute;
-                    top: 12px;
-                    left: 5px;
-                }
-            }
-        }
-    }
-}
-@media(max-width:1130px) {
-    .searchForm {
-        :global {
-            .ant-form {
-                .ant-form-item {
-                    margin-right: 5px;
-                }
-                .ant-input {
-                    max-width: 110px;
-                    margin-right: 0px;
-                }
-                .ant-cascader-picker {
-                    max-width: 110px;
-                    margin-left: 0px;
-                }
-                .ant-btn {
-                    max-width: 70px;
-                    margin-left: 0px;
-                    position: relative;
-                    .anticon {
-                        position: absolute;
-                        top: 12px;
-                        left: 8px;
-                    }
-                }
-            }
-            .ant-btn {
                 max-width: 80px;
                 margin-right: 5px;
                 position: relative;
                 .anticon {
                     position: absolute;
                     top: 12px;
-                    left: 3px;
+                    left: 2px;
                 }
             }
         }
@@ -514,14 +474,18 @@
 
 //历史数据 
 .history {
+    // 表格单元最小宽度
+    .tbw{
+        min-width: 100px;
+    }
     //设备信息
     .deviceInfo {
         display: flex;
         height: 95px;
         background-color: #1C2241;
-        margin:0 38px 20px ;
-        padding-left:16px;
-        .info{
+        margin: 0 38px 20px;
+        padding-left: 16px;
+        .info {
             width: 216px;
             height: 64px;
             line-height: 64px;
@@ -529,13 +493,26 @@
             border: 0px;
             color: #C1CBFF;
             position: relative;
-            top:15px;
-            padding-left:40px; 
-            .deviceId{
+            top: 15px;
+            padding-left: 40px;
+            padding-right: 37px;
+            .deviceId {
                 font-size: 45px;
-                color:#327DF4;
+                color: #327DF4;
                 vertical-align: middle;
-                margin-right:12px;
+                margin-right: 12px;
+            }
+            .name{
+                font-size: 45px;
+                color: #327DF4;
+                vertical-align: middle;
+                margin-right: 12px;
+            }
+            .installAddr{
+                font-size: 45px;
+                color: #327DF4;
+                vertical-align: middle;
+                margin-right: 12px;
             }
         }
         :global {
@@ -562,7 +539,7 @@
             .ant-table-tbody {
                 tr {
                     height: 54px;
-                    td{
+                    td {
                         font-size: 12px;
                         font-weight: normal;
                     }
@@ -572,12 +549,15 @@
     }
     @media(max-width:1480px) {
         .deviceInfo {
+            .info{
+                padding: 0 20px;
+            }
             :global {
                 .ant-form-inline {
                     margin-right: 10px;
                     .ant-form-item {
                         .ant-input {
-                            width: 180px;
+                            max-width: 180px;
                         }
                     }
                 }
@@ -591,26 +571,26 @@
                     margin-right: 10px;
                     .ant-form-item {
                         .ant-input {
-                            width: 150px;
+                            max-width: 150px;
                         }
                     }
                 }
             }
         }
     }
-    @media(max-width:1210px) {
+    @media(max-width:1230px) {
         .deviceInfo {
             :global {
                 .ant-form-inline {
                     margin-right: 10px;
                     .ant-form-item {
                         .ant-input {
-                            width: 150px;
+                            max-width: 150px;
                         }
                     }
                 }
-                .ant-btn{
-                    width:100px;
+                .ant-btn {
+                    max-width: 100px;
                     position: relative;
                     .anticon {
                         position: absolute;
@@ -619,23 +599,22 @@
                     }
                 }
             }
-            
         }
     }
-    @media(max-width:1120px) {
+    @media(max-width:1180px) {
         .deviceInfo {
             :global {
                 .ant-form-inline {
-                    
                     margin-right: 0px;
                     .ant-form-item {
                         .ant-input {
-                            width: 130px;
+                            max-width: 110px;
+                            
                         }
                     }
                 }
-                .ant-btn{
-                    width:90px;
+                .ant-btn {
+                    max-width: 90px;
                     position: relative;
                     .anticon {
                         position: absolute;
@@ -644,7 +623,33 @@
                     }
                 }
             }
-            
+        }
+    }
+    @media(max-width:1050px) {
+        .deviceInfo {
+            .info{
+                padding: 0 10px;
+            }
+            :global {
+                .ant-form-inline {
+                    margin-right: 0px;
+                    .ant-form-item {
+                        .ant-input {
+                            max-width: 110px;
+                            
+                        }
+                    }
+                }
+                .ant-btn {
+                    max-width: 90px;
+                    position: relative;
+                    .anticon {
+                        position: absolute;
+                        top: 14px;
+                        left: 10px;
+                    }
+                }
+            }
         }
     }
 }

@@ -76,13 +76,13 @@ export default class extends Component{
                         <Button
                             className={styles.set}
                             // onClick={() => this._set()}
-                            icon='edit'
+                            icon='setting'
                         >
                             设置自动化规则
                         </Button>
                         <Button
                             className={styles.stop}
-                            icon='edit'
+                            icon='stop'
                         >
                             停用
                         </Button>
@@ -93,6 +93,7 @@ export default class extends Component{
                             修改
                         </Button>
                         <Button
+                        className={styles.delete}
                             icon='delete'
                         >
                             删除
