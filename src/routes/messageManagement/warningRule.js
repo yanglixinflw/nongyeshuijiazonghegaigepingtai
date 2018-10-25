@@ -1,5 +1,5 @@
 import React from "react";
-import WarningRule from '../../components/infoManagement/warningRule';
+// import WarningRule from '../../components/infoManagement/warningRule';
 import { connect } from 'dva';
 import { Spin } from 'antd'
 @connect(({ warningRule, loading }) => ({
@@ -25,10 +25,11 @@ export default class extends React.Component{
         return (
             <div>
                 {/* <Spin size='large' spinning={loading}> */}
-                    <WarningRule
-                        // {...this.props}
-                    />
+                    {/* <WarningRule */}
+                        {/* // {...this.props} */}
+                    {/* /> */}
                 {/* </Spin> */}
+                123
             </div>
         )
     }
