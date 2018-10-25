@@ -85,19 +85,19 @@ export default class extends Component{
                         <Button
                             className={styles.record}
                             // onClick={() => this._set()}
-                            icon='setting'
+                            icon='file-text'
                         >
                             消费记录
                         </Button>
                         <Button
                             className={styles.clear}
-                            icon='stop'
+                            icon='delete'
                         >
                             清空当前用量
                         </Button>
                         <Button
                             className={styles.assignment}
-                            icon='edit'
+                            icon='share-alt'
                         >
                             分配水权
                         </Button>
@@ -109,7 +109,7 @@ export default class extends Component{
                         </Button>
                         <Button
                         className={styles.management}
-                            icon='delete'
+                            icon='team'
                         >
                             管理小组成员
                         </Button>
