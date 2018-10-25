@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import styles from "./index.less"
+import styles from "./autoControl.less"
 import { Input, Button, Form, Cascader, Table, Divider} from 'antd';
 const tableTitle=[
     {index:"num",item:"自动化编号"},
