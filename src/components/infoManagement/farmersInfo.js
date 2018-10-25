@@ -17,30 +17,22 @@ export default class extends Component{
     constructor(props) {
         super(props)
         const { farmersInfo } = props;
-        const { items } = farmersInfo.data.data;
-        const { itemCount } = farmersInfo.data.data;//用来翻页
-        let tableData=[],tableIndex=[];
-        tableTitle.map(v=>{
-            tableData.push(v.item);
-            tableIndex.push(v.index)   
-        })
+        console.log(props)
         this.state = {
-            formLayout: 'inline',
+            //表头数据
             tableTitle,
-            tableDatas:[],
-            tableIndex,
             title:tableTitle,
-            itemCount,
-            items,
+            tableDatas:[],
+            itemCount:farmersInfo.data.data.itemCount,//总数据数
+            data:farmersInfo.data.data.items,//表格数据源
+            //表的每一列
             columns: [],
-            //显示设置弹窗可见性
-            showSetVisible: false,
           };
     }
     componentDidMount() {
-        this._getTableDatas(this.state.title, this.state.items);
+        this._getTableDatas(this.state.title, this.state.data);
     }
-    _getTableDatas(title, items) {
+    _getTableDatas(title, data) {
         let columns = [];
         title.map(v => {
             columns.push({
@@ -75,7 +67,7 @@ export default class extends Component{
                         </Button>
                         <Button
                             className={styles.editPsw}
-                            icon='edit'
+                            icon='form'
                         >
                             修改密码
                         </Button>
@@ -84,7 +76,8 @@ export default class extends Component{
             }
         })
         let tableDatas = [];
-        items.map((v, i) => {
+        //表单数据
+        data.map((v, i) => {
             tableDatas.push({
                 realName:v.realName,
                 mobilePhone:v.mobilePhone,
@@ -135,30 +128,29 @@ export default class extends Component{
             }),
             credentials: "include",
             body:JSON.stringify({
-                deviceTypeId: 2,
-                deviceId: "",
                 name: "",
-                installAddrId: 0,
-                showColumns: [],
-                PageIndex,
-                pageSize: 10
+                mobile: "",
+                roleId: 0,
+                pageIndex: PageIndex,
+                pageSize:10
             })
         }).then((res)=>{
             Promise.resolve(res.json())
             .then((v)=>{
+                console.log(v)
                 if(v.ret==1){
                     // console.log(v);
                     // 设置页面显示的元素
-                    let items = v.data.items;
+                    let data = v.data.items;
                     //添加key
-                    items.map((v, i) => {
+                    data.map((v, i) => {
                         v.key = i
                     })
                     this.setState({
                         itemCount:v.data.itemCount,
-                        items
+                        data
                     })
-                    this._getTableDatas(this.state.tableTitle, this.state.items);
+                    this._getTableDatas(this.state.tableTitle, this.state.data);
                 }
             })
             .catch((err)=>{

@@ -78,7 +78,7 @@ export default class extends Component{
             key: 'action',
             align: 'center',
             fixed: 'right',
-            width: 426,
+            width: 430,
             render: (record) => {
                 return (
                     <span className={styles.option}>
