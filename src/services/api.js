@@ -104,12 +104,3 @@ export function getInstallAddrList(){
     credentials: "include",
   })
 }
-//预警规则列表
-export function getWarningRule(){
-  return request(`${envNet}/api/DeviceWaringRule/ruleList`,{
-    ...postOption,
-    body:JSON.stringify(
-      params
-    )
-  })
-}

@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Layout, Icon } from 'antd';
 import { Switch } from 'dva/router';
@@ -8,8 +7,6 @@ import styles from './basicLayout.less'
 import GlobalHeader from '../components/GlobalHeader'
 // 响应式布局
 import { ContainerQuery } from 'react-container-query';
-// 根据菜单的内容改变标题
-import DocumentTitle from 'react-document-title';
 import SliderMenu from 'components/SliderMenu/SliderMenu'
 import NoRight from '../routes/Exception/403';
 import { getRoutes } from '../utils/utils'
@@ -110,6 +107,7 @@ export default class BasicLayout extends React.PureComponent {
                             ))}
 
                             {getRoutes(match.path, routerData).map(item => {
+                                // debugger
                                 return (
                                     <Route
                                         key={item.key}

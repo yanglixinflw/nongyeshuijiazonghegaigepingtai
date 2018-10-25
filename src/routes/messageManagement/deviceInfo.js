@@ -11,6 +11,10 @@ export default class extends React.Component {
   constructor(props) {
     super(props)
     const { dispatch } = props
+    // 获取安装地列表
+    dispatch({
+      type: 'deviceInformation/getInstallAddrList',
+    })
     // 默认列表请求方式
     dispatch({
       type: 'deviceInformation/getInfo',
@@ -25,10 +29,8 @@ export default class extends React.Component {
         "pageSize": 10
       }
     })
-    // 获取安装地列表
-    dispatch({
-      type: 'deviceInformation/getInstallAddrList',
-    })
+    
+    
   }
   render() {
     let { deviceInformation ,loading} = this.props
