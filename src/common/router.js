@@ -117,7 +117,9 @@ export const getRouterData = app => {
     '/deviceInformation/warningRules:id':{
       component: dynamicWrapper(app, ["deviceWarning"], () => import('../routes/messageManagement/deviceWarning')),
     },
-    
+    '/rent/groupAccount':{
+      component: dynamicWrapper(app, [], () => import('../routes/waterRate/groupAccount')),
+    },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     // },

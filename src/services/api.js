@@ -73,7 +73,7 @@ export function getDeviceInfo(params) {
 export function getFarmersInfo(params) {
   return request(`${envNet}/api/PeasantMgr/list`, {
     ...postOption,
-    body: JSON.stringify(  params
+    body: JSON.stringify(params
       )
     })
   }
