@@ -4,6 +4,15 @@ import { Input, Button, Form, Cascader, Table} from 'antd';
 // 开发环境用以翻页调用
 const envNet='http://192.168.30.127:88';
 const dataUrl=`${envNet}/api/PeasantMgr/list`;
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+}
 //头信息
 const tableTitle=[
     {index:"realName",item:"姓名"},
@@ -17,16 +26,22 @@ export default class extends Component{
     constructor(props) {
         super(props)
         const { farmersInfo } = props;
-        console.log(props)
         this.state = {
             //表头数据
             tableTitle,
             title:tableTitle,
-            tableDatas:[],
             itemCount:farmersInfo.data.data.itemCount,//总数据数
             data:farmersInfo.data.data.items,//表格数据源
             //表的每一列
             columns: [],
+            //
+            searchValue: {
+                "name": "",
+                "mobile": "",
+                "roleId": 0,
+                "pageIndex": 0,
+                "pageSize":10
+            },
           };
     }
     componentDidMount() {
@@ -99,12 +114,43 @@ export default class extends Component{
     }
     // 搜索功能
     _searchTableData() {
+        const { title, data } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
                 return
             }
+            // 未定义时给空值
+            values.idCard = undefined || ""
+            values.realName = undefined || ""
+            values.pageIndex = 0;
+            values.pageSize = 10;
             // console.log(values)
+            // 保存搜索信息 翻页
+            this.setState({
+                searchValue: values
+            })
+            return fetch(dataUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    ...values
+                })
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        if (v.ret == 1) {
+                            // 设置页面显示的元素
+                            let {items,itemCount}=v.data
+                            this.setState({
+                                itemCount,
+                                data:items
+                            })
+                            this._getTableDatas(title,data);
+                        }
+                    })
+            }).catch((err) => {
+                console.log(err)
+            })
         })
     }
     //重置
@@ -119,25 +165,16 @@ export default class extends Component{
     }
     //换页
     _pageChange(page){
-        let PageIndex = page - 1;
-        return fetch(dataUrl,{
-            method:'POST',
-            mode:'cors',
-            headers:new Headers({
-                'Content-Type': 'application/json',
-            }),
-            credentials: "include",
-            body:JSON.stringify({
-                name: "",
-                mobile: "",
-                roleId: 0,
-                pageIndex: PageIndex,
-                pageSize:10
+        const { searchValue } = this.state;
+        searchValue.pageIndex = page - 1;
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                ...searchValue
             })
         }).then((res)=>{
             Promise.resolve(res.json())
             .then((v)=>{
-                console.log(v)
                 if(v.ret==1){
                     // console.log(v);
                     // 设置页面显示的元素
@@ -150,7 +187,7 @@ export default class extends Component{
                         itemCount:v.data.itemCount,
                         data
                     })
-                    this._getTableDatas(this.state.tableTitle, this.state.data);
+                    this._getTableDatas(this.state.title, this.state.data);
                 }
             })
             .catch((err)=>{
@@ -175,8 +212,6 @@ export default class extends Component{
                     {/* 表单信息 */}
                     <SearchForm
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        searchHandler={() => this._searchTableData()}
-                        resetHandler={() => this._resetForm()}
                     />
                     <div className={styles.buttonGroup}>
                         <Button
@@ -223,7 +258,7 @@ export default class extends Component{
 const SearchForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, searchHandler, resetHandler } = this.props;
+            const { form } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Form 
@@ -285,7 +320,6 @@ const SearchForm = Form.create()(
                     </Form.Item>
                 </Form>
             )
-
         }
     }
 )
