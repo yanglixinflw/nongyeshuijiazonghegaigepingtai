@@ -19,7 +19,8 @@ let postOption = {
 export default class extends Component {
     constructor(props) {
         super(props)
-        let { pageTitle, deviceTypeId ,title} = this.props
+        let { pageTitle, deviceTypeId ,title} = props
+        console.log(props)
         // 公用Columns
         let commonColumns = [
             { name: "deviceId", displayName: "设备ID" },

@@ -79,10 +79,6 @@ export default class extends Component {
         //初始化数据
         this._getTableData(this.state.tableData, this.state.commonColumns);
     }
-    // componentWillUnmount(){
-    //     //移除localStorange
-    //     localStorage.removeItem('deviceInfo')
-    // }
     //获取表的数据
     _getTableData(tableData, commonColumns) {
         let columns = [];
@@ -100,7 +96,6 @@ export default class extends Component {
         tableData.map((v, i) => {
             v.key = i
         })
-        console.log(tableData)
         this.setState({
             columns,
             tableData,

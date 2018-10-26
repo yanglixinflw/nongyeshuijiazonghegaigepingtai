@@ -28,7 +28,6 @@ export default class extends Component{
                 pageSize: 10
             }
         });
-       
     }
     render(){
         let { deviceDataHistory, loading } = this.props;
