@@ -82,7 +82,6 @@
             color: #4A5A72;
         }
         .ant-btn {
-            margin-top:3px;
             border-radius: 50px;
             height: 38px;
             width: 130px;
@@ -494,15 +493,13 @@
             color: #C1CBFF;
             position: relative;
             top: 15px;
-            padding-left: 37px;
+            padding-left: 40px;
             padding-right: 37px;
-            cursor: pointer;
             .deviceId {
                 font-size: 45px;
                 color: #327DF4;
                 vertical-align: middle;
                 margin-right: 12px;
-                
             }
             .name{
                 font-size: 45px;
@@ -549,17 +546,72 @@
             }
         }
     }
-    @media(max-width:1280px) {
+    @media(max-width:1480px) {
         .deviceInfo {
             .info{
                 padding: 0 20px;
-                width: 180px;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow:ellipsis;
-                
             }
             :global {
+                .ant-form-inline {
+                    margin-right: 10px;
+                    .ant-form-item {
+                        .ant-input {
+                            max-width: 180px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @media(max-width:1310px) {
+        .deviceInfo {
+            :global {
+                .ant-form-inline {
+                    margin-right: 10px;
+                    .ant-form-item {
+                        .ant-input {
+                            max-width: 150px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @media(max-width:1230px) {
+        .deviceInfo {
+            :global {
+                .ant-form-inline {
+                    margin-right: 10px;
+                    .ant-form-item {
+                        .ant-input {
+                            max-width: 150px;
+                        }
+                    }
+                }
+                .ant-btn {
+                    max-width: 100px;
+                    position: relative;
+                    .anticon {
+                        position: absolute;
+                        top: 14px;
+                        left: 10px;
+                    }
+                }
+            }
+        }
+    }
+    @media(max-width:1180px) {
+        .deviceInfo {
+            :global {
+                .ant-form-inline {
+                    margin-right: 0px;
+                    .ant-form-item {
+                        .ant-input {
+                            max-width: 110px;
+                            
+                        }
+                    }
+                }
                 .ant-btn {
                     max-width: 90px;
                     position: relative;
@@ -578,6 +630,15 @@
                 padding: 0 10px;
             }
             :global {
+                .ant-form-inline {
+                    margin-right: 0px;
+                    .ant-form-item {
+                        .ant-input {
+                            max-width: 110px;
+                            
+                        }
+                    }
+                }
                 .ant-btn {
                     max-width: 90px;
                     position: relative;
