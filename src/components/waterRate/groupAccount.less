@@ -1,0 +1,256 @@
+//引入线上图标
+@import 'http://at.alicdn.com/t/font_869092_lzfptbjsxoa.css';
+.header {
+    height: 60px;
+    line-height: 60px;
+    background: #151836;
+    width: 100%;
+    font-size: 18px;
+    color: #2C6CD4;
+    display: flex;
+    padding-left: 38px;
+    margin-bottom: 20px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.6);
+    span {
+        margin-right: 10px;
+    }
+}
+.searchForm{
+    padding: 17px 10px;
+    height: 74px;
+    margin: 20px 38px;
+    background: #1c2241;
+    display: flex;
+    justify-content: space-between;
+    :global{
+        .ant-input,.ant-cascader-picker{
+            height: 46px;
+            min-width: 150px;
+            background: #141831;
+            outline: none;
+            border: none;
+            color: #4A5A72;
+            margin-right: -20px;
+        }
+        .ant-cascader-picker{
+            margin-right: -8px
+        }
+    }
+    .buttonGroup{
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        .fnButton{
+            height:36px;
+            border-radius: 16px;
+            margin-left: 10px;
+            background: #2e386c;
+            outline: none;
+            border: none;
+            color: #bac4f7;
+        }
+        .fnButton:hover{
+            background: #327df4;
+        }
+    }
+}
+.option{
+    display: flex;
+    align-content: space-around;
+    flex-wrap: wrap;
+    .record{
+        margin-right: 10px;
+        border: 1px solid #327DF4;
+        color: #327DF4;
+        background: #1C2241;
+    }
+    .edit{
+        margin-right: 10px;
+        margin-top: 10px;
+        background: #1C2241;
+        border: 1px solid rgba(232,120,72,1);
+        color:rgba(232,120,72,1);
+    }
+    .clear{
+        margin-right: 10px;
+        border: 1px solid #ff5062;
+        color: #ff5062;
+        background: #1C2241;
+    }
+    .assignment{
+        margin-right: 10px;
+        border: 1px solid #6050f1;
+        color:#6050f1;
+        background: #1C2241;
+    }
+    .management{
+        border: 1px solid #19cf86;
+        color:#19cf86;
+        background: #1C2241;
+        margin-top: 10px;
+    }
+}
+:global {
+    .ant-cascader-picker-arrow {
+        color: #4A5A72;
+    }
+    .ant-table-fixed-right {
+        box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
+        .ant-table-thead {
+            tr {
+                th {
+                    border: 1px solid #2A325E;
+                    
+                    font-weight: 600;
+                    background: #2E3459;
+                    color: #DEDEE4;
+                }
+            }
+        }
+        .ant-table-tbody {
+            tr {
+                &:hover td {
+                    background: #1C2241;
+                    color: #0084FF;
+                }
+                &:focus td {
+                    background: #1C2241;
+                    color: #0084FF;
+                }
+                td {
+                    min-width: 100px;
+                    border-left:0;
+                    border: 1px solid #2A325E;
+                    font-weight: 600;
+                    background: #1C2241;
+                    color: #DEDEE4;
+                    &:hover {
+                        background: #1C2241;
+                        color: #0084FF;
+                    }
+                    &:focus {
+                        background: #1C2241;
+                        color: #0084FF;
+                    }
+                }
+            }
+        }
+    }
+    .ant-table-wrapper {
+        .ant-table {
+            background: #2E3459;
+            margin: 0 38px;
+            .ant-table-content {
+                
+                    .ant-table-body {
+                        &::-webkit-scrollbar {
+                            height: 10px;
+                        }
+                        &::-webkit-scrollbar-button {
+                            display: none;
+                        }
+                        &::-webkit-scrollbar-thumb {
+                            background: #3164BF;
+                            border-radius: 2px;
+                        }
+                        &::-webkit-scrollbar-track {
+                            background: #2E3459;
+                        }
+                    }
+                
+                .ant-table-fixed-right table {
+                    background: #2E3459;
+                }
+            }
+        }
+        
+            .ant-table-thead {
+                tr {
+                    th {
+                        font-weight: 600;
+                        background: #2E3459;
+                        color: #DEDEE4;
+                        border: 1px solid #2A325E;
+                    }
+                }
+            }
+            .ant-table-tbody {
+                tr {
+                    &:hover td {
+                        color: #0084FF;
+                    }
+                    &:focus td {
+                        color: #0084FF;
+                    }
+                    td {
+                        min-width: 100px;
+                        font-size: 12px;
+                        background: #1C2241;
+                        color: #BBC5D2;
+                        border: 1px solid #2A325E;
+                        &:hover {
+                            color: #0084FF;
+                        }
+                        &:focus {
+                            color: #0084FF;
+                        }
+                    }
+                }
+            }
+        
+        .ant-pagination.ant-table-pagination {
+            margin-top: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            float: none;
+            color: #637890;
+            .ant-pagination-prev .ant-pagination-item-link,
+            .ant-pagination-next .ant-pagination-item-link {
+                background: #151836;
+                border: 1px solid #637890;
+                color: #637890;
+            }
+            .ant-pagination-item {
+                border: 1px solid #637890;
+                color: #637890;
+                background: #151836;
+                a {
+                    color: #637890;
+                }
+            }
+            .ant-pagination-item-active {
+                border: 0;
+                background: #327DF4;
+                a {
+                    color: #fff;
+                }
+            }
+            .ant-pagination-item-ellipsis {
+                color: #637890;
+            }
+            .ant-pagination-options-quick-jumper input {
+                background: #151836;
+                border: 1px solid #637890;
+                color: #637890;
+            }
+        }
+    }
+}
+@media(max-width:1400px) {
+    .searchForm {
+        height: 150px; 
+    }
+}
+
+@media(max-width:1090px) {
+    .searchForm {
+        height: 150px;
+        :global {
+            .ant-input,.ant-cascader-picker {
+                min-width: 115px;
+                width: 105px;
+                margin-right: 0;
+            }
+        }
+    }
+}

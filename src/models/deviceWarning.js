@@ -1,10 +1,10 @@
-import { getWarningRule } from '../services/api';
+import { getFarmersInfo } from '../services/api';
 export default {
-    namespace: 'warningRule',
+    namespace: 'deviceWarning',
     state:{},
     effects: {
         *fetch({ payload }, { call, put }) {  
-          const data = yield call(getWarningRule, payload)
+          const data = yield call(getFarmersInfo, payload)
           yield put({ type: 'fetchOk', payload: data })
         },
       },

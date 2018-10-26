@@ -3,8 +3,6 @@ import { Spin } from 'antd';
 import pathToRegexp from 'path-to-regexp';
 import Loadable from 'react-loadable';
 import { getMenuData } from './menu';
-import warningRule from '../routes/messageManagement/warningRule';
-
 
 let routerDataCache;
 
@@ -116,8 +114,11 @@ export const getRouterData = app => {
     '/dcs/automation':{
       component: dynamicWrapper(app, [], () => import('../routes/distributedControl/autoControl')),
     },
-    '/messageManagement/warningRules':{
-      component: dynamicWrapper(app, ["warningRule"], () => import('../routes/messageManagement/warningRule')),
+    '/deviceInformation/warningRules:id':{
+      component: dynamicWrapper(app, ["deviceWarning"], () => import('../routes/messageManagement/deviceWarning')),
+    },
+    '/rent/groupAccount':{
+      component: dynamicWrapper(app, [], () => import('../routes/waterRate/groupAccount')),
     },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),

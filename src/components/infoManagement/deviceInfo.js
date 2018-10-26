@@ -5,13 +5,13 @@ import {
     Button,
     Input,
     Select,
-    Cascader,
     Table,
     Modal,
     Checkbox,
     Row,
     Col
 } from 'antd'
+import { Link } from 'dva/router';
 const Item = Form.Item
 const Option = Select.Option
 
@@ -126,12 +126,15 @@ export default class extends Component {
                         >
                             生成二维码
                         </Button>
+                        <Link to={`/deviceInformation/warningRules:${record.deviceId}`}>
                         <Button
                             className={styles.warn}
                             icon='exception'
                         >
                             预警机制
                         </Button>
+                        </Link>
+                        
                         <Button
                             className={styles.edit}
                             icon='edit'
