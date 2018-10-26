@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="045366d6-f127-48ce-8dc3-45e6b2a482b8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/distributedControl/autoControl.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/distributedControl/autoControl.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/waterRate/groupAccount.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/waterRate/groupAccount.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -20,6 +17,7 @@
     <session id="902355902">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+          <entry key="project.closed" value="1" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.opened" value="1" />
         </counts>
@@ -56,7 +54,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/infoManagement/farmersInfo.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="535">
+            <state relative-caret-position="6900">
               <caret line="285" column="22" lean-forward="true" selection-start-line="285" selection-start-column="22" selection-end-line="285" selection-end-column="22" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
@@ -174,16 +172,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1540534545637</updated>
-      <workItem from="1540534547644" duration="2956000" />
+      <workItem from="1540534547644" duration="3580000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2956000" />
+    <option name="totallyTimeSpent" value="3580000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="npm" side_tool="true" />
       <window_info id="Favorites" side_tool="true" />
@@ -191,7 +188,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" />
-      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.040130153" />
+      <window_info anchor="bottom" id="Terminal" weight="0.48590022" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -214,7 +211,7 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/components/infoManagement/farmersInfo.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="535">
+        <state relative-caret-position="6900">
           <caret line="285" column="22" lean-forward="true" selection-start-line="285" selection-start-column="22" selection-end-line="285" selection-end-column="22" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
