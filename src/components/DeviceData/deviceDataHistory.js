@@ -16,28 +16,6 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 };
-//全部title
-const tableTitle = [
-    "网关地址",
-    "管道压力",
-    "太阳能电压",
-    "瞬时流量",
-    "累积流量",
-    "供电电压",
-    "阀门状态",
-    '更新时间'
-];
-// 源columns拥有编号
-const sourceColumns = [
-    { title: "网关地址", dataIndex: "GatewayAddr", number: 0 },
-    { title: "管道压力", dataIndex: "Press", number: 1 },
-    { title: "太阳能电压", dataIndex: "SunElecPress", number: 2 },
-    { title: "瞬时流量", dataIndex: "InstantNumber", number: 3 },
-    { title: "累积流量", dataIndex: "WaterTotalNumber", number: 4 },
-    { title: "供电电压", dataIndex: "BatteryPress", number: 5 },
-    { title: "阀门状态", dataIndex: "ValveStatus", number: 6 },
-    { title: "更新时间", dataIndex: "updateTime", number: 7 }
-];
 export default class extends Component {
     constructor(props) {
         super(props)
@@ -72,7 +50,7 @@ export default class extends Component {
             //显示设置弹窗可见性
             showSetVisible: false,
             // 设置过滤后的表头
-            filterColumns: sourceColumns
+            filterColumns: commonColumns
         }
     }
     componentDidMount() {
@@ -96,6 +74,7 @@ export default class extends Component {
         tableData.map((v, i) => {
             v.key = i
         })
+        // console.log(tableData)
         this.setState({
             columns,
             tableData,

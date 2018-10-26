@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styles from './index.less'
-import { Button, Table, Form, Input, Cascader, Modal, message } from 'antd';
-import FormItem from 'antd/lib/form/FormItem';
+import { Button, Table, Form, Input, Select, Modal, message, } from 'antd';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
 ////获取用户角色列表url
@@ -27,7 +26,7 @@ let postOption = {
 };
 // 全部title
 const tableTitle = [
-    '账号', '姓名', '角色', '手机号', '权限', '添加日期'
+    '账号', '姓名', '角色', '手机号', '部门', '添加日期'
 ];
 // 全局提示样式
 message.config({
@@ -37,7 +36,7 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { userManagement } = props;
-        console.log(props)
+        // console.log(props)
         //获取标题和数据
         this.state = {
             //数据总数
@@ -161,6 +160,7 @@ export default class extends Component {
                 mobilePhone: v.mobilePhone,
                 department: v.department,
                 createTime: v.createTime,
+                userId:v.userId,
                 key: i,
             });
         })
@@ -328,9 +328,10 @@ export default class extends Component {
     }
     // 点击修改
     _modifyHandler(userId) {
-        const { tableData } = this.state;
+        const { items } = this.state;
+        // console.log(items)
         let modifydata = {};
-        modifydata = tableData.filter(Item => Item.userId === userId);
+        modifydata = items.filter(Item => Item.userId === userId);
         this.setState({
             modifyVisible: true,
             userId,
@@ -524,7 +525,11 @@ export default class extends Component {
             deleteVisible,
             addVisible,
             modifyVisible,
-            modifyData
+            modifyData,
+            //角色列表
+            roleList,
+            //部门列表
+            deptList
         } = this.state;
         const paginationProps = {
             showQuickJumper: true,
@@ -533,7 +538,7 @@ export default class extends Component {
             onChange: (page) => this._pageChange(page)
         }
         return (
-            <div>
+            <div className={styles.userMgr}>
                 <Modal
                     visible={deleteVisible}
                     onOk={() => this._deleteOkHandler()}
@@ -552,6 +557,7 @@ export default class extends Component {
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
                         searchHandler={() => this._searchTableData()}
                         resetHandler={() => this._resetForm()}
+                        {...{ roleList }}
                     />
                     <Button
                         icon="plus"
@@ -569,6 +575,7 @@ export default class extends Component {
                     visible={addVisible}
                     onCancel={() => this._addCancelHandler()}
                     onOk={() => this._addOkHandler()}
+                    {...{ roleList,deptList }}
                 />
                 {/* 修改弹窗 */}
                 <ModifyForm
@@ -576,7 +583,7 @@ export default class extends Component {
                     visible={modifyVisible}
                     onCancel={() => this._modifyCancelHandler()}
                     onOk={() => this._modifyOkHandler()}
-                    {...{ modifyData }}
+                    {...{ modifyData, roleList, deptList }}
                 />
             </div>
         )
@@ -586,8 +593,13 @@ export default class extends Component {
 const SearchForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, searchHandler, resetHandler } = this.props;
+            const { form, searchHandler, resetHandler, roleList } = this.props;
             const { getFieldDecorator } = form;
+            const Option = Select.Option;
+            if (roleList.length == 0) {
+                return null
+            }
+            // console.log(roleList)
             return (
                 <Form layout='inline'>
                     <Form.Item>
@@ -616,12 +628,19 @@ const SearchForm = Form.create()(
                     </Form.Item>
                     <Form.Item>
                         {getFieldDecorator('roleName', {
-                            initialValue: ''
+                            initialValue: '全部角色'
                         })
                             (
-                            <Cascader
-                                placeholder='全部角色'
-                            />
+                            <Select
+                            //placeholder='全部角色'
+                            >
+                                {roleList.map((v, i) => {
+                                    return (
+                                        <Option key={i} value={v.id}>{v.name}</Option>
+                                    )
+
+                                })}
+                            </Select>
                             )
                         }
                     </Form.Item>
@@ -668,8 +687,15 @@ const formItemLayout = {
 const AddForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, onCancel, onOk, form } = this.props;
+            const { visible, onCancel, onOk, form,roleList, deptList} = this.props;
             const { getFieldDecorator } = form;
+            const Option = Select.Option;
+            if (roleList.length == 0) {
+                return null
+            }
+            if (deptList.length == 0) {
+                return null
+            }
             return (
                 <Modal
                     //className={styles.addModal}
@@ -723,32 +749,32 @@ const AddForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='部门'>
                             {getFieldDecorator('department', {
-                                initialValue: '',
+                                initialValue: deptList[0].name,
                             })
                                 (
-                                <Cascader
-                                    options={[
-                                        {
-                                            value: '',
-                                            label: '全部',
-                                        }
-                                    ]}
-                                />
+                                    <Select>
+                                        {deptList.map((v, i) => {
+                                            return (
+                                                <Option key={i} value={v.id}>{v.name}</Option>
+                                            )
+        
+                                        })}
+                                    </Select>
                                 )}
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='角色'>
                             {getFieldDecorator('roleName', {
-                                initialValue: '',
+                                initialValue: roleList[0].name,
                             })
                                 (
-                                <Cascader
-                                    options={[
-                                        {
-                                            value: '',
-                                            label: '全部',
-                                        }
-                                    ]}
-                                />
+                                    <Select>
+                                        {roleList.map((v, i) => {
+                                            return (
+                                                <Option key={i} value={v.id}>{v.name}</Option>
+                                            )
+        
+                                        })}
+                                    </Select>
                                 )}
                         </Form.Item>
                         <Form.Item {...formItemLayout} label="手机号">
@@ -772,11 +798,18 @@ const AddForm = Form.create()(
 const ModifyForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, onCancel, onOk, form, modifyData } = this.props;
+            const { visible, onCancel, onOk, form, modifyData,roleList, deptList } = this.props;
             const { getFieldDecorator } = form;
             if (typeof (modifyData[0]) == 'undefined') {
                 return false
             }
+            if (roleList.length == 0) {
+                return null
+            }
+            if (deptList.length == 0) {
+                return null
+            }
+            // console.log(modifyData)
             return (
                 <Modal
                     visible={visible}
@@ -829,32 +862,32 @@ const ModifyForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='部门'>
                             {getFieldDecorator('department', {
-                                //    initialValue: modifyData[0].department,
+                                   initialValue: modifyData[0].department,
                             })
                                 (
-                                <Cascader
-                                    options={[
-                                        {
-                                            value: '',
-                                            label: '全部',
-                                        }
-                                    ]}
-                                />
+                                    <Select>
+                                    {deptList.map((v, i) => {
+                                        return (
+                                            <Option key={i} value={v.id}>{v.name}</Option>
+                                        )
+    
+                                    })}
+                                </Select>
                                 )}
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='角色'>
                             {getFieldDecorator('roleName', {
-                                // initialValue: modifyData[0].roleName,
+                                initialValue: modifyData[0].roleName,
                             })
                                 (
-                                <Cascader
-                                    options={[
-                                        {
-                                            value: '',
-                                            label: '全部',
-                                        }
-                                    ]}
-                                />
+                                    <Select>
+                                    {roleList.map((v, i) => {
+                                        return (
+                                            <Option key={i} value={v.id}>{v.name}</Option>
+                                        )
+    
+                                    })}
+                                </Select>
                                 )}
                         </Form.Item>
                         <Form.Item {...formItemLayout} label="手机号">
