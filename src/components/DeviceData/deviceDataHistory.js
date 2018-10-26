@@ -16,39 +16,17 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 };
-//全部title
-const tableTitle = [
-    "网关地址",
-    "管道压力",
-    "太阳能电压",
-    "瞬时流量",
-    "累积流量",
-    "供电电压",
-    "阀门状态",
-    '更新时间'
-];
-// 源columns拥有编号
-const sourceColumns = [
-    { title: "网关地址", dataIndex: "GatewayAddr", number: 0 },
-    { title: "管道压力", dataIndex: "Press", number: 1 },
-    { title: "太阳能电压", dataIndex: "SunElecPress", number: 2 },
-    { title: "瞬时流量", dataIndex: "InstantNumber", number: 3 },
-    { title: "累积流量", dataIndex: "WaterTotalNumber", number: 4 },
-    { title: "供电电压", dataIndex: "BatteryPress", number: 5 },
-    { title: "阀门状态", dataIndex: "ValveStatus", number: 6 },
-    { title: "更新时间", dataIndex: "updateTime", number: 7 }
-];
 export default class extends Component {
     constructor(props) {
         super(props)
-        // console.log(props)
+        console.log(props)
         let {title}=this.props
         // 公用Columns
         let commonColumns = [
             { name: "updateTime", displayName: "更新时间" }
         ]
         // 插入其他段
-        let difColumns=title.data.data
+        let difColumns=title
         commonColumns.splice(0,0,...difColumns)
         // 添加序号
         commonColumns.map((v,i)=>{
@@ -68,21 +46,17 @@ export default class extends Component {
             //表头
             columns: [],
             //表单数据
-            tableData: this.props.data.data.items,
+            tableData: this.props.deviceDataHistory.data.data.items,
             //显示设置弹窗可见性
             showSetVisible: false,
             // 设置过滤后的表头
-            filterColumns: sourceColumns
+            filterColumns: commonColumns
         }
     }
     componentDidMount() {
         //初始化数据
         this._getTableData(this.state.tableData, this.state.commonColumns);
     }
-    // componentWillUnmount(){
-    //     //移除localStorange
-    //     localStorage.removeItem('deviceInfo')
-    // }
     //获取表的数据
     _getTableData(tableData, commonColumns) {
         let columns = [];
@@ -100,7 +74,7 @@ export default class extends Component {
         tableData.map((v, i) => {
             v.key = i
         })
-        console.log(tableData)
+        // console.log(tableData)
         this.setState({
             columns,
             tableData,
@@ -167,34 +141,34 @@ export default class extends Component {
         let deviceId = deviceInfo.deviceId;
         // console.log(deviceId)
         let PageIndex = page - 1;
-        return fetch(dataUrl, {
-            ...postOption,
-            body: JSON.stringify({
-                deviceId,
-                deviceTypeId: 1,
-                PageIndex,
-                pageSize: 10
-            })
-        }).then((res) => {
-            Promise.resolve(res.json())
-                .then((v) => {
-                    if (v.ret == 1) {
-                        //设置页面元素
-                        let items = v.data.items;
-                        let itemCount = v.data.itemCount;
-                        items.map((v, i) => {
-                            v.key = i
-                        })
-                        this.setState({
-                            itemCount,
-                            items
-                        })
-                        this._getTableData(title, items, filterColumns);
-                    }
-                })
-        }).catch((err) => {
-            console.log(err)
-        })
+        // return fetch(dataUrl, {
+        //     ...postOption,
+        //     body: JSON.stringify({
+        //         deviceId,
+        //         deviceTypeId: 1,
+        //         PageIndex,
+        //         pageSize: 10
+        //     })
+        // }).then((res) => {
+        //     Promise.resolve(res.json())
+        //         .then((v) => {
+        //             if (v.ret == 1) {
+        //                 //设置页面元素
+        //                 let items = v.data.items;
+        //                 let itemCount = v.data.itemCount;
+        //                 items.map((v, i) => {
+        //                     v.key = i
+        //                 })
+        //                 this.setState({
+        //                     itemCount,
+        //                     items
+        //                 })
+        //                 this._getTableData(title, items, filterColumns);
+        //             }
+        //         })
+        // }).catch((err) => {
+        //     console.log(err)
+        // })
     }
     render() {
         const {

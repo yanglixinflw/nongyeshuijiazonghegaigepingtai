@@ -21,7 +21,7 @@ export default class extends React.Component {
       payload: {
         "deviceId": "",
         "name": "",
-        "deviceTypeId": 0,
+        "deviceTypeId": "",
         "installAddrId": "",
         "warningRules": "",
         "areaName": "",
