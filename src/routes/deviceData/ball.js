@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Ball from '../../components/DeviceData/ball';
+// import Ball from '../../components/DeviceData/ball';
+import DeviceData from '../../components/DeviceData/deviceData';
 import { connect } from 'dva';
 import { Spin } from 'antd';
 @connect(({ ball, loading }) => ({
@@ -32,8 +33,11 @@ export default class extends Component {
         return (
             <div>
                 <Spin size='large' spinning={loading}>
-                    <Ball
+                    {/* <Ball
                         {...{ball}}
+                    /> */}
+                    <DeviceData
+                        {...this.props}
                     />
                 </Spin>
             </div>

@@ -33,6 +33,9 @@
                 border: 0;
                 margin-right: 3px;
                 color:#ACB5E8; 
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
             .ant-cascader-picker {
                 height: 46px;
@@ -46,8 +49,9 @@
             }
         }
         .ant-btn{
+            margin-top:4px;
             border-radius: 50px;
-            height: 46px;
+            height: 38px;
             width: 130px;
             background: #2E386C;
             color: #ACB5E8;
@@ -178,9 +182,48 @@
                     max-width: 150px;
                 }
             }
-            
             .ant-btn{
                 max-width: 80px;
+            }
+        }
+    }
+}
+@media(max-width:1199px){
+    .searchForm {
+        :global{
+            .ant-form-item{
+                margin-right:6px;
+                .ant-input {
+                    max-width: 130px;
+                }
+                .ant-cascader-picker{
+                    max-width: 130px;
+                }
+            }
+            .ant-btn{
+                max-width: 70px;
+                .anticon + span, {
+                    margin-left: 2px;
+                }
+            }
+        }
+    }
+}
+@media(max-width:1099px){
+    .searchForm {
+        :global{
+            .ant-form-item{
+                margin-right:6px;
+                .ant-input {
+                    max-width: 120px;
+                }
+                .ant-cascader-picker{
+                    max-width: 120px;
+                }
+            }
+            .ant-btn{
+                padding:0;
+                max-width: 60px;
             }
         }
     }

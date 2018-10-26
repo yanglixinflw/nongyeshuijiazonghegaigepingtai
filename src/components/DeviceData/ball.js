@@ -179,7 +179,6 @@ export default class extends Component {
                                 itemCount,
                                 items
                             })
-
                             this._getTableData(title, items, filterColumns);
                         }
                     })

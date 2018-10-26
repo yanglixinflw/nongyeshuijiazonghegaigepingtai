@@ -23,6 +23,9 @@ export default class extends Component {
         })
         const { dispatch } = this.props;
         dispatch({
+            type: 'wellsHistory/fetchTitle',
+        });
+        dispatch({
             type: 'wellsHistory/fetch',
             payload:{
                 deviceId,
@@ -31,9 +34,7 @@ export default class extends Component {
                 pageSize: 10
             }
         });
-        dispatch({
-            type: 'wellsHistory/fetchTitle',
-        });
+        
     }
     render() {
         let { wellsHistory, loading } = this.props;

@@ -19,11 +19,12 @@ export default class extends React.Component{
                 "pageSize": 10
               }
         });//type来选择请求的接口，payload为传给后台的参数
+       
     }
     render(){
         let { userManagement, loading } = this.props;
         let arr = Object.keys(userManagement);
-        if (arr.length ===0 ) return userManagement = null;
+        if (arr.length ==0 ) return userManagement = null;
         // console.log(userManagement)
         return (
             <div>

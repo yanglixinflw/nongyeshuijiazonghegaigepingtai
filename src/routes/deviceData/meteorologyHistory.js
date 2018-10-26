@@ -23,6 +23,9 @@ export default class extends Component {
         })
         const { dispatch } = this.props;
         dispatch({
+            type: 'meteorologyHistory/fetchTitle',
+        });
+        dispatch({
             type: 'meteorologyHistory/fetch',
             payload: {
                 deviceId,
@@ -31,9 +34,7 @@ export default class extends Component {
                 pageSize: 10
             }
         });
-        dispatch({
-            type: 'meteorologyHistory/fetchTitle',
-        });
+        
     }
     render() {
         let { meteorologyHistory, loading } = this.props

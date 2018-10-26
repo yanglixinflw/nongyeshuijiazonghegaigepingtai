@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Meteorology from '../../components/DeviceData/meteorology';
+// import Meteorology from '../../components/DeviceData/meteorology';
+import DeviceData from '../../components/DeviceData/deviceData';
 import { connect } from 'dva';
 import {Spin} from 'antd';
 @connect(({ meteorology, loading }) => ({
@@ -32,10 +33,12 @@ export default class extends Component {
         return (
             <div>
                 <Spin size='large' spinning={loading}>
-                    <Meteorology 
+                    {/* <Meteorology
                         {...{meteorology}}
+                    /> */}
+                    <DeviceData 
+                        {...this.props}
                     />
-                    {/* 123456 */}
                 </Spin>
             </div>
         )

@@ -23,6 +23,9 @@ export default class extends Component {
         })
         const { dispatch } = this.props;
         dispatch({
+            type: 'moistureHistory/fetchTitle',
+        });
+        dispatch({
             type: 'moistureHistory/fetch',
             payload:{
                 deviceId,
@@ -31,9 +34,7 @@ export default class extends Component {
                 pageSize: 10
             }
         });
-        dispatch({
-            type: 'moistureHistory/fetchTitle',
-        });
+        
     }
     render() {
         let { moistureHistory, loading } = this.props;

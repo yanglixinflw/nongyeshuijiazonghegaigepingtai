@@ -240,15 +240,15 @@ export default class extends Component {
                     />
                 </div>
                 <div className={styles.deviceInfo}>
-                    <div className={styles.info}>
+                    <div className={styles.info} title={deviceInfo.deviceId}>
                         <i className={classnames('dyhsicon', 'dyhs-shebeiID', `${styles.deviceId}`)}></i>
                         {deviceInfo.deviceId}
                     </div>
-                    <div className={styles.info}>
+                    <div className={styles.info} title={deviceInfo.name}>
                         <i className={classnames('dyhsicon', 'dyhs-shebeimingcheng', `${styles.name}`)}></i>
                         {deviceInfo.name}
                     </div>
-                    <div className={styles.info}>
+                    <div className={styles.info} title={deviceInfo.installAddr}>
                         <i className={classnames('dyhsicon', 'dyhs-shebeianzhuangdi', `${styles.installAddr}`)}></i>
                         {deviceInfo.installAddr}
                     </div>
