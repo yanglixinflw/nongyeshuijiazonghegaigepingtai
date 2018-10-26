@@ -35,10 +35,6 @@ export default class extends Component {
             }
         });
         
-<<<<<<< HEAD
-=======
-        
->>>>>>> 70830707044ac5719c579119db6de5f4db846df6
     }
     render() {
         let { ballHistory, loading } = this.props;
