@@ -78,29 +78,11 @@ export const getRouterData = app => {
     '/gismap/gismapPage':{
       component: dynamicWrapper(app, [], () => import('../routes/gisMap')),
     },
-    '/data/moisture':{
-      component: dynamicWrapper(app, ['moisture'], () => import('../routes/deviceData/moisture')),
+    '/deviceData/device:id':{
+      component: dynamicWrapper(app, ['deviceData'], () => import('../routes/deviceData/deviceData')),
     },
-    '/moisture/history:id':{
-      component: dynamicWrapper(app, ['moistureHistory'], () => import('../routes/deviceData/moistureHistory')),
-    },
-    '/data/wells':{
-      component: dynamicWrapper(app, ['wells'], () => import('../routes/deviceData/wells')),
-    },
-    '/wells/history:id':{
-      component: dynamicWrapper(app, ['wellsHistory'], () => import('../routes/deviceData/wellsHistory')),
-    },
-    '/data/meteorology':{
-      component: dynamicWrapper(app, ['meteorology'], () => import('../routes/deviceData/meteorology')),
-    },
-    '/meteorology/history:id':{
-      component: dynamicWrapper(app, ['meteorologyHistory'], () => import('../routes/deviceData/meteorologyHistory')),
-    },
-    '/data/ball':{
-      component: dynamicWrapper(app, ['ball'], () => import('../routes/deviceData/ball')),
-    },
-    '/ball/history:id':{
-      component: dynamicWrapper(app, ['ballHistory'], () => import('../routes/deviceData/ballHistory')),
+    '/device:id/history:id':{
+      component: dynamicWrapper(app, ['deviceDataHistory'], () => import('../routes/deviceData/deviceDataHistory')),
     },
     '/messageManagement/deviceInformation':{
       component: dynamicWrapper(app, ['deviceInformation'], () => import('../routes/messageManagement/deviceInfo')),

@@ -41,23 +41,23 @@ const menuData = [
   {
     name: '设备数据',
     icon: 'dyhs-shebeishuju',
-    path: 'data',
+    path: 'deviceData',
     children: [
       {
-        name: '井电',
-        path: 'wells',
+        name: '开创井电',
+        path: 'device:2',
       },
       {
-        name: '气象',
-        path: 'meteorology',
+        name: '清易气象',
+        path: 'device:3',
       },
       {
-        name: '墒情',
-        path: 'moisture',
+        name: '某某墒情',
+        path: 'device:4',
       },
       {
         name: '智能球阀',
-        path: 'ball',
+        path: 'device:1',
       },
     ],
   },
