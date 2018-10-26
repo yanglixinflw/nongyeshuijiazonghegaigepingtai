@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from './farmersInfo.less';
-import { Input, Button, Form, Cascader, Table} from 'antd';
+import { Input, Button, Form, Cascader, Table, Modal} from 'antd';
 // 开发环境用以翻页调用
 const envNet='http://192.168.30.127:88';
 const dataUrl=`${envNet}/api/PeasantMgr/list`;
@@ -34,7 +34,7 @@ export default class extends Component{
             data:farmersInfo.data.data.items,//表格数据源
             //表的每一列
             columns: [],
-            //
+            //搜索框初始值
             searchValue: {
                 "name": "",
                 "mobile": "",
@@ -42,6 +42,10 @@ export default class extends Component{
                 "pageIndex": 0,
                 "pageSize":10
             },
+            //删除弹框显示的内容
+            ModalText: '删除后信息将无法恢复，是否确认删除。',
+            //弹出框是否显示
+            visible: false,
           };
     }
     componentDidMount() {
@@ -76,6 +80,7 @@ export default class extends Component{
                         </Button>
                         <Button
                             className={styles.delete}
+                            onClick={()=> this._delete()}
                             icon='delete'
                         >
                             删除
@@ -112,9 +117,30 @@ export default class extends Component{
     _editFarmerInfo(){
         console.log("修改")
     }
+    //删除功能
+    _delete(){
+      //显示弹框
+      this.setState({
+        visible: true,
+      });
+    }
+    //弹框点击确定
+    handleOk = () => {
+        this.setState({
+          visible: false,
+          confirmLoading: false,
+        });
+    }
+    //弹框点击取消
+    handleCancel = () => {
+      console.log('Clicked cancel button');
+      this.setState({
+        visible: false,
+      });
+    }
     // 搜索功能
     _searchTableData() {
-        const { title, data } = this.state;
+        const { title } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
@@ -140,10 +166,11 @@ export default class extends Component{
                     .then((v) => {
                         if (v.ret == 1) {
                             // 设置页面显示的元素
-                            let {items,itemCount}=v.data
+                            let itemCount = v.data.itemCount
+                            let data = v.data.items
                             this.setState({
                                 itemCount,
-                                data:items
+                                data
                             })
                             this._getTableDatas(title,data);
                         }
@@ -196,7 +223,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { columns, tableDatas,itemCount } = this.state;
+        const { visible,columns, tableDatas,itemCount,ModalText} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -250,6 +277,13 @@ export default class extends Component{
                     dataSource={tableDatas}
                     // scroll={{ x: 1300 }}
                 />
+              <Modal title="Title"
+                     visible={visible}
+                     onOk={this.handleOk}
+                     onCancel={this.handleCancel}
+              >
+                <p>{ModalText}</p>
+              </Modal>
             </div>
         )
     }
