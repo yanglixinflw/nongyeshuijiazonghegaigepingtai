@@ -19,7 +19,12 @@ export default class extends React.Component {
 
     }
     render() {
-        const {errorMassage}=this.props
+        const {
+            errorMassage,
+            CAPTCHA,
+            reloadCAPTCHA
+        }=this.props
+
         return (
             <div className={styles.basic}>
                 <header>
@@ -41,6 +46,8 @@ export default class extends React.Component {
                                         this._loginSumbit()
                                     }}
                                     errorMassage={errorMassage}
+                                    {...CAPTCHA}
+                                    reloadCAPTCHA={reloadCAPTCHA}
                                 />
                             </div>
                             <div className={styles.boxFooter}>
@@ -86,7 +93,7 @@ const LoginForm = Form.create()(
         }
         render() {
             const { showYzm, isLoading } = this.state
-            const { form, submitHandler,errorMassage } = this.props
+            const { form, submitHandler,errorMassage ,url,reloadCAPTCHA} = this.props
             const { getFieldDecorator } = form;
             // 设置输入密码的外边距
             let passWordMargin
@@ -154,8 +161,9 @@ const LoginForm = Form.create()(
                                                 placeholder='请输入验证码'></Input>
                                         )
                                     }
-
-                                    <div className={styles.yzmwindow}>
+                                    {/* 点击刷新 */}
+                                    <div className={styles.yzmwindow} onClick={reloadCAPTCHA} >
+                                    <img src={url}/>
                                     </div>
                                 </FormItem>
                                 : null

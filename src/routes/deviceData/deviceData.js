@@ -16,12 +16,6 @@ export default class extends Component {
         const deviceTypeId = parse(window.location.href.split(':'))[3]
         const { dispatch } = this.props;
         dispatch({
-            type: 'deviceData/fetchTitle',
-            payload: {
-                deviceTypeId,
-            }
-        });
-        dispatch({
             type: 'deviceData/fetch',
             payload: {
                  deviceTypeId,
@@ -54,6 +48,18 @@ export default class extends Component {
             deviceTypeId,
             pageTitle:title[0].name
         }
+        this._getTitle()
+    }
+    // 获取title
+    _getTitle(){
+        const deviceTypeId = parse(window.location.href.split(':'))[3]
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'deviceData/fetchTitle',
+            payload: {
+                deviceTypeId,
+            }
+        });
     }
     componentWillUpdate(nextProps) {
         // 根据不同的设备ID获取不同的数据
