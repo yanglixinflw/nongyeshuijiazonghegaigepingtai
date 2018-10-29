@@ -13,6 +13,7 @@ class IndexPage extends React.Component {
             {...this.props}
           />
         </div>
+          
         <MyMap />
       </div>
 

@@ -1,5 +1,21 @@
 .map{
-    margin:auto;
-    width: 90%;
-    height: 700px;;
+    margin:-10px 40px 0 ;
+    height: 700px;
+    .search{
+        position: relative;
+        display: flex;
+        height:40px;
+        line-height: 40px;
+        top:50px;
+        left:25px;
+        z-index: 199;
+        font-weight: 600;
+        :global{
+            .ant-input{
+                width:214px;
+                height:40px;
+                margin-left:25px;
+            }
+        }
+    }
 }
