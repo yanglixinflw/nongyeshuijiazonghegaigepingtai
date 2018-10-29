@@ -1,5 +1,6 @@
 import React from 'react';
-import BreadcrumbView from 'components/PageHeader/breadcrumb'
+import BreadcrumbView from 'components/PageHeader/breadcrumb';
+import MyMap from '../../components/GisMap/index';
 class IndexPage extends React.Component {
   constructor(props) {
     super(props)
@@ -8,8 +9,11 @@ class IndexPage extends React.Component {
     return (
       <div>
         <div>
-          地图页
-      </div>
+          <BreadcrumbView
+            {...this.props}
+          />
+        </div>
+        <MyMap />
       </div>
 
     );
