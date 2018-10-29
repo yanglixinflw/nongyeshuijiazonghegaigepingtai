@@ -24,17 +24,13 @@ export default class extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            title: []
+            title: [],
+            deviceTypeId:null
+            
         }
         let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0]
         let historyId = parse(window.location.href.split(':'))[4]
         const { dispatch } = this.props;
-        // dispatch({
-        //     type: 'deviceDataHistory/fetchTitle',
-        //     payload: {
-        //         deviceTypeId,
-        //     }
-        // });
         dispatch({
             type: 'deviceDataHistory/fetch',
             payload: {
@@ -44,10 +40,18 @@ export default class extends Component {
                 pageSize: 10
             }
         });
-        this._getTitle()
+        this._getTitle();
     }
     _getTitle(){
-        let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0]
+        const { dispatch } = this.props;
+        // console.log(dispatch)
+        let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0];
+        // dispatch({
+        //     type: 'deviceDataHistory/fetchTitle',
+        //     payload: {
+        //         deviceTypeId,
+        //     }
+        // });
         return fetch(getTitle, {
             ...postOption,
             body: JSON.stringify({
@@ -59,7 +63,8 @@ export default class extends Component {
                     if (v.ret == 1) {
                         // console.log(v)
                         this.setState({
-                            title: v.data
+                            title: v.data,
+                            deviceTypeId
                         })
                     }
                 })
@@ -69,7 +74,7 @@ export default class extends Component {
     }
     render() {
         let { deviceDataHistory, loading } = this.props;
-        let { title } = this.state
+        let { title,deviceTypeId } = this.state
         let arr = Object.keys(deviceDataHistory);
         if (arr.length == 0) return deviceDataHistory = null;
         if (title.length == 0) return title = null;
@@ -78,7 +83,7 @@ export default class extends Component {
             <div>
                 <Spin size='large' spinning={loading}>
                     <History
-                        {...{ deviceDataHistory, title }}
+                        {...{ deviceDataHistory, title,deviceTypeId}}
                     />
                 </Spin>
             </div>
