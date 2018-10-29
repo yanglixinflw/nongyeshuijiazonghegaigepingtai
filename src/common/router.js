@@ -90,15 +90,18 @@ export const getRouterData = app => {
     '/messageManagement/farmerInfor':{
       component: dynamicWrapper(app, ['farmersInfo'], () => import('../routes/messageManagement/farmersInfo')),
     },
+    '/messageManagement/warningRules':{
+      component: dynamicWrapper(app, ['deviceWarning'], () => import('../routes/messageManagement/deviceWarning')),
+    },
     '/system/userManagement':{
       component: dynamicWrapper(app, ['userManagement'], () => import('../routes/systemManagement/userManagement')),
     },
     '/dcs/automation':{
       component: dynamicWrapper(app, [], () => import('../routes/distributedControl/autoControl')),
     },
-    '/deviceInformation/warningRules:id':{
-      component: dynamicWrapper(app, ["deviceWarning"], () => import('../routes/messageManagement/deviceWarning')),
-    },
+    // '/deviceInformation/warningRules:id':{
+    //   component: dynamicWrapper(app, ["deviceWarning"], () => import('../routes/messageManagement/deviceWarning')),
+    // },
     '/rent/groupAccount':{
       component: dynamicWrapper(app, [], () => import('../routes/waterRate/groupAccount')),
     },
