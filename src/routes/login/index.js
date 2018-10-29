@@ -43,6 +43,7 @@ export default class extends React.Component {
 
   submitHandler = (err, value) => {
     const {codeId}= this.state
+    // 传递验证码id
     value.verifyCodeId=codeId
     // console.log(value)
     // 添加codeId字段
