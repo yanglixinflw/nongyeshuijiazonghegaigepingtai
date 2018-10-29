@@ -8,9 +8,9 @@ const menuData = [
     children: [
       {
         name: 'Gis地图',
-        path: 'gismapPage',
+        path: 'gismapPage'
       }
-    ],
+    ]
   },
   {
     name: '指挥中心',
@@ -19,9 +19,9 @@ const menuData = [
     children: [
       {
         name: '视频监控',
-        path: 'videoMonitoring',
-      },
-    ],
+        path: 'videoMonitoring'
+      }
+    ]
   },
   {
     name: '集散控制',
@@ -30,13 +30,13 @@ const menuData = [
     children: [
       {
         name: '远程控制',
-        path: 'remote',
+        path: 'remote'
       },
       {
         name: '自动化控制',
-        path: 'automation',
-      },
-    ],
+        path: 'automation'
+      }
+    ]
   },
   {
     name: '设备数据',
@@ -45,21 +45,21 @@ const menuData = [
     children: [
       {
         name: '开创井电',
-        path: 'device:2',
+        path: 'device:2'
       },
       {
         name: '清易气象',
-        path: 'device:3',
+        path: 'device:3'
       },
       {
         name: '某某墒情',
-        path: 'device:4',
+        path: 'device:4'
       },
       {
         name: '智能球阀',
-        path: 'device:1',
-      },
-    ],
+        path: 'device:1'
+      }
+    ]
   },
   {
     name: '设备管护',
@@ -68,9 +68,9 @@ const menuData = [
     children: [
       {
         name: '预警事件记录',
-        path: 'warning',
-      },
-    ],
+        path: 'warning'
+      }
+    ]
   },
   {
     name: '水费收缴',
@@ -79,13 +79,13 @@ const menuData = [
     children: [
       {
         name: '计费设施',
-        path: 'device',
+        path: 'device'
       },
       {
         name:'小组账户',
         path:'groupAccount'
-      },
-    ],
+      }
+    ]
   },
   {
     name: '信息管理',
@@ -94,17 +94,17 @@ const menuData = [
     children: [
       {
         name: '设备信息',
-        path: 'deviceInformation',
+        path: 'deviceInformation'
       },
       {
         name: '农户信息',
-        path: 'farmerInfor',
+        path: 'farmerInfor'
       },
       {
         name: '预警规则',
-        path: 'warningRules',
-      },
-    ],
+        path: 'warningRules'
+      }
+    ]
   },
   {
     name: '系统管理',
@@ -113,10 +113,10 @@ const menuData = [
     children: [
       {
         name: '用户管理',
-        path: 'userManagement',
-      },
-    ],
-  },
+        path: 'userManagement'
+      }
+    ]
+  }
   
 ];
 
