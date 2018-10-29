@@ -137,7 +137,7 @@ export default class extends Component {
     }
     // 翻页请求数据
     _pageChange(page) {
-        const { deviceInfo, title, filterColumns } = this.state;
+        const { tableData ,commonColumns } = this.state;
         let deviceId = deviceInfo.deviceId;
         // console.log(deviceId)
         let PageIndex = page - 1;
