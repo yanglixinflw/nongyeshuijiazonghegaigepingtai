@@ -25,6 +25,7 @@ export default class extends React.Component{
         // console.log(farmersInfo)
         let arr = Object.keys(farmersInfo);
         if (arr.length === 0) return farmersInfo = null;
+        console.log(arr)
         return (
             <div>
                 <Spin size='large' spinning={loading}>
