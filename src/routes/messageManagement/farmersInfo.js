@@ -24,7 +24,6 @@ export default class extends React.Component{
         let { farmersInfo, loading } = this.props;
         // console.log(farmersInfo)
         let arr = Object.keys(farmersInfo);
-        // console.log(Object)
         if (arr.length === 0) return farmersInfo = null;
         return (
             <div>

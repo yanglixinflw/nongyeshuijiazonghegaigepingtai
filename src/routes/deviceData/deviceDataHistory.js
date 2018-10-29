@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Spin } from 'antd';
+import { Spin, Button } from 'antd';
+import BreadcrumbView from '../../components/PageHeader/breadcrumb';
 import { parse } from 'qs';
 import History from '../../components/DeviceData/deviceDataHistory';
 // 开发环境
@@ -23,11 +24,6 @@ let postOption = {
 export default class extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            title: [],
-            deviceTypeId:null
-            
-        }
         let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0]
         let historyId = parse(window.location.href.split(':'))[4]
         const { dispatch } = this.props;
@@ -40,12 +36,18 @@ export default class extends Component {
                 pageSize: 10
             }
         });
-        this._getTitle();
+        this.state = {
+            title: [],
+            deviceTypeId
+        }
     }
-    _getTitle(){
-        const { dispatch } = this.props;
-        // console.log(dispatch)
-        let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0];
+    componentDidMount() {
+        this._getTitle(this.state.deviceTypeId);
+    }
+    _getTitle(deviceTypeId) {
+        //const { dispatch } = this.props;
+        // // console.log(dispatch)
+        // let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0];
         // dispatch({
         //     type: 'deviceDataHistory/fetchTitle',
         //     payload: {
@@ -68,22 +70,26 @@ export default class extends Component {
                         })
                     }
                 })
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err)
         })
     }
     render() {
+        // console.log(this.props)
         let { deviceDataHistory, loading } = this.props;
-        let { title,deviceTypeId } = this.state
+        let { title, deviceTypeId } = this.state
         let arr = Object.keys(deviceDataHistory);
         if (arr.length == 0) return deviceDataHistory = null;
         if (title.length == 0) return title = null;
-        // console.log(title)
+
         return (
             <div>
                 <Spin size='large' spinning={loading}>
+                    <BreadcrumbView
+                        {...this.props}
+                    />
                     <History
-                        {...{ deviceDataHistory, title,deviceTypeId}}
+                        {...{ deviceDataHistory, title, deviceTypeId }}
                     />
                 </Spin>
             </div>
