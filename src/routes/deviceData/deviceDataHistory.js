@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Spin, Button } from 'antd';
+import { Spin} from 'antd';
 import BreadcrumbView from '../../components/PageHeader/breadcrumb';
 import { parse } from 'qs';
 import History from '../../components/DeviceData/deviceDataHistory';
@@ -24,9 +24,17 @@ let postOption = {
 export default class extends Component {
     constructor(props) {
         super(props)
+        this.state={
+            title:[]
+        }
+    }
+    componentDidMount() {
         let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0]
         let historyId = parse(window.location.href.split(':'))[4]
         const { dispatch } = this.props;
+        dispatch({
+            type: 'deviceDataHistory/clear',
+        })
         dispatch({
             type: 'deviceDataHistory/fetch',
             payload: {
@@ -36,24 +44,16 @@ export default class extends Component {
                 pageSize: 10
             }
         });
-        this.state = {
-            title: [],
+        this.setState({
             deviceTypeId
-        }
-    }
-    componentDidMount() {
-        this._getTitle(this.state.deviceTypeId);
+        }) 
+        this._getTitle(deviceTypeId);
     }
     _getTitle(deviceTypeId) {
-        //const { dispatch } = this.props;
-        // // console.log(dispatch)
-        // let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0];
-        // dispatch({
-        //     type: 'deviceDataHistory/fetchTitle',
-        //     payload: {
-        //         deviceTypeId,
-        //     }
-        // });
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'deviceDataHistory/clear',
+        })
         return fetch(getTitle, {
             ...postOption,
             body: JSON.stringify({
@@ -74,14 +74,36 @@ export default class extends Component {
             console.log(err)
         })
     }
+    componentWillUpdate(nextProps) {
+        // 根据不同的设备ID获取不同的数据
+        if (this.props.location !== nextProps.location) {
+            // 路由变化
+            const { dispatch } = this.props;
+            let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0];
+            dispatch({
+                type: 'deviceDataHistory/fetchTitle',
+                payload: {
+                    deviceTypeId,
+                }
+            });
+            dispatch({
+                type: 'deviceDataHistory/fetch',
+                payload: {
+                    deviceId: historyId,
+                    deviceTypeId,
+                    pageIndex: 0,
+                    pageSize: 10
+                }
+            });
+        }
+    }
     render() {
         // console.log(this.props)
         let { deviceDataHistory, loading } = this.props;
-        let { title, deviceTypeId } = this.state
+        let { deviceTypeId,title } = this.state
         let arr = Object.keys(deviceDataHistory);
         if (arr.length == 0) return deviceDataHistory = null;
         if (title.length == 0) return title = null;
-
         return (
             <div>
                 <Spin size='large' spinning={loading}>

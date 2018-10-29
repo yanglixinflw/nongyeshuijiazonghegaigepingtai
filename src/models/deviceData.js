@@ -26,6 +26,9 @@ export default {
             'title':payload
           }
           return { ...state } 
+        },
+        clear(){
+          return 1
         }
       }
 }
