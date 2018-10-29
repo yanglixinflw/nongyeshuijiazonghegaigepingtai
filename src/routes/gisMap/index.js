@@ -8,9 +8,6 @@ class IndexPage extends React.Component {
     return (
       <div>
         <div>
-          <BreadcrumbView
-            {...this.props}
-          />
           地图页
       </div>
       </div>
