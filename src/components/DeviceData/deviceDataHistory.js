@@ -20,23 +20,25 @@ export default class extends Component {
     constructor(props) {
         super(props)
         console.log(props)
-        let {title}=this.props
+        let { title, deviceTypeId } = this.props
         // 公用Columns
         let commonColumns = [
             { name: "updateTime", displayName: "更新时间" }
         ]
         // 插入其他段
-        let difColumns=title
-        commonColumns.splice(0,0,...difColumns)
+        let difColumns = title
+        commonColumns.splice(0, 0, ...difColumns)
         // 添加序号
-        commonColumns.map((v,i)=>{
-            v.number=i
+        commonColumns.map((v, i) => {
+            v.number = i
         })
         //获取设备信息
         let deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'));
         // console.log(filtertitle);
         // 获取标题和数据
         this.state = {
+            // 页面typeId
+            deviceTypeId,
             //设备信息
             deviceInfo,
             //数据总数
@@ -61,7 +63,7 @@ export default class extends Component {
     _getTableData(tableData, commonColumns) {
         let columns = [];
         commonColumns.map((v, i) => {
-            
+
             columns.push({
                 title: v.displayName,
                 // 给表头添加字段名 必须一一对应
@@ -88,7 +90,7 @@ export default class extends Component {
     }
     //显示设置点击确定
     _showSetOkHandler() {
-        const { tableData ,commonColumns } = this.state;
+        const { tableData, commonColumns } = this.state;
         const form = this.showSetForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
@@ -118,7 +120,7 @@ export default class extends Component {
             }
             // 排序
             filterColumns.sort(compare('number'))
-            this._getTableData( tableData, filterColumns)
+            this._getTableData(tableData, filterColumns)
             this.setState({
                 showSetVisible: false,
                 filterColumns
@@ -137,38 +139,38 @@ export default class extends Component {
     }
     // 翻页请求数据
     _pageChange(page) {
-        const { tableData ,commonColumns } = this.state;
+        const { commonColumns, deviceTypeId, deviceInfo } = this.state;
         let deviceId = deviceInfo.deviceId;
         // console.log(deviceId)
         let PageIndex = page - 1;
-        // return fetch(dataUrl, {
-        //     ...postOption,
-        //     body: JSON.stringify({
-        //         deviceId,
-        //         deviceTypeId: 1,
-        //         PageIndex,
-        //         pageSize: 10
-        //     })
-        // }).then((res) => {
-        //     Promise.resolve(res.json())
-        //         .then((v) => {
-        //             if (v.ret == 1) {
-        //                 //设置页面元素
-        //                 let items = v.data.items;
-        //                 let itemCount = v.data.itemCount;
-        //                 items.map((v, i) => {
-        //                     v.key = i
-        //                 })
-        //                 this.setState({
-        //                     itemCount,
-        //                     items
-        //                 })
-        //                 this._getTableData(title, items, filterColumns);
-        //             }
-        //         })
-        // }).catch((err) => {
-        //     console.log(err)
-        // })
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                deviceId,
+                deviceTypeId,
+                PageIndex,
+                pageSize: 10
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        //设置页面元素
+                        let tableData = v.data.items;
+                        let itemCount = v.data.itemCount;
+                        tableData.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            itemCount,
+                            tableData
+                        })
+                        this._getTableData(tableData, commonColumns);
+                    }
+                })
+        }).catch((err) => {
+            console.log(err)
+        })
     }
     render() {
         const {
@@ -178,7 +180,7 @@ export default class extends Component {
             itemCount,
             deviceInfo,
             commonColumns
-            } = this.state;
+        } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -197,7 +199,7 @@ export default class extends Component {
                 />
                 <div className={styles.header}>
                     <Button icon="arrow-left"
-                    onClick={()=>{window.history.back()}}
+                        onClick={() => { window.history.back() }}
                     >
                     </Button>
                     <BreadcrumbView
@@ -250,7 +252,7 @@ export default class extends Component {
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk ,commonColumns} = this.props;
+            const { form, visible, onCancel, onOk, commonColumns } = this.props;
             // console.log(this.props)
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
@@ -272,7 +274,7 @@ const ShowSetForm = Form.create()(
                                 (
                                 <CheckboxGroup>
                                     <Row>
-                                    {commonColumns.map((v, i) => {
+                                        {commonColumns.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>
                                                     <Checkbox value={commonColumns[i]}>{v.displayName}</Checkbox>
