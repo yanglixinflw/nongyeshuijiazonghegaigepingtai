@@ -62,7 +62,7 @@ const sourceColumns = [
 export default class extends Component {
     constructor(props) {
         super(props)
-        console.log(props)
+        // console.log(props)
         this.state = {
             // 显示设置可见
             showSetVisible: false,
@@ -81,7 +81,7 @@ export default class extends Component {
             searchValue: {
                 "deviceId": "",
                 "name": "",
-                "deviceTypeId": 0,
+                "deviceTypeId": "",
                 "installAddrId": "",
                 "warningRules": "",
                 "areaName": "",
@@ -281,6 +281,7 @@ export default class extends Component {
             filterColumns.map((v, i) => {
                 title.push(v.title)
             })
+            console.log(filterColumns)
             this._getTableData(title, this.state.data, filterColumns)
             this.setState({
                 showSetVisible: false,

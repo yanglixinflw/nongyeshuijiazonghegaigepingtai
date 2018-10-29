@@ -1,9 +1,12 @@
 import React,{Component} from 'react';
 import styles from './farmersInfo.less';
 import { Input, Button, Form, Cascader, Table, Modal} from 'antd';
-// 开发环境用以翻页调用
+//ip地址
 const envNet='http://192.168.30.127:88';
+//翻页调用
 const dataUrl=`${envNet}/api/PeasantMgr/list`;
+//删除调用
+const delUrl=`${envNet}/api/PeasantMgr/delete`;
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -42,10 +45,14 @@ export default class extends Component{
                 "pageIndex": 0,
                 "pageSize":10
             },
+            //用于增删改查标识字段
+            idCard:'',
             //删除弹框显示的内容
-            ModalText: '删除后信息将无法恢复，是否确认删除。',
-            //弹出框是否显示
-            visible: false,
+            delModalText: '删除后信息将无法恢复，是否确认删除。',
+            //删除的弹出框是否显示
+            delvisible: false,
+            //修改用户信息的弹出框是否显示
+            editvisible: false,
           };
     }
     componentDidMount() {
@@ -67,20 +74,20 @@ export default class extends Component{
             key: 'action',
             align: 'center',
             fixed: 'right',
-            width: 100,
+            width: 200,
             render: (record) => {
                 return (
                     <span className={styles.option}>
                         <Button
                             className={styles.edit}
-                            // onClick={() => this._editFarmerInfo()}
+                            onClick={() => this.editInfo(record.idCard)}
                             icon='edit'
                         >
                             修改
                         </Button>
                         <Button
                             className={styles.delete}
-                            onClick={()=> this._delete()}
+                            onClick={()=>this.delete(record.idCard)}
                             icon='delete'
                         >
                             删除
@@ -118,25 +125,95 @@ export default class extends Component{
         console.log("修改")
     }
     //删除功能
-    _delete(){
+    delete(index){
       //显示弹框
       this.setState({
-        visible: true,
+        delvisible: true,
+        idCard:index
       });
     }
-    //弹框点击确定
-    handleOk = () => {
+    //删除的弹框点击确定
+    delHandleOk = () => {
+        let {idCard,title}=this.state;
+        return fetch(delUrl,{
+            ...postOption,
+             body: JSON.stringify({
+                idCard
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+            .then((v) => {
+                if (v.ret == 1) {
+                    return fetch(dataUrl, {
+                        ...postOption,
+                        body: JSON.stringify({
+                            "name": "",
+                            "mobile": "",
+                            "roleId": 0,
+                            "pageIndex": 0,
+                            "pageSize": 10
+                        })
+                    }).then((res) => {
+                        Promise.resolve(res.json())
+                            .then((v) => {
+                                if (v.ret == 1) {
+                                    let data = v.data.items;
+                                    let itemCount = v.data.itemCount;
+                                    // 给每一条数据添加key
+                                    data.map((v, i) => {
+                                        v.key = i
+                                    });
+                                    this.setState({
+                                        data,
+                                        itemCount,
+                                        delvisible: false
+                                    });
+                                    this._getTableDatas(title, data);
+                                    // message.success('删除成功', 2);
+                                } else {
+                                    this.setState({
+                                        items: []
+                                    })
+                                }
+                            })
+                    })
+                } else {
+                    message.error(v.msg, 2);
+                }
+            })
+        })
+    }
+    //删除的弹框点击取消
+    delHandleCancel = () => {
+      this.setState({
+        delvisible: false,
+      });
+    }
+    //修改用户信息的弹出框
+    showModal = () => {
         this.setState({
-          visible: false,
-          confirmLoading: false,
+          visible: true,
         });
     }
-    //弹框点击取消
-    handleCancel = () => {
-      console.log('Clicked cancel button');
-      this.setState({
+    //修改用户信息的弹出框点击确定
+    handleOk = () => {
+    this.setState({
+        ModalText: '',
+        confirmLoading: true,
+    });
+    setTimeout(() => {
+        this.setState({
         visible: false,
-      });
+        confirmLoading: false,
+        });
+    }, 2000);
+    }
+    //修改用户信息的弹出框点击取消
+    handleCancel = () => {
+    console.log('Clicked cancel button');
+    this.setState({
+        visible: false,
+    });
     }
     // 搜索功能
     _searchTableData() {
@@ -223,7 +300,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { visible,columns, tableDatas,itemCount,ModalText} = this.state;
+        const { delvisible,columns, tableDatas,itemCount,delModalText} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -277,12 +354,16 @@ export default class extends Component{
                     dataSource={tableDatas}
                     // scroll={{ x: 1300 }}
                 />
-              <Modal title="Title"
-                     visible={visible}
-                     onOk={this.handleOk}
-                     onCancel={this.handleCancel}
+              <Modal 
+                    title="删除"
+                    delvisible={delvisible}
+                    onOk={this.delHandleOk}
+                    onCancel={this.delHandleCancel}
+                    okText="确认"
+                    cancelText="取消"
+                    centered//居中显示
               >
-                <p>{ModalText}</p>
+                <p>{delModalText}</p>
               </Modal>
             </div>
         )
