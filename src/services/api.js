@@ -90,3 +90,12 @@ export function getDeviceWarning(params){
     )
   })
 }
+//预警事件记录
+export function getWarningRecords(params){
+  return request(`${envNet}/api/DeviceWaringRule/eventList`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
