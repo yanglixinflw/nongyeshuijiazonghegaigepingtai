@@ -78,16 +78,25 @@ export default class BasicLayout extends React.PureComponent {
     }
     // 页面加载前获取权限列表和是否登录信息
     componentWillMount() {
-        this.setState({
-            isLogin: true,
-            // isLogin: false,
-        })
+        let loginOrNot=localStorage.getItem('welcome')
+        if(loginOrNot>=100){
+            this.setState({
+                isLogin: true,
+                // isLogin: false,
+            })
+        }else{
+            this.setState({
+                isLogin: false,
+            })
+        }
+        
     }
     render() {
-        // console.log(redirectData)
+        // console.log(this.props.app._store)
         const { isLogin } = this.state
         const { match } = this.props.props
         const { routerData } = this.props
+        const {dispatch}=this.props.app._store
         const layout = (
             <Layout>
                 <Sider>
@@ -98,7 +107,7 @@ export default class BasicLayout extends React.PureComponent {
                 </Sider>
                 <Layout style={{ background: '#0A0C1D' }}>
                     <Header>
-                    <GlobalHeader></GlobalHeader>
+                    <GlobalHeader dispatch={dispatch}></GlobalHeader>
                     </Header>
                     <Content style={{ background: '#151837' ,minWidth:'800px'}}>
                         <Switch>

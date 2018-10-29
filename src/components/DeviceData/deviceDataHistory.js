@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import BreadcrumbView from '../PageHeader/breadcrumb';
 import { Button, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
 import styles from './common.less';
 import classnames from 'classnames';
@@ -19,7 +18,7 @@ let postOption = {
 export default class extends Component {
     constructor(props) {
         super(props)
-        console.log(props)
+        // console.log(props)
         let { title, deviceTypeId } = this.props
         // 公用Columns
         let commonColumns = [
@@ -197,16 +196,6 @@ export default class extends Component {
                     onCancel={() => this._showSetCancelHandler()}
                     onOk={() => this._showSetOkHandler()}
                 />
-                <div className={styles.header}>
-                    <Button icon="arrow-left"
-                        onClick={() => { window.history.back() }}
-                    >
-                    </Button>
-                    <BreadcrumbView
-                        {...this.props}
-                        className={styles.breadcrumb}
-                    />
-                </div>
                 <div className={styles.deviceInfo}>
                     <div className={styles.info}>
                         <i className={classnames('dyhsicon', 'dyhs-shebeiID', `${styles.deviceId}`)}></i>
