@@ -10,8 +10,13 @@ import { urlToList } from '../../components/_utils/pathTools';
     loading: loading.models.deviceData,
 }))
 export default class extends Component {
-    constructor(props) {
+    constructor(props){
         super(props)
+        this.state={
+            deviceTypeId:''
+        }
+    }
+    componentDidMount() {
         // 初始化
         const deviceTypeId = parse(window.location.href.split(':'))[3]
         const { dispatch } = this.props;
@@ -44,10 +49,10 @@ export default class extends Component {
         // 匹配到name
         let title=childrenName.filter(item=>item.path===pathName)
         // console.log(title[0].name)
-        this.state={
+        this.setState({
             deviceTypeId,
             pageTitle:title[0].name
-        }
+        })
         this._getTitle()
     }
     // 获取title
@@ -67,6 +72,9 @@ export default class extends Component {
             // 路由变化
             const { dispatch } = this.props;
             const deviceTypeId = parse(window.location.href.split(':'))[3]
+            dispatch({
+                type: 'deviceData/clear',
+            })
             dispatch({
                 type: 'deviceData/fetchTitle',
                 payload: {

@@ -9,6 +9,9 @@ export default class extends Component {
     render(){
         return(
             <div className={styles.map}>
+                <div>
+                    <Input />
+                </div>
                 <Map amapkey={MY_AMAP_KEY}/>
             </div>
         )

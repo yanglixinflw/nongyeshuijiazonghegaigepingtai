@@ -18,7 +18,7 @@ let postOption = {
 export default class extends Component {
     constructor(props) {
         super(props)
-        // console.log(props)
+        console.log(props)
         let { title, deviceTypeId } = this.props
         // 公用Columns
         let commonColumns = [
@@ -62,7 +62,6 @@ export default class extends Component {
     _getTableData(tableData, commonColumns) {
         let columns = [];
         commonColumns.map((v, i) => {
-
             columns.push({
                 title: v.displayName,
                 // 给表头添加字段名 必须一一对应
