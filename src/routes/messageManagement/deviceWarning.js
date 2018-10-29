@@ -18,14 +18,16 @@ export default class extends Component{
         });//type来选择请求的接口，payload为传给后台的参数
     }
     render(){
-        let { deviceWarning } = this.props;
-        console.log(deviceWarning)
-        // let arr = Object.keys(deviceWarning);
-        // console.log(Object)
-        // if (arr.length >=0) return deviceWarning = null;
+        let { deviceWarning,loading } = this.props;
+        let arr = Object.keys(deviceWarning);
+        if (arr.length ==0) return deviceWarning = null;
         return(
             <div>
-                <DeviceWarning/>   
+                <Spin size='large' spinning={loading}>
+                    <DeviceWarning
+                        {...this.props}
+                    /> 
+                </Spin>  
             </div>
         )
     }

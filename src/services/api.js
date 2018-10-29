@@ -82,7 +82,7 @@ export function getInstallAddrList(){
   })
 }
 //预警规则列表
-export function getDeviceWarning(){
+export function getDeviceWarning(params){
   return request(`${envNet}/api/DeviceWaringRule/ruleList`,{
     ...postOption,
     body:JSON.stringify(
