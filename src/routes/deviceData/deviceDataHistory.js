@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Spin, Button } from 'antd';
+import { Spin} from 'antd';
 import BreadcrumbView from '../../components/PageHeader/breadcrumb';
 import { parse } from 'qs';
 import History from '../../components/DeviceData/deviceDataHistory';
@@ -39,15 +39,16 @@ export default class extends Component {
         this.state = {
             title: [],
             deviceTypeId
-        }
+        };
+        this._getTitle()
     }
-    componentDidMount() {
-        this._getTitle(this.state.deviceTypeId);
-    }
-    _getTitle(deviceTypeId) {
+    // componentDidMount() {
+    //     this._getTitle(this.state.deviceTypeId);
+    // }
+    _getTitle() {
         //const { dispatch } = this.props;
         // // console.log(dispatch)
-        // let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0];
+        let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0];
         // dispatch({
         //     type: 'deviceDataHistory/fetchTitle',
         //     payload: {
@@ -73,6 +74,29 @@ export default class extends Component {
         }).catch((err) => {
             console.log(err)
         })
+    }
+    componentWillUpdate(nextProps) {
+        // 根据不同的设备ID获取不同的数据
+        if (this.props.location !== nextProps.location) {
+            // 路由变化
+            const { dispatch } = this.props;
+            let deviceTypeId = parse(parse(window.location.href.split(':'))[3].split('/'))[0];
+            dispatch({
+                type: 'deviceDataHistory/fetchTitle',
+                payload: {
+                    deviceTypeId,
+                }
+            });
+            dispatch({
+                type: 'deviceDataHistory/fetch',
+                payload: {
+                    deviceId: historyId,
+                    deviceTypeId,
+                    pageIndex: 0,
+                    pageSize: 10
+                }
+            });
+        }
     }
     render() {
         // console.log(this.props)
