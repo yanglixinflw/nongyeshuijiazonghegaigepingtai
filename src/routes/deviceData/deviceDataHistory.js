@@ -73,12 +73,13 @@ export default class extends Component {
         })
     }
     render() {
+        console.log(this.props)
         let { deviceDataHistory, loading } = this.props;
         let { title,deviceTypeId } = this.state
         let arr = Object.keys(deviceDataHistory);
         if (arr.length == 0) return deviceDataHistory = null;
         if (title.length == 0) return title = null;
-        // console.log(title)
+       
         return (
             <div>
                 <Spin size='large' spinning={loading}>
