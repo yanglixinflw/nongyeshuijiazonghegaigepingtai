@@ -103,7 +103,6 @@ const LoginForm = Form.create()(
                 passWordMargin = null
             }
             return (
-                <div>
                     <Form
                         autoComplete="off"
                         onSubmit={submitHandler}
@@ -207,7 +206,6 @@ const LoginForm = Form.create()(
                             {/* 显示区域 */}
                         </FormItem>
                     </Form>
-                </div>
             )
         }
     }

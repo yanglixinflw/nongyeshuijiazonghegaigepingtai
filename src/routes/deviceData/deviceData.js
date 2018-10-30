@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component ,Fragment} from 'react';
 import DeviceData from '../../components/DeviceData/deviceData';
 import { connect } from 'dva';
 import { Spin } from 'antd';
@@ -122,13 +122,13 @@ export default class extends Component {
         let arr = Object.keys(deviceData);
         if (arr.length <= 1) return deviceData = null;
         return (
-            <div>
+            <Fragment>
                 <Spin size='large' spinning={loading}>
                     <DeviceData
                     {...{...deviceData,deviceTypeId,pageTitle}}
                     />
                 </Spin>
-            </div>
+            </Fragment>
         )
 
     }
