@@ -63,14 +63,14 @@ export default class extends Component{
                     <span className={styles.option}>
                         <Button
                             className={styles.edit}
-                            onClick={() => this.editInfo(record.idCard)}
+                            onClick={() => this.ruleDetails()}
                             icon='file-text'
                         >
                             规则详情
                         </Button>
                         <Button
                             className={styles.delete}
-                            onClick={()=>this.delete(record.idCard)}
+                            onClick={()=>this.delete()}
                             icon='delete'
                         >
                             删除

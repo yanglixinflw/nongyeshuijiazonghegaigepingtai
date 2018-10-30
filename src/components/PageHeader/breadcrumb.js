@@ -52,7 +52,7 @@ class BreadcrumbView extends PureComponent {
         } */}
           {breadcrumbChildrenData ? breadcrumbChildrenData.map((v, i) => (
             <Breadcrumb.Item key={1}>
-              {v.path.indexOf(pathSnippets[0]) !== -1 ? (<Link to={v.path}>{v.name}</Link>) : ''}
+              {v.path.indexOf(pathSnippets[0]) !== -1 ? (<span onClick={() => { window.history.back() }}>{v.name}</span>) : ''}
             </Breadcrumb.Item>
           )) : null
           }
