@@ -1,9 +1,26 @@
 import React from 'react';
 import styles from './index.less'
 import { routerRedux } from 'dva/router';
-import { Button, Menu, Dropdown, Icon ,Modal} from 'antd'
+import { Button, Menu, Dropdown, Icon ,Modal,Badge,Switch} from 'antd'
 // 开发环境
 const envNet = 'http://192.168.30.127:88'
+//头信息
+const tableTitle=[
+    {index:"time",item:"预警时间"},
+    {index:"waringType",item:"预警类型"},
+    {index:"name",item:"预警名称"},
+    {index:"eventContent",item:"事件内容"},
+    {index:"warningStatus",item:"状态"},
+    {index:"deviceId",item:"设备ID"},
+    {index:"building",item:"关联建筑物"}
+]
+const menu = (
+    <Menu>
+        <Menu.Item key="0">
+            <a href="#">1st menu item1st menu item1st menu item1st menu item1st menu item</a>
+        </Menu.Item>
+    </Menu>
+  );
 // 确认退出className
 const confirmLogout=styles.confirmLogout
 const confirm = Modal.confirm;
@@ -25,9 +42,36 @@ export default class extends React.Component {
             </Menu>
         );
         this.state = {
-            downData
+            downData,
+            //预警事件的个数
+            count: 1,
+            //预警事件弹出框红点是否显示
+            show: true,
         }
     }
+    // componentDidMount() {
+    //     this._getTableDatas(this.state.title, this.state.data);
+    // }
+    // _getTableDatas(){
+    //     let tableDatas = [];
+    //     //表单数据
+    //     data.map((v, i) => {
+    //         tableDatas.push({
+    //             time:v.time,
+    //             waringType:v.waringType,
+    //             name:v.name,
+    //             eventContent:v.eventContent,
+    //             deviceId:v.deviceId,
+    //             building:v.building,
+    //             warningStatus:v.warningStatus,
+    //             key: i,
+    //         });
+    //     })
+    //     this.setState({
+    //         columns,
+    //         tableDatas,
+    //     });
+    // }
      // 退出登录
   _showConfirm(){
     const {dispatch}=this.props
@@ -67,7 +111,11 @@ export default class extends React.Component {
         const { downData } = this.state
         return (
             <div className={styles.header}>
-                <Button icon='bell' className={styles.news}>预警消息</Button>
+                <Dropdown overlay={menu} trigger={['click']}>
+                    <Badge count={this.state.count}>
+                        <Button icon='bell' className={styles.news}>预警消息</Button>
+                    </Badge>
+                </Dropdown>
                 <Dropdown overlay={downData}>
                     <Button icon='user' className={styles.user}>
                         用户名 <Icon type='down'></Icon>

@@ -2,6 +2,9 @@
     float: right;
     color:white ;
     :global{
+        .ant-scroll-number,.ant-badge-count{
+           right:20px;
+        }
         .ant-btn{
             background: #1F2F49;
             border:none;
@@ -9,17 +12,20 @@
             
         }
         .ant-btn:hover{
-            
                 color:rgb(51,125,246);
-            
         }
     }
     .news{
-    margin-right: 16px;    
+         margin-right: 16px; 
+        :global {
+            .anticon,.anticon-user{
+                font-size: 16px !important;
+            }
+        }   
     }
     .user {
         :global {
-            .anticon-user{
+            .anticon,.anticon-user{
                 font-size: 16px !important;
             }
         }

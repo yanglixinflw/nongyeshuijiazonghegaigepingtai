@@ -140,7 +140,7 @@ export default class extends Component{
             showQuickJumper: true,
         };
         return(
-            <div>
+            <React.Fragment>
                <div className={styles.header}>
                     <span>|</span>小组账户
                 </div>
@@ -181,7 +181,7 @@ export default class extends Component{
                     dataSource={tableDatas}
                     scroll={{ x: 1100 }}
                 />
-            </div>
+            </React.Fragment>
         )
     }
 }

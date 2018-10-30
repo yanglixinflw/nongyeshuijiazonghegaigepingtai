@@ -26,13 +26,13 @@ export default class extends Component{
         let arr = Object.keys(warningRecords);
         if (arr.length ==0) return warningRecords = null;
         return(
-            <div>
+            <React.Fragment>
                 <Spin size='large' spinning={loading}>
                     <WarningRecords
                         {...this.props}
                     /> 
                 </Spin>  
-            </div>
+            </React.Fragment>
         )
     }
 }

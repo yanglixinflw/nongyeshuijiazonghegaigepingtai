@@ -22,13 +22,13 @@ export default class extends React.Component{
         // let arr = Object.keys(groupAccount);
         // if (arr.length === 0) return groupAccount = null;
         return (
-            <div>
+            <React.Fragment>
                 {/* <Spin size='large' spinning={loading}> */}
                     <GroupAccount
                         // {...this.props}
                     /> 
                 {/* </Spin> */}
-            </div>
+            </React.Fragment>
         )
     }
 }
