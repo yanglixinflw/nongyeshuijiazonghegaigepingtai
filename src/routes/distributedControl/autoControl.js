@@ -22,13 +22,13 @@ export default class extends React.Component{
         // let arr = Object.keys(autoControl);
         // if (arr.length === 0) return autoControl = null;
         return (
-            <div>
+            <Fragment>
                 {/* <Spin size='large' spinning={loading}> */}
                     <AutoControl
                         // {...this.props}
                     /> 
                 {/* </Spin> */}
-            </div>
+            </Fragment>
         )
     }
 }

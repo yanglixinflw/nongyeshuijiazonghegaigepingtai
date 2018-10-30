@@ -105,7 +105,7 @@ export default class extends Component {
         if (arr.length == 0) return deviceDataHistory = null;
         if (title.length == 0) return title = null;
         return (
-            <div>
+            <Fragment>
                 <Spin size='large' spinning={loading}>
                     <BreadcrumbView
                         {...this.props}
@@ -114,7 +114,7 @@ export default class extends Component {
                         {...{ deviceDataHistory, title, deviceTypeId }}
                     />
                 </Spin>
-            </div>
+            </Fragment>
         )
     }
 }

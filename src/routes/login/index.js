@@ -70,7 +70,7 @@ export default class extends React.Component {
       return null
     }
     return (
-      <div>
+      <Fragment>
         <Login
           loginFunc={this.submitHandler}
           errorMassage={msg}
@@ -79,7 +79,7 @@ export default class extends React.Component {
           reloadCAPTCHA={this.reloadCAPTCHA}
         >
         </Login>
-      </div>
+      </Fragment>
     )
   }
 }
