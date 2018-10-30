@@ -1,6 +1,7 @@
 import React from 'react';
 import BreadcrumbView from 'components/PageHeader/breadcrumb';
 import MyMap from '../../components/GisMap/index';
+import { Map } from 'react-amap';
 class IndexPage extends React.Component {
   constructor(props) {
     super(props)
@@ -13,8 +14,10 @@ class IndexPage extends React.Component {
             {...this.props}
           />
         </div>
-          
-        <MyMap />
+        <Map>
+          <MyMap />
+        </Map>
+        
       </div>
 
     );
