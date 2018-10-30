@@ -197,7 +197,8 @@ const SearchForm = Form.create()(
                     style={{
                         display: 'flex',
                         alignItems:"center",
-                        flexWrap:"wrap"
+                        flexWrap:"wrap",
+                        marginRight:"10px"
                     }}>
                     <Form.Item>
                         {getFieldDecorator('id', {initialValue: ''})
