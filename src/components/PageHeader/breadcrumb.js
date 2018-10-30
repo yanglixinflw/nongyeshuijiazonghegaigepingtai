@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, } from 'react';
 import { Breadcrumb } from 'antd';
 import { Link } from 'dva/router';
 import { Button } from 'antd';
@@ -67,8 +67,6 @@ class BreadcrumbView extends PureComponent {
               {<Link to={pathSnippets[pathSnippets.length - 1]}>{historyName}</Link>}
             </Breadcrumb.Item> : ''
           }
-
-
         </Breadcrumb>
       </div>
     )
