@@ -102,9 +102,9 @@ export const getRouterData = app => {
     '/dcs/automation':{
       component: dynamicWrapper(app, [], () => import('../routes/distributedControl/autoControl')),
     },
-    // '/deviceInformation/warningRules:id':{
-    //   component: dynamicWrapper(app, ["deviceWarning"], () => import('../routes/messageManagement/deviceWarning')),
-    // },
+    '/command/videoMonitoring':{
+      component: dynamicWrapper(app, [], () => import('../routes/command/monitor')),
+    },
     '/rent/groupAccount':{
       component: dynamicWrapper(app, [], () => import('../routes/waterRate/groupAccount')),
     },
