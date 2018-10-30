@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{Fragment} from 'react';
 import { connect } from 'dva'
 import Login from '../../components/Login'
 import request from './../../utils/request';
