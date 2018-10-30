@@ -6,6 +6,7 @@ const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
 export default class extends Component {
     constructor(props){
         super(props)
+        console.log(props)
     }
     //添加折线图
     _addPolyline(){
