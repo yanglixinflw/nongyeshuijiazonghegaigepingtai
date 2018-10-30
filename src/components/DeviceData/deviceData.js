@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,Fragment } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
@@ -273,7 +273,7 @@ export default class extends Component {
             onChange: (page) => this._pageChange(page)
         };
         return (
-            <div>
+            <Fragment>
                 <ShowSetForm
                     wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
                     visible={showSetVisible}
@@ -312,7 +312,7 @@ export default class extends Component {
                         { x: columns.length > 10 ? 3200 : false }
                     }
                 />
-            </div>
+            </Fragment>
         )
     }
 }
