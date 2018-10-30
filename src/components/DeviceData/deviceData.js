@@ -1,4 +1,4 @@
-import React, { Component,Fragment } from 'react';
+import React, { Component ,Fragment} from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';

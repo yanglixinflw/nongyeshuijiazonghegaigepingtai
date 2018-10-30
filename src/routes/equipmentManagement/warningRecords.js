@@ -1,10 +1,10 @@
 import React,{ Component } from 'react';
-// import DeviceWarning from '../../components/infoManagement/deviceWarning'
+import WarningRecords from '../../components/equipmentManagement/warningRecords'
 import { connect } from 'dva';
 import {Spin} from 'antd'
-@connect(({ warningRecord, loading }) => ({
-    warningRecord,
-    loading: loading.models.warningRecord
+@connect(({ warningRecords, loading }) => ({
+    warningRecords,
+    loading: loading.models.warningRecords
 }))
 export default class extends Component{
     componentDidMount() {
@@ -22,17 +22,17 @@ export default class extends Component{
         });//type来选择请求的接口，payload为传给后台的参数
     }
     render(){
-        // let { warningRecord,loading } = this.props;
-        // let arr = Object.keys(warningRecord);
-        // if (arr.length ==0) return warningRecord = null;
+        let { warningRecords,loading } = this.props;
+        let arr = Object.keys(warningRecords);
+        if (arr.length ==0) return warningRecords = null;
+        console.log(warningRecords)
         return(
             <div>
-                123
-                {/* <Spin size='large' spinning={loading}>
-                    <DeviceWarning
+                <Spin size='large' spinning={loading}>
+                    <WarningRecords
                         {...this.props}
                     /> 
-                </Spin>   */}
+                </Spin>  
             </div>
         )
     }

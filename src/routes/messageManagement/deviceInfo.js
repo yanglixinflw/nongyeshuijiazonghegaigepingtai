@@ -37,13 +37,13 @@ export default class extends React.Component {
     let arr = Object.keys(deviceInformation)
     if (arr.length <=1) return deviceInformation = null
     return (
-      <div>
+      <Fragment>
         <Spin size='large' spinning={loading}>
         <DeviceInfo
           {...deviceInformation}
         />
         </Spin>
-        </div>
+        </Fragment>
     )
   }
 }

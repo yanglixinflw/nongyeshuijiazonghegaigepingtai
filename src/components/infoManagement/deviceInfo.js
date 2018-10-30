@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,Fragment } from 'react';
 import styles from './index.less'
 import {
     Form,
@@ -300,7 +300,7 @@ export default class extends Component {
             onChange: (page) => this._pageChange(page)
         };
         return (
-            <div>
+            <Fragment>
                 <ShowSetForm
                     wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
                     visible={showSetVisible}
@@ -359,7 +359,7 @@ export default class extends Component {
                         { x: columns.length > 10 ? 2000 : false }
                     }
                 />
-            </div>
+            </Fragment>
         )
     }
 }

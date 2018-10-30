@@ -10,31 +10,32 @@
     display: flex;
     padding-left: 38px;
     margin-bottom: 20px;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.6);
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
     span {
         margin-right: 10px;
     }
 }
 .searchForm{
-    padding: 17px 10px;
+    padding: 15px 20px;
     height: 74px;
     margin: 20px 38px;
     background: #1c2241;
     display: flex;
-    justify-content: space-between;
     :global{
-        .ant-input,.ant-cascader-picker{
+        .ant-input,.ant-cascader-picker,.ant-form-item{
             height: 46px;
             min-width: 150px;
             background: #141831;
             outline: none;
             border: none;
             color: #4A5A72;
-            margin-right: -20px;
+            margin-right: 20px;
+            float: left;
         }
         .ant-cascader-picker{
-            margin-right: -8px
+            width: 163px;
         }
+        
     }
     .buttonGroup{
         display: flex;
@@ -43,7 +44,7 @@
         .fnButton{
             height:36px;
             border-radius: 30px;
-            margin-left: 10px;
+            margin-left: 16px;
             background: #2e386c;
             outline: none;
             border: none;
@@ -236,20 +237,20 @@
         }
     }
 }
-@media(max-width:1400px) {
+@media(max-width:1669px) {
     .searchForm {
         height: 150px; 
     }
 }
 
-@media(max-width:1090px) {
+@media(max-width:1137px) {
     .searchForm {
         height: 150px;
         :global {
-            .ant-input,.ant-cascader-picker {
+            .ant-input,.ant-cascader-picker,.ant-form-item{
                 min-width: 115px;
                 width: 105px;
-                margin-right: 0;
+                margin-right: 20px;
             }
         }
     }
