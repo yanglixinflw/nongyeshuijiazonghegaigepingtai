@@ -25,7 +25,6 @@ export default class extends Component{
         let { warningRecords,loading } = this.props;
         let arr = Object.keys(warningRecords);
         if (arr.length ==0) return warningRecords = null;
-        console.log(warningRecords)
         return(
             <div>
                 <Spin size='large' spinning={loading}>
