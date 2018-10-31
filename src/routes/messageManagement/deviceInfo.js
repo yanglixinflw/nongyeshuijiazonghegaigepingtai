@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{Fragment }from 'react'
 import { connect } from 'dva';
 import {Spin} from 'antd'
 import DeviceInfo from 'components/infoManagement/deviceInfo'
@@ -28,9 +28,7 @@ export default class extends React.Component {
         "pageIndex": 0,
         "pageSize": 10
       }
-    })
-    
-    
+    })   
   }
   render() {
     let { deviceInformation ,loading} = this.props

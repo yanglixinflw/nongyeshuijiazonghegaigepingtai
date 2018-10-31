@@ -57,42 +57,29 @@
 }
 .option{
     display: flex;
-    align-content: space-around;
-    flex-wrap: wrap;
-    .record{
-        margin-top: 10px;
-        margin-right: 10px;
-        border: 1px solid #327DF4!important;
-        color: #327DF4!important;
-        background: #1C2241;
-    }
+    justify-content: space-around;
     .edit{
         margin-right: 10px;
-        margin-top: 10px;
-        background: #1C2241;
         border: 1px solid rgba(232,120,72,1)!important;
         color:rgba(232,120,72,1)!important;
-    }
-    .clear{
-        margin-top: 10px;
-        margin-right: 10px;
-        border: 1px solid #ff5062!important;
-        color: #ff5062!important;
         background: #1C2241;
     }
-    .assignment{
-        margin-top: 10px;
+    .set{
         margin-right: 10px;
-        border: 1px solid #6050f1!important;
-        color:#6050f1!important;
+        background: #1C2241;
+        border: 1px solid #327DF4!important;
+        color: #327DF4!important;
+    }
+    .stop{
+        margin-right: 10px;
+        border: 1px solid rgba(255,80,98,1)!important;
+        color:rgba(255,80,98,1)!important;
         background: #1C2241;
     }
-    .management{
-        margin-right: 10px;
-        border: 1px solid #19cf86!important;
-        color:#19cf86!important;
+    .delete{
+        border: 1px solid rgba(255,80,98,1)!important;
+        color:rgba(255,80,98,1)!important;
         background: #1C2241;
-        margin-top: 10px;
     }
 }
 :global {
@@ -241,18 +228,17 @@
         }
     }
 }
-@media(max-width:1669px) {
+@media(max-width:1496px) {
     .searchForm {
         height: 150px; 
     }
 }
-
-@media(max-width:1137px) {
+@media(max-width:1196px) {
     .searchForm {
         height: 150px;
         :global {
             .ant-input,.ant-cascader-picker,.ant-form-item{
-                min-width: 115px;
+                min-width: 105px;
                 width: 105px;
                 // margin-right: 20px;
             }

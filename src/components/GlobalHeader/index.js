@@ -4,6 +4,16 @@ import { routerRedux } from 'dva/router';
 import { Button, Menu, Dropdown, Icon ,Modal,Badge,Switch} from 'antd'
 // 开发环境
 const envNet = 'http://192.168.30.127:88'
+const dataUrl=`${envNet}/api/DeviceWaringRule/eventList`;
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+}
 //头信息
 const tableTitle=[
     {index:"time",item:"预警时间"},
@@ -42,36 +52,60 @@ export default class extends React.Component {
             </Menu>
         );
         this.state = {
+            //预警事件的内容
+            menu,
             downData,
             //预警事件的个数
-            count: 1,
+            count: 0,
             //预警事件弹出框红点是否显示
             show: true,
+            //搜索框初始值
+            searchValue: {
+                "waringType": 1,
+                "warningStatus": 1,
+                "deviceId": "",
+                "installAddr": "",
+                "pageIndex": 0,
+                "pageSize": 10
+            },
         }
     }
-    // componentDidMount() {
-    //     this._getTableDatas(this.state.title, this.state.data);
-    // }
-    // _getTableDatas(){
-    //     let tableDatas = [];
-    //     //表单数据
-    //     data.map((v, i) => {
-    //         tableDatas.push({
-    //             time:v.time,
-    //             waringType:v.waringType,
-    //             name:v.name,
-    //             eventContent:v.eventContent,
-    //             deviceId:v.deviceId,
-    //             building:v.building,
-    //             warningStatus:v.warningStatus,
-    //             key: i,
-    //         });
-    //     })
-    //     this.setState({
-    //         columns,
-    //         tableDatas,
-    //     });
-    // }
+    componentDidMount() {
+        this._getTableDatas(this.state.data);
+    }
+    _getTableDatas(){
+        const { searchValue } = this.state;
+        fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                ...searchValue
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+            .then((v)=>{
+                if(v.ret==1){
+                    // console.log(v);
+                    // 设置页面显示的元素
+                    let data = v.data.items;
+                    let tableDatas = [];
+                    //添加key      //出现预警的数据
+                    data.map((v, i) => {
+                        if(v.waringStatus==2){
+                            tableDatas.push(v);
+                        };
+                        v.key = i;
+                    })
+                    this.setState({
+                        tableDatas,
+                        count:tableDatas.length
+                    })
+                }
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        })
+    }
      // 退出登录
   _showConfirm(){
     const {dispatch}=this.props
