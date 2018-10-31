@@ -142,13 +142,13 @@ export default class extends Component{
                             重置
                         </Button>
                         <Button
-                            icon='plus'
+                            icon='poweroff'
                             className={styles.fnButton}
                         >
                             阀门开关
                         </Button>
                         <Button
-                            icon='plus'
+                            icon='environment'
                             className={styles.fnButton}
                         >
                             在地图操作

@@ -14,23 +14,19 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 }
-//头信息
-const tableTitle=[
-    {index:"time",item:"预警时间"},
-    {index:"waringType",item:"预警类型"},
-    {index:"name",item:"预警名称"},
-    {index:"eventContent",item:"事件内容"},
-    {index:"warningStatus",item:"状态"},
-    {index:"deviceId",item:"设备ID"},
-    {index:"building",item:"关联建筑物"}
+//预警事件记录下拉框
+const menu =(
+    <Menu style={{width:0,height:0}}></Menu>
+);
+//假数据
+var data=[
+    {dev:"12345",name:"设备电量低",build:"一号闸阀井",time:"2018-9-10 22:30:10",waringStatus:"预警"},
+    {dev:"12346",name:"设备电量低",build:"一号闸阀井",time:"2018-9-10 22:30:10",waringStatus:"预警"},
+    {dev:"12347",name:"设备电量低",build:"一号闸阀井",time:"2018-9-10 22:30:10",waringStatus:"正常"},
+    {dev:"12348",name:"设备电量低",build:"一号闸阀井",time:"2018-9-10 22:30:10",waringStatus:"预警"},
+    {dev:"12349",name:"设备电量低",build:"一号闸阀井",time:"2018-9-10 22:30:10",waringStatus:"正常"},
+    {dev:"12344",name:"设备电量低",build:"一号闸阀井",time:"2018-9-10 22:30:10",waringStatus:"预警"},
 ]
-const menu = (
-    <Menu>
-        <Menu.Item key="0">
-            <a href="#">1st menu item1st menu item1st menu item1st menu item1st menu item</a>
-        </Menu.Item>
-    </Menu>
-  );
 // 确认退出className
 const confirmLogout=styles.confirmLogout
 const confirm = Modal.confirm;
@@ -54,6 +50,7 @@ export default class extends React.Component {
         this.state = {
             //预警事件的内容
             menu,
+            
             downData,
             //预警事件的个数
             count: 0,
@@ -73,39 +70,39 @@ export default class extends React.Component {
     componentDidMount() {
         this._getTableDatas(this.state.data);
     }
-    _getTableDatas(){
-        const { searchValue } = this.state;
-        fetch(dataUrl, {
-            ...postOption,
-            body: JSON.stringify({
-                ...searchValue
-            })
-        }).then((res)=>{
-            Promise.resolve(res.json())
-            .then((v)=>{
-                if(v.ret==1){
-                    // console.log(v);
-                    // 设置页面显示的元素
-                    let data = v.data.items;
-                    let tableDatas = [];
-                    //添加key      //出现预警的数据
-                    data.map((v, i) => {
-                        if(v.waringStatus==2){
-                            tableDatas.push(v);
-                        };
-                        v.key = i;
-                    })
-                    this.setState({
-                        tableDatas,
-                        count:tableDatas.length
-                    })
-                }
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
-        })
-    }
+    // _getTableDatas(){
+    //     const { searchValue } = this.state;
+    //     fetch(dataUrl, {
+    //         ...postOption,
+    //         body: JSON.stringify({
+    //             ...searchValue
+    //         })
+    //     }).then((res)=>{
+    //         Promise.resolve(res.json())
+    //         .then((v)=>{
+    //             if(v.ret==1){
+    //                 // console.log(v);
+    //                 // 设置页面显示的元素
+    //                 let data = v.data.items;
+    //                 let tableDatas = [];
+    //                 //添加key      //出现预警的数据
+    //                 data.map((v, i) => {
+    //                     if(v.waringStatus==2){
+    //                         tableDatas.push(v);
+    //                     };
+    //                     v.key = i;
+    //                 })
+    //                 this.setState({
+    //                     tableDatas,
+    //                     // count:tableDatas.length
+    //                 })
+    //             }
+    //         })
+    //         .catch((err)=>{
+    //             console.log(err)
+    //         })
+    //     })
+    // }
      // 退出登录
   _showConfirm(){
     const {dispatch}=this.props
