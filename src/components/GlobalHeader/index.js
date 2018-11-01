@@ -4,23 +4,29 @@ import { routerRedux } from 'dva/router';
 import { Button, Menu, Dropdown, Icon ,Modal,Badge,Switch} from 'antd'
 // 开发环境
 const envNet = 'http://192.168.30.127:88'
-//头信息
-const tableTitle=[
-    {index:"time",item:"预警时间"},
-    {index:"waringType",item:"预警类型"},
-    {index:"name",item:"预警名称"},
-    {index:"eventContent",item:"事件内容"},
-    {index:"warningStatus",item:"状态"},
-    {index:"deviceId",item:"设备ID"},
-    {index:"building",item:"关联建筑物"}
+const dataUrl=`${envNet}/api/DeviceWaringRule/eventList`;
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+}
+//预警事件记录下拉框
+const menu =(
+    <Menu style={{width:0,height:0}}></Menu>
+);
+//假数据
+var data=[
+    {dev:"12345",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"预警"},
+    {dev:"12346",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"预警"},
+    {dev:"12347",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"正常"},
+    {dev:"12348",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"预警"},
+    {dev:"12349",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"正常"},
+    {dev:"12344",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"预警"},
 ]
-const menu = (
-    <Menu>
-        <Menu.Item key="0">
-            <a href="#">1st menu item1st menu item1st menu item1st menu item1st menu item</a>
-        </Menu.Item>
-    </Menu>
-  );
 // 确认退出className
 const confirmLogout=styles.confirmLogout
 const confirm = Modal.confirm;
@@ -42,35 +48,88 @@ export default class extends React.Component {
             </Menu>
         );
         this.state = {
+            //预警事件的内容
+            menu,
+            //数据源
+            data,
             downData,
             //预警事件的个数
-            count: 1,
+            count: 0,
             //预警事件弹出框红点是否显示
             show: true,
+            //搜索框初始值
+            searchValue: {
+                "waringType": 1,
+                "warningStatus": 1,
+                "deviceId": "",
+                "installAddr": "",
+                "pageIndex": 0,
+                "pageSize": 10
+            },
         }
     }
-    // componentDidMount() {
-    //     this._getTableDatas(this.state.title, this.state.data);
-    // }
+    componentDidMount() {
+        this._getTableDatas(this.state.data);
+    }
+    _getTableDatas(){
+        var {menu}=this.state
+        let tableDatas = [];
+        //出现预警的数据
+        data.map((v, i) => {
+            if(v.waringStatus=="预警"){
+                tableDatas.push(v);
+            };
+            v.key = i;
+        })
+        const menus=(
+            <Menu>
+                {
+                    tableDatas.map(function(v,i){
+                        return  <Menu.Item key={i}>
+                                    <a href="#">{"【设备异常】"+v.content+v.time}</a>
+                                </Menu.Item> 
+                    })
+                }
+            </Menu>
+        )
+        this.setState={
+            data:tableDatas,
+            count:tableDatas.length,
+            menu:menus
+        }
+    }
     // _getTableDatas(){
-    //     let tableDatas = [];
-    //     //表单数据
-    //     data.map((v, i) => {
-    //         tableDatas.push({
-    //             time:v.time,
-    //             waringType:v.waringType,
-    //             name:v.name,
-    //             eventContent:v.eventContent,
-    //             deviceId:v.deviceId,
-    //             building:v.building,
-    //             warningStatus:v.warningStatus,
-    //             key: i,
-    //         });
+    //     const { searchValue } = this.state;
+    //     fetch(dataUrl, {
+    //         ...postOption,
+    //         body: JSON.stringify({
+    //             ...searchValue
+    //         })
+    //     }).then((res)=>{
+    //         Promise.resolve(res.json())
+    //         .then((v)=>{
+    //             if(v.ret==1){
+    //                 // console.log(v);
+    //                 // 设置页面显示的元素
+    //                 let data = v.data.items;
+    //                 let tableDatas = [];
+    //                 //添加key      //出现预警的数据
+    //                 data.map((v, i) => {
+    //                     if(v.waringStatus==2){
+    //                         tableDatas.push(v);
+    //                     };
+    //                     v.key = i;
+    //                 })
+    //                 this.setState({
+    //                     tableDatas,
+    //                     // count:tableDatas.length
+    //                 })
+    //             }
+    //         })
+    //         .catch((err)=>{
+    //             console.log(err)
+    //         })
     //     })
-    //     this.setState({
-    //         columns,
-    //         tableDatas,
-    //     });
     // }
      // 退出登录
   _showConfirm(){
