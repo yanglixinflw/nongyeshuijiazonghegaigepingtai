@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{Fragment} from 'react'
 import { connect } from 'dva';
 import {Spin} from 'antd'
 import DeviceInfo from 'components/infoManagement/deviceInfo'

@@ -1,5 +1,5 @@
 // 引入线上图标
-@import 'http://at.alicdn.com/t/font_869092_qjvhbhxnj1e.css';
+@import 'http://at.alicdn.com/t/font_869092_4ae4crrntfc.css';
 .header {
     height: 60px;
     line-height: 60px;
@@ -21,6 +21,7 @@
     // min-width: 1230px;
     white-space: nowrap;
     overflow-x: auto;
+    overflow-y: auto;
     &::-webkit-scrollbar {
         height: 10px;
     }
@@ -39,13 +40,14 @@
 .allScreen {
     width: calc(~"100% - 70px");
     min-width: 1650px;
+    min-height: 715px;
     background: #1D2242;
     height: calc(~"100vh - 200px");
     margin: 0 auto;
     display: flex;
     .playArea {
         width: 75%; 
-        // 测试使用
+        // 开发使用
         // width: 30%;
         height: calc(~"100% - 28px"); // margin: 14px;
         position: relative;
@@ -75,12 +77,40 @@
         background: #29305E;
         width: 25%;
         height: calc(~"100% - 29px");
-        margin: 14px 16px; // 操作区域
+        margin: 14px 16px; 
+        .operateTop{
+            padding: 0 35px;
+            margin-top: 20px;
+            display: flex;
+            height: 90px;
+            justify-content: space-between;
+            .operateIcon {
+                width: 50px;
+                height: 60px;
+                color: white;
+                font-size: 12px;
+                text-align: center;
+                cursor: pointer;
+            }
+            .picIcon {
+                font-size: 36px;
+                color: #439FB9;
+            }
+            .speedIcon {
+                position: relative;
+                right: -6px;
+            }
+            .speed {
+                font-size: 17px;
+                position: relative;
+                left: -28px;
+                top: -6px;
+            }
+        }
+        // 操作区域
         .picOperate {
             display: flex;
-            margin-top: 20px;
             padding: 0 35px;
-            height: 20%;
             justify-content: space-between;
             .operateLeft {
                 width: 150px;
@@ -101,37 +131,101 @@
                 }
             }
             .operateRight {
-                width: 120px;
-                height: 140px;
+                width: 98px;
+                height: 150px;
                 justify-content: space-between;
-                align-content: space-between;
                 display: flex;
                 flex-wrap: wrap;
-                .operateIcon {
-                    width: 50px;
-                    height: 60px;
-                    color: white;
-                    font-size: 12px;
+                // background: red;
+                .operateAdd{
+                    width: 36px;
+                    // background: red;
+                    color:white;
                     text-align: center;
-                    cursor: pointer;
+                    justify-content: space-between;
+                    display: flex;
+                    flex-direction:column;
+                    .plus{
+                        cursor: pointer;
+                        color: #439FB9;
+                        position: relative;
+                        top:-10px;
+                        i{
+                            font-size: 36px;
+                        }
+                    }
+                    .minus{
+                        cursor: pointer;
+                        color: #439FB9;
+                        position: relative;
+                        top:10px;
+                        i{
+                            font-size: 36px;
+                        }
+                    }
                 }
-                .picIcon {
-                    font-size: 36px;
-                    color: #439FB9;
+            }
+        }
+        // 监控队列区域
+        .videoArea{
+            padding:0 35px;
+            :global{
+                .ant-select{
+                    width: 100%;
+                    margin-top:22px;
+                    
                 }
-                .speedIcon {
-                    position: relative;
-                    right: -6px;
+                .ant-select-selection--single {
+                    background: #3B4585;
+                    border: none;
+                    color: white;
+                    outline: none;
                 }
-                .speed {
-                    font-size: 17px;
-                    position: relative;
-                    left: -28px;
-                    top: -6px;
+                .ant-select-arrow{
+                    color:white
+                }
+                .ant-select-selection-selected-value{
+                    width: 100%;
+                    text-align: center;
+                    padding-left: 20px;
+                }
+            }
+            .videoList{
+                overflow-y: scroll;
+                height: 380px;
+                &::-webkit-scrollbar {
+                    width: 10px;
+                    margin-left: 0;
+                }
+                &::-webkit-scrollbar-button {
+                    display: none;
+                }
+                &::-webkit-scrollbar-thumb {
+                    background: #3164BF;
+                    border-radius: 2px;
+                }
+                &::-webkit-scrollbar-track {
+                    background: #2E3459;
                 }
             }
         }
     }
+}
+// 视频列表选择
+.dropdown{
+    text-align: center;
+    background: #3B4585;
+    color:white;
+    :global{
+        .ant-select-dropdown-menu-item{
+            background: #3B4585;
+            color:white;
+            &:hover{
+                background: #327DF4
+            }
+        }
+    }
+    
 }
 
 .speedList{
@@ -143,4 +237,14 @@
         cursor: pointer;
         line-height: 26px;
     }
+}
+.video{
+    width: 310px;
+    height: 170px;
+    &:hover{
+        background: #404B91;
+    }
+    background: #313A75;
+    margin: 10px auto;
+    border-radius: 4px;
 }
