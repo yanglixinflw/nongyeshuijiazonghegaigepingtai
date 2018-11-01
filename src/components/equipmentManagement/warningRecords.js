@@ -210,7 +210,7 @@ const SearchForm = Form.create()(
                         marginRight:'10px'
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('areaId', {})
+                        {getFieldDecorator('waringType', {})
                             (
                             <Cascader
                                 placeholder='所有类型'
@@ -220,7 +220,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('areaId', {})
+                        {getFieldDecorator('warningStatus', {})
                             (
                             <Cascader
                                 placeholder='所有状态'
@@ -230,7 +230,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('idCard', {})
+                        {getFieldDecorator('id', {})
                             (
                             <Input
                                 placeholder='设备ID'
@@ -240,7 +240,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('areaId', {})
+                        {getFieldDecorator('area', {})
                             (
                             <Cascader
                                 placeholder='归属地区'
@@ -260,7 +260,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('idCard', {})
+                        {getFieldDecorator('building', {})
                             (
                             <Input
                                 placeholder='关联建筑物'
