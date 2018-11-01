@@ -139,7 +139,7 @@ export default class extends Component{
             onChange: (page) => this._pageChange(page)
         };
         return(      
-            <div>
+            <React.Fragment>
                 <div className={styles.header}>
                     <span>|</span>预警规则
                 </div>
@@ -160,7 +160,7 @@ export default class extends Component{
                     dataSource={tableDatas}
                     // scroll={{ x: 1300 }}
                 />
-            </div>
+            </React.Fragment>
         )
     }
 }

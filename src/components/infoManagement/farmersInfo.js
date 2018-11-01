@@ -308,7 +308,7 @@ export default class extends Component{
             onChange: (page) => this._pageChange(page)
         };
         return(      
-            <div>
+            <React.Fragment>
                 <div className={styles.header}>
                     <span>|</span>农户信息
                 </div>
@@ -365,7 +365,7 @@ export default class extends Component{
               >
                 <p>{delModalText}</p>
               </Modal>
-            </div>
+            </React.Fragment>
         )
     }
 }

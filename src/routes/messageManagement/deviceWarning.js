@@ -22,13 +22,13 @@ export default class extends Component{
         let arr = Object.keys(deviceWarning);
         if (arr.length ==0) return deviceWarning = null;
         return(
-            <div>
+            <React.Fragment>
                 <Spin size='large' spinning={loading}>
                     <DeviceWarning
                         {...this.props}
                     /> 
                 </Spin>  
-            </div>
+            </React.Fragment>
         )
     }
 }

@@ -1,0 +1,146 @@
+// 引入线上图标
+@import 'http://at.alicdn.com/t/font_869092_qjvhbhxnj1e.css';
+.header {
+    height: 60px;
+    line-height: 60px;
+    background: #151836;
+    width: 100%;
+    font-size: 18px;
+    color: #2C6CD4;
+    display: flex;
+    padding-left: 38px;
+    margin-bottom: 20px;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
+    span {
+        margin-right: 10px;
+    }
+}
+
+// 添加滚动条
+.allBody {
+    // min-width: 1230px;
+    white-space: nowrap;
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+        height: 10px;
+    }
+    &::-webkit-scrollbar-button {
+        display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #3164BF;
+        border-radius: 2px;
+    }
+    &::-webkit-scrollbar-track {
+        background: #2E3459;
+    }
+}
+
+.allScreen {
+    width: calc(~"100% - 70px");
+    min-width: 1650px;
+    background: #1D2242;
+    height: calc(~"100vh - 200px");
+    margin: 0 auto;
+    display: flex;
+    .playArea {
+        width: 75%; 
+        // 测试使用
+        // width: 30%;
+        height: calc(~"100% - 28px"); // margin: 14px;
+        position: relative;
+        justify-content: space-between;
+        align-content: space-between;
+        display: flex;
+        flex-wrap: wrap;
+        top: 14px;
+        margin-left: 14px;
+        .playBox9 {
+            width: 33%;
+            height: 33%;
+            background: #29305E;
+        }
+        .playBox4 {
+            width: 49.5%;
+            height: 49.5%;
+            background: #29305E;
+        }
+        .playBox1 {
+            width: 100%;
+            height: 100%;
+            background: #29305E;
+        }
+    }
+    .operateArea {
+        background: #29305E;
+        width: 25%;
+        height: calc(~"100% - 29px");
+        margin: 14px 16px; // 操作区域
+        .picOperate {
+            display: flex;
+            margin-top: 20px;
+            padding: 0 35px;
+            height: 20%;
+            justify-content: space-between;
+            .operateLeft {
+                width: 150px;
+                height: 150px;
+                justify-content: space-between;
+                align-content: space-between;
+                display: flex;
+                flex-wrap: wrap;
+                .operateButton {
+                    width: 40px;
+                    height: 40px;
+                    background: #3B4585;
+                    cursor: pointer;
+                    img {
+                        width: 40px;
+                        height: 40px;
+                    }
+                }
+            }
+            .operateRight {
+                width: 120px;
+                height: 140px;
+                justify-content: space-between;
+                align-content: space-between;
+                display: flex;
+                flex-wrap: wrap;
+                .operateIcon {
+                    width: 50px;
+                    height: 60px;
+                    color: white;
+                    font-size: 12px;
+                    text-align: center;
+                    cursor: pointer;
+                }
+                .picIcon {
+                    font-size: 36px;
+                    color: #439FB9;
+                }
+                .speedIcon {
+                    position: relative;
+                    right: -6px;
+                }
+                .speed {
+                    font-size: 17px;
+                    position: relative;
+                    left: -28px;
+                    top: -6px;
+                }
+            }
+        }
+    }
+}
+
+.speedList{
+    background: #3B4585;
+    div{
+        height: 26px;
+        text-align: center;
+        color:white;
+        cursor: pointer;
+        line-height: 26px;
+    }
+}

@@ -1,30 +1,29 @@
 import React from "react";
-import GroupAccount from '../../components/waterRate/groupAccount';
+import RemoteControl from '../../components/distributedControl/remoteControl';
 // import { connect } from 'dva';
 // import { Spin } from 'antd'
-// @connect(({ groupAccount, loading }) => ({
-//     groupAccount,
-//     loading: loading.models.groupAccount
+// @connect(({ remoteControl, loading }) => ({
+//     remoteControl,
+//     loading: loading.models.remoteControl
 // }))
 export default class extends React.Component{
     componentDidMount() {
         // const { dispatch } = this.props;
         // dispatch({
-        //     type: 'groupAccount/fetch',
+        //     type: 'remoteControl/fetch',
         //     payload:{
-
+   
         //       }
         // });//type来选择请求的接口，payload为传给后台的参数
-        // console.log(this.props)
     }
     render(){
-        // let { groupAccount, loading } = this.props;
-        // let arr = Object.keys(groupAccount);
-        // if (arr.length === 0) return groupAccount = null;
+        // let { remoteControl, loading } = this.props;
+        // let arr = Object.keys(remoteControl);
+        // if (arr.length === 0) return remoteControl = null;
         return (
             <React.Fragment>
                 {/* <Spin size='large' spinning={loading}> */}
-                    <GroupAccount
+                    <RemoteControl
                         // {...this.props}
                     /> 
                 {/* </Spin> */}

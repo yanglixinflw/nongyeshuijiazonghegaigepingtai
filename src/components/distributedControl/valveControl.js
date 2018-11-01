@@ -1,39 +1,37 @@
 import React,{Component} from 'react';
-import styles from "./groupAccount.less"
-import { Input, Button, Form, Cascader, Table, Divider,Select,} from 'antd';
+import styles from "./valveControl.less"
+import { Input, Button, Form, Cascader, Table, Divider} from 'antd';
 const tableTitle=[
-    {index:"id",item:"设备ID"},
-    {index:"name",item:"设备名称"},
-    {index:"groupName",item:"小组"},
-    {index:"member",item:"小组成员"},
-    {index:"amount",item:"账户余额"},
-    {index:"useLevel",item:"当前用量"},
-    {index:"waterRight",item:"剩余水权"},
+    {index:"valveType",item:"阀门型号"},
+    {index:"id",item:"阀门ID"},
+    {index:"name",item:"阀门名称"},
+    {index:"area",item:"阀门安装地"},
+    {index:"build",item:"关联建筑物"},
+    {index:"inter",item:"网络"},
+    {index:"electric",item:"电量"},
+    {index:"state",item:"阀门状态"},
     {index:"updateTime",item:"更新时间"},
 ]
 const data=[
-    {id:"435676651",name:" 宁圩村1#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676652",name:" 宁圩村2#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676653",name:" 宁圩村3#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676654",name:" 宁圩村4#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676655",name:" 宁圩村5#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676656",name:" 宁圩村6#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676657",name:" 宁圩村7#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676658",name:" 宁圩村8#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676659",name:" 宁圩村9#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"}
+    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"A开",updateTime:"2018-07-02 08:09:21"},
+    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"B开",updateTime:"2018-07-02 08:09:21"},
+    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"B开",updateTime:"2018-07-02 08:09:21"},
+    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"全关",updateTime:"2018-07-02 08:09:21"},
+    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"A开",updateTime:"2018-07-02 08:09:21"},
+    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"A开",updateTime:"2018-07-02 08:09:21"},
 ]
 export default class extends Component{
     constructor(props) {
         super(props)
-        const groupAccount=data;
+        const valveControl=data;
         var tableData=[],tableIndex=[];//数据表的item 和 index
         tableTitle.map(v=>{
             tableData.push(v.item);
             tableIndex.push(v.index)
         })
         this.state={
-            groupAccount,
-            items:groupAccount,
+            valveControl,
+            items:valveControl,
             tableTitle,
             tableDatas:[],
             columns: [],
@@ -57,13 +55,14 @@ export default class extends Component{
         let tableDatas = [];
         items.map((v, i) => {
             tableDatas.push({
+                valveType:v.valveType,
                 id:v.id,
                 name:v.name,
-                groupName:v.groupName,
-                member:v.member,
-                amount:v.amount,
-                useLevel:v.useLevel,
-                waterRight:v.waterRight,
+                area:v.area,
+                build:v.build,
+                inter:v.inter,
+                electric:v.electric,
+                state:v.state,
                 updateTime:v.updateTime,
                 key: i,
             });
@@ -78,48 +77,24 @@ export default class extends Component{
             key: 'action',
             align: 'center',
             fixed: 'right',
-            width: 430,
+            width: 100,
             render: (record) => {
                 return (
                     <span className={styles.option}>
                         <Button
-                            className={styles.record}
+                            className={styles.set}
                             // onClick={() => this._set()}
-                            icon='file-text'
+                            icon='setting'
                         >
-                            消费记录
-                        </Button>
-                        <Button
-                            className={styles.clear}
-                            icon='delete'
-                        >
-                            清空当前用量
-                        </Button>
-                        <Button
-                            className={styles.assignment}
-                            icon='share-alt'
-                        >
-                            分配水权
-                        </Button>
-                        <Button
-                            className={styles.edit}
-                            icon='edit'
-                        >
-                            修改
-                        </Button>
-                        <Button
-                        className={styles.management}
-                            icon='team'
-                        >
-                            管理小组成员
+                            操作
                         </Button>
                     </span>
                 )
             }
         })
     }
-     //搜索功能
-     _searchTableDatas() {
+    //搜索功能
+    _searchTableDatas() {
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
@@ -141,8 +116,8 @@ export default class extends Component{
         };
         return(
             <React.Fragment>
-               <div className={styles.header}>
-                    <span>|</span>小组账户
+                <div className={styles.header}>
+                    <span>|</span>阀门控制
                 </div>
                 <div className={styles.searchForm}>
                     {/* 表单信息 */}
@@ -167,10 +142,16 @@ export default class extends Component{
                             重置
                         </Button>
                         <Button
-                            icon='upload'
+                            icon='poweroff'
                             className={styles.fnButton}
                         >
-                            导出数据
+                            阀门开关
+                        </Button>
+                        <Button
+                            icon='environment'
+                            className={styles.fnButton}
+                        >
+                            在地图操作
                         </Button>
                     </div> 
                 </div>
@@ -179,7 +160,7 @@ export default class extends Component{
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableDatas}
-                    scroll={{ x: 1100 }}
+                    scroll={{ x: 1300 }}
                 />
             </React.Fragment>
         )
@@ -201,10 +182,11 @@ const SearchForm = Form.create()(
                         marginRight:"10px"
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('id', {initialValue: ''})
+                        {getFieldDecorator('num', {})
                             (
-                            <Cascader
-                                placeholder='设备ID'
+                            <Input
+                                placeholder='阀门ID'
+                                type='text'
                             />
                             )
                         }
@@ -213,37 +195,28 @@ const SearchForm = Form.create()(
                         {getFieldDecorator('name', {})
                             (
                             <Input
-                                placeholder='设备名称'
+                                placeholder='阀门名称'
                                 type='text'
                             />
                             )
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('groupName', {})
-                            (
-                            <Input
-                                placeholder='名称'
-                                type='text'
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('name/phone', {})
-                            (
-                            <Input
-                                placeholder='农户姓名/手机'
-                                type='text'
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('state', {initialValue: ''})
+                        {getFieldDecorator('areaId', {})
                             (
                             <Cascader
-                                placeholder='所有状态'
+                                placeholder='设备安装地'
+                                type='text'
+                            />
+                            )
+                        }
+                    </Form.Item>
+                    <Form.Item>
+                        {getFieldDecorator('name', {})
+                            (
+                            <Input
+                                placeholder='关联建筑物'
+                                type='text'
                             />
                             )
                         }

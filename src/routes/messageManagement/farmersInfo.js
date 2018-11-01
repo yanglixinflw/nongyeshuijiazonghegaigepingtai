@@ -25,15 +25,14 @@ export default class extends React.Component{
         // console.log(farmersInfo)
         let arr = Object.keys(farmersInfo);
         if (arr.length === 0) return farmersInfo = null;
-        console.log(arr)
         return (
-            <div>
+            <React.Fragment>
                 <Spin size='large' spinning={loading}>
                     <FarmersInfo
                         {...this.props}
                     />
                 </Spin>
-            </div>
+            </React.Fragment>
         )
     }
 }
