@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './index.less'
-import { Button, Table, Form, Input, Select, Modal, message, } from 'antd';
+import { Button, Table, Form, Input, Select, Modal, message, Radio} from 'antd';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
 ////获取用户角色列表url
@@ -26,7 +26,7 @@ let postOption = {
 };
 // 全部title
 const tableTitle = [
-    '账号', '姓名', '角色', '手机号', '部门', '添加日期'
+    '账号','用户ID', '姓名', '性别', '角色', '手机号', '部门', '添加日期'
 ];
 // 全局提示样式
 message.config({
@@ -111,7 +111,9 @@ export default class extends Component {
         let columns = [];
         let dataIndex = [
             'loginName',
+            'userId',
             'realName',
+            'sex',
             'roleName',
             'mobilePhone',
             'department',
@@ -155,12 +157,14 @@ export default class extends Component {
         items.map((v, i) => {
             tableData.push({
                 loginName: v.loginName,
+                userId:v.userId,
                 realName: v.realName,
+                sex:v.sex,
                 roleName: v.roleName,
                 mobilePhone: v.mobilePhone,
                 department: v.department,
                 createTime: v.createTime,
-                userId:v.userId,
+                userId: v.userId,
                 key: i,
             });
         })
@@ -220,7 +224,6 @@ export default class extends Component {
             body: JSON.stringify({
                 "name": '',
                 "mobile": '',
-                "roleId": 0,
                 "pageIndex": 0,
                 "pageSize": 10
             })
@@ -262,15 +265,13 @@ export default class extends Component {
             return fetch(addUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "roleId": 0,
-                    "departmentId": "string",
-                    "userId": "string",
+                    "departmentId": values.department,
+                    "password": values.passWord,
                     "userType": 1,
-                    "loginName": "string",
-                    "realName": "string",
-                    "mobilePhone": "string",
-                    "orgId": "string",
-                    "token": "string"
+                    "loginName": values.loginName,
+                    "realName": values.realName,
+                    "mobilePhone": values.mobilePhone,
+                    "sex": values.sex
 
                 })
             }).then((res) => {
@@ -280,7 +281,10 @@ export default class extends Component {
                             return fetch(dataUrl, {
                                 ...postOption,
                                 body: JSON.stringify({
-
+                                    "name": "",
+                                    "mobile": "",
+                                    "pageIndex": 0,
+                                    "pageSize": 10
                                 })
                             }).then((res) => {
                                 Promise.resolve(res.json())
@@ -351,13 +355,13 @@ export default class extends Component {
             return fetch(editUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "roleId": 0,
                     "departmentId": values.department,
                     userId,
                     "userType": 1,
                     "loginName": values.loginName,
                     "realName": values.realName,
                     "mobilePhone": values.mobilePhone,
+                    "sex": values.sex
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
@@ -368,7 +372,6 @@ export default class extends Component {
                                 body: JSON.stringify({
                                     "name": '',
                                     "mobile": '',
-                                    "roleId": 0,
                                     "pageIndex": 0,
                                     "pageSize": 10
                                 })
@@ -441,7 +444,7 @@ export default class extends Component {
                             body: JSON.stringify({
                                 "name": '',
                                 "mobile": '',
-                                "roleId": 0,
+                                "roleId": 1,
                                 "pageIndex": 0,
                                 "pageSize": 10
                             })
@@ -575,7 +578,7 @@ export default class extends Component {
                     visible={addVisible}
                     onCancel={() => this._addCancelHandler()}
                     onOk={() => this._addOkHandler()}
-                    {...{ roleList,deptList }}
+                    {...{ roleList, deptList }}
                 />
                 {/* 修改弹窗 */}
                 <ModifyForm
@@ -687,7 +690,7 @@ const formItemLayout = {
 const AddForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, onCancel, onOk, form,roleList, deptList} = this.props;
+            const { visible, onCancel, onOk, form, roleList, deptList } = this.props;
             const { getFieldDecorator } = form;
             const Option = Select.Option;
             if (roleList.length == 0) {
@@ -696,6 +699,7 @@ const AddForm = Form.create()(
             if (deptList.length == 0) {
                 return null
             }
+            // console.log(roleList)
             return (
                 <Modal
                     //className={styles.addModal}
@@ -731,6 +735,17 @@ const AddForm = Form.create()(
                                 />
                             )}
                         </Form.Item>
+                        <Form.Item {...formItemLayout} label='性别'>
+                            {getFieldDecorator('sex', {
+                                initialValue: '',
+                            })(
+                                <Radio.Group>
+                                    <Radio value='男'>男</Radio>
+                                    <Radio value='女'>女</Radio>
+                                </Radio.Group>
+                                
+                            )}
+                        </Form.Item>
                         <Form.Item {...formItemLayout} label='密码'>
                             {getFieldDecorator('passWord', {
                                 initialValue: '',
@@ -749,32 +764,32 @@ const AddForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='部门'>
                             {getFieldDecorator('department', {
-                                initialValue: deptList[0].name,
+                                initialValue: deptList[0].id,
                             })
                                 (
-                                    <Select>
-                                        {deptList.map((v, i) => {
-                                            return (
-                                                <Option key={i} value={v.id}>{v.name}</Option>
-                                            )
-        
-                                        })}
-                                    </Select>
+                                <Select>
+                                    {deptList.map((v, i) => {
+                                        return (
+                                            <Option key={i} value={v.id}>{v.name}</Option>
+                                        )
+
+                                    })}
+                                </Select>
                                 )}
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='角色'>
                             {getFieldDecorator('roleName', {
-                                initialValue: roleList[0].name,
+                                initialValue: roleList[0].id,
                             })
                                 (
-                                    <Select>
-                                        {roleList.map((v, i) => {
-                                            return (
-                                                <Option key={i} value={v.id}>{v.name}</Option>
-                                            )
-        
-                                        })}
-                                    </Select>
+                                <Select>
+                                    {roleList.map((v, i) => {
+                                        return (
+                                            <Option key={i} value={v.id}>{v.name}</Option>
+                                        )
+
+                                    })}
+                                </Select>
                                 )}
                         </Form.Item>
                         <Form.Item {...formItemLayout} label="手机号">
@@ -798,7 +813,7 @@ const AddForm = Form.create()(
 const ModifyForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, onCancel, onOk, form, modifyData,roleList, deptList } = this.props;
+            const { visible, onCancel, onOk, form, modifyData, roleList, deptList } = this.props;
             const { getFieldDecorator } = form;
             if (typeof (modifyData[0]) == 'undefined') {
                 return false
@@ -844,6 +859,17 @@ const ModifyForm = Form.create()(
                                 />
                             )}
                         </Form.Item>
+                        <Form.Item {...formItemLayout} label='性别'>
+                            {getFieldDecorator('sex', {
+                                initialValue: modifyData[0].sex,
+                            })(
+                                <Radio.Group>
+                                    <Radio value='男'>男</Radio>
+                                    <Radio value='女'>女</Radio>
+                                </Radio.Group>
+                                
+                            )}
+                        </Form.Item>
                         <Form.Item {...formItemLayout} label='密码'>
                             {getFieldDecorator('passWord', {
                                 initialValue: "123456",
@@ -862,15 +888,15 @@ const ModifyForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='部门'>
                             {getFieldDecorator('department', {
-                                   initialValue: modifyData[0].department,
+                                initialValue: modifyData[0].department,
                             })
                                 (
-                                    <Select>
+                                <Select>
                                     {deptList.map((v, i) => {
                                         return (
                                             <Option key={i} value={v.id}>{v.name}</Option>
                                         )
-    
+
                                     })}
                                 </Select>
                                 )}
@@ -880,12 +906,12 @@ const ModifyForm = Form.create()(
                                 initialValue: modifyData[0].roleName,
                             })
                                 (
-                                    <Select>
+                                <Select>
                                     {roleList.map((v, i) => {
                                         return (
                                             <Option key={i} value={v.id}>{v.name}</Option>
                                         )
-    
+
                                     })}
                                 </Select>
                                 )}
