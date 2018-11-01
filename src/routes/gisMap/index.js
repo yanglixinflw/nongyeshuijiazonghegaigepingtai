@@ -1,22 +1,16 @@
 import React from 'react';
-import BreadcrumbView from 'components/PageHeader/breadcrumb';
-import MyMap from '../../components/GisMap/index';
-import { Map } from 'react-amap';
+import MyMapComponent from '../../components/GisMap/index';
+import styles from './index.less';
 class IndexPage extends React.Component {
   constructor(props) {
-    super(props)
+    super(props)     
   }
   render() {
     return (
       <div>
-        <div>
-          <BreadcrumbView
-            {...this.props}
-          />
+        <div className={styles.map}>
+            <MyMapComponent />   
         </div>
-        <Map>
-          <MyMap />
-        </Map>
         
       </div>
 
