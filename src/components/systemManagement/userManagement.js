@@ -44,7 +44,6 @@ export default class extends Component {
             //数据源
             items: userManagement.data.data.items,
             //总数据列表title
-            tableTitle,
             title: tableTitle,
             //表头
             columns: [],

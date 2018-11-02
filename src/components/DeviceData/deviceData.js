@@ -158,7 +158,7 @@ export default class extends Component {
                                 itemCount,
                                 tableData:items
                             })
-                            this._getTableData( tableData, filterColumns);
+                            this._getTableData( items, filterColumns);
                         }
                     })
             }).catch((err) => {
