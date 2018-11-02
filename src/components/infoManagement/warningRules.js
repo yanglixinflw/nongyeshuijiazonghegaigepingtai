@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import styles from "./deviceWarning.less"
+import styles from "./warningRules.less"
 import { Input, Button, Form, Cascader, Table, Modal} from 'antd';
 //ip地址
 const envNet='http://192.168.30.127:88';
