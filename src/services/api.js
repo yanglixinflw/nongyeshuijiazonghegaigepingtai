@@ -99,3 +99,12 @@ export function getWarningRecords(params){
     )
   })
 }
+// 设备类型列表
+export function getDeviceTypeList(params){
+  return request(`${envNet}/api/DeviceType/list`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}

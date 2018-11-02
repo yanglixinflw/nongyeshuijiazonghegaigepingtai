@@ -4,6 +4,8 @@ import { Input, Button } from 'antd';
 import { Map, Markers, InfoWindow, Polyline } from 'react-amap';
 import IwContent from './infoWindow';
 import MarkerContent from './marker';
+import MyCustomize from './myCustomize';
+import classnames from 'classnames';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
 const homePosition = [
     { position: { longitude: 120.27, latitude: 30.27 },isWarningMsg:true },
@@ -26,27 +28,24 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const plugins = [
-            // 地图类型切换
-            // 'MapType',
             // 比例尺
             'Scale',
             //鹰眼
             'OverView',
-            //缩放控件
-            // 'ToolBar',
+            // 地图类型切换
             {
                 name: 'MapType',
                 options: {
-                  visible: true,  // 不设置该属性默认就是 true
+                  visible: false,  // 不设置该属性默认就是 true
                   defaultType:1,    //底图默认 0位平面2D，1为卫星
                   onCreated(ins){
                     // console.log(ins);
                   },
                 },
             },
+            //缩放控件
             {
                 name: 'ToolBar',
-                ruler   : true,
                 options: {
                   visible: true,  // 不设置该属性默认就是 true
                   onCreated(ins){
@@ -152,7 +151,7 @@ export default class extends Component {
                 // console.log(ins) 
             },
             show: () => { 
-                console.log('line show') 
+                // console.log('line show') 
             },
             hide: () => { 
                 console.log('line hide') 
@@ -215,7 +214,6 @@ export default class extends Component {
                 zoom={16}
             >
                 <div className={styles.search}>
-                    管网编号
                     <Input
                         placeholder='请查询设备编号或设备名称'
                         onPressEnter={(e)=>this._searchHandler(e)}
@@ -223,15 +221,13 @@ export default class extends Component {
                     />
                 </div>
                 <div className={styles.btnGroup}>
-                    <Button onClick={() => this._homeHandler()}>管网信息</Button>
-                    <Button onClick={() => this._lineHandler()}>管道</Button>
-                    <div className={styles.pipeClass}>
-                        <Button>一级管道</Button>
-                        <Button>二级管道</Button>
-                    </div>
-                    <Button>泵站</Button>
-                    <Button>蓄水池</Button>
-                    <Button>闸阀井</Button>
+                    <Button onClick={() => this._homeHandler()}>
+                        <i className={styles.camera}></i>
+                        <span>摄像头</span>
+                    </Button>
+                    <Button onClick={() => this._lineHandler()}>水表</Button>
+                    <Button>电表</Button>
+                    <Button>水阀</Button>
                 </div>
                 {/* 信息窗 */}
                 <InfoWindow
@@ -257,7 +253,7 @@ export default class extends Component {
                     visible={lineVisible}
                     // draggable={this.state.draggable}
                 />
-
+                <MyCustomize />
 
             </Map>
         )

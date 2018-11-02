@@ -1,4 +1,4 @@
-import React, { Component,Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import styles from './index.less'
 import {
     Form,
@@ -28,22 +28,7 @@ let postOption = {
 // 开发环境
 const envNet = 'http://192.168.30.127:88'
 // 搜索、翻页接口
-const getDataUrl=`${envNet}/api/Device/list`
-// 全部title
-const totalTitle = [
-    '设备ID',
-    '设备型号',
-    '设备名称',
-    '设备安装地',
-    '地理坐标',
-    '启用日期',
-    '运维公司',
-    '管护人员',
-    '网关地址',
-    '出厂编号',
-    '预警规则',
-    '更新时间'
-]
+const getDataUrl = `${envNet}/api/Device/list`
 // 源columns拥有编号
 const sourceColumns = [
     { title: "设备ID", dataIndex: "deviceId", number: 0 },
@@ -62,7 +47,8 @@ const sourceColumns = [
 export default class extends Component {
     constructor(props) {
         super(props)
-        // console.log(props)
+        const { DeviceTypeList,InstallList } = this.props
+        console.log(InstallList.data.data)
         this.state = {
             // 显示设置可见
             showSetVisible: false,
@@ -71,8 +57,6 @@ export default class extends Component {
             columns: [],
             // 数据总数
             itemCount: props.data.data.itemCount,
-            // 标题
-            title: totalTitle,
             // 表格数据源
             data: props.data.data.items,
             // 表格数据
@@ -87,24 +71,26 @@ export default class extends Component {
                 "areaName": "",
             },
             // 设备安装地列表
-            installAddress:props.list.data.data,
+            installAddress: InstallList.data.data,
             // 过滤后的表头
-            filterColumns:sourceColumns
+            filterColumns: sourceColumns,
+            // 设备类型列表
+            deviceTypeList: DeviceTypeList.data.data
         }
     }
     componentDidMount() {
         // 初始化处理表单数据
-        this._getTableData(this.state.title, this.state.data, sourceColumns)
+        this._getTableData(this.state.data, this.state.filterColumns)
     }
     // 获取表单数据
-    _getTableData(title, data, sourceColumns) {
+    _getTableData(data, sourceColumns) {
         let columns = []
         // 设置columns
-        title.map((v, i) => {
+        sourceColumns.map((v, i) => {
             columns.push({
-                title: v,
+                title: v.title,
                 // 表头添加字段
-                dataIndex: sourceColumns[i].dataIndex,
+                dataIndex: v.dataIndex,
                 align: 'center',
                 className: `${styles.tbw}`
             })
@@ -127,14 +113,14 @@ export default class extends Component {
                             生成二维码
                         </Button>
                         <Link to={`/deviceInformation/warningRules:${record.deviceId}`}>
-                        <Button
-                            className={styles.warn}
-                            icon='exception'
-                        >
-                            预警机制
+                            <Button
+                                className={styles.warn}
+                                icon='exception'
+                            >
+                                预警机制
                         </Button>
                         </Link>
-                        
+
                         <Button
                             className={styles.edit}
                             icon='edit'
@@ -184,52 +170,56 @@ export default class extends Component {
     }
     // 翻页
     _pageChange(page) {
-        let {searchValue}=this.state
-        searchValue.pageIndex=page-1
+        let { searchValue } = this.state
+        searchValue.pageIndex = page - 1
         // console.log(searchValue)
     }
     // 重置搜索表单
     _resetForm() {
-        const form =this.searchForm.props.form;
+        const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
     }
     // 搜索功能
     _searchTableData() {
-        const{title,data,filterColumns}=this.state
-        const form =this.searchForm.props.form;
+        const {filterColumns } = this.state
+        const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
             if (err) {
                 return;
             }
             // 未定义时给空值
-            values.deviceTypeId=undefined||''
-            values.installAddrId=undefined||''
-            values.pageIndex=0
-            values.pageSize=10
+            if(!values.deviceTypeId){
+                values.deviceTypeId=''
+            }
+            if(!values.installAddrId){
+                values.installAddrId=''
+            }
+            values.pageIndex = 0
+            values.pageSize = 10
             this.setState({
-                searchValue:values
+                searchValue: values
             })
-            return fetch(getDataUrl,{
+            return fetch(getDataUrl, {
                 ...postOption,
-                body:JSON.stringify({
+                body: JSON.stringify({
                     ...values
                 })
-            }).then((res)=>{
+            }).then((res) => {
                 Promise.resolve(res.json())
-                .then((v)=>{
-                    if(v.ret==1){
-                        // console.log(v)
-                        let {items,itemCount}=v.data
-                        this.setState({
-                            itemCount,
-                            data:items
-                        })
-                        this._getTableData(title,data,filterColumns)
-                    }
-                })
-            }).catch((err)=>{
+                    .then((v) => {
+                        console.log(v)
+                        if (v.ret == 1) {
+                            let { items, itemCount } = v.data
+                            this.setState({
+                                itemCount,
+                                data: items
+                            })
+                            this._getTableData(items, filterColumns)
+                        }
+                    })
+            }).catch((err) => {
                 console.log(err)
             })
         })
@@ -281,18 +271,17 @@ export default class extends Component {
             filterColumns.map((v, i) => {
                 title.push(v.title)
             })
-            console.log(filterColumns)
-            this._getTableData(title, this.state.data, filterColumns)
+            this._getTableData(this.state.data, filterColumns)
             this.setState({
                 showSetVisible: false,
                 title,
                 filterColumns
             })
         })
-        
+
     }
     render() {
-        const { columns, showSetVisible, tableData, itemCount ,installAddress} = this.state
+        const { columns, showSetVisible, tableData, itemCount, installAddress, deviceTypeList } = this.state
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -316,6 +305,7 @@ export default class extends Component {
                     <SearchForm
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
                         installAddress={installAddress}
+                        deviceTypeList={deviceTypeList}
                     />
                     <div className={styles.buttonGroup}
                     >
@@ -368,8 +358,9 @@ export default class extends Component {
 const SearchForm = Form.create()(
     class extends Component {
         render() {
-            const { form ,installAddress} = this.props;
+            const { form, installAddress, deviceTypeList } = this.props;
             const { getFieldDecorator } = form;
+            // console.log(deviceTypeList)
             return (
                 <Form
                     layout='inline'
@@ -400,6 +391,21 @@ const SearchForm = Form.create()(
                                 placeholder='设备类型'
                             >
                                 <Option value=''>全部</Option>
+                                {
+                                    deviceTypeList.length === 0 ? null
+                                        :
+                                        deviceTypeList.map((v, i) => {
+                                            return (
+                                                <Option 
+                                                value={v.deviceTypeId} 
+                                                key={v.deviceTypeId}>
+                                                {v.name}
+                                                </Option>
+                                            )
+
+                                        })
+                                }
+
                             </Select>
                             )
                         }
@@ -424,6 +430,20 @@ const SearchForm = Form.create()(
                                 placeholder='设备安装地'
                             >
                                 <Option value=''>全部</Option>
+                                {
+                                    installAddress.length === 0 ? null
+                                        :
+                                        installAddress.map((v, i) => {
+                                            return (
+                                                <Option 
+                                                value={v.id} 
+                                                key={v.id}>
+                                                {v.addr}
+                                                </Option>
+                                            )
+
+                                        })
+                                }
                             </Select>
                             )
                         }
@@ -472,6 +492,7 @@ const ShowSetForm = Form.create()(
                     okText='确定'
                     onOk={onOk}
                     onCancel={onCancel}
+                    style={{ marginTop: "250px" }}
                 >
                     <Form>
                         <Form.Item>
@@ -481,11 +502,10 @@ const ShowSetForm = Form.create()(
                                 (
                                 <CheckboxGroup>
                                     <Row>
-                                        {/* <Col><Checkbox value='q'>q</Checkbox></Col> */}
-                                        {totalTitle.map((v, i) => {
+                                        {sourceColumns.map((v, i) => {
                                             return (
                                                 <Col key={i} span={8}>
-                                                    <Checkbox value={sourceColumns[i]}>{v}</Checkbox>
+                                                    <Checkbox value={sourceColumns[i]}>{v.title}</Checkbox>
                                                 </Col>
                                             )
                                         })}
