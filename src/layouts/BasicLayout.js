@@ -78,25 +78,27 @@ export default class BasicLayout extends React.PureComponent {
     }
     // 页面加载前获取权限列表和是否登录信息
     componentWillMount() {
-        let loginOrNot=localStorage.getItem('welcome')
-        if(loginOrNot>=100){
+        let loginOrNot = localStorage.getItem('welcome')
+        if (loginOrNot >= 100) {
             this.setState({
                 isLogin: true,
                 // isLogin: false,
             })
-        }else{
+        } else {
             this.setState({
                 isLogin: false,
             })
         }
-        
+
     }
     render() {
         // console.log(this.props.app._store)
         const { isLogin } = this.state
         const { match } = this.props.props
         const { routerData } = this.props
-        const {dispatch}=this.props.app._store
+        // console.log(this.props.props.location.pathname)
+        let pathname = this.props.props.location.pathname
+        const { dispatch } = this.props.app._store
         const layout = (
             <Layout>
                 <Sider>
@@ -107,9 +109,9 @@ export default class BasicLayout extends React.PureComponent {
                 </Sider>
                 <Layout style={{ background: '#0A0C1D' }}>
                     <Header>
-                    <GlobalHeader dispatch={dispatch}></GlobalHeader>
+                        <GlobalHeader dispatch={dispatch}></GlobalHeader>
                     </Header>
-                    <Content style={{ background: '#151837' ,minWidth:'800px'}}>
+                    <Content style={{ background: '#151837', minWidth: '800px' }}>
                         <Switch>
                             {redirectData.map(item => (
                                 <Redirect key={item.from} exact from={item.from} to={item.to} />
@@ -134,17 +136,20 @@ export default class BasicLayout extends React.PureComponent {
                             <Route component={NoRight} />
                         </Switch>
                     </Content>
-                    <Footer style={{ background: '#151837' }}>
-                        <GlobalFooter
-                            links={[
-                            ]}
-                            copyright={
-                                <div style={{ color: '#95A5A6' }}>
-                                    Copyright <Icon type="copyright" /> www.dyjs.com, All Rights Reserved.
-                                </div>
-                            }
-                        />
-                    </Footer>
+                    {pathname == '/gismap/gismapPage' ? null :
+                        <Footer style={{ background: '#151837' }}>
+                            <GlobalFooter
+                                links={[
+                                ]}
+                                copyright={
+                                    <div style={{ color: '#95A5A6' }}>
+                                        Copyright <Icon type="copyright" /> www.dyjs.com, All Rights Reserved.
+                        </div>
+                                }
+                            />
+                        </Footer>
+                    }
+
                 </Layout>
             </Layout>
         )

@@ -1,3 +1,5 @@
+//引入线上图标
+@import 'http://at.alicdn.com/t/font_869092_twicu4yjbc8.css';
 .search {
     height: 40px;
     line-height: 40px;
@@ -10,9 +12,11 @@
     font-weight: 600;
     :global {
         .ant-input {
-            width: 214px;
+            border: 0;
+            width: 288px;
             height: 40px;
             margin-left: 25px;
+            background: #141831;
         }
     }
 }
@@ -21,14 +25,15 @@
     z-index: 199;
     position: absolute;
     top: 20px;
-    right: 80px;
+    right: 283px;
     :global {
         .ant-btn {
+            margin-right: 35px;
             border: 0;
-            background: #27BC31;
+            background: #141831;
             color: #fff;
-            width: 45px;
-            height: 45px;
+            width:68px;
+            height: 68px;
             line-height: 20px;
             margin-left: 7px;
             font-size: 12px;
@@ -36,7 +41,19 @@
             overflow: hidden;
             vertical-align: middle;
             white-space: pre-wrap;
+            span{
+                font-size: 12px;
+                font-weight: 600;
+                color:#BBC5D2;
+            }
         }
+    }
+    .camera{
+        margin:4px 7px; 
+        display: block;
+        width: 40px;
+        height: 28px;
+        background:url(../../assets/camera.png) no-repeat;
     }
     .pipeClass{
         display: none;
@@ -47,9 +64,89 @@
     .amap-info-content {
         overflow: hidden;
     }
+    // .amap-touch-toolbar .amap-geo{
+    //     display: block !important;
+    // }
+    .amap-touch-toolbar .amap-zoomcontrol{
+        display: none
+    }
+    .amap-maptype-check{
+        background:url(../../assets/ysj.png) -30px 4px no-repeat;
+    }
+    .amap-maptype-con{
+        display: none;
+    }
+    .amap-maptype-list{
+        display: none !important;
+        .amap-maptype-item{
+            display: none !important;
+        }
+    }
 }
 
 .waring {
     position: absolute;
     top: -10px;
+}
+
+.btnMapType{
+    position: absolute;
+    top:27px;
+    right: 35px;
+    z-index: 199;
+    :global{
+        .ant-btn{
+            width:80px;
+            height:43px;
+            background: #141831;
+            color:#fff;
+            font-weight: 600;
+            font-size: 16px;
+            border:0;
+            &:focus {
+                background: #327DF4;
+            }
+            &:hover {
+                background: #327DF4;
+            }
+            &:active{
+                background: #327DF4;
+            }
+        }
+        
+        
+    }
+}
+.btnMapZoom{
+    position: absolute;
+    top:690px;
+    right:10px;
+    :global{
+        .ant-btn{
+            width:35px;
+            height: 35px;
+            padding: 0;
+            position:absolute;
+            background:#337DF6;
+            border:0;
+            i{
+                color:#fff;
+                font-size: 20px;
+                
+            }
+        }
+    }
+    .btnReset{ 
+        top:-84px;
+        left: -64px;
+    }
+    .btnPlus{
+        top:-36px;
+        left: -64px;
+    }
+    .btnLess{
+        
+        top:12px;
+        left: -64px;
+    }
 }

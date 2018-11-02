@@ -12,7 +12,7 @@ const dataUrl = `${envNet}/api/UserMgr/list`;
 //添加url
 const addUrl = `${envNet}/api/UserMgr/add`;
 //修改url
-const editUrl = `${envNet}/api/UserMgr/edit`;
+const updateUrl = `${envNet}/api/UserMgr/update`;
 //删除url
 const deleteUrl = `${envNet}/api/UserMgr/delete`;
 // post通用设置
@@ -262,62 +262,63 @@ export default class extends Component {
                 return;
             }
             console.log(values)
-            return fetch(addUrl, {
-                ...postOption,
-                body: JSON.stringify({
-                    "departmentId": values.department,
-                    "password": values.passWord,
-                    "userType": 1,
-                    "loginName": values.loginName,
-                    "realName": values.realName,
-                    "mobilePhone": values.mobilePhone,
-                    "sex": values.sex
-
-                })
-            }).then((res) => {
-                Promise.resolve(res.json())
-                    .then((v) => {
-                        if (v.ret == 1) {
-                            return fetch(dataUrl, {
-                                ...postOption,
-                                body: JSON.stringify({
-                                    "name": "",
-                                    "mobile": "",
-                                    "pageIndex": 0,
-                                    "pageSize": 10
-                                })
-                            }).then((res) => {
-                                Promise.resolve(res.json())
-                                    .then((v) => {
-                                        if (v.re == 1) {
-                                            let items = v.data.items;
-                                            let itemCount = v.data.itemCount;
-                                            // 给每一条数据添加key
-                                            items.map((v, i) => {
-                                                v.key = i
-                                            })
-                                            this.setState({
-                                                itemCount,
-                                                items,
-                                                addVisible: false
-                                            });
-                                            this._getTableData(title, items);
-                                            form.resetFields();
-                                            message.success('添加成功', 2);
-                                        } else {
-                                            this.setState({
-                                                items: []
-                                            })
-                                        }
-                                    })
-                            })
-                        } else {
-                            message.error(v.msg, 2);
-                        }
-                    })
-            }).catch((err) => {
-                console.log(err)
-            })
+            // return fetch(addUrl, {
+            //     ...postOption,
+            //     body: JSON.stringify({
+            //         "departmentId": values.department,
+            //         "password": values.passWord,
+            //         "loginName": values.loginName,
+            //         "realName": values.realName,
+            //         "mobilePhone": values.mobilePhone,
+            //         "sex": values.sex,
+            //         "roleId":values.roleName
+                    
+            //     })
+            // }).then((res) => {
+            //     Promise.resolve(res.json())
+            //         .then((v) => {
+            //             if (v.ret == 1) {
+            //                 return fetch(dataUrl, {
+            //                     ...postOption,
+            //                     body: JSON.stringify({
+            //                         "name": "",
+            //                         "mobile": "",
+            //                         "pageIndex": 0,
+            //                         "pageSize": 10
+            //                     })
+            //                 }).then((res) => {
+            //                     Promise.resolve(res.json())
+            //                         .then((v) => {
+            //                             if (v.ret== 1) {
+            //                                 console.log(v)
+            //                                 let items = v.data.items;
+            //                                 let itemCount = v.data.itemCount;
+            //                                 // 给每一条数据添加key
+            //                                 items.map((v, i) => {
+            //                                     v.key = i
+            //                                 })
+            //                                 this.setState({
+            //                                     itemCount,
+            //                                     items,
+            //                                     addVisible: false
+            //                                 });
+            //                                 this._getTableData(title, items);
+            //                                 form.resetFields();
+            //                                 message.success('添加成功', 2);
+            //                             } else {
+            //                                 this.setState({
+            //                                     items: []
+            //                                 })
+            //                             }
+            //                         })
+            //                 })
+            //             } else {
+            //                 message.error(v.msg, 2);
+            //             }
+            //         })
+            // }).catch((err) => {
+            //     console.log(err)
+            // })
         })
     }
     // 添加取消
@@ -352,16 +353,16 @@ export default class extends Component {
                 return;
             }
             console.log(values);
-            return fetch(editUrl, {
+            return fetch(updateUrl, {
                 ...postOption,
                 body: JSON.stringify({
                     "departmentId": values.department,
                     userId,
-                    "userType": 1,
                     "loginName": values.loginName,
                     "realName": values.realName,
                     "mobilePhone": values.mobilePhone,
-                    "sex": values.sex
+                    "sex": values.sex,
+                    "password": values.passWord,
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
@@ -370,8 +371,6 @@ export default class extends Component {
                             return fetch(dataUrl, {
                                 ...postOption,
                                 body: JSON.stringify({
-                                    "name": '',
-                                    "mobile": '',
                                     "pageIndex": 0,
                                     "pageSize": 10
                                 })
@@ -379,6 +378,7 @@ export default class extends Component {
                                 Promise.resolve(res.json())
                                     .then((v) => {
                                         if (v.ret == 1) {
+                                            console.log(v)
                                             let items = v.data.items;
                                             let itemCount = v.data.itemCount;
                                             // 给每一条数据添加key
@@ -767,7 +767,9 @@ const AddForm = Form.create()(
                                 initialValue: deptList[0].id,
                             })
                                 (
-                                <Select>
+                                <Select
+                                    // mode="multiple"
+                                >
                                     {deptList.map((v, i) => {
                                         return (
                                             <Option key={i} value={v.id}>{v.name}</Option>
@@ -782,7 +784,9 @@ const AddForm = Form.create()(
                                 initialValue: roleList[0].id,
                             })
                                 (
-                                <Select>
+                                <Select
+                                    mode="multiple"
+                                >
                                     {roleList.map((v, i) => {
                                         return (
                                             <Option key={i} value={v.id}>{v.name}</Option>
@@ -815,6 +819,7 @@ const ModifyForm = Form.create()(
         render() {
             const { visible, onCancel, onOk, form, modifyData, roleList, deptList } = this.props;
             const { getFieldDecorator } = form;
+            const Option = Select.Option;
             if (typeof (modifyData[0]) == 'undefined') {
                 return false
             }
@@ -906,7 +911,9 @@ const ModifyForm = Form.create()(
                                 initialValue: modifyData[0].roleName,
                             })
                                 (
-                                <Select>
+                                <Select
+                                    mode="multiple"
+                                >
                                     {roleList.map((v, i) => {
                                         return (
                                             <Option key={i} value={v.id}>{v.name}</Option>
