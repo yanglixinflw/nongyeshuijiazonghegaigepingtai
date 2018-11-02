@@ -14,10 +14,6 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 }
-//预警事件记录下拉框
-const menu =(
-    <Menu style={{width:0,height:0}}></Menu>
-);
 //假数据
 var data=[
     {dev:"12345",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"预警"},
@@ -47,8 +43,12 @@ export default class extends React.Component {
                 </Menu.Item>
             </Menu>
         );
+        const menu = (
+            <Menu style={{width:0,height:0}}>
+              
+            </Menu>
+          );
         this.state = {
-            //预警事件的内容
             menu,
             //数据源
             data,
@@ -66,13 +66,14 @@ export default class extends React.Component {
                 "pageIndex": 0,
                 "pageSize": 10
             },
+            //预警事件弹出框默认隐藏
+            visible: false
         }
     }
     componentDidMount() {
         this._getTableDatas(this.state.data);
     }
-    _getTableDatas(){
-        var {menu}=this.state
+    _getTableDatas(data){
         let tableDatas = [];
         //出现预警的数据
         data.map((v, i) => {
@@ -81,22 +82,25 @@ export default class extends React.Component {
             };
             v.key = i;
         })
-        const menus=(
+        if(tableDatas.length>0){
+           var menus=(
             <Menu>
                 {
                     tableDatas.map(function(v,i){
-                        return  <Menu.Item key={i}>
-                                    <a href="#">{"【设备异常】"+v.content+v.time}</a>
-                                </Menu.Item> 
+                        return <Menu.Item key={i}>
+                                    <a href={`/#/manage/warning`}>{'【设备异常】'+" "+v.content+" "+v.time}</a>
+                                </Menu.Item>
                     })
+                
                 }
             </Menu>
-        )
-        this.setState={
+           )
+        }
+        this.setState({
             data:tableDatas,
             count:tableDatas.length,
             menu:menus
-        }
+        })
     }
     // _getTableDatas(){
     //     const { searchValue } = this.state;
@@ -167,7 +171,7 @@ export default class extends React.Component {
     });
   }
     render() {
-        const { downData } = this.state
+        const { downData,menu} = this.state
         return (
             <div className={styles.header}>
                 <Dropdown overlay={menu} trigger={['click']}>

@@ -203,7 +203,7 @@ const SearchForm = Form.create()(
                     <Form.Item>
                         {getFieldDecorator('id', {initialValue: ''})
                             (
-                            <Cascader
+                            <Input
                                 placeholder='设备ID'
                             />
                             )

@@ -84,7 +84,7 @@ export default class extends Component{
                         <Button
                             className={styles.set}
                             // onClick={() => this._set()}
-                            icon='setting'
+                            icon='tool'
                         >
                             操作
                         </Button>
@@ -182,7 +182,7 @@ const SearchForm = Form.create()(
                         marginRight:"10px"
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('num', {})
+                        {getFieldDecorator('id', {})
                             (
                             <Input
                                 placeholder='阀门ID'
@@ -212,7 +212,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('name', {})
+                        {getFieldDecorator('build', {})
                             (
                             <Input
                                 placeholder='关联建筑物'
