@@ -46,9 +46,9 @@
     margin: 0 auto;
     display: flex;
     .playArea {
-        width: 75%; 
+        // width: 75%; 
         // 开发使用
-        // width: 30%;
+        width: 30%;
         height: calc(~"100% - 28px"); // margin: 14px;
         position: relative;
         justify-content: space-between;
@@ -241,10 +241,36 @@
 .video{
     width: 310px;
     height: 170px;
-    &:hover{
-        background: #404B91;
-    }
+    // 测试使用
+    // width: 388px;
+    // height: 200px;
     background: #313A75;
     margin: 10px auto;
     border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    .mask{
+        background: rgba(0,0,0,0.4);
+        height: 100%;
+        width: 100%;
+        
+    }
+    .playButton{
+        color:white;
+        position: absolute;
+        left:50%;
+        top:50%;
+        transform: translate(-50%,-50%);
+        font-size:42px;
+    }
+    .videoTitle{
+        color:white;
+        position: absolute;
+        bottom:0;
+        width: 100%;
+        background: rgba(0,0,0,0.5);
+        text-align: center;
+        height: 32px;
+        line-height: 32px;
+    }
 }
