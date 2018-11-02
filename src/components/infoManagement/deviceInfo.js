@@ -306,7 +306,7 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._setShowCancel()}
                     onOk={() => this._setShowOk()}
-                    
+                    className={styles.searchForm}
                 />
 
                 <div className={styles.header}>

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import styles from './index.less';
 import { Input, Button } from 'antd';
-import { Map, Markers, InfoWindow } from 'react-amap';
+import { Map, Markers, InfoWindow, Polyline } from 'react-amap';
 import IwContent from './infoWindow';
 import MarkerContent from './marker';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
 const homePosition = [
-    { position: { longitude: 120.27, latitude: 30.27 } },
+    { position: { longitude: 120.27, latitude: 30.27 },isWarningMsg:true },
     { position: { longitude: 120.26, latitude: 30.27 } },
     { position: { longitude: 120.27, latitude: 30.26 } },
     { position: { longitude: 120.26, latitude: 30.28 } },
@@ -17,18 +17,44 @@ const homePosition = [
     { position: { longitude: 120.26, latitude: 30.29 } },
     { position: { longitude: 120.29, latitude: 30.26 } },
 ]
+const linePosition = [
+    { longitude: 121.27, latitude: 31.27 },
+    { longitude: 123.27, latitude: 33.27 },
+
+]
 export default class extends Component {
     constructor(props) {
         super(props)
         const plugins = [
             // 地图类型切换
-            'MapType',
+            // 'MapType',
             // 比例尺
             'Scale',
             //鹰眼
             'OverView',
             //缩放控件
-            'ToolBar',
+            // 'ToolBar',
+            {
+                name: 'MapType',
+                options: {
+                  visible: true,  // 不设置该属性默认就是 true
+                  defaultType:1,    //底图默认 0位平面2D，1为卫星
+                  onCreated(ins){
+                    // console.log(ins);
+                  },
+                },
+            },
+            {
+                name: 'ToolBar',
+                ruler   : true,
+                options: {
+                  visible: true,  // 不设置该属性默认就是 true
+                  onCreated(ins){
+                    // console.log(ins);
+                  },
+                },
+            },
+            
         ]
 
         // console.log(map)
@@ -40,7 +66,7 @@ export default class extends Component {
             //信息窗可见性
             infoVisible: false,
             //信息窗位置，根据点击marker时 赋值
-            infoPosition:'',
+            infoPosition: '',
             size: {
                 width: 230,
                 height: 230,
@@ -51,27 +77,55 @@ export default class extends Component {
             //控件插件
             plugins,
             //多个Marker
-            markers: homePosition,
+            homeMarkers: homePosition,
+            allHomeMarkers: '',
+            clicked: false,
+            //折线path
+            linePath: linePosition,
+            lineVisible:true,
         }
         //console.log(this.state.markers)
         //标记点触发事件
         this.markersEvents = {
-            created: (allMarkers) => {
+            created: (allHomeMarkers) => {
                 //   console.log('All Markers Instance Are Below');
-                // console.log(allMarkers);
+                // console.log(MapsOption)
+                this.setState({
+                    allHomeMarkers
+                })
             },
             click: (MapsOption, marker) => {
-                // console.log(marker)
                 this.setState({
-                    infoPosition:marker.F.extData.position,
-                    infoVisible: true
+                    infoPosition: marker.F.extData.position,
+                    infoVisible: true,
+                    clicked: true
                 })
                 //   console.log('MapsOptions:');
                 //   console.log(MapsOption);
                 //   console.log('marker:');
                 //   console.log(marker);
             },
-            dragend: (MapsOption, marker) => { /* ... */ }
+            dragend: (MapsOption, marker) => { /* ... */ },
+            mouseover: (MapsOption, marker) => {
+                this.setState({
+                    infoPosition: marker.F.extData.position,
+                    infoVisible: true
+                })
+            },
+            mouseout: (MapsOption, marker) => {
+                if (this.state.clicked) {
+                    this.setState({
+                        infoPosition: marker.F.extData.position,
+                        infoVisible: true
+                    })
+                } else {
+                    this.setState({
+                        infoPosition: marker.F.extData.position,
+                        infoVisible: false
+                    })
+                }
+
+            }
         }
         //信息窗触发事件
         this.windowEvents = {
@@ -84,36 +138,71 @@ export default class extends Component {
             close: () => {
                 // console.log('InfoWindow closed')
                 this.setState({
-                    infoVisible: false
+                    infoVisible: false,
+                    clicked: false
                 })
             },
             change: () => {
                 // console.log('InfoWindow prop changed')
             },
         }
+        //折线触发事件
+        this.lineEvents = {
+            created: (ins) => { 
+                // console.log(ins) 
+            },
+            show: () => { 
+                console.log('line show') 
+            },
+            hide: () => { 
+                console.log('line hide') 
+            },
+            click: () => { 
+                console.log('line clicked') 
+            },
+        }
     }
     //markers的render方法
     renderMarkerLayout(extData) {
-        // if (extData.myIndex === 3){
-        //   return false;
-        // }
         // console.log(extData)
-        return <MarkerContent type='home' />
-    }
-    _homeHandler(){
+        if(extData.isWarningMsg){
+            return <MarkerContent type='home' isWarningMsg={extData.isWarningMsg}/>
+        }else{
+            return <MarkerContent type='home' />
+        }
         
-        this.setState({
-            markerVisible:!this.state.markerVisible
+    }
+    //图标记显示/隐藏
+    _homeHandler() {
+        const { allHomeMarkers } = this.state;
+        allHomeMarkers.map((v, i) => {
+            if (v.Pg.visible == true) {
+                v.hide();
+            } else {
+                v.show()
+            }
         })
-        //console.log(this.state.markerVisible)
+        //    console.log(allHomeMarkers)
+    }
+    //折线显示/隐藏
+    _lineHandler(){
+        this.setState({
+            lineVisible:!this.state.lineVisible
+        })
+    }
+    //搜索
+    _searchHandler(e){
+        // console.log(e.target.value)
+        //从后台拿到数据后动态插入
     }
     render() {
         const {
             plugins, center,
             //useCluster,
-            markers,markerVisible,
+            homeMarkers,
             infoVisible,
-            infoOffset, isCustom, size,infoPosition
+            infoOffset, isCustom, size, infoPosition,
+            linePath,lineVisible
         } = this.state;
         return (
             <Map
@@ -123,17 +212,23 @@ export default class extends Component {
                 // 地图中心点设置
                 center={center}
                 //地图显示的缩放级别
-                zoom={4}
+                zoom={16}
             >
                 <div className={styles.search}>
                     管网编号
                     <Input
                         placeholder='请查询设备编号或设备名称'
+                        onPressEnter={(e)=>this._searchHandler(e)}
+                        onChange={(e)=>this._searchHandler(e)}
                     />
                 </div>
                 <div className={styles.btnGroup}>
-                    <Button onClick={()=>this._homeHandler()}>管网信息</Button>
-                    <Button>管道</Button>
+                    <Button onClick={() => this._homeHandler()}>管网信息</Button>
+                    <Button onClick={() => this._lineHandler()}>管道</Button>
+                    <div className={styles.pipeClass}>
+                        <Button>一级管道</Button>
+                        <Button>二级管道</Button>
+                    </div>
                     <Button>泵站</Button>
                     <Button>蓄水池</Button>
                     <Button>闸阀井</Button>
@@ -151,10 +246,16 @@ export default class extends Component {
                 </InfoWindow>
                 {/* marker */}
                 <Markers
-                    markers={markers}
+                    markers={homeMarkers}
                     render={this.renderMarkerLayout}
                     events={this.markersEvents}
-                    visible={markerVisible}
+                />
+                {/* 折线 */}
+                <Polyline
+                    path={linePath}
+                    events={this.lineEvents}
+                    visible={lineVisible}
+                    // draggable={this.state.draggable}
                 />
 
 

@@ -1,45 +1,55 @@
- .search {
-        height: 40px;
-        line-height: 40px;
-        z-index: 199;
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        height: 40px;
-        line-height: 40px;
-        font-weight: 600;
-        :global {
-            .ant-input {
-                width: 214px;
-                height: 40px;
-                margin-left: 25px;
-            }
+.search {
+    height: 40px;
+    line-height: 40px;
+    z-index: 199;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    height: 40px;
+    line-height: 40px;
+    font-weight: 600;
+    :global {
+        .ant-input {
+            width: 214px;
+            height: 40px;
+            margin-left: 25px;
         }
- }
- .btnGroup {
-        z-index: 199;
-        position: absolute;
-        top: 20px;
-        right: 80px;
-        :global {
-            .ant-btn {
-                border: 0;
-                background: #27BC31;
-                color: #fff;
-                width: 45px;
-                height: 45px;
-                line-height: 20px;
-                margin-left: 7px;
-                font-size: 12px;
-                padding: 0px 5px;
-                overflow: hidden;
-                vertical-align: middle; 
-                white-space: pre-wrap;
-               
-            }
-        }
+    }
 }
-.infoWindow{
-    width: 200px;
-    height: 140px;
+
+.btnGroup {
+    z-index: 199;
+    position: absolute;
+    top: 20px;
+    right: 80px;
+    :global {
+        .ant-btn {
+            border: 0;
+            background: #27BC31;
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            line-height: 20px;
+            margin-left: 7px;
+            font-size: 12px;
+            padding: 0px 5px;
+            overflow: hidden;
+            vertical-align: middle;
+            white-space: pre-wrap;
+        }
+    }
+    .pipeClass{
+        display: none;
+    }
+}
+
+:global {
+    .amap-info-content {
+        overflow: hidden;
+    }
+}
+
+.waring {
+    position: absolute;
+    top: -10px;
 }

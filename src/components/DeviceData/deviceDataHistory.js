@@ -1,4 +1,4 @@
-import React, { Component,Fragment } from 'react';
+import React, { Component} from 'react';
 import { Button, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
 import styles from './common.less';
 import classnames from 'classnames';
