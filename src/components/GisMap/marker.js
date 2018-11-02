@@ -1,6 +1,6 @@
 import React,{ Component} from 'react';
 import { Icon } from 'antd';
-
+import styles from './index.less';
 export default class extends Component {
     constructor(props){
         super(props)
@@ -9,9 +9,13 @@ export default class extends Component {
     
     }
     render(){
-        const {type} = this.props;
+        const {type,isWarningMsg} = this.props;
         return (
-            <Icon type={type} />
+            <div>
+                {isWarningMsg?<Icon type='warning' className={styles.waring}/>:null}
+                <Icon type={type} />
+            </div>
+           
         )
     }
 }

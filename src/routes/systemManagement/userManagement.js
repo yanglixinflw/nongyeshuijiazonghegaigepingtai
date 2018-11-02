@@ -24,7 +24,7 @@ export default class extends React.Component{
         let { userManagement, loading } = this.props;
         let arr = Object.keys(userManagement);
         if (arr.length ==0 ) return userManagement = null;
-        console.log(userManagement)
+        // console.log(userManagement)
         return (
             <div>
                 <Spin size='large' spinning={loading}>
