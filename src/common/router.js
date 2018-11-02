@@ -91,7 +91,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['farmersInfo'], () => import('../routes/messageManagement/farmersInfo')),
     },
     '/messageManagement/warningRules':{
-      component: dynamicWrapper(app, ['deviceWarning'], () => import('../routes/messageManagement/deviceWarning')),
+      component: dynamicWrapper(app, ['warningRules'], () => import('../routes/messageManagement/warningRules')),
     },
     '/system/userManagement':{
       component: dynamicWrapper(app, ['userManagement'], () => import('../routes/systemManagement/userManagement')),
