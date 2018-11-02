@@ -4,33 +4,40 @@ import ysj from '../../assets/ysj.png'
 import up from '../../assets/up.png'
 import play from '../../assets/play.png'
 import pause from '../../assets/pause.png'
-import Video from './video'
+import EZUIPlayer from '../../assets/ezuikit'
 import classnames from 'classnames'
 import { Dropdown, Select } from 'antd'
 const Option = Select.Option
 const mockselectList = [
     {
-        id: 'all', count: 500, name: '全部'
+        id: 'all', count: 10, name: '全部'
     },
     {
-        id: '1', count: 100, name: '井'
+        id: '1', count: 1, name: '井'
     },
     {
-        id: '2', count: 150, name: '田'
+        id: '2', count: 1, name: '田'
     },
     {
-        id: "3", count: 100, name: '水'
+        id: "3", count: 1, name: '水'
     },
     {
-        id: "4", count: 50, name: '家'
+        id: "4", count: 5, name: '家'
     },
     {
-        id: "5", count: 50, name: '库房'
+        id: "5", count: 5, name: '库房'
     },
 ]
 export default class extends Component {
     constructor(props) {
         super(props)
+        // 初始等待队列
+        let initAwit = mockselectList.filter(item => item.id === 'all')
+        let count = initAwit[0].count
+        let awaitArray = []
+        for (let i = 1; i <= count; i++) {
+            awaitArray.push({id:i,value:i})
+        }
         this.state = {
             // 初始显示格数
             monitorNum: 9,
@@ -41,22 +48,29 @@ export default class extends Component {
             // 播放队列
             playArray: [],
             // 等待队列
-            awaitArray: [],
+            awaitArray,
             // 云台速度
             yuntaiSpeed: "慢",
             // 受控视频
-            controlVideo: "",
-            // controlVideo:'1',
+            controlVideoId: "",
+            // controlVideoId:'1',
             // 受控视频播放状态
             controlPlay: true,
             // 下拉选项列表
             selectList: mockselectList
         }
+
     }
     componentDidMount() {
         // 渲染初始化格子
         this.setScreenNum(this.state.monitorNum)
-        this.getAwaitArray()
+        // let { awaitArray } = this.state
+        // 实例化所有的player
+        // let newPlayer = []
+        // awaitArray.map((v, i) => {
+        //     // console.log(v)
+        //     newPlayer.push(new EZUIPlayer(v.toString()))
+        // })
     }
     // 设置画面数量
     setScreenNum(monitorNum) {
@@ -81,29 +95,16 @@ export default class extends Component {
     }
     //显示等待队列
     getAwaitArray(selectId) {
-        const { selectList } = this.state
-        // 初始等待队列
-        let initAwit = selectList.filter(item => item.id === 'all')
+        const {selectList}=this.state
+        let initAwit = selectList.filter(item => item.id === selectId)
         let count = initAwit[0].count
         let awaitArray = []
         for (let i = 1; i <= count; i++) {
-            awaitArray.push(i)
+            awaitArray.push({id:i,value:i})
         }
         this.setState({
             awaitArray
         })
-        // 选择后逻辑
-        if (selectId) {
-            let initAwit = selectList.filter(item => item.id === selectId)
-            let count = initAwit[0].count
-            let awaitArray = []
-            for (let i = 1; i <= count; i++) {
-                awaitArray.push(i)
-            }
-            this.setState({
-                awaitArray
-            })
-        }
     }
     //设置云台速度 
     setSpeed(speed) {
@@ -116,7 +117,7 @@ export default class extends Component {
             playBoxStyle,
             yuntaiSpeed,
             controlPlay,
-            controlVideo,
+            controlVideoId,
             selectList,
             awaitArray
         } = this.state
@@ -141,7 +142,9 @@ export default class extends Component {
                             {monitorArr.map((v, i) => {
                                 // console.log(v)
                                 return (
-                                    <div className={playBoxStyle} key={i}>
+                                    <div className={playBoxStyle} key={i} onClick={()=>{
+                                        console.log(v)
+                                    }}>
                                         {v}
                                     </div>
                                 )
@@ -179,7 +182,8 @@ export default class extends Component {
                                 <div className={styles.operateIcon}>
                                     <Dropdown
                                         overlay={speed}
-                                    // trigger={['click']}
+                                        trigger={['click']}
+                                        // disabled={false}
                                     >
                                         <i className={classnames('dyhsicon', 'dyhs-yuntaisudu', `${styles.picIcon}`, `${styles.speedIcon}`)}>
                                             <span className={styles.speed}>{yuntaiSpeed}</span>
@@ -215,7 +219,7 @@ export default class extends Component {
                                         />
                                     </div>
                                     <div className={styles.operateButton}>
-                                        {controlVideo == '' ? null :
+                                        {controlVideoId == '' ? null :
                                             <img
                                                 src={controlPlay ? pause : play} title={controlPlay ? '暂停' : '播放'}
                                             />
@@ -283,16 +287,19 @@ export default class extends Component {
 
                                 </Select>
                                 <div className={styles.videoList}>
-                                    {awaitArray.length === 0 ? null
-                                        : awaitArray.map((v, i) => {
-                                            return (
-                                                <Video 
-                                                key={i}
-                                                value={v}
-                                                >
-                                                </Video>
-                                            )
-                                        })
+                                    {
+                                        awaitArray.length === 0 ? null :
+                                            awaitArray.map((v, i) => {
+                                                return (
+                                                    <div className={styles.video} key={i}>
+                                                        <div className={styles.mask}>
+                                                        <i className={classnames('dyhsicon', 'dyhs-bofang',`${styles.playButton}`)}></i>
+                                                        </div>
+                                                        <div className={styles.videoTitle}>第个{v.id}摄像头</div>
+                                                    </div>
+                                                )
+
+                                            })
                                     }
                                 </div>
                             </div>

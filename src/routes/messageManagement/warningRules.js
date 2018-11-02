@@ -1,16 +1,16 @@
 import React,{ Component } from 'react';
-import DeviceWarning from '../../components/infoManagement/deviceWarning'
+import WarningRules from '../../components/infoManagement/warningRules'
 import { connect } from 'dva';
 import {Spin} from 'antd'
-@connect(({ deviceWarning, loading }) => ({
-    deviceWarning,
-    loading: loading.models.deviceWarning
+@connect(({ warningRules, loading }) => ({
+    warningRules,
+    loading: loading.models.warningRules
 }))
 export default class extends Component{
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch({
-            type: 'deviceWarning/fetch',
+            type: 'warningRules/fetch',
             payload:{
                 "pageIndex": 0,
                 "pageSize": 10
@@ -18,13 +18,13 @@ export default class extends Component{
         });//type来选择请求的接口，payload为传给后台的参数
     }
     render(){
-        let { deviceWarning,loading } = this.props;
-        let arr = Object.keys(deviceWarning);
-        if (arr.length ==0) return deviceWarning = null;
+        let { warningRules,loading } = this.props;
+        let arr = Object.keys(warningRules);
+        if (arr.length ==0) return warningRules = null;
         return(
             <React.Fragment>
                 <Spin size='large' spinning={loading}>
-                    <DeviceWarning
+                    <WarningRules
                         {...this.props}
                     /> 
                 </Spin>  
