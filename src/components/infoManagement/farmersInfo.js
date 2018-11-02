@@ -1,12 +1,16 @@
 import React,{Component} from 'react';
 import styles from './farmersInfo.less';
-import { Input, Button, Form, Cascader, Table, Modal} from 'antd';
+import { Input, Button, Form, Select, Cascader, Table, Modal} from 'antd';
 //ip地址
 const envNet='http://192.168.30.127:88';
 //翻页调用
 const dataUrl=`${envNet}/api/PeasantMgr/list`;
 //删除调用
 const delUrl=`${envNet}/api/PeasantMgr/delete`;
+//添加调用
+const addUrl=`${envNet}/api/PeasantMgr/add`
+//获取地址
+const areaUrl=`${envNet}/api/Area/list`
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -49,14 +53,36 @@ export default class extends Component{
             idCard:'',
             //删除弹框显示的内容
             delModalText: '删除后信息将无法恢复，是否确认删除。',
-            //删除的弹出框是否显示
+            //删除的弹出框显示
             delvisible: false,
-            //修改用户信息的弹出框是否显示
+            //修改用户信息的弹出框显示
             editvisible: false,
+            //添加用户信息的弹出框显示
+            addvisible:false,
+            //归属片区列表
+            areaId:[]
           };
     }
     componentDidMount() {
         this._getTableDatas(this.state.title, this.state.data);
+        return (
+            fetch(areaUrl, {
+                ...postOption,
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        if (v.ret == 1) {
+                            console.log(v)
+                            let roleList = v.data
+                            this.setState({
+                                roleList
+                            })
+                        }
+                    })
+            }).catch((err) => {
+                console.log(err)
+            })
+        )
     }
     _getTableDatas(title, data) {
         let columns = [];
@@ -133,7 +159,7 @@ export default class extends Component{
       });
     }
     //删除的弹框点击确定
-    delHandleOk = () => {
+    delHandleOk(){
         let {idCard,title}=this.state;
         return fetch(delUrl,{
             ...postOption,
@@ -184,36 +210,108 @@ export default class extends Component{
         })
     }
     //删除的弹框点击取消
-    delHandleCancel = () => {
+    delHandleCancel(){
       this.setState({
         delvisible: false,
       });
     }
     //修改用户信息的弹出框
-    showModal = () => {
+    showModal(){
         this.setState({
           visible: true,
         });
     }
     //修改用户信息的弹出框点击确定
-    handleOk = () => {
-    this.setState({
-        ModalText: '',
-        confirmLoading: true,
-    });
-    setTimeout(() => {
+    handleOk (){
         this.setState({
-        visible: false,
-        confirmLoading: false,
+            ModalText: '',
+            confirmLoading: true,
         });
-    }, 2000);
     }
     //修改用户信息的弹出框点击取消
     handleCancel = () => {
-    console.log('Clicked cancel button');
-    this.setState({
-        visible: false,
-    });
+        console.log('Clicked cancel button');
+        this.setState({
+            visible: false,
+        });
+    }
+    //添加用户信息的弹出框
+    add(){
+        this.setState({
+          addvisible: true,
+        });
+    }
+    addhandleOk(){
+        const { title } = this.state
+        const form = this.addForm.props.form;
+        form.validateFields((err, values) => {
+            if (err) {
+                return;
+            }
+            console.log(values)
+            return fetch(addUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "departmentId": values.department,
+                    "password": values.passWord,
+                    "userType": 1,
+                    "loginName": values.loginName,
+                    "realName": values.realName,
+                    "mobilePhone": values.mobilePhone,
+                    "sex": values.sex
+
+                })
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        if (v.ret == 1) {
+                            return fetch(dataUrl, {
+                                ...postOption,
+                                body: JSON.stringify({
+                                    "name": "",
+                                    "mobile": "",
+                                    "pageIndex": 0,
+                                    "pageSize": 10
+                                })
+                            }).then((res) => {
+                                Promise.resolve(res.json())
+                                    .then((v) => {
+                                        if (v.re == 1) {
+                                            let items = v.data.items;
+                                            let itemCount = v.data.itemCount;
+                                            // 给每一条数据添加key
+                                            items.map((v, i) => {
+                                                v.key = i
+                                            })
+                                            this.setState({
+                                                itemCount,
+                                                items,
+                                                addVisible: false
+                                            });
+                                            this._getTableData(title, items);
+                                            form.resetFields();
+                                            message.success('添加成功', 2);
+                                        } else {
+                                            this.setState({
+                                                items: []
+                                            })
+                                        }
+                                    })
+                            })
+                        } else {
+                            message.error(v.msg, 2);
+                        }
+                    })
+            }).catch((err) => {
+                console.log(err)
+            })
+        })
+    }
+    addhandleCancel () {
+        console.log('Clicked cancel button');
+        this.setState({
+            addvisible: false,
+        });
     }
     // 搜索功能
     _searchTableData() {
@@ -300,7 +398,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { delvisible,columns, tableDatas,itemCount,delModalText} = this.state;
+        const { delvisible,columns, tableDatas,itemCount,delModalText,addvisible} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -335,6 +433,7 @@ export default class extends Component{
                         <Button
                             icon='plus'
                             className={styles.fnButton}
+                            onClick={() =>this.add()}
                         >
                             添加
                         </Button>
@@ -353,6 +452,13 @@ export default class extends Component{
                     pagination={paginationProps}
                     dataSource={tableDatas}
                     // scroll={{ x: 1300 }}
+                />
+                <AddForm
+                    wrappedComponentRef={(addForm) => this.addForm = addForm}
+                    visible={addvisible}
+                    onCancel={() => this.addhandleCancel()}
+                    onOk={() => this.addhandleOk()}
+                    // {...{ roleList, deptList }}
                 />
               <Modal 
                     title="删除"
@@ -435,6 +541,76 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                 </Form>
+            )
+        }
+    }
+)
+const formItemLayout = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 16 },
+};
+//添加弹窗表单
+const AddForm = Form.create()(
+    class extends React.Component {
+        render() {
+            const { visible, onCancel, onOk, form} = this.props;
+            const { getFieldDecorator } = form;
+            return (
+                <Modal
+                    //className={styles.addModal}
+                    visible={visible}
+                    title="添加农户信息"
+                    onCancel={onCancel}
+                    onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
+                >
+                    <Form>
+                        <Form.Item {...formItemLayout} label='姓名'>
+                            {getFieldDecorator('realName', {
+                                initialValue: '',
+                                rules: [{ required: true, message: '请输入姓名' },],
+                            })(
+                                <Input
+                                    placeholder='请输入农户的姓名'
+                                    autoComplete='off'
+                                    type='text'
+                                />
+                            )}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="手机号">
+                            {getFieldDecorator('mobilePhone', {
+                                initialValue: '',
+                                rules: [{ required: true, pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
+                            })(
+                                <Input
+                                    placeholder='请输入农户的手机号码'
+                                    autoComplete='off'
+                                />
+                            )}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="身份证">
+                            {getFieldDecorator('idCard', {
+                                initialValue: '',
+                                rules: [{ required: true, pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
+                            })(
+                                <Input
+                                    placeholder='请输入农户的身份证号'
+                                    autoComplete='off'
+                                />
+                            )}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label='归属片区'>
+                            {getFieldDecorator('areaId', {
+                                initialValue: '请选择归属片区',
+                            })(
+                                <Select>
+                                    <Option key="key"></Option>
+                                </Select>
+                                )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
             )
         }
     }

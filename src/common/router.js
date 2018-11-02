@@ -87,11 +87,14 @@ export const getRouterData = app => {
     '/messageManagement/deviceInformation':{
       component: dynamicWrapper(app, ['deviceInformation'], () => import('../routes/messageManagement/deviceInfo')),
     },
+    '/deviceInformation/warningRules:id':{
+      component: dynamicWrapper(app, [], () => import('../routes/messageManagement/deviceInfo')),
+    },
     '/messageManagement/farmerInfor':{
       component: dynamicWrapper(app, ['farmersInfo'], () => import('../routes/messageManagement/farmersInfo')),
     },
     '/messageManagement/warningRules':{
-      component: dynamicWrapper(app, ['deviceWarning'], () => import('../routes/messageManagement/deviceWarning')),
+      component: dynamicWrapper(app, ['warningRules'], () => import('../routes/messageManagement/warningRules')),
     },
     '/system/userManagement':{
       component: dynamicWrapper(app, ['userManagement'], () => import('../routes/systemManagement/userManagement')),

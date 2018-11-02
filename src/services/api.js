@@ -82,7 +82,7 @@ export function getInstallAddrList(){
   })
 }
 //预警规则列表
-export function getDeviceWarning(params){
+export function getWarningRules(params){
   return request(`${envNet}/api/DeviceWaringRule/ruleList`,{
     ...postOption,
     body:JSON.stringify(
@@ -93,6 +93,15 @@ export function getDeviceWarning(params){
 //预警事件记录
 export function getWarningRecords(params){
   return request(`${envNet}/api/DeviceWaringRule/eventList`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
+// 设备类型列表
+export function getDeviceTypeList(params){
+  return request(`${envNet}/api/DeviceType/list`,{
     ...postOption,
     body:JSON.stringify(
       params

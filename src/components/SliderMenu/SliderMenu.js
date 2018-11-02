@@ -6,6 +6,7 @@ import styles from './index.less';
 import { urlToList } from '../_utils/pathTools';
 import classnames from 'classnames'
 import headerlogo from '../../assets/headerlogo.png'
+import menuBg from '../../assets/menubg.png'
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -232,10 +233,14 @@ export default class SiderMenu extends PureComponent {
           onOpenChange={this.handleOpenChange}
           // selectedKeys={selectedKeys}
           className={styles.menu}
-          style={{ padding: '16px 0', width: '100%', background: '#0A0C1D' }}
+          style={{  width: '100%', background: '#0A0C1D' }}
         >
           {this.getNavMenuItems(this.menus)}
+          
         </Menu>
+        <div className={styles.siderFoot}>
+          <img src={menuBg}></img>
+        </div>
       </Sider>
     );
   }

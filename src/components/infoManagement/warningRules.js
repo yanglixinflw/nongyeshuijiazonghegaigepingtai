@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import styles from "./deviceWarning.less"
+import styles from "./warningRules.less"
 import { Input, Button, Form, Cascader, Table, Modal} from 'antd';
 //ip地址
 const envNet='http://192.168.30.127:88';
@@ -22,13 +22,14 @@ const tableTitle=[
 export default class extends Component{
     constructor(props){
         super(props)
-        const {deviceWarning}=props;
+        const {warningRules}=props;
+        // console.log(this.props)
         this.state = {
             //表头数据
             tableTitle,
             title:tableTitle,
-            itemCount:deviceWarning.data.data.itemCount,//总数据数
-            data:deviceWarning.data.data.items,//表格数据源
+            itemCount:warningRules.data.data.itemCount,//总数据数
+            data:warningRules.data.data.items,//表格数据源
             //表的每一列
             columns: [],
             //搜索框初始值

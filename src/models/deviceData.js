@@ -28,7 +28,7 @@ export default {
           return { ...state } 
         },
         clear(){
-          return 1
+          return {}
         }
       }
 }

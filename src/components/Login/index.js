@@ -9,7 +9,10 @@ export default class extends React.Component {
     constructor(props){
         super(props)
     }
-    _loginSumbit() {
+    _loginSumbit(e) {
+        // console.log(e)
+        // 阻止默认行为
+        e.preventDefault()
         // 登录功能回交route
         let {loginFunc} = this.props
         const form = this.loginForm.props.form;
@@ -42,8 +45,8 @@ export default class extends React.Component {
                                 <div className={styles.loginTitle}>登录</div>
                                 <LoginForm
                                     wrappedComponentRef={(loginForm) => this.loginForm = loginForm}
-                                    submitHandler={() => {
-                                        this._loginSumbit()
+                                    submitHandler={(e) => {
+                                        this._loginSumbit(e)
                                     }}
                                     errorMassage={errorMassage}
                                     {...CAPTCHA}
@@ -201,7 +204,9 @@ const LoginForm = Form.create()(
                         </FormItem>
                         <FormItem style={{ marginBottom: 0, marginLeft: 50, color: 'white' }}>
                             {
-                                errorMassage === '' ? null : <span>{errorMassage}</span>
+                                errorMassage === '' ? null : 
+                                <span className={errorMassage === '' ? null : styles.shake}>{errorMassage}
+                                </span>
                             }
                             {/* 显示区域 */}
                         </FormItem>
