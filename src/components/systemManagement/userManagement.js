@@ -26,7 +26,9 @@ let postOption = {
 };
 // 全部title
 const tableTitle = [
-    '账号','用户ID', '姓名', '性别', '角色', '手机号', '部门', '添加日期'
+    '账号',
+    // '用户ID', 
+    '姓名', '性别', '角色', '手机号', '部门', '添加日期'
 ];
 // 全局提示样式
 message.config({
@@ -110,12 +112,12 @@ export default class extends Component {
         let columns = [];
         let dataIndex = [
             'loginName',
-            'userId',
+            // 'userId',
             'realName',
             'sex',
             'roleName',
             'mobilePhone',
-            'department',
+            'departmentName',
             'createTime'
         ]
         title.map((v, i) => {
@@ -161,9 +163,8 @@ export default class extends Component {
                 sex:v.sex,
                 roleName: v.roleName,
                 mobilePhone: v.mobilePhone,
-                department: v.department,
+                departmentName: v.departmentName,
                 createTime: v.createTime,
-                userId: v.userId,
                 key: i,
             });
         })
@@ -171,6 +172,7 @@ export default class extends Component {
             columns,
             tableData,
         });
+        console.log(columns[4])
     }
     //搜索功能
     _searchTableData() {
@@ -186,7 +188,6 @@ export default class extends Component {
                 body: JSON.stringify({
                     "name": values.realName,
                     "mobile": values.mobilePhone,
-                    "roleId": 0,
                     "pageIndex": 0,
                     "pageSize": 10
                 })
@@ -261,63 +262,63 @@ export default class extends Component {
                 return;
             }
             console.log(values)
-            // return fetch(addUrl, {
-            //     ...postOption,
-            //     body: JSON.stringify({
-            //         "departmentId": values.department,
-            //         "password": values.passWord,
-            //         "loginName": values.loginName,
-            //         "realName": values.realName,
-            //         "mobilePhone": values.mobilePhone,
-            //         "sex": values.sex,
-            //         "roleId":values.roleName
+            return fetch(addUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "departmentId": values.department,
+                    "password": values.passWord,
+                    "loginName": values.loginName,
+                    "realName": values.realName,
+                    "mobilePhone": values.mobilePhone,
+                    "sex": values.sex,
+                    "roleIds":values.roleName
                     
-            //     })
-            // }).then((res) => {
-            //     Promise.resolve(res.json())
-            //         .then((v) => {
-            //             if (v.ret == 1) {
-            //                 return fetch(dataUrl, {
-            //                     ...postOption,
-            //                     body: JSON.stringify({
-            //                         "name": "",
-            //                         "mobile": "",
-            //                         "pageIndex": 0,
-            //                         "pageSize": 10
-            //                     })
-            //                 }).then((res) => {
-            //                     Promise.resolve(res.json())
-            //                         .then((v) => {
-            //                             if (v.ret== 1) {
-            //                                 console.log(v)
-            //                                 let items = v.data.items;
-            //                                 let itemCount = v.data.itemCount;
-            //                                 // 给每一条数据添加key
-            //                                 items.map((v, i) => {
-            //                                     v.key = i
-            //                                 })
-            //                                 this.setState({
-            //                                     itemCount,
-            //                                     items,
-            //                                     addVisible: false
-            //                                 });
-            //                                 this._getTableData(title, items);
-            //                                 form.resetFields();
-            //                                 message.success('添加成功', 2);
-            //                             } else {
-            //                                 this.setState({
-            //                                     items: []
-            //                                 })
-            //                             }
-            //                         })
-            //                 })
-            //             } else {
-            //                 message.error(v.msg, 2);
-            //             }
-            //         })
-            // }).catch((err) => {
-            //     console.log(err)
-            // })
+                })
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        if (v.ret == 1) {
+                            return fetch(dataUrl, {
+                                ...postOption,
+                                body: JSON.stringify({
+                                    "name": "",
+                                    "mobile": "",
+                                    "pageIndex": 0,
+                                    "pageSize": 10
+                                })
+                            }).then((res) => {
+                                Promise.resolve(res.json())
+                                    .then((v) => {
+                                        if (v.ret== 1) {
+                                            console.log(v)
+                                            let items = v.data.items;
+                                            let itemCount = v.data.itemCount;
+                                            // 给每一条数据添加key
+                                            items.map((v, i) => {
+                                                v.key = i
+                                            })
+                                            this.setState({
+                                                itemCount,
+                                                items,
+                                                addVisible: false
+                                            });
+                                            this._getTableData(title, items);
+                                            form.resetFields();
+                                            message.success('添加成功', 2);
+                                        } else {
+                                            this.setState({
+                                                items: []
+                                            })
+                                        }
+                                    })
+                            })
+                        } else {
+                            message.error(v.msg, 2);
+                        }
+                    })
+            }).catch((err) => {
+                console.log(err)
+            })
         })
     }
     // 添加取消
@@ -429,10 +430,12 @@ export default class extends Component {
     // 确认删除
     _deleteOkHandler() {
         let { userId, title } = this.state;
+        let userIds=[];
+        userIds.push(userId);
         return fetch(deleteUrl, {
             ...postOption,
             body: JSON.stringify({
-                userId
+                userIds
             })
         }).then((res) => {
             Promise.resolve(res.json())
@@ -441,9 +444,6 @@ export default class extends Component {
                         return fetch(dataUrl, {
                             ...postOption,
                             body: JSON.stringify({
-                                "name": '',
-                                "mobile": '',
-                                "roleId": 1,
                                 "pageIndex": 0,
                                 "pageSize": 10
                             })
@@ -492,9 +492,6 @@ export default class extends Component {
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "name": '',
-                "mobile": '',
-                "roleId": 0,
                 pageIndex,
                 "pageSize": 10
             })
@@ -630,12 +627,13 @@ const SearchForm = Form.create()(
                     </Form.Item>
                     <Form.Item>
                         {getFieldDecorator('roleName', {
-                            initialValue: '全部角色'
+                            //initialValue: '全部角色'
                         })
                             (
                             <Select
-                            //placeholder='全部角色'
+                                placeholder='全部角色'
                             >
+                                <Option value=''>全部角色</Option>
                                 {roleList.map((v, i) => {
                                     return (
                                         <Option key={i} value={v.id}>{v.name}</Option>

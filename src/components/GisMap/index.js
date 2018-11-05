@@ -61,14 +61,14 @@ export default class extends Component {
             //标记可见性
             markerVisible: true,
             //信息窗位置偏移量
-            infoOffset: [0, -31],
+            infoOffset: [0, -21],
             //信息窗可见性
             infoVisible: false,
             //信息窗位置，根据点击marker时 赋值
             infoPosition: '',
             size: {
-                width: 230,
-                height: 230,
+                width: 284,
+                height: 169
             },
             isCustom: false,
             // 地图中心点
@@ -102,7 +102,16 @@ export default class extends Component {
                 //   console.log('MapsOptions:');
                 //   console.log(MapsOption);
                 //   console.log('marker:');
-                //   console.log(marker);
+                 
+                marker.render=()=>{
+                    return(
+                        <div className={styles.focused}>
+                            <div className={styles.focusedAnimation}></div>
+                        </div>
+                    )
+                    
+                }
+                console.log(marker.render());
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
@@ -164,15 +173,11 @@ export default class extends Component {
     //markers的render方法
     renderMarkerLayout(extData) {
         // console.log(extData)
-        if(extData.isWarningMsg){
-            return <MarkerContent type='home' isWarningMsg={extData.isWarningMsg}/>
-        }else{
-            return <MarkerContent type='home' />
-        }
-        
+        return <MarkerContent markers={extData}/>
+    
     }
     //图标记显示/隐藏
-    _homeHandler() {
+    _cameraHandler() {
         const { allHomeMarkers } = this.state;
         allHomeMarkers.map((v, i) => {
             if (v.Pg.visible == true) {
@@ -221,7 +226,7 @@ export default class extends Component {
                     />
                 </div>
                 <div className={styles.btnGroup}>
-                    <Button onClick={() => this._homeHandler()}>
+                    <Button onClick={() => this._cameraHandler()}>
                         <i className={styles.camera}></i>
                         <span>摄像头</span>
                     </Button>
