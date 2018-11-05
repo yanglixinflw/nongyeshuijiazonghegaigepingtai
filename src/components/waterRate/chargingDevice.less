@@ -17,7 +17,7 @@
 }
 .searchForm{
     padding: 15px 20px;
-    height: 74px;
+    height: 150px;;
     margin: 20px 38px;
     background: #1c2241;
     display: flex;
@@ -31,7 +31,11 @@
             color: #4A5A72;
             // margin-right: 20px;
             float: left;
-        } 
+        }
+        // .ant-cascader-picker{
+        //     width: 163px;
+        // }
+        
     }
     .buttonGroup{
         display: flex;
@@ -53,28 +57,20 @@
 }
 .option{
     display: flex;
-    justify-content: space-around;
+    align-content: space-around;
+    flex-wrap: wrap;
     .edit{
         margin-right: 10px;
+        margin-top: 10px;
+        background: #1C2241;
         border: 1px solid rgba(232,120,72,1)!important;
         color:rgba(232,120,72,1)!important;
-        background: #1C2241;
     }
-    .set{
+    .clear{
+        margin-top: 10px;
         margin-right: 10px;
-        background: #1C2241;
-        border: 1px solid #327DF4!important;
-        color: #327DF4!important;
-    }
-    .stop{
-        margin-right: 10px;
-        border: 1px solid rgba(255,80,98,1)!important;
-        color:rgba(255,80,98,1)!important;
-        background: #1C2241;
-    }
-    .delete{
-        border: 1px solid rgba(255,80,98,1)!important;
-        color:rgba(255,80,98,1)!important;
+        border: 1px solid #ff5062!important;
+        color: #ff5062!important;
         background: #1C2241;
     }
 }
@@ -220,6 +216,24 @@
                 background: #151836;
                 border: 1px solid #637890;
                 color: #637890;
+            }
+        }
+    }
+}
+@media(max-width:1275px) {
+    .searchForm {
+        height: 74*3px; 
+    }
+}
+
+@media(max-width:1137px) {
+    .searchForm {
+        height: 74*3px;
+        :global {
+            .ant-input,.ant-cascader-picker,.ant-form-item{
+                min-width: 115px;
+                width: 115px;
+                // margin-right: 20px;
             }
         }
     }

@@ -35,20 +35,21 @@ const sourceColumns = [
     { title: "设备型号", dataIndex: "deviceTypeName", number: 1 },
     { title: "设备名称", dataIndex: "name", number: 2 },
     { title: "设备安装地", dataIndex: "installAddr", number: 3 },
-    { title: "地理坐标", dataIndex: "IP", number: 4 },
-    { title: "启用日期", dataIndex: "enableTime", number: 5 },
-    { title: "运维公司", dataIndex: "opsCompony", number: 6 },
-    { title: "管护人员", dataIndex: "managerName", number: 7 },
-    { title: "网关地址", dataIndex: "gatewayAddr", number: 8 },
-    { title: "出厂编号", dataIndex: "factoryNumber", number: 9 },
-    { title: "预警规则", dataIndex: "warningRules", number: 10 },
-    { title: "更新时间", dataIndex: "lastRequestTime", number: 11 }
+    { title: "关联建筑物", dataIndex: "relatedBuilding", number: 4},
+    { title: "地理坐标", dataIndex: "IP", number:5 },
+    { title: "启用日期", dataIndex: "enableTime", number: 6 },
+    { title: "运维公司", dataIndex: "opsCompony", number: 7 },
+    { title: "管护人员", dataIndex: "managerName", number: 8 },
+    { title: "网关地址", dataIndex: "gatewayAddr", number: 9 },
+    { title: "出厂编号", dataIndex: "factoryNumber", number: 10 },
+    { title: "预警规则", dataIndex: "warningRules", number: 11 },
+    { title: "更新时间", dataIndex: "lastRequestTime", number: 12 }
 ]
 export default class extends Component {
     constructor(props) {
         super(props)
         const { DeviceTypeList,InstallList } = this.props
-        console.log(InstallList.data.data)
+        // console.log(InstallList.data.data)
         this.state = {
             // 显示设置可见
             showSetVisible: false,
@@ -103,6 +104,7 @@ export default class extends Component {
             align: 'center',
             fixed: 'right',
             width: 410,
+            className:`${styles.action}`,
             render: (record) => {
                 return (
                     <span>
@@ -140,6 +142,7 @@ export default class extends Component {
         let tableData = []
         // 表单数据
         data.map((v, i) => {
+            console.log(v)
             tableData.push({
                 deviceId: v.deviceId,
                 deviceTypeName: v.deviceTypeName,
@@ -151,6 +154,7 @@ export default class extends Component {
                 managerName: v.managerName,
                 gatewayAddr: v.gatewayAddr,
                 factoryNumber: v.factoryNumber,
+                relatedBuilding:v.relatedBuilding,
                 warningRules: v.warningRules,
                 lastRequestTime: v.lastRequestTime,
                 key: i
@@ -170,9 +174,36 @@ export default class extends Component {
     }
     // 翻页
     _pageChange(page) {
-        let { searchValue } = this.state
+        let { searchValue ,filterColumns} = this.state
         searchValue.pageIndex = page - 1
         // console.log(searchValue)
+        return fetch(getDataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                ...searchValue
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v);
+                        // 设置页面显示的元素
+                        let items = v.data.items;
+                        let itemCount = v.data.itemCount;
+                        //添加key
+                        items.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            itemCount,
+                            tableData:items
+                        })
+                        this._getTableData(items, filterColumns);
+                    }
+                })
+        }).catch((err) => {
+            console.log(err)
+        })
     }
     // 重置搜索表单
     _resetForm() {

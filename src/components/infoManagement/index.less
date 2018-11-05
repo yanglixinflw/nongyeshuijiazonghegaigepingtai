@@ -98,6 +98,8 @@
 // 表格单元最小宽度
 .tbw{
     min-width: 100px;
+    height: 52px !important;
+    padding: 160px;
 }
 .searchForm{
     :global {
@@ -246,10 +248,22 @@
         }
     }
 }
-
+.action{
+    padding:0px  0px !important;
+    :global{
+        .ant-btn{
+            padding:0px 6px !important;
+        }
+    }
+}
 .scan {
     color: #19cf86 !important;
     border: 1px solid #19CF86 !important;
+    :global{
+        .ant-btn{
+
+        }
+    }
 }
 
 .warn {

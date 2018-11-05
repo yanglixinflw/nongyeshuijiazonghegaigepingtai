@@ -8,9 +8,9 @@ const dataUrl=`${envNet}/api/PeasantMgr/list`;
 //删除调用
 const delUrl=`${envNet}/api/PeasantMgr/delete`;
 //添加调用
-const addUrl=`${envNet}/api/PeasantMgr/add`
+const addUrl=`${envNet}/api/PeasantMgr/add`;
 //获取地址
-const areaUrl=`${envNet}/api/Area/list`
+const areaUrl=`${envNet}/api/Area/list`;
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -60,7 +60,7 @@ export default class extends Component{
             //添加用户信息的弹出框显示
             addvisible:false,
             //归属片区列表
-            areaId:[]
+            areaList:[]
           };
     }
     componentDidMount() {
@@ -71,11 +71,11 @@ export default class extends Component{
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
+                        console.log(v)
                         if (v.ret == 1) {
-                            console.log(v)
-                            let roleList = v.data
+                            let areaList = v.data
                             this.setState({
-                                roleList
+                                areaList
                             })
                         }
                     })
@@ -248,18 +248,13 @@ export default class extends Component{
             if (err) {
                 return;
             }
-            console.log(values)
             return fetch(addUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "departmentId": values.department,
-                    "password": values.passWord,
-                    "userType": 1,
-                    "loginName": values.loginName,
                     "realName": values.realName,
                     "mobilePhone": values.mobilePhone,
-                    "sex": values.sex
-
+                    "idCard":values.idCard,
+                    "areaId":values.areaId
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
@@ -270,6 +265,7 @@ export default class extends Component{
                                 body: JSON.stringify({
                                     "name": "",
                                     "mobile": "",
+                                    "roleId": 0,
                                     "pageIndex": 0,
                                     "pageSize": 10
                                 })
@@ -286,7 +282,7 @@ export default class extends Component{
                                             this.setState({
                                                 itemCount,
                                                 items,
-                                                addVisible: false
+                                                addvisible: false
                                             });
                                             this._getTableData(title, items);
                                             form.resetFields();
@@ -398,7 +394,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { delvisible,columns, tableDatas,itemCount,delModalText,addvisible} = this.state;
+        const { delvisible,columns, tableDatas,itemCount,delModalText,addvisible,areaList} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -458,9 +454,9 @@ export default class extends Component{
                     visible={addvisible}
                     onCancel={() => this.addhandleCancel()}
                     onOk={() => this.addhandleOk()}
-                    // {...{ roleList, deptList }}
+                    {...{ areaList }}
                 />
-              <Modal 
+                <Modal 
                     title="删除"
                     delvisible={delvisible}
                     onOk={this.delHandleOk}
@@ -468,9 +464,9 @@ export default class extends Component{
                     okText="确认"
                     cancelText="取消"
                     centered//居中显示
-              >
-                <p>{delModalText}</p>
-              </Modal>
+                >
+                    <p>{delModalText}</p>
+                </Modal>
             </React.Fragment>
         )
     }
@@ -553,8 +549,11 @@ const formItemLayout = {
 const AddForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, onCancel, onOk, form} = this.props;
+            const { visible, onCancel, onOk, form,areaList} = this.props;
             const { getFieldDecorator } = form;
+            if (areaList.length == 0) {
+                return null
+            }
             return (
                 <Modal
                     //className={styles.addModal}
@@ -569,7 +568,7 @@ const AddForm = Form.create()(
                         <Form.Item {...formItemLayout} label='姓名'>
                             {getFieldDecorator('realName', {
                                 initialValue: '',
-                                rules: [{ required: true, message: '请输入姓名' },],
+                                rules: [{ required: true, message: '姓名不能为空' },],
                             })(
                                 <Input
                                     placeholder='请输入农户的姓名'
@@ -592,7 +591,9 @@ const AddForm = Form.create()(
                         <Form.Item {...formItemLayout} label="身份证">
                             {getFieldDecorator('idCard', {
                                 initialValue: '',
-                                rules: [{ required: true, pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
+                                rules: [
+                                    { required: true, pattern:'^(^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$)|(^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])((\\d{4})|\\d{3}[Xx])$)$',message:"请输入正确的身份证号"}
+                                ],
                             })(
                                 <Input
                                     placeholder='请输入农户的身份证号'
@@ -605,7 +606,12 @@ const AddForm = Form.create()(
                                 initialValue: '请选择归属片区',
                             })(
                                 <Select>
-                                    <Option key="key"></Option>
+                                    {areaList.map((v, i) => {
+                                        return (
+                                            <Option key={i} value={v.areaId}>{v.areaName}</Option>
+                                        )
+
+                                    })}
                                 </Select>
                                 )}
                         </Form.Item>

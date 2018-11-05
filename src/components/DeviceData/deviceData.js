@@ -1,6 +1,6 @@
 import React, { Component ,Fragment} from 'react';
 import styles from './common.less';
-import { Input, Button, Form, Cascader, Table, Checkbox, Modal, Row, Col } from 'antd';
+import { Input, Button, Form, Select, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
@@ -15,7 +15,7 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 }
-
+const Option=Select.Option
 export default class extends Component {
     constructor(props) {
         super(props)
@@ -349,13 +349,13 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('installAddrId', {
-                            initialValue: 0
-                        })
+                        {getFieldDecorator('installAddrId')
                             (
-                            <Cascader
+                            <Select
                                 placeholder='设备安装地'
-                            />
+                            >
+                            <Option value=''>全部</Option>
+                            </Select>
                             )
                         }
                     </Form.Item>

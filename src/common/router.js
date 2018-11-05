@@ -117,6 +117,9 @@ export const getRouterData = app => {
     '/rent/groupAccount':{
       component: dynamicWrapper(app, [], () => import('../routes/waterRate/groupAccount')),
     },
+    '/rent/device':{
+      component: dynamicWrapper(app, [], () => import('../routes/waterRate/chargingDevice')),
+    },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     // },
