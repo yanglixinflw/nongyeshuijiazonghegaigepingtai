@@ -51,6 +51,7 @@ export default class extends Component{
                 // 给表头添加字段名 必须一一对应
                 dataIndex: v.index,
                 align: 'center',
+                className: `${styles.tbw}`
             })
         })
         //把数据都push到tableDatas里
@@ -240,11 +241,12 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('state', {initialValue: ''})
+                        {getFieldDecorator('state', {initialValue: 'state'})
                             (
-                            <Cascader
-                                placeholder='所有状态'
-                            />
+                            <Select>
+                                <Option value="state">所有状态</Option>
+                                <Option value=""></Option>
+                            </Select>
                             )
                         }
                     </Form.Item>

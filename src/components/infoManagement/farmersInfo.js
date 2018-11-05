@@ -1,8 +1,10 @@
 import React,{Component} from 'react';
 import styles from './farmersInfo.less';
-import { Input, Button, Form, Select,Cascader, Table, Modal,message} from 'antd';
+import { Input, Button, Form, Select,Table, Modal,message} from 'antd';
 //ip地址
 const envNet='http://192.168.30.127:88';
+//生产环境
+// const envNet='';
 //翻页调用
 const dataUrl=`${envNet}/api/PeasantMgr/list`;
 //删除调用
@@ -29,6 +31,7 @@ const tableTitle=[
     {index:"userType",item:"用户类型"},
     {index:"orgId",item:"所属机构"}
 ]
+const { Option } = Select;
 export default class extends Component{
     constructor(props) {
         super(props)
@@ -92,6 +95,7 @@ export default class extends Component{
                 // 给表头添加字段名 必须一一对应
                 dataIndex: v.index,
                 align: 'center',
+                className: `${styles.tbw}`
             })
         })
         //操作列
@@ -449,7 +453,7 @@ export default class extends Component{
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableDatas}
-                    // scroll={{ x: 1300 }}
+                    scroll={{ x: 1000}}
                 />
                 <AddForm
                     wrappedComponentRef={(addForm) => this.addForm = addForm}
@@ -519,22 +523,23 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('areaId', {})
+                        {getFieldDecorator('areaId', {initialValue:'area'})
                             (
-                            <Cascader
-                                placeholder='归属地区'
-                                type='text'
-                            />
+                            <Select>
+                                <Option value="area">归属地区</Option>
+                                <Option value="all">全部</Option>
+                            </Select>
                             )
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('areaId', {})
+                        {getFieldDecorator('state', {initialValue:'all'})
                             (
-                            <Cascader
-                                placeholder='全部状态'
-                                type='text'
-                            />
+                            <Select>
+                                <Option value="all">全部状态</Option>
+                                <Option value="jihuo">激活</Option>
+                                <Option value="weijihuo">未激活</Option>
+                            </Select>
                             )
                         }
                     </Form.Item>

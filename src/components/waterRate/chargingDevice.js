@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import styles from "./chargingDevice.less"
-import { Input, Button, Form, Cascader, Table, Divider,Select,} from 'antd';
+import { Input, Button, Form, Cascader, Table, Divider,Select} from 'antd';
+//表头
 const tableTitle=[
     {index:"id",item:"设备ID"},
     {index:"type",item:"设备型号"},
@@ -11,6 +12,7 @@ const tableTitle=[
     {index:"plantType",item:"种植类型"},
     {index:"updateTime",item:"更新时间"},
 ]
+//假数据
 const data=[
     {id:"435676651",type:"慧水超声波表",name:" 宁圩村1#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"},
     {id:"435676652",type:"慧水超声波表",name:" 宁圩村2#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"},
@@ -22,6 +24,7 @@ const data=[
     {id:"435676658",type:"慧水超声波表",name:" 宁圩村8#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"},
     {id:"435676659",type:"慧水超声波表",name:" 宁圩村9#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"}
 ]
+const { Option }=Select
 export default class extends Component{
     constructor(props) {
         super(props)
@@ -51,6 +54,7 @@ export default class extends Component{
                 // 给表头添加字段名 必须一一对应
                 dataIndex: v.index,
                 align: 'center',
+                className: `${styles.tbw}`
             })
         })
         //把数据都push到tableDatas里
@@ -211,11 +215,12 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('area', {})
+                        {getFieldDecorator('area', {initialValue:'area'})
                             (
-                                <Cascader
-                                    placeholder='设备安装地'
-                                />
+                            <Select>
+                                <Option value="area">设备安装地</Option>
+                                <Option value="all">全部</Option>
+                            </Select>
                             )
                         }
                     </Form.Item>
@@ -230,20 +235,22 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('valveType', {})
+                        {getFieldDecorator('valveType', {initialValue: 'valveType'})
                             (
-                                <Cascader
-                                    placeholder='灌区类型'
-                                />
+                            <Select>
+                                <Option value="valveType">灌区类型</Option>
+                                <Option value="all">全部</Option>
+                            </Select>
                             )
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('plantType', {})
+                        {getFieldDecorator('plantType', {initialValue: 'plantType'})
                             (
-                                <Cascader
-                                    placeholder='种植类型'
-                                />
+                            <Select>
+                                <Option value="plantType">种植类型</Option>
+                                <Option value="all">全部</Option>
+                            </Select>
                             )
                         }
                     </Form.Item>

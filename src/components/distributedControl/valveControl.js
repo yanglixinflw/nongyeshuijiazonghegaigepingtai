@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import styles from "./valveControl.less"
-import { Input, Button, Form, Cascader, Table, Divider} from 'antd';
+import { Input, Button, Form, Cascader, Table, Divider,Select} from 'antd';
+//表头
 const tableTitle=[
     {index:"valveType",item:"阀门型号"},
     {index:"id",item:"阀门ID"},
@@ -12,6 +13,7 @@ const tableTitle=[
     {index:"state",item:"阀门状态"},
     {index:"updateTime",item:"更新时间"},
 ]
+//假数据
 const data=[
     {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"A开",updateTime:"2018-07-02 08:09:21"},
     {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"B开",updateTime:"2018-07-02 08:09:21"},
@@ -20,6 +22,7 @@ const data=[
     {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"A开",updateTime:"2018-07-02 08:09:21"},
     {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"A开",updateTime:"2018-07-02 08:09:21"},
 ]
+const { Option } = Select;
 export default class extends Component{
     constructor(props) {
         super(props)
@@ -49,6 +52,7 @@ export default class extends Component{
                 // 给表头添加字段名 必须一一对应
                 dataIndex: v.index,
                 align: 'center',
+                className: `${styles.tbw}`
             })
         })
         //把数据都push到tableDatas里
@@ -202,12 +206,12 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('areaId', {})
+                        {getFieldDecorator('areaId', {initialValue:'area'})
                             (
-                            <Cascader
-                                placeholder='设备安装地'
-                                type='text'
-                            />
+                            <Select>
+                                <Option value='area'>设备安装地</Option>
+                                <Option value='all'>全部</Option>
+                            </Select>
                             )
                         }
                     </Form.Item>
