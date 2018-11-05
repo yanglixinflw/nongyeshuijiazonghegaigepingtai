@@ -100,10 +100,12 @@
             border: 0;
             outline: 0;
             &:hover {
-                background: #327DF4
+                background: #327DF4;
+                color:#fff;
             }
             &:focus {
-                background: #327DF4
+                background: #327DF4;
+                color:#fff;
             }
         }
     }
@@ -153,6 +155,7 @@
                         background: #1C2241;
                         border: 1px solid #327DF4;
                         color: #327DF4;
+                        height: 28px;
                     }
                 }
             }
@@ -202,6 +205,8 @@
                     color: #0084FF;
                 }
                 td {
+                    height: 52px ;
+                    padding: 0 16px;
                     font-size: 12px;
                     background: #1C2241;
                     color: #BBC5D2;
@@ -504,6 +509,10 @@
             top: 15px;
             padding-left: 40px;
             padding-right: 37px;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             .deviceId {
                 font-size: 45px;
                 color: #327DF4;
@@ -534,10 +543,12 @@
                 color: #ACB5E8;
                 border: 0;
                 &:hover {
-                    background: #327DF4
+                    background: #327DF4;
+                    color:#fff;
                 }
                 &:focus {
-                    background: #327DF4
+                    background: #327DF4;
+                    color:#fff;
                 }
             }
         }
@@ -546,7 +557,7 @@
         .ant-table-fixed {
             .ant-table-tbody {
                 tr {
-                    height: 54px;
+                    height: 52px;
                     td {
                         font-size: 12px;
                         font-weight: normal;

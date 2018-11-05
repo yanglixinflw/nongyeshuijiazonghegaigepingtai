@@ -4,16 +4,29 @@ import styles from './index.less';
 export default class extends Component {
     constructor(props){
         super(props)
-        // console.log(props)
+        const {markers} = props;
+        if(!markers){
+            return null
+        }
+        // console.log(isWarningMsg)
         // const {type} = props;
+        this.state = {
+            markers,
+        }
     
     }
     render(){
-        const {type,isWarningMsg} = this.props;
+        const {markers} = this.state;
         return (
             <div>
-                {isWarningMsg?<Icon type='warning' className={styles.waring}/>:null}
-                <Icon type={type} />
+                {markers.isWarningMsg?
+                        <i className={styles.warning}>
+                            <div className={styles.warningAnimation}></div>
+                        </i> 
+                    : 
+                        <i className={styles.normal}></i>
+                    
+                }
             </div>
            
         )

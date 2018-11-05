@@ -4,6 +4,8 @@ import styles from './common.less';
 import classnames from 'classnames';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
+// 生产环境
+// const envNet = '';
 //翻页url
 const dataUrl = `${envNet}/api/DeviceData/historyData`;
 // post通用设置
@@ -195,15 +197,15 @@ export default class extends Component {
                     onOk={() => this._showSetOkHandler()}
                 />
                 <div className={styles.deviceInfo}>
-                    <div className={styles.info}>
+                    <div className={styles.info} title={deviceInfo.deviceId}>
                         <i className={classnames('dyhsicon', 'dyhs-shebeiID', `${styles.deviceId}`)}></i>
                         {deviceInfo.deviceId}
                     </div>
-                    <div className={styles.info}>
+                    <div className={styles.info} title={deviceInfo.name}>
                         <i className={classnames('dyhsicon', 'dyhs-shebeimingcheng', `${styles.name}`)}></i>
                         {deviceInfo.name}
                     </div>
-                    <div className={styles.info}>
+                    <div className={styles.info} title={deviceInfo.installAddr}>
                         <i className={classnames('dyhsicon', 'dyhs-shebeianzhuangdi', `${styles.installAddr}`)}></i>
                         {deviceInfo.installAddr}
                     </div>

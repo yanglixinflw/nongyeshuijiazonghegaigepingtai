@@ -49,8 +49,12 @@ export default class extends Component{
         return (
             <div>
                 <div className={styles.btnMapType}>
-                    <Button onClick={()=>this._satelliteMap()}>卫星</Button>
-                    <Button onClick={()=>this._flatMap()}>地图</Button>
+                    <Button 
+                        className={styles.btnsatellite}
+                        onClick={()=>this._satelliteMap()}>卫星</Button>
+                    <Button 
+                        className={styles.btnflat}
+                        onClick={()=>this._flatMap()}>地图</Button>
                     
                 </div>
                 <div className={styles.btnMapZoom}>

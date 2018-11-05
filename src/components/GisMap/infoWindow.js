@@ -1,6 +1,6 @@
 import React,{ Component} from 'react';
 import styles from './index.less';
-import {Card,Icon} from 'antd';
+import classnames from 'classnames'
 export default class extends Component{
     constructor(props){
         super(props)
@@ -11,15 +11,8 @@ export default class extends Component{
     }
     render(){
         return (
-            <div className={styles.infoWindow}> 
-                <Card 
-                    title="XXXXXX建筑物名称"
-                    extra={<Icon type='video-camera' />}
-                >
-                    <p>Card content</p>
-                    <p>Card content</p>
-                    <p>Card content</p>
-                </Card>
+            <div> 
+                <i className={classnames('dyhsicon', 'dyhs-bofang', `${styles.playIcon}`)}></i>
             </div>
         )
     }
