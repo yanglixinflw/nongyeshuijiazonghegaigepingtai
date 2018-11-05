@@ -102,10 +102,10 @@ export const getRouterData = app => {
     '/manage/warning':{
       component: dynamicWrapper(app, ['warningRecords'], () => import('../routes/equipmentManagement/warningRecords')),
     },
-    '/dcs/remote':{
-      component: dynamicWrapper(app, [], () => import('../routes/distributedControl/remoteControl')),
-    },
-    '/remote/valveControl':{
+    // '/dcs/remote':{
+    //   component: dynamicWrapper(app, [], () => import('../routes/distributedControl/remoteControl')),
+    // },
+    '/dcs/valveControl':{
       component: dynamicWrapper(app, [], () => import('../routes/distributedControl/valveControl')),
     },
     '/dcs/automation':{
