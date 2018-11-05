@@ -165,10 +165,12 @@ export default class extends Component{
     //删除的弹框点击确定
     delHandleOk(){
         let {userId,title}=this.state;
+        let userIds = [];
+        userIds.push(userId);
         return fetch(delUrl,{
             ...postOption,
             body: JSON.stringify({
-                userId
+                userIds
             })
         }).then(res=>{
             Promise.resolve(res.json())

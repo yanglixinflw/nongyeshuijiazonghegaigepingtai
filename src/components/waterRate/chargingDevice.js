@@ -85,7 +85,7 @@ export default class extends Component{
             width: 220,
             render: (record) => {
                 return (
-                    <span className={styles.option}>
+                    <span className={styles.options}>
                      <Button
                             className={styles.edit}
                             icon='edit'
@@ -93,7 +93,7 @@ export default class extends Component{
                             修改
                         </Button>
                         <Button
-                            className={styles.clear}
+                            className={styles.delete}
                             icon='delete'
                         >
                             删除
