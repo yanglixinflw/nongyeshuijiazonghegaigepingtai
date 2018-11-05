@@ -4,6 +4,8 @@ import styles from './common.less';
 import classnames from 'classnames';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
+// 生产环境
+// const envNet = '';
 //翻页url
 const dataUrl = `${envNet}/api/DeviceData/historyData`;
 // post通用设置

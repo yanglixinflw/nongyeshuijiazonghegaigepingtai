@@ -3,6 +3,8 @@ import styles from './index.less'
 import { Button, Table, Form, Input, Select, Modal, message, Radio } from 'antd';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
+// 生产环境
+// const envNet = '';
 ////获取用户角色列表url
 const roleUrl = `${envNet}/api/UserMgr/roleList`;
 //获取部门列表url
