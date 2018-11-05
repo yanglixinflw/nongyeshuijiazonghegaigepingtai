@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './index.less';
-import { Input, Button } from 'antd';
+import { Input, Button,List } from 'antd';
 import { Map, Markers, InfoWindow, Polyline } from 'react-amap';
 import IwContent from './infoWindow';
 import MarkerContent from './marker';
