@@ -265,6 +265,7 @@ export default class extends Component{
                                 body: JSON.stringify({
                                     "name": "",
                                     "mobile": "",
+                                    "roleId": 0,
                                     "pageIndex": 0,
                                     "pageSize": 10
                                 })
@@ -281,7 +282,7 @@ export default class extends Component{
                                             this.setState({
                                                 itemCount,
                                                 items,
-                                                addVisible: false
+                                                addvisible: false
                                             });
                                             this._getTableData(title, items);
                                             form.resetFields();
@@ -567,7 +568,7 @@ const AddForm = Form.create()(
                         <Form.Item {...formItemLayout} label='姓名'>
                             {getFieldDecorator('realName', {
                                 initialValue: '',
-                                rules: [{ required: true, message: '请输入姓名' },],
+                                rules: [{ required: true, message: '姓名不能为空' },],
                             })(
                                 <Input
                                     placeholder='请输入农户的姓名'
