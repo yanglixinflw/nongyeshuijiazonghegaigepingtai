@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from './farmersInfo.less';
-import { Input, Button, Form, Select, Cascader, Table, Modal} from 'antd';
+import { Input, Button, Form, Select,Cascader, Table, Modal,message} from 'antd';
 //ip地址
 const envNet='http://192.168.30.127:88';
 //翻页调用
@@ -51,10 +51,11 @@ export default class extends Component{
             },
             //用于增删改查标识字段
             idCard:'',
+            userId:"",
             //删除弹框显示的内容
             delModalText: '删除后信息将无法恢复，是否确认删除。',
             //删除的弹出框显示
-            delvisible: false,
+            delVisible: false,
             //修改用户信息的弹出框显示
             editvisible: false,
             //添加用户信息的弹出框显示
@@ -71,7 +72,6 @@ export default class extends Component{
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
-                        console.log(v)
                         if (v.ret == 1) {
                             let areaList = v.data
                             this.setState({
@@ -113,7 +113,7 @@ export default class extends Component{
                         </Button>
                         <Button
                             className={styles.delete}
-                            onClick={()=>this.delete(record.idCard)}
+                            onClick={()=>this._deleteInfo(record.userId)}
                             icon='delete'
                         >
                             删除
@@ -138,6 +138,7 @@ export default class extends Component{
                 areaId:v.areaId,
                 userType:v.userType,
                 orgId:v.orgId,
+                userId:v.userId,
                 key: i,
             });
         })
@@ -151,24 +152,23 @@ export default class extends Component{
         console.log("修改")
     }
     //删除功能
-    delete(index){
-      //显示弹框
+    _deleteInfo(userId){ 
       this.setState({
-        delvisible: true,
-        idCard:index
+        delVisible: true,
+        userId
       });
     }
     //删除的弹框点击确定
     delHandleOk(){
-        let {idCard,title}=this.state;
+        let {userId,title}=this.state;
         return fetch(delUrl,{
             ...postOption,
-             body: JSON.stringify({
-                idCard
+            body: JSON.stringify({
+                userId
             })
-        }).then((res)=>{
+        }).then(res=>{
             Promise.resolve(res.json())
-            .then((v) => {
+            .then(v => {
                 if (v.ret == 1) {
                     return fetch(dataUrl, {
                         ...postOption,
@@ -179,9 +179,9 @@ export default class extends Component{
                             "pageIndex": 0,
                             "pageSize": 10
                         })
-                    }).then((res) => {
+                    }).then(res => {
                         Promise.resolve(res.json())
-                            .then((v) => {
+                            .then(v => {
                                 if (v.ret == 1) {
                                     let data = v.data.items;
                                     let itemCount = v.data.itemCount;
@@ -192,10 +192,10 @@ export default class extends Component{
                                     this.setState({
                                         data,
                                         itemCount,
-                                        delvisible: false
+                                        delVisible: false
                                     });
                                     this._getTableDatas(title, data);
-                                    // message.success('删除成功', 2);
+                                    message.success('删除成功', 2);
                                 } else {
                                     this.setState({
                                         items: []
@@ -207,12 +207,14 @@ export default class extends Component{
                     message.error(v.msg, 2);
                 }
             })
+        }).catch(err => {
+            console.log(err)
         })
     }
     //删除的弹框点击取消
     delHandleCancel(){
       this.setState({
-        delvisible: false,
+        delVisible: false,
       });
     }
     //修改用户信息的弹出框
@@ -256,9 +258,9 @@ export default class extends Component{
                     "idCard":values.idCard,
                     "areaId":values.areaId
                 })
-            }).then((res) => {
+            }).then(res => {
                 Promise.resolve(res.json())
-                    .then((v) => {
+                    .then(v => {
                         if (v.ret == 1) {
                             return fetch(dataUrl, {
                                 ...postOption,
@@ -269,10 +271,10 @@ export default class extends Component{
                                     "pageIndex": 0,
                                     "pageSize": 10
                                 })
-                            }).then((res) => {
+                            }).then(res => {
                                 Promise.resolve(res.json())
-                                    .then((v) => {
-                                        if (v.re == 1) {
+                                    .then(v => {
+                                        if (v.ret == 1) {
                                             let items = v.data.items;
                                             let itemCount = v.data.itemCount;
                                             // 给每一条数据添加key
@@ -280,11 +282,11 @@ export default class extends Component{
                                                 v.key = i
                                             })
                                             this.setState({
+                                                addvisible: false,
                                                 itemCount,
                                                 items,
-                                                addvisible: false
                                             });
-                                            this._getTableData(title, items);
+                                            this._getTableDatas(title, items);
                                             form.resetFields();
                                             message.success('添加成功', 2);
                                         } else {
@@ -298,7 +300,7 @@ export default class extends Component{
                             message.error(v.msg, 2);
                         }
                     })
-            }).catch((err) => {
+            }).catch(err => {
                 console.log(err)
             })
         })
@@ -332,9 +334,9 @@ export default class extends Component{
                 body: JSON.stringify({
                     ...values
                 })
-            }).then((res) => {
+            }).then(res => {
                 Promise.resolve(res.json())
-                    .then((v) => {
+                    .then(v => {
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             let itemCount = v.data.itemCount
@@ -346,7 +348,7 @@ export default class extends Component{
                             this._getTableDatas(title,data);
                         }
                     })
-            }).catch((err) => {
+            }).catch(err => {
                 console.log(err)
             })
         })
@@ -370,9 +372,9 @@ export default class extends Component{
             body: JSON.stringify({
                 ...searchValue
             })
-        }).then((res)=>{
+        }).then(res=>{
             Promise.resolve(res.json())
-            .then((v)=>{
+            .then(v=>{
                 if(v.ret==1){
                     // console.log(v);
                     // 设置页面显示的元素
@@ -388,13 +390,13 @@ export default class extends Component{
                     this._getTableDatas(this.state.title, this.state.data);
                 }
             })
-            .catch((err)=>{
+            .catch(err=>{
                 console.log(err)
             })
         })
     }
     render(){
-        const { delvisible,columns, tableDatas,itemCount,delModalText,addvisible,areaList} = this.state;
+        const { delVisible,columns, tableDatas,itemCount,delModalText,addvisible,areaList} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -458,9 +460,9 @@ export default class extends Component{
                 />
                 <Modal 
                     title="删除"
-                    delvisible={delvisible}
-                    onOk={this.delHandleOk}
-                    onCancel={this.delHandleCancel}
+                    visible={delVisible}
+                    onOk={()=>this.delHandleOk()}
+                    onCancel={()=>this.delHandleCancel()}
                     okText="确认"
                     cancelText="取消"
                     centered//居中显示
@@ -592,7 +594,7 @@ const AddForm = Form.create()(
                             {getFieldDecorator('idCard', {
                                 initialValue: '',
                                 rules: [
-                                    { required: true, pattern:'^(^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$)|(^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])((\\d{4})|\\d{3}[Xx])$)$',message:"请输入正确的身份证号"}
+                                    { pattern:'^(^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$)|(^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])((\\d{4})|\\d{3}[Xx])$)$',message:"请输入正确的身份证号"}
                                 ],
                             })(
                                 <Input
@@ -604,6 +606,7 @@ const AddForm = Form.create()(
                         <Form.Item {...formItemLayout} label='归属片区'>
                             {getFieldDecorator('areaId', {
                                 initialValue: '请选择归属片区',
+                                rules: [{ required: true}]
                             })(
                                 <Select>
                                     {areaList.map((v, i) => {
