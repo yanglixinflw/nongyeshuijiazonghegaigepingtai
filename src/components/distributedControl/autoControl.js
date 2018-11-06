@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import styles from "./autoControl.less"
 import { Input, Button, Form, Cascader, Table, Divider} from 'antd';
+import { Link } from 'dva/router';
 const tableTitle=[
     {index:"num",item:"自动化编号"},
     {index:"name",item:"自动化名称"},
@@ -74,13 +75,15 @@ export default class extends Component{
             render: (record) => {
                 return (
                     <span className={styles.option}>
-                        <Button
-                            className={styles.set}
-                            // onClick={() => this._set()}
-                            icon='setting'
-                        >
-                            设置自动化规则
-                        </Button>
+                        <Link to={`/automation/autoRules`}>
+                            <Button
+                                className={styles.set}
+                                // onClick={() => this._set()}
+                                icon='setting'
+                            >
+                                设置自动化规则
+                            </Button>
+                        </Link>
                         <Button
                             className={styles.stop}
                             icon='stop'

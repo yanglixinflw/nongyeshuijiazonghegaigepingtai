@@ -572,6 +572,7 @@ const AddForm = Form.create()(
                     onOk={onOk}
                     cancelText='取消'
                     okText='确定'
+                    centered
                 >
                     <Form>
                         <Form.Item {...formItemLayout} label='姓名'>
