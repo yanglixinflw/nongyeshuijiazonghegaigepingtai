@@ -29,8 +29,8 @@ const menuData = [
     path: 'dcs',
     children: [
       {
-        name: '远程控制',
-        path: 'remote'
+        name: '阀门控制',
+        path: 'valveControl'
       },
       {
         name: '自动化控制',

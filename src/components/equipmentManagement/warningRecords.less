@@ -22,15 +22,21 @@
     background: #1c2241;
     display: flex;
     :global{
-        .ant-input,.ant-cascader-picker,.ant-form-item{
+        .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
             height: 46px;
-            min-width: 150px;
+            width: 172px;
             background: #141831;
             outline: none;
             border: none;
-            color: #4A5A72;
-            // margin-right: 13px;
+            color: #fff;
+            // margin-right: 20px;
             float: left;
+        } 
+        .ant-select-selection__rendered{
+            margin-top:8px; 
+        }
+        .anticon,.anticon-down,.ant-select-arrow-icon{
+            color: #fff;
         }
     }
     .buttonGroup{
@@ -48,6 +54,7 @@
         }
         .fnButton:hover{
             background: #327df4;
+            color: #fff;
         }
     }
 }
@@ -204,6 +211,12 @@
             }
         }
     }
+    .ant-table-tbody > tr > td {
+        padding:0 16px !important;
+    }
+}
+.tbw{
+    height:52px !important;
 }
 @media(max-width:1900px) {
     .searchForm {
@@ -215,7 +228,7 @@
     .searchForm {
         height: 150px;
         :global {
-            .ant-input,.ant-cascader-picker,.ant-form-item{
+            .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
                 min-width: 105px;
                 width: 105px;
                 // margin-right: 20px;

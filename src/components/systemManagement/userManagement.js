@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import styles from './index.less'
-import { Button, Table, Form, Input, Select, Modal, message, Radio} from 'antd';
+import { Button, Table, Form, Input, Select, Modal, message, Radio } from 'antd';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
+// 生产环境
+// const envNet = '';
 ////获取用户角色列表url
 const roleUrl = `${envNet}/api/UserMgr/roleList`;
 //获取部门列表url
@@ -15,6 +17,8 @@ const addUrl = `${envNet}/api/UserMgr/add`;
 const updateUrl = `${envNet}/api/UserMgr/update`;
 //删除url
 const deleteUrl = `${envNet}/api/UserMgr/delete`;
+//点击修改是获取用户详细信息
+const detailUrl = `${envNet}/api/UserMgr/details`;
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -26,7 +30,9 @@ let postOption = {
 };
 // 全部title
 const tableTitle = [
-    '账号','用户ID', '姓名', '性别', '角色', '手机号', '部门', '添加日期'
+    '账号',
+    // '用户ID', 
+    '姓名', '性别', '角色', '手机号', '部门', '添加日期'
 ];
 // 全局提示样式
 message.config({
@@ -110,12 +116,12 @@ export default class extends Component {
         let columns = [];
         let dataIndex = [
             'loginName',
-            'userId',
+            // 'userId',
             'realName',
             'sex',
             'roleName',
             'mobilePhone',
-            'department',
+            'departmentName',
             'createTime'
         ]
         title.map((v, i) => {
@@ -156,14 +162,13 @@ export default class extends Component {
         items.map((v, i) => {
             tableData.push({
                 loginName: v.loginName,
-                userId:v.userId,
+                userId: v.userId,
                 realName: v.realName,
-                sex:v.sex,
+                sex: v.sex,
                 roleName: v.roleName,
                 mobilePhone: v.mobilePhone,
-                department: v.department,
+                departmentName: v.departmentName,
                 createTime: v.createTime,
-                userId: v.userId,
                 key: i,
             });
         })
@@ -171,6 +176,7 @@ export default class extends Component {
             columns,
             tableData,
         });
+        // console.log(columns[4])
     }
     //搜索功能
     _searchTableData() {
@@ -180,13 +186,12 @@ export default class extends Component {
             if (err) {
                 return
             }
-            console.log(values)
+            // console.log(values)
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
                     "name": values.realName,
                     "mobile": values.mobilePhone,
-                    "roleId": 0,
                     "pageIndex": 0,
                     "pageSize": 10
                 })
@@ -260,64 +265,64 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            console.log(values)
-            // return fetch(addUrl, {
-            //     ...postOption,
-            //     body: JSON.stringify({
-            //         "departmentId": values.department,
-            //         "password": values.passWord,
-            //         "loginName": values.loginName,
-            //         "realName": values.realName,
-            //         "mobilePhone": values.mobilePhone,
-            //         "sex": values.sex,
-            //         "roleId":values.roleName
-                    
-            //     })
-            // }).then((res) => {
-            //     Promise.resolve(res.json())
-            //         .then((v) => {
-            //             if (v.ret == 1) {
-            //                 return fetch(dataUrl, {
-            //                     ...postOption,
-            //                     body: JSON.stringify({
-            //                         "name": "",
-            //                         "mobile": "",
-            //                         "pageIndex": 0,
-            //                         "pageSize": 10
-            //                     })
-            //                 }).then((res) => {
-            //                     Promise.resolve(res.json())
-            //                         .then((v) => {
-            //                             if (v.ret== 1) {
-            //                                 console.log(v)
-            //                                 let items = v.data.items;
-            //                                 let itemCount = v.data.itemCount;
-            //                                 // 给每一条数据添加key
-            //                                 items.map((v, i) => {
-            //                                     v.key = i
-            //                                 })
-            //                                 this.setState({
-            //                                     itemCount,
-            //                                     items,
-            //                                     addVisible: false
-            //                                 });
-            //                                 this._getTableData(title, items);
-            //                                 form.resetFields();
-            //                                 message.success('添加成功', 2);
-            //                             } else {
-            //                                 this.setState({
-            //                                     items: []
-            //                                 })
-            //                             }
-            //                         })
-            //                 })
-            //             } else {
-            //                 message.error(v.msg, 2);
-            //             }
-            //         })
-            // }).catch((err) => {
-            //     console.log(err)
-            // })
+            // console.log(values)
+            return fetch(addUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "departmentId": values.department,
+                    "password": values.passWord,
+                    "loginName": values.loginName,
+                    "realName": values.realName,
+                    "mobilePhone": values.mobilePhone,
+                    "sex": values.sex,
+                    "roleIds": values.roleName
+
+                })
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        if (v.ret == 1) {
+                            return fetch(dataUrl, {
+                                ...postOption,
+                                body: JSON.stringify({
+                                    "name": "",
+                                    "mobile": "",
+                                    "pageIndex": 0,
+                                    "pageSize": 10
+                                })
+                            }).then((res) => {
+                                Promise.resolve(res.json())
+                                    .then((v) => {
+                                        if (v.ret == 1) {
+                                            // console.log(v)
+                                            let items = v.data.items;
+                                            let itemCount = v.data.itemCount;
+                                            // 给每一条数据添加key
+                                            items.map((v, i) => {
+                                                v.key = i
+                                            })
+                                            this.setState({
+                                                itemCount,
+                                                items,
+                                                addVisible: false
+                                            });
+                                            this._getTableData(title, items);
+                                            form.resetFields();
+                                            message.success('添加成功', 2);
+                                        } else {
+                                            this.setState({
+                                                items: []
+                                            })
+                                        }
+                                    })
+                            })
+                        } else {
+                            message.error(v.msg, 2);
+                        }
+                    })
+            }).catch((err) => {
+                console.log(err)
+            })
         })
     }
     // 添加取消
@@ -332,15 +337,34 @@ export default class extends Component {
     }
     // 点击修改
     _modifyHandler(userId) {
-        const { items } = this.state;
+        // const { items} = this.state;
         // console.log(items)
-        let modifydata = {};
-        modifydata = items.filter(Item => Item.userId === userId);
-        this.setState({
-            modifyVisible: true,
-            userId,
-            modifyData: modifydata
+        return fetch(detailUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                userId
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v)
+                        let modifydata = v.data;
+                        this.setState({
+                            userId,
+                            modifyData: modifydata,
+                            modifyVisible: true,
+                        })
+                    } else {
+                        this.setState({
+                            modifyData: []
+                        })
+                    }
+                })
+        }).catch((err) => {
+            console.log(err)
         })
+
     }
     // 修改确定
     _modifyOkHandler() {
@@ -351,10 +375,11 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            console.log(values);
+            // console.log(values);
             return fetch(updateUrl, {
                 ...postOption,
                 body: JSON.stringify({
+                    roleIds:values.roleName,
                     "departmentId": values.department,
                     userId,
                     "loginName": values.loginName,
@@ -377,7 +402,7 @@ export default class extends Component {
                                 Promise.resolve(res.json())
                                     .then((v) => {
                                         if (v.ret == 1) {
-                                            console.log(v)
+                                            // console.log(v)
                                             let items = v.data.items;
                                             let itemCount = v.data.itemCount;
                                             // 给每一条数据添加key
@@ -429,10 +454,12 @@ export default class extends Component {
     // 确认删除
     _deleteOkHandler() {
         let { userId, title } = this.state;
+        let userIds = [];
+        userIds.push(userId);
         return fetch(deleteUrl, {
             ...postOption,
             body: JSON.stringify({
-                userId
+                userIds
             })
         }).then((res) => {
             Promise.resolve(res.json())
@@ -441,9 +468,6 @@ export default class extends Component {
                         return fetch(dataUrl, {
                             ...postOption,
                             body: JSON.stringify({
-                                "name": '',
-                                "mobile": '',
-                                "roleId": 1,
                                 "pageIndex": 0,
                                 "pageSize": 10
                             })
@@ -492,9 +516,6 @@ export default class extends Component {
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "name": '',
-                "mobile": '',
-                "roleId": 0,
                 pageIndex,
                 "pageSize": 10
             })
@@ -630,12 +651,13 @@ const SearchForm = Form.create()(
                     </Form.Item>
                     <Form.Item>
                         {getFieldDecorator('roleName', {
-                            initialValue: '全部角色'
+                            //initialValue: '全部角色'
                         })
                             (
                             <Select
-                            //placeholder='全部角色'
+                                placeholder='全部角色'
                             >
+                                <Option value=''>全部角色</Option>
                                 {roleList.map((v, i) => {
                                     return (
                                         <Option key={i} value={v.id}>{v.name}</Option>
@@ -742,7 +764,7 @@ const AddForm = Form.create()(
                                     <Radio value='男'>男</Radio>
                                     <Radio value='女'>女</Radio>
                                 </Radio.Group>
-                                
+
                             )}
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='密码'>
@@ -767,7 +789,7 @@ const AddForm = Form.create()(
                             })
                                 (
                                 <Select
-                                    // mode="multiple"
+                                // mode="multiple"
                                 >
                                     {deptList.map((v, i) => {
                                         return (
@@ -819,7 +841,8 @@ const ModifyForm = Form.create()(
             const { visible, onCancel, onOk, form, modifyData, roleList, deptList } = this.props;
             const { getFieldDecorator } = form;
             const Option = Select.Option;
-            if (typeof (modifyData[0]) == 'undefined') {
+            
+            if (!modifyData) {
                 return false
             }
             if (roleList.length == 0) {
@@ -841,7 +864,7 @@ const ModifyForm = Form.create()(
                     <Form>
                         <Form.Item {...formItemLayout} label='账号'>
                             {getFieldDecorator('loginName', {
-                                initialValue: modifyData[0].loginName,
+                                initialValue: modifyData.loginName,
                                 rules: [{ required: true, message: '请输入账号' },],
                             })(
                                 <Input
@@ -853,7 +876,7 @@ const ModifyForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='姓名'>
                             {getFieldDecorator('realName', {
-                                initialValue: modifyData[0].realName,
+                                initialValue: modifyData.realName,
                                 rules: [{ required: true, message: '请输入姓名' },],
                             })(
                                 <Input
@@ -865,13 +888,13 @@ const ModifyForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='性别'>
                             {getFieldDecorator('sex', {
-                                initialValue: modifyData[0].sex,
+                                initialValue: modifyData.sex,
                             })(
                                 <Radio.Group>
                                     <Radio value='男'>男</Radio>
                                     <Radio value='女'>女</Radio>
                                 </Radio.Group>
-                                
+
                             )}
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='密码'>
@@ -892,7 +915,7 @@ const ModifyForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='部门'>
                             {getFieldDecorator('department', {
-                                initialValue: modifyData[0].department,
+                                initialValue: modifyData.departmentId,
                             })
                                 (
                                 <Select>
@@ -907,7 +930,7 @@ const ModifyForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='角色'>
                             {getFieldDecorator('roleName', {
-                                initialValue: modifyData[0].roleName,
+                                initialValue: modifyData.roleIds,
                             })
                                 (
                                 <Select
@@ -924,7 +947,7 @@ const ModifyForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label="手机号">
                             {getFieldDecorator('mobilePhone', {
-                                initialValue: modifyData[0].mobilePhone,
+                                initialValue: modifyData.mobilePhone,
                                 rules: [{ required: true, pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
                             })(
                                 <Input

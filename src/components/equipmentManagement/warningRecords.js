@@ -1,8 +1,10 @@
 import React,{Component} from 'react';
 import styles from './warningRecords.less';
-import { Input, Button, Form, Cascader, Table, Modal} from 'antd';
+import { Input, Button, Form, Cascader, Table, Modal,Select} from 'antd';
 //ip地址
 const envNet='http://192.168.30.127:88';
+//生产环境
+// const envNet='';
 //翻页调用
 const dataUrl=`${envNet}/api/DeviceWaringRule/eventList`;
 // post通用设置
@@ -24,6 +26,7 @@ const tableTitle=[
     {index:"deviceId",item:"设备ID"},
     {index:"building",item:"关联建筑物"}
 ]
+const { Option }= Select
 export default class extends Component{
     constructor(props){
         super(props)
@@ -58,6 +61,7 @@ export default class extends Component{
                 // 给表头添加字段名 必须一一对应
                 dataIndex: v.index,
                 align: 'center',
+                className: `${styles.tbw}`
             })
         })
         //操作列
@@ -210,22 +214,22 @@ const SearchForm = Form.create()(
                         marginRight:'10px'
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('waringType', {})
+                        {getFieldDecorator('waringType', {initialValue:'waringType'})
                             (
-                            <Cascader
-                                placeholder='所有类型'
-                                type='text'
-                            />
+                            <Select>
+                                <Option value='waringType'>所有类型</Option>
+                                <Option value=''></Option>
+                            </Select>
                             )
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('warningStatus', {})
+                        {getFieldDecorator('warningStatus', {initialValue:'state'})
                             (
-                            <Cascader
-                                placeholder='所有状态'
-                                type='text'
-                            />
+                            <Select>
+                                <Option value='state'>所有状态</Option>
+                                <Option value=''></Option>
+                            </Select>
                             )
                         }
                     </Form.Item>
@@ -240,22 +244,22 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('area', {})
+                        {getFieldDecorator('area', {initialValue:'area'})
                             (
-                            <Cascader
-                                placeholder='归属地区'
-                                type='text'
-                            />
+                            <Select>
+                                <Option value='area'>归属地区</Option>
+                                <Option value='all'>全部</Option>
+                            </Select>
                             )
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('areaId', {})
+                        {getFieldDecorator('areaId', {initialValue:'areaId'})
                             (
-                            <Cascader
-                                placeholder='设备安装地'
-                                type='text'
-                            />
+                            <Select>
+                                <Option value='areaId'>设备安装地</Option>
+                                <Option value='all'>全部</Option>
+                            </Select>
                             )
                         }
                     </Form.Item>
