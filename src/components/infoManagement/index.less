@@ -84,17 +84,6 @@
             position: relative;
             top: 8px;
         }
-        .ant-cascader-picker {
-            height: 46px;
-            background: #141831;
-            width: auto;
-            min-width: 110px;
-            outline: 0;
-            border: 0;
-        }
-        .ant-cascader-picker-arrow {
-            color: #4A5A72;
-        }
     }
 }
 // 表格单元最小宽度
@@ -106,6 +95,15 @@
 
 .addModal{
     width: 840px !important;
+    .FlexForm{
+        display: flex;
+        // flex-direction:column;
+        justify-content: space-between;
+        flex-wrap:wrap;
+    }
+    .formInput{
+        width: 200px;
+    }
     :global{
         .ant-modal-header{
             padding: 16px 0;
@@ -127,7 +125,8 @@
             
         }
         .ant-modal-body{
-            color:white
+            color:white;
+            padding:24px 70px;
         }
         .ant-modal-footer{
             border-top:1px solid #363A69;
@@ -151,7 +150,37 @@
         .ant-form-item-label label{
             color:white;
         }
-        
+        .ant-form-item{
+            display: inline-block
+        }
+        .ant-form-item-control-wrapper{
+            display: inline-block
+        }
+        .ant-select-selection--single{
+            background: #272D52;
+            color:#bbc5d2;
+            border: none;
+            font-size: 12px;
+        }
+        .ant-select-arrow{
+            color:#bbc5d2;
+        }
+        .ant-input{
+            background: #272D52;
+            color:#bbc5d2;
+            font-size: 12px;
+            border: none;
+        }
+        .ant-form-explain{
+            display: inline-block;
+            margin-left: 6px;
+        }
+        .ant-calendar-picker-clear{
+            background: #272D52;
+        }
+        .ant-calendar-picker-icon{
+            color:#bbc5d2
+        }
     }
 }
 :global {
