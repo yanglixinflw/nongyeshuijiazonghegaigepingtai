@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import styles from './index.less';
-import { Input, Button,List } from 'antd';
-import { Map, Markers, InfoWindow} from 'react-amap';
+import { Input, Button, List } from 'antd';
+import { Map, Markers, InfoWindow } from 'react-amap';
 import IwContent from './infoWindow';
 import MarkerContent from './marker';
 import MyCustomize from './myCustomize';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
 const homePosition = [
-    { position: { longitude: 120.27, latitude: 30.27 },isWarningMsg:true },
+    { position: { longitude: 120.27, latitude: 30.27 }, isWarningMsg: true },
     { position: { longitude: 120.26, latitude: 30.27 } },
     { position: { longitude: 120.27, latitude: 30.26 } },
     { position: { longitude: 120.26, latitude: 30.28 } },
@@ -18,10 +18,33 @@ const homePosition = [
     { position: { longitude: 120.26, latitude: 30.29 } },
     { position: { longitude: 120.27, latitude: 30.17 } },
 ]
-const linePosition = [
-    { longitude: 121.27, latitude: 31.27 },
-    { longitude: 123.27, latitude: 33.27 },
-
+const dataList = [
+    {
+        name: '宁圩村三组四号水表 ',
+        id: '0010200008',
+        address: '萧山区-宁围街道=三村二组耕地',
+        icon: 'WIFI'
+    },
+    {
+        name: '宁圩村三组四号水表 ',
+        id: '0010200008',
+        address: '萧山区-宁围街道=三村二组耕地'
+    },
+    {
+        name: '宁圩村三组四号水表 ',
+        id: '0010200008',
+        address: '萧山区-宁围街道=三村二组耕地'
+    },
+    {
+        name: '宁圩村三组四号水表 ',
+        id: '0010200008',
+        address: '萧山区-宁围街道=三村二组耕地'
+    },
+    {
+        name: '宁圩村三组四号水表 ',
+        id: '0010200008',
+        address: '萧山区-宁围街道=三村二组耕地'
+    }
 ]
 export default class extends Component {
     constructor(props) {
@@ -35,11 +58,11 @@ export default class extends Component {
             {
                 name: 'MapType',
                 options: {
-                  visible: false,  // 不设置该属性默认就是 true
-                  defaultType:1,    //底图默认 0位平面2D，1为卫星
-                  onCreated(ins){
-                    // console.log(ins);
-                  },
+                    visible: false,  // 不设置该属性默认就是 true
+                    defaultType: 1,    //底图默认 0位平面2D，1为卫星
+                    onCreated(ins) {
+                        // console.log(ins);
+                    },
                 },
             },
             //缩放控件
@@ -52,7 +75,7 @@ export default class extends Component {
             //       },
             //     },
             // },
-            
+
         ]
 
         // console.log(map)
@@ -82,6 +105,12 @@ export default class extends Component {
             allCameraMarkers: '',
             //marker是否被点击
             clicked: false,
+            //搜索下拉列表数据
+            dataList,
+            loading: false,
+            hasMore: true,
+            //搜索关键字
+            keyWord:'00'
         }
         //console.log(this.state.markers)
         //摄像头标记点触发事件
@@ -102,16 +131,6 @@ export default class extends Component {
                 //   console.log('MapsOptions:');
                 //   console.log(MapsOption);
                 //   console.log('marker:');
-                 
-                marker.render=()=>{
-                    return(
-                        <div className={styles.focused}>
-                            <div className={styles.focusedAnimation}></div>
-                        </div>
-                    )
-                    
-                }
-                console.log(marker.render());
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
@@ -158,17 +177,16 @@ export default class extends Component {
     //摄像头markers的render方法
     renderMarkerLayout(extData) {
         //判断marker的position是否和map的中心点一致，一致的话即为被选中的marker
-        if(
-            extData.position.latitude==this.state.center.latitude
+        if (
+            extData.position.latitude == this.state.center.latitude
             &&
-            extData.position.longitude==this.state.center.longitude
-            )
-        {
-            return <MarkerContent markers={extData} chosenMarker={true}/>
-        }else{
-            return <MarkerContent markers={extData} chosenMarker={false}/>
+            extData.position.longitude == this.state.center.longitude
+        ) {
+            return <MarkerContent markers={extData} chosenMarker={true} />
+        } else {
+            return <MarkerContent markers={extData} chosenMarker={false} />
         }
-        
+
     }
     //图标记显示/隐藏
     _cameraHandler() {
@@ -183,19 +201,50 @@ export default class extends Component {
         //    console.log(allCameraMarkers)
     }
     //搜索
-    _searchHandler(e){
+    _searchHandler(e) {
         // console.log(e.target.value)
+        this.setState({
+            keyWord: e.target.value
+        })
         //请求接口从后台拿到数据（dataList）后，_getDataList()
         //选择marker后设置map的center为该marker的position
     }
+    _getDataList(dataList) {
+
+    }
+    // _renderdataList() {
+    //     const { dataList,keyWord } = this.state;
+    //     dataList.filter((val, i) => {
+    //         var re = new RegExp(keyWord, 'g');
+    //         val.name = val.name.replace(re, `<span className=${styles.keyWord}>${keyWord}</span>`);
+    //         val.id = val.id.replace(re, `<span className=${styles.keyWord}>${keyWord}</span>`)
+    //     })
+    //     console.log(dataList)
+    //     dataList.map((v, i) => {
+    //         return (
+    //             <List.Item key={i}>
+    //                 <p>{v.name}{v.id}</p>
+    //                 <p>{v.address}</p>
+    //                 {v.icon ?
+    //                     <i></i>
+    //                     : null
+    //                 }
+    //             </List.Item>
+    //         )
+    //     })
+    // }
     render() {
+        
         const {
+            keyWord,
+            dataList,
             plugins, center,
             //useCluster,
             cameraMarkers,
             infoVisible,
             infoOffset, isCustom, size, infoPosition,
         } = this.state;
+        let re = new RegExp(keyWord, 'g');
         return (
             <Map
                 amapkey={MY_AMAP_KEY}
@@ -209,14 +258,30 @@ export default class extends Component {
                 <div className={styles.search}>
                     <Input
                         placeholder='请查询设备编号或设备名称'
-                        onPressEnter={(e)=>this._searchHandler(e)}
-                        onChange={(e)=>this._searchHandler(e)}
+                        onPressEnter={(e) => this._searchHandler(e)}
+                        onChange={(e) => this._searchHandler(e)}
                     />
+                    <div className={styles.dataList}>
+                        <List
+                            itemLayout='vertical'
+                            dataSource={dataList}
+                            renderItem={item => (
+                                <List.Item>
+                                  <List.Item.Meta
+                                    description={
+                                        item.name
+                                    }
+                                  />
+                                </List.Item>
+                              )}
+                           
+                        />
+                    </div>
                 </div>
                 <div className={styles.btnGroup}>
-                    <Button 
+                    <Button
                         onClick={() => this._cameraHandler()}
-                    
+
                     >
                         <i className={styles.camera}></i>
                         <span>摄像头</span>
@@ -239,9 +304,10 @@ export default class extends Component {
                 {/* marker */}
                 <Markers
                     markers={cameraMarkers}
-                    render={(extData)=>this.renderMarkerLayout(extData)}
+                    render={(extData) => this.renderMarkerLayout(extData)}
                     events={this.cameraEvents}
                 />
+                {/* 自定义地图控件 */}
                 <MyCustomize />
 
             </Map>

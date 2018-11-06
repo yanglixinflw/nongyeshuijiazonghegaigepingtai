@@ -18,7 +18,7 @@ export default class extends Component {
     render(){
         const {markers} = this.state;
         const {chosenMarker} = this.props;
-        console.log(chosenMarker)
+        // console.log(chosenMarker)
         return (
             <div>
                 {
