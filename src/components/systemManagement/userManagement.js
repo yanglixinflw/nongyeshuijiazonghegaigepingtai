@@ -30,9 +30,12 @@ let postOption = {
 };
 // 全部title
 const tableTitle = [
-    '账号',
-    // '用户ID', 
-    '姓名', '性别', '角色', '手机号', '部门', '添加日期'
+    '账号', 
+    '姓名', 
+    '角色', 
+    '手机号', 
+    '部门', 
+    '添加日期'
 ];
 // 全局提示样式
 message.config({
@@ -116,9 +119,7 @@ export default class extends Component {
         let columns = [];
         let dataIndex = [
             'loginName',
-            // 'userId',
             'realName',
-            'sex',
             'roleName',
             'mobilePhone',
             'departmentName',
@@ -164,7 +165,6 @@ export default class extends Component {
                 loginName: v.loginName,
                 userId: v.userId,
                 realName: v.realName,
-                sex: v.sex,
                 roleName: v.roleName,
                 mobilePhone: v.mobilePhone,
                 departmentName: v.departmentName,
@@ -274,7 +274,6 @@ export default class extends Component {
                     "loginName": values.loginName,
                     "realName": values.realName,
                     "mobilePhone": values.mobilePhone,
-                    "sex": values.sex,
                     "roleIds": values.roleName
 
                 })
@@ -385,7 +384,6 @@ export default class extends Component {
                     "loginName": values.loginName,
                     "realName": values.realName,
                     "mobilePhone": values.mobilePhone,
-                    "sex": values.sex,
                     "password": values.passWord,
                 })
             }).then((res) => {
@@ -563,10 +561,12 @@ export default class extends Component {
         return (
             <div className={styles.userMgr}>
                 <Modal
+                    centered={true}
+                    className={styles.delModal}
                     visible={deleteVisible}
                     onOk={() => this._deleteOkHandler()}
                     onCancel={() => this._deleteCancelHandler()}
-                    title='删除提示'
+                    title='删除'
                     cancelText='取消'
                     okText='确定'
                 >
@@ -705,7 +705,7 @@ const SearchForm = Form.create()(
 )
 const formItemLayout = {
     labelCol: { span: 4 },
-    wrapperCol: { span: 16 },
+    wrapperCol: { span: 20 },
 };
 //添加弹窗表单
 const AddForm = Form.create()(
@@ -723,7 +723,8 @@ const AddForm = Form.create()(
             // console.log(roleList)
             return (
                 <Modal
-                    //className={styles.addModal}
+                    centered={true}
+                    className={styles.addModal}
                     visible={visible}
                     title="添加用户信息"
                     onCancel={onCancel}
@@ -756,17 +757,6 @@ const AddForm = Form.create()(
                                 />
                             )}
                         </Form.Item>
-                        <Form.Item {...formItemLayout} label='性别'>
-                            {getFieldDecorator('sex', {
-                                initialValue: '',
-                            })(
-                                <Radio.Group>
-                                    <Radio value='男'>男</Radio>
-                                    <Radio value='女'>女</Radio>
-                                </Radio.Group>
-
-                            )}
-                        </Form.Item>
                         <Form.Item {...formItemLayout} label='密码'>
                             {getFieldDecorator('passWord', {
                                 initialValue: '',
@@ -786,6 +776,9 @@ const AddForm = Form.create()(
                         <Form.Item {...formItemLayout} label='部门'>
                             {getFieldDecorator('department', {
                                 initialValue: deptList[0].id,
+                                rules:[
+                                    { required: true, message: '请先选择部门' }
+                                ]
                             })
                                 (
                                 <Select
@@ -803,6 +796,9 @@ const AddForm = Form.create()(
                         <Form.Item {...formItemLayout} label='角色'>
                             {getFieldDecorator('roleName', {
                                 initialValue: roleList[0].id,
+                                rules:[
+                                    { required: true, message: '请先创建角色' }
+                                ]
                             })
                                 (
                                 <Select
@@ -820,7 +816,7 @@ const AddForm = Form.create()(
                         <Form.Item {...formItemLayout} label="手机号">
                             {getFieldDecorator('mobilePhone', {
                                 initialValue: '',
-                                rules: [{ required: true, pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
+                                rules: [{pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
                             })(
                                 <Input
                                     placeholder='请输入手机号码'
@@ -854,6 +850,8 @@ const ModifyForm = Form.create()(
             // console.log(modifyData)
             return (
                 <Modal
+                    centered={true}
+                    className={styles.addModal}
                     visible={visible}
                     title="修改用户信息"
                     onCancel={onCancel}
@@ -886,17 +884,6 @@ const ModifyForm = Form.create()(
                                 />
                             )}
                         </Form.Item>
-                        <Form.Item {...formItemLayout} label='性别'>
-                            {getFieldDecorator('sex', {
-                                initialValue: modifyData.sex,
-                            })(
-                                <Radio.Group>
-                                    <Radio value='男'>男</Radio>
-                                    <Radio value='女'>女</Radio>
-                                </Radio.Group>
-
-                            )}
-                        </Form.Item>
                         <Form.Item {...formItemLayout} label='密码'>
                             {getFieldDecorator('passWord', {
                                 initialValue: "123456",
@@ -916,6 +903,9 @@ const ModifyForm = Form.create()(
                         <Form.Item {...formItemLayout} label='部门'>
                             {getFieldDecorator('department', {
                                 initialValue: modifyData.departmentId,
+                                rules:[
+                                    { required: true, message: '请先选择部门' }
+                                ]
                             })
                                 (
                                 <Select>
@@ -931,6 +921,9 @@ const ModifyForm = Form.create()(
                         <Form.Item {...formItemLayout} label='角色'>
                             {getFieldDecorator('roleName', {
                                 initialValue: modifyData.roleIds,
+                                rules:[
+                                    { required: true, message: '请先创建角色' }
+                                ]
                             })
                                 (
                                 <Select
@@ -948,7 +941,7 @@ const ModifyForm = Form.create()(
                         <Form.Item {...formItemLayout} label="手机号">
                             {getFieldDecorator('mobilePhone', {
                                 initialValue: modifyData.mobilePhone,
-                                rules: [{ required: true, pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
+                                rules: [{ pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
                             })(
                                 <Input
                                     placeholder='请输入手机号码'
