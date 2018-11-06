@@ -3,19 +3,18 @@ import styles from "./autoControl.less"
 import { Input, Button, Form, Cascader, Table, Divider} from 'antd';
 import { Link } from 'dva/router';
 const tableTitle=[
-    {index:"num",item:"自动化编号"},
     {index:"name",item:"自动化名称"},
     {index:"rule",item:"规则"},
     {index:"state",item:"状态"},
     {index:"updateTime",item:"更新时间"},
 ]
 const data=[
-    {num:"1231",name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"启用",updateTime:"2018-07-02 08:09:21"},
-    {num:"1232",name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"停用",updateTime:"2018-07-02 08:09:21"},
-    {num:"1233",name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"启用",updateTime:"2018-07-02 08:09:21"},
-    {num:"1234",name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"停用",updateTime:"2018-07-02 08:09:21"},
-    {num:"1235",name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"启用",updateTime:"2018-07-02 08:09:21"},
-    {num:"1236",name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"停用",updateTime:"2018-07-02 08:09:21"}
+    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"启用",updateTime:"2018-07-02 08:09:21"},
+    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"停用",updateTime:"2018-07-02 08:09:21"},
+    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"启用",updateTime:"2018-07-02 08:09:21"},
+    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"停用",updateTime:"2018-07-02 08:09:21"},
+    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"启用",updateTime:"2018-07-02 08:09:21"},
+    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"停用",updateTime:"2018-07-02 08:09:21"}
 ]
 export default class extends Component{
     constructor(props) {
@@ -53,7 +52,6 @@ export default class extends Component{
         let tableDatas = [];
         items.map((v, i) => {
             tableDatas.push({
-                num:v.num,
                 name:v.name,
                 rule:v.rule,
                 state:v.state,
@@ -190,16 +188,6 @@ const SearchForm = Form.create()(
                         flexWrap:"wrap",
                         marginRight:"10px"
                     }}>
-                    <Form.Item>
-                        {getFieldDecorator('num', {})
-                            (
-                            <Input
-                                placeholder='自动化编号'
-                                type='text'
-                            />
-                            )
-                        }
-                    </Form.Item>
                     <Form.Item>
                         {getFieldDecorator('name', {})
                             (

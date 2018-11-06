@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import styles from './farmersInfo.less';
 import { Input, Button, Form, Select,Table, Modal,message} from 'antd';
-//ip地址
+//开发地址
 const envNet='http://192.168.30.127:88';
 //生产环境
 // const envNet='';
