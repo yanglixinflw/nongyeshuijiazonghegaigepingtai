@@ -34,7 +34,7 @@ const envNet = 'http://192.168.30.127:88'
 // 搜索、翻页接口
 const getDataUrl = `${envNet}/api/Device/list`
 // 获取公司管护人列表
-const getManagerUserUrl=`${envNet}/api/BaseInfo/orgUserList`
+const getManagerUserUrl = `${envNet}/api/BaseInfo/orgUserList`
 // 源columns拥有编号
 const sourceColumns = [
     { title: "设备ID", dataIndex: "deviceId" },
@@ -58,7 +58,11 @@ sourceColumns.map((v, i) => {
 export default class extends Component {
     constructor(props) {
         super(props)
-        const { DeviceTypeList, InstallList, relatedBuilding } = this.props
+        const { DeviceTypeList,
+            InstallList,
+            RelatedBuilding,
+            CompanyList
+        } = this.props
         // console.log(props.data.data.items)
         this.state = {
             // 显示设置可见
@@ -91,7 +95,9 @@ export default class extends Component {
             // addModalVisible:false
             addModalVisible: true,
             // 关联建筑物列表
-            relatedBuilding: relatedBuilding.data.data
+            relatedBuilding: RelatedBuilding.data.data,
+            // 公司列表
+            companyList: CompanyList.data.data
         }
     }
     componentDidMount() {
@@ -347,7 +353,8 @@ export default class extends Component {
             installAddress,
             deviceTypeList,
             addModalVisible,
-            relatedBuilding
+            relatedBuilding,
+            companyList
         } = this.state
         const paginationProps = {
             showQuickJumper: true,
@@ -371,6 +378,7 @@ export default class extends Component {
                     installAddress={installAddress}
                     deviceTypeList={deviceTypeList}
                     relatedBuilding={relatedBuilding}
+                    companyList={companyList}
                 />
                 <div className={styles.header}>
                     <span>|</span>设备信息
@@ -610,11 +618,38 @@ const ShowSetForm = Form.create()(
 // 添加表单
 const AddForm = Form.create()(
     class extends Component {
-        state={
+        state = {
             // 是否选择公司
-            selectCompany:false
+            selectCompany: false,
+            // 公司管理员列表
+            adminList:[]
         }
-        s
+        showAdmin(id) {
+            if (id != '') {
+                fetch(`${getManagerUserUrl}?orgId=${id}`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: "include",
+                }).then((res)=>{
+                    Promise.resolve(res.json())
+                    .then((v) => {
+                        if (v.ret == 1) {
+                            // console.log(v);
+                            this.setState({
+                                selectCompany:true,
+                                adminList:v.data
+                            })
+                        }
+                    })
+                }).catch((err) => {
+                    console.log(err)
+                })
+            }else{
+                this.setState({
+                    selectCompany:false,
+                })
+            }
+        }
         render() {
             const { visible,
                 form,
@@ -622,12 +657,14 @@ const AddForm = Form.create()(
                 onCancel,
                 relatedBuilding,
                 deviceTypeList,
-                installAddress
+                installAddress,
+                companyList
             } = this.props
             const { getFieldDecorator } = form;
+            const {selectCompany,adminList}=this.state
             let today = new Date()
             let defaultEnd = moment(today).format('YYYY-MM-DD')
-            // console.log(this.props)
+            // console.log(adminList)
             return (
                 <Modal
                     visible={visible}
@@ -746,7 +783,6 @@ const AddForm = Form.create()(
                                                     {v.name}
                                                 </Option>
                                             )
-
                                         })
                                     }
                                 </Select>
@@ -781,6 +817,61 @@ const AddForm = Form.create()(
                                 )
                             }
                         </Item>
+                        <Item label="运维公司">
+                            {getFieldDecorator('managedCompanyId', {
+                                rules: [{ required: true, message: '运维公司不能为空' }]
+                            })
+                                (
+                                <Select
+                                    placeholder='运维公司'
+                                    className={styles.formInput}
+                                    onChange={id => this.showAdmin(id)}
+                                >
+                                    {
+                                        companyList.map((v, i) => {
+                                            return (
+                                                <Option
+                                                    value={v.id}
+                                                    key={v.id}>
+                                                    {v.name}
+                                                </Option>
+                                            )
+
+                                        })
+                                    }
+                                </Select>
+                                )
+                            }
+                        </Item>
+                        {
+                            selectCompany?
+                            <Item label='管护人员'>
+                            {getFieldDecorator('managerUserId', {
+                            })
+                                (
+                                <Select
+                                    showSearch
+                                    placeholder='管护人员'
+                                    className={styles.formInput}
+                                >
+                                    {
+                                        adminList.map((v, i) => {
+                                            return (
+                                                <Option
+                                                    value={v.id}
+                                                    key={v.id}>
+                                                    {v.id}
+                                                </Option>
+                                            )
+
+                                        })
+                                    }
+                                </Select>
+                                )
+                            }
+                            </Item>
+                            :null
+                        }
                     </Form>
                 </Modal>
             )

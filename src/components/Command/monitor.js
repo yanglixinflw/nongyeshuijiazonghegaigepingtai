@@ -252,7 +252,7 @@ export default class extends Component {
                                             <i className={classnames('dyhsicon', 'dyhs-fangda')}>
                                             </i>
                                         </div>
-                                        <div>速度</div>
+                                        <div>画面</div>
                                         <div className={styles.minus}>
                                             <i className={classnames('dyhsicon', 'dyhs-suoxiao')}>
                                             </i>

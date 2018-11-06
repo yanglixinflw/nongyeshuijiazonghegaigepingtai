@@ -22,6 +22,10 @@ export default class extends React.Component {
     dispatch({
       type: 'deviceInformation/getInstallAddrList',
     })
+    // 获取公司列表
+    dispatch({
+      type: 'deviceInformation/getCompanyList',
+    })
     // 获取关联建筑物列表
     dispatch({
       type: 'deviceInformation/getRelatedBuilding',
@@ -48,7 +52,7 @@ export default class extends React.Component {
     let { deviceInformation ,loading} = this.props
     // console.log(deviceInformation)
     let arr = Object.keys(deviceInformation)
-    if (arr.length <=3) return deviceInformation = null
+    if (arr.length <=4) return deviceInformation = null
     // console.log(deviceInformation)
     return (
       <Fragment>
