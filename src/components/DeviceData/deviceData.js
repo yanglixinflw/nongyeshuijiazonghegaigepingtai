@@ -97,6 +97,7 @@ export default class extends Component {
             align: 'center',
             fixed: 'right',
             width: 100,
+            className:`${styles.action}`,
             render: (record) => {
                 return (
                     <span>

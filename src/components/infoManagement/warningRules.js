@@ -3,6 +3,8 @@ import styles from "./warningRules.less"
 import { Input, Button, Form, Cascader, Table, Modal} from 'antd';
 //ip地址
 const envNet='http://192.168.30.127:88';
+//生产环境
+// const envNet='';
 //翻页调用
 const dataUrl=`${envNet}/api/DeviceWaringRule/ruleList`;
 // post通用设置
@@ -50,6 +52,7 @@ export default class extends Component{
                 // 给表头添加字段名 必须一一对应
                 dataIndex: v.index,
                 align: 'center',
+                className: `${styles.tbw}`
             })
         })
         //操作列
