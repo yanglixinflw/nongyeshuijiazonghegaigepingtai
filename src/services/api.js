@@ -1,6 +1,8 @@
 import request from '../utils/request';
 // 开发环境
 const envNet = 'http://192.168.30.127:88'
+// 生产环境
+// const envNet=''
 // post通用设置
 let postOption = {
   method: 'POST',
@@ -75,7 +77,7 @@ export function getUserManagement(params){
 }
 // 获取设备安装地列表
 export function getInstallAddrList(){
-  return request(`${envNet}/api/Device/installAddrList`,{
+  return request(`${envNet}/api/BaseInfo/installAddrList`,{
     method:'GET',
     mode:'cors',
     credentials: "include",
