@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import styles from './index.less';
 import { Input, Button,List } from 'antd';
-import { Map, Markers, InfoWindow, Polyline } from 'react-amap';
+import { Map, Markers, InfoWindow} from 'react-amap';
 import IwContent from './infoWindow';
 import MarkerContent from './marker';
 import MyCustomize from './myCustomize';
-import classnames from 'classnames';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
 const homePosition = [
     { position: { longitude: 120.27, latitude: 30.27 },isWarningMsg:true },
@@ -17,7 +16,7 @@ const homePosition = [
     { position: { longitude: 120.27, latitude: 30.29 } },
     { position: { longitude: 120.29, latitude: 30.27 } },
     { position: { longitude: 120.26, latitude: 30.29 } },
-    { position: { longitude: 120.29, latitude: 30.26 } },
+    { position: { longitude: 120.27, latitude: 30.17 } },
 ]
 const linePosition = [
     { longitude: 121.27, latitude: 31.27 },
@@ -44,15 +43,15 @@ export default class extends Component {
                 },
             },
             //缩放控件
-            {
-                name: 'ToolBar',
-                options: {
-                  visible: true,  // 不设置该属性默认就是 true
-                  onCreated(ins){
-                    // console.log(ins);
-                  },
-                },
-            },
+            // {
+            //     name: 'ToolBar',
+            //     options: {
+            //       visible: true,  // 不设置该属性默认就是 true
+            //       onCreated(ins){
+            //         // console.log(ins);
+            //       },
+            //     },
+            // },
             
         ]
 
@@ -66,13 +65,15 @@ export default class extends Component {
             infoVisible: false,
             //信息窗位置，根据点击marker时 赋值
             infoPosition: '',
+            //信息窗大小
             size: {
                 width: 284,
                 height: 169
             },
+            //信息窗组件是否可用子组件
             isCustom: false,
             // 地图中心点
-            center: { longitude: 120.27, latitude: 30.17 },
+            center: { longitude: 120.26, latitude: 30.29 },
             //控件插件
             plugins,
             //多个Marker经纬度
@@ -81,8 +82,6 @@ export default class extends Component {
             allCameraMarkers: '',
             //marker是否被点击
             clicked: false,
-            //被选中的marker
-            chosenMarker:''
         }
         //console.log(this.state.markers)
         //摄像头标记点触发事件
@@ -158,8 +157,18 @@ export default class extends Component {
     }
     //摄像头markers的render方法
     renderMarkerLayout(extData) {
-        // console.log(extData)
-        return <MarkerContent markers={extData}/>
+        //判断marker的position是否和map的中心点一致，一致的话即为被选中的marker
+        if(
+            extData.position.latitude==this.state.center.latitude
+            &&
+            extData.position.longitude==this.state.center.longitude
+            )
+        {
+            return <MarkerContent markers={extData} chosenMarker={true}/>
+        }else{
+            return <MarkerContent markers={extData} chosenMarker={false}/>
+        }
+        
     }
     //图标记显示/隐藏
     _cameraHandler() {
@@ -176,7 +185,8 @@ export default class extends Component {
     //搜索
     _searchHandler(e){
         // console.log(e.target.value)
-        //从后台拿到数据后动态插入
+        //请求接口从后台拿到数据（dataList）后，_getDataList()
+        //选择marker后设置map的center为该marker的position
     }
     render() {
         const {
@@ -204,7 +214,10 @@ export default class extends Component {
                     />
                 </div>
                 <div className={styles.btnGroup}>
-                    <Button onClick={() => this._cameraHandler()}>
+                    <Button 
+                        onClick={() => this._cameraHandler()}
+                    
+                    >
                         <i className={styles.camera}></i>
                         <span>摄像头</span>
                     </Button>
@@ -226,7 +239,7 @@ export default class extends Component {
                 {/* marker */}
                 <Markers
                     markers={cameraMarkers}
-                    render={this.renderMarkerLayout}
+                    render={(extData)=>this.renderMarkerLayout(extData)}
                     events={this.cameraEvents}
                 />
                 <MyCustomize />

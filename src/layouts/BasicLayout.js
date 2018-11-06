@@ -136,7 +136,7 @@ export default class BasicLayout extends React.PureComponent {
                             <Route component={NoRight} />
                         </Switch>
                     </Content>
-                    {pathname == '/gismap/gismapPage' ? null :
+                    {pathname == '/gismap/gismapPage'? null :
                         <Footer style={{ background: '#151837' }}>
                             <GlobalFooter
                                 links={[
