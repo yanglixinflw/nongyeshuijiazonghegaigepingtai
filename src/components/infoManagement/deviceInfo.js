@@ -9,8 +9,10 @@ import {
     Modal,
     Checkbox,
     Row,
-    Col
+    Col,
+    DatePicker 
 } from 'antd'
+import moment from 'moment'
 import { Link } from 'dva/router';
 const Item = Form.Item
 const Option = Select.Option
@@ -85,7 +87,7 @@ export default class extends Component {
             deviceTypeList: DeviceTypeList.data.data,
             // 添加弹窗设置
             // addModalVisible:false
-            addModalVisible: true
+            addModalVisible: true,
         }
     }
     componentDidMount() {
@@ -585,16 +587,15 @@ const ShowSetForm = Form.create()(
         }
     }
 )
-const formItemLayout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 16 },
-};
 // 添加表单
 const AddForm = Form.create()(
     class extends Component {
         render() {
             const { visible, form, onOk, onCancel } = this.props
             const { getFieldDecorator } = form;
+            let today=new Date()
+            let defaultEnd = moment(today).format('YYYY-MM-DD')
+            console.log(defaultEnd)
             return (
                 <Modal
                     visible={visible}
@@ -603,12 +604,14 @@ const AddForm = Form.create()(
                     okText='确定'
                     onOk={onOk}
                     onCancel={onCancel}
-                    // style={{ marginTop: "250px" }}
                     className={styles.addModal}
                     centered={true}
                 >
-                    <Form>
-                        <Form.Item {...formItemLayout} label="设备型号">
+                    <Form 
+
+                    className={styles.FlexForm}
+                    >
+                        <Form.Item label="设备型号">
                             {getFieldDecorator('deviceTypeId', 
                             {
                                 rules: [{ required: true, message: '设备型号不能为空' }]
@@ -616,12 +619,61 @@ const AddForm = Form.create()(
                             )
                                 (
                                 <Select
+                                    className={styles.formInput}
                                     placeholder='设备类型'
                                 >
                                     <Option value=''>全部</Option>
                                     
     
                                 </Select>
+                                )
+                            }
+                        </Form.Item>
+                        <Form.Item label="设备名称">
+                            {getFieldDecorator('name', 
+                            {
+                                rules: [{ required: true, message: '设备名称不能为空' },
+                                {max:30,message:'不超过30个字符'}]
+                            }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入设备名称'
+                                />
+                                )
+                            }
+                        </Form.Item>
+                        <Form.Item label="设备安装地">
+                            {getFieldDecorator('installAddrId', 
+                            {
+                                rules: [{ required: true, message: '设备安装地不能为空' }]
+                            }
+                            )
+                                (
+                                <Select
+                                    className={styles.formInput}
+                                    placeholder='设备安装地'
+                                >
+                                    <Option value=''>全部</Option>
+                                    
+    
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                        <Form.Item label="启用日期">
+                            {getFieldDecorator('enableTime', 
+                            {
+                                initialValue:moment(defaultEnd)
+                            }
+                            )
+                                (
+                                <DatePicker
+                                    className={styles.formInput}
+                                    placeholder='设备安装地'
+                                    allowClear={false}
+                                />
                                 )
                             }
                         </Form.Item>
