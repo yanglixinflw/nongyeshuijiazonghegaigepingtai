@@ -82,9 +82,6 @@
         }   
     }
     :global{
-        .ant-modal-content{
-            top: 150px;
-        }
         .ant-table{
             background:#1C2241;
             margin-left: 35px;
@@ -250,4 +247,150 @@
         }
     }
     
+}
+.delModal{
+    width: 400px !important;
+    color:#fff;
+    :global{
+        .ant-modal-header{
+            background: #171A39;
+            border-bottom:1px solid #363A69;
+            .ant-modal-title{
+                color:#fff;
+            }
+        }
+        .ant-modal-body{
+            text-align: center;
+            padding: 38px 53px ;
+            background: #171A39;
+
+        }
+        .ant-modal-close-x{
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .ant-modal-footer{
+            background: #171A39;
+            border-top: 1px solid #363A69;
+            text-align: center;
+            div{
+                .ant-btn{
+                    color:#A4AFBC;
+                    width:70px;
+                    
+                }
+                button:first-child{
+                    border:0;
+                    background: #171A39;
+                    &:hover{
+                        color:#327DF4;
+                    }
+                }
+                button:last-child{
+                    border:0;
+                    background: #272D52;
+                    &:hover{
+                        background: #327DF4;
+                        color:#fff;
+                    }
+                }
+            }
+            
+        }
+    }
+}
+.addModal{
+    width: 400px !important;
+    color:#fff;
+    :global{
+        .ant-form-item-required:before{
+            color:#E94B5E;
+        }
+        .ant-form-item-label label:after{
+            content: ''
+        }
+        .ant-modal-header{
+            background: #171A39;
+            border-bottom:1px solid #363A69;
+            .ant-modal-title{
+                color:#fff;
+            }
+        }
+        .ant-modal-body{
+            text-align: center;
+            padding: 38px 50px ;
+            background: #171A39;
+            .ant-form-item-label label{
+                color:#fff;
+            }
+            .ant-input{
+                background: #272D52;
+                border:0;
+                color:#D4D5DC;
+                font-size: 12px;
+                &:focus{
+                    border:1px solid #327DF4;
+                }
+            }
+            .ant-select-selection{
+                background: #272D52;
+                border:0;
+                color:#D4D5DC;
+                .ant-select-arrow{
+                    color:#5C6480;
+                }
+                &:focus{
+                    border:1px solid #327DF4;
+                }
+            }
+        }
+        .ant-modal-close-x{
+            color: #C8C8C8;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .ant-modal-footer{
+            background: #171A39;
+            border-top: 1px solid #363A69;
+            text-align: center;
+            div{
+                .ant-btn{
+                    color:#A4AFBC;
+                    width:70px;
+                    
+                }
+                button:first-child{
+                    border:0;
+                    background: #171A39;
+                    &:hover{
+                        color:#327DF4;
+                    }
+                }
+                button:last-child{
+                    border:0;
+                    background: #272D52;
+                    &:hover{
+                        background: #327DF4;
+                        color:#fff;
+                    }
+                }
+            }
+        }
+        .ant-select-selection__choice{
+            background: #2f355f;
+            border:0;
+            color:#D4D5DC;
+        }
+        .ant-select-selection__choice__remove{
+            color: #C8C8C8;
+        }
+        .has-error .ant-form-explain, .has-error .ant-form-split{
+            text-align: left;
+            color:#E94B5E;
+        }
+        .has-error .ant-input, .has-error .ant-input:hover{
+            border:1px solid #E94B5E;
+        }
+    }
 }

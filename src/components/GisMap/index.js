@@ -75,22 +75,23 @@ export default class extends Component {
             center: { longitude: 120.27, latitude: 30.17 },
             //控件插件
             plugins,
-            //多个Marker
-            homeMarkers: homePosition,
-            allHomeMarkers: '',
+            //多个Marker经纬度
+            cameraMarkers: homePosition,
+            //所有摄像头markers实例
+            allCameraMarkers: '',
+            //marker是否被点击
             clicked: false,
-            //折线path
-            linePath: linePosition,
-            lineVisible:true,
+            //被选中的marker
+            chosenMarker:''
         }
         //console.log(this.state.markers)
-        //标记点触发事件
-        this.markersEvents = {
-            created: (allHomeMarkers) => {
+        //摄像头标记点触发事件
+        this.cameraEvents = {
+            created: (allCameraMarkers) => {
                 //   console.log('All Markers Instance Are Below');
                 // console.log(MapsOption)
                 this.setState({
-                    allHomeMarkers
+                    allCameraMarkers
                 })
             },
             click: (MapsOption, marker) => {
@@ -154,45 +155,23 @@ export default class extends Component {
                 // console.log('InfoWindow prop changed')
             },
         }
-        //折线触发事件
-        this.lineEvents = {
-            created: (ins) => { 
-                // console.log(ins) 
-            },
-            show: () => { 
-                // console.log('line show') 
-            },
-            hide: () => { 
-                console.log('line hide') 
-            },
-            click: () => { 
-                console.log('line clicked') 
-            },
-        }
     }
-    //markers的render方法
+    //摄像头markers的render方法
     renderMarkerLayout(extData) {
         // console.log(extData)
         return <MarkerContent markers={extData}/>
-    
     }
     //图标记显示/隐藏
     _cameraHandler() {
-        const { allHomeMarkers } = this.state;
-        allHomeMarkers.map((v, i) => {
+        const { allCameraMarkers } = this.state;
+        allCameraMarkers.map((v, i) => {
             if (v.Pg.visible == true) {
                 v.hide();
             } else {
                 v.show()
             }
         })
-        //    console.log(allHomeMarkers)
-    }
-    //折线显示/隐藏
-    _lineHandler(){
-        this.setState({
-            lineVisible:!this.state.lineVisible
-        })
+        //    console.log(allCameraMarkers)
     }
     //搜索
     _searchHandler(e){
@@ -203,10 +182,9 @@ export default class extends Component {
         const {
             plugins, center,
             //useCluster,
-            homeMarkers,
+            cameraMarkers,
             infoVisible,
             infoOffset, isCustom, size, infoPosition,
-            linePath,lineVisible
         } = this.state;
         return (
             <Map
@@ -230,9 +208,9 @@ export default class extends Component {
                         <i className={styles.camera}></i>
                         <span>摄像头</span>
                     </Button>
-                    <Button onClick={() => this._lineHandler()}>水表</Button>
-                    <Button>电表</Button>
-                    <Button>水阀</Button>
+                    <Button onClick={() => this._WatermeterHandler()}>水表</Button>
+                    <Button onClick={() => this._ElectricmeterHandler()}>电表</Button>
+                    <Button onClick={() => this._WatervalveHandler()}>水阀</Button>
                 </div>
                 {/* 信息窗 */}
                 <InfoWindow
@@ -247,16 +225,9 @@ export default class extends Component {
                 </InfoWindow>
                 {/* marker */}
                 <Markers
-                    markers={homeMarkers}
+                    markers={cameraMarkers}
                     render={this.renderMarkerLayout}
-                    events={this.markersEvents}
-                />
-                {/* 折线 */}
-                <Polyline
-                    path={linePath}
-                    events={this.lineEvents}
-                    visible={lineVisible}
-                    // draggable={this.state.draggable}
+                    events={this.cameraEvents}
                 />
                 <MyCustomize />
 

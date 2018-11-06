@@ -247,6 +247,7 @@ const ShowSetForm = Form.create()(
             const CheckboxGroup = Checkbox.Group;
             return (
                 <Modal
+                    centered={true}
                     className={styles.showSet}
                     visible={visible}
                     title="显示设置"
