@@ -119,3 +119,11 @@ export function getRelatedBuilding(params){
     )
   })
 }
+// 获取运营公司列表
+export function getCompanyList(){
+  return request(`${envNet}/api/BaseInfo/companyList`,{
+    method:'GET',
+    mode:'cors',
+    credentials: "include",
+  })
+}
