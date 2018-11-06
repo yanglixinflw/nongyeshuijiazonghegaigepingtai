@@ -1,6 +1,8 @@
 import React from 'react';
 import { routerRedux, Switch } from 'dva/router';
-import { Route, Redirect } from 'react-router-dom';
+import { Route} from 'react-router-dom';
+import { LocaleProvider } from 'antd';
+import zhCN from 'antd/lib/locale-provider/zh_CN';
 import { getRouterData } from './common/router';
 const { ConnectedRouter } = routerRedux
 // app为顶层信息
@@ -11,6 +13,7 @@ function RouterConfig({ history, app }) {
   const BasicLayout = routerData['/'].component;
   // console.log(BasicLayout)
   return (
+    <LocaleProvider locale={zhCN}>
     <ConnectedRouter history={history}>
       <Switch>
         <Route path="/login" exact component={loginLayout} />
@@ -22,6 +25,7 @@ function RouterConfig({ history, app }) {
         />
       </Switch>
     </ConnectedRouter>
+    </LocaleProvider>
   );
 }
 

@@ -101,6 +101,11 @@
             outline: 0;
             &:hover {
                 background: #327DF4;
+                color: #fff;
+            }
+            &:focus {
+                background: #327DF4;
+                color: #fff;
                 color:#fff;
             }
             &:focus {
@@ -112,9 +117,6 @@
 }
 
 :global {
-    .ant-modal-content {
-        top: 150px;
-    }
     .ant-table-fixed-right {
         box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
         .ant-table-thead {
@@ -485,7 +487,14 @@
         }
     }
 }
-
+.action{
+    padding:0px  16px !important;
+    :global{
+        .ant-btn{
+            padding:0px 6px !important;
+        }
+    }
+}
 //历史数据 
 .history {
     // 表格单元最小宽度

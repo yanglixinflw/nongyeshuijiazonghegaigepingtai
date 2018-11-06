@@ -9,8 +9,10 @@ import {
     Modal,
     Checkbox,
     Row,
-    Col
+    Col,
+    DatePicker
 } from 'antd'
+import moment from 'moment'
 import { Link } from 'dva/router';
 const Item = Form.Item
 const Option = Select.Option
@@ -27,29 +29,37 @@ let postOption = {
 
 // 开发环境
 const envNet = 'http://192.168.30.127:88'
+// 生产环境
+// const envNet=''
 // 搜索、翻页接口
 const getDataUrl = `${envNet}/api/Device/list`
+// 获取公司管护人列表
+const getManagerUserUrl=`${envNet}/api/BaseInfo/orgUserList`
 // 源columns拥有编号
 const sourceColumns = [
-    { title: "设备ID", dataIndex: "deviceId", number: 0 },
-    { title: "设备型号", dataIndex: "deviceTypeName", number: 1 },
-    { title: "设备名称", dataIndex: "name", number: 2 },
-    { title: "设备安装地", dataIndex: "installAddr", number: 3 },
-    { title: "关联建筑物", dataIndex: "relatedBuilding", number: 4},
-    { title: "地理坐标", dataIndex: "IP", number:5 },
-    { title: "启用日期", dataIndex: "enableTime", number: 6 },
-    { title: "运维公司", dataIndex: "opsCompony", number: 7 },
-    { title: "管护人员", dataIndex: "managerName", number: 8 },
-    { title: "网关地址", dataIndex: "gatewayAddr", number: 9 },
-    { title: "出厂编号", dataIndex: "factoryNumber", number: 10 },
-    { title: "预警规则", dataIndex: "warningRules", number: 11 },
-    { title: "更新时间", dataIndex: "lastRequestTime", number: 12 }
+    { title: "设备ID", dataIndex: "deviceId" },
+    { title: "设备型号", dataIndex: "deviceTypeName" },
+    { title: "设备名称", dataIndex: "name" },
+    { title: "设备安装地", dataIndex: "installAddr" },
+    { title: "关联建筑物", dataIndex: "relatedBuilding" },
+    { title: "地理坐标", dataIndex: "IP" },
+    { title: "启用日期", dataIndex: "enableTime" },
+    { title: "运维公司", dataIndex: "opsCompony" },
+    { title: "管护人员", dataIndex: "managerName" },
+    { title: "网关地址", dataIndex: "gatewayAddr" },
+    { title: "出厂编号", dataIndex: "factoryNumber" },
+    { title: "预警规则", dataIndex: "warningRules" },
+    { title: "更新时间", dataIndex: "lastRequestTime" }
 ]
+// 按顺序给定序号
+sourceColumns.map((v, i) => {
+    v.number = i
+})
 export default class extends Component {
     constructor(props) {
         super(props)
-        const { DeviceTypeList,InstallList } = this.props
-        // console.log(InstallList.data.data)
+        const { DeviceTypeList, InstallList, relatedBuilding } = this.props
+        // console.log(props.data.data.items)
         this.state = {
             // 显示设置可见
             showSetVisible: false,
@@ -69,14 +79,19 @@ export default class extends Component {
                 "deviceTypeId": "",
                 "installAddrId": "",
                 "warningRules": "",
-                "areaName": "",
+                "relatedBuildingId": "",
             },
             // 设备安装地列表
             installAddress: InstallList.data.data,
             // 过滤后的表头
             filterColumns: sourceColumns,
             // 设备类型列表
-            deviceTypeList: DeviceTypeList.data.data
+            deviceTypeList: DeviceTypeList.data.data,
+            // 添加弹窗设置
+            // addModalVisible:false
+            addModalVisible: true,
+            // 关联建筑物列表
+            relatedBuilding: relatedBuilding.data.data
         }
     }
     componentDidMount() {
@@ -104,7 +119,7 @@ export default class extends Component {
             align: 'center',
             fixed: 'right',
             width: 410,
-            className:`${styles.action}`,
+            className: `${styles.action}`,
             render: (record) => {
                 return (
                     <span>
@@ -142,7 +157,6 @@ export default class extends Component {
         let tableData = []
         // 表单数据
         data.map((v, i) => {
-            console.log(v)
             tableData.push({
                 deviceId: v.deviceId,
                 deviceTypeName: v.deviceTypeName,
@@ -154,7 +168,7 @@ export default class extends Component {
                 managerName: v.managerName,
                 gatewayAddr: v.gatewayAddr,
                 factoryNumber: v.factoryNumber,
-                relatedBuilding:v.relatedBuilding,
+                relatedBuilding: v.relatedBuilding,
                 warningRules: v.warningRules,
                 lastRequestTime: v.lastRequestTime,
                 key: i
@@ -174,7 +188,7 @@ export default class extends Component {
     }
     // 翻页
     _pageChange(page) {
-        let { searchValue ,filterColumns} = this.state
+        let { searchValue, filterColumns } = this.state
         searchValue.pageIndex = page - 1
         // console.log(searchValue)
         return fetch(getDataUrl, {
@@ -196,7 +210,7 @@ export default class extends Component {
                         })
                         this.setState({
                             itemCount,
-                            tableData:items
+                            tableData: items
                         })
                         this._getTableData(items, filterColumns);
                     }
@@ -213,7 +227,7 @@ export default class extends Component {
     }
     // 搜索功能
     _searchTableData() {
-        const {filterColumns } = this.state
+        const { filterColumns } = this.state
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
@@ -221,11 +235,11 @@ export default class extends Component {
                 return;
             }
             // 未定义时给空值
-            if(!values.deviceTypeId){
-                values.deviceTypeId=''
+            if (!values.deviceTypeId) {
+                values.deviceTypeId = ''
             }
-            if(!values.installAddrId){
-                values.installAddrId=''
+            if (!values.installAddrId) {
+                values.installAddrId = ''
             }
             values.pageIndex = 0
             values.pageSize = 10
@@ -240,7 +254,7 @@ export default class extends Component {
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
-                        console.log(v)
+                        // console.log(v)
                         if (v.ret == 1) {
                             let { items, itemCount } = v.data
                             this.setState({
@@ -311,8 +325,30 @@ export default class extends Component {
         })
 
     }
+    // 添加弹窗
+    _addHandler() {
+        this.setState({
+            addModalVisible: true
+        })
+    }
+    _addOk() {
+
+    }
+    _addCancel() {
+        this.setState({
+            addModalVisible: false
+        })
+    }
     render() {
-        const { columns, showSetVisible, tableData, itemCount, installAddress, deviceTypeList } = this.state
+        const { columns,
+            showSetVisible,
+            tableData,
+            itemCount,
+            installAddress,
+            deviceTypeList,
+            addModalVisible,
+            relatedBuilding
+        } = this.state
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -326,9 +362,16 @@ export default class extends Component {
                     visible={showSetVisible}
                     onCancel={() => this._setShowCancel()}
                     onOk={() => this._setShowOk()}
-                    className={styles.searchForm}
                 />
-
+                <AddForm
+                    wrappedComponentRef={(addForm) => this.addForm = addForm}
+                    visible={addModalVisible}
+                    onCancel={() => this._addCancel()}
+                    onOk={() => this._addOk()}
+                    installAddress={installAddress}
+                    deviceTypeList={deviceTypeList}
+                    relatedBuilding={relatedBuilding}
+                />
                 <div className={styles.header}>
                     <span>|</span>设备信息
                 </div>
@@ -337,6 +380,7 @@ export default class extends Component {
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
                         installAddress={installAddress}
                         deviceTypeList={deviceTypeList}
+                        relatedBuilding={relatedBuilding}
                     />
                     <div className={styles.buttonGroup}
                     >
@@ -346,7 +390,7 @@ export default class extends Component {
                             onClick={() => this._searchTableData()}
                         >
                             搜索
-                    </Button>
+                        </Button>
                         <Button
                             icon='reload'
                             className={styles.searchButton}
@@ -355,21 +399,22 @@ export default class extends Component {
                             重置</Button>
                         <Button
                             icon='plus'
+                            onClick={() => this._addHandler()}
                         >
                             添加
-                    </Button>
+                        </Button>
                         <Button
                             icon='eye'
                             onClick={() => this._showSetHandler()}
                         >
                             显示设置
-                    </Button>
+                        </Button>
                         <Button
                             icon='upload'
                             onClick={() => this._uploadHandler()}
                         >
                             导出数据
-                    </Button>
+                        </Button>
                     </div>
                 </div>
                 <Table
@@ -389,9 +434,9 @@ export default class extends Component {
 const SearchForm = Form.create()(
     class extends Component {
         render() {
-            const { form, installAddress, deviceTypeList } = this.props;
+            const { form, installAddress, deviceTypeList, relatedBuilding } = this.props;
             const { getFieldDecorator } = form;
-            // console.log(deviceTypeList)
+            // console.log(relatedBuilding)
             return (
                 <Form
                     layout='inline'
@@ -427,16 +472,14 @@ const SearchForm = Form.create()(
                                         :
                                         deviceTypeList.map((v, i) => {
                                             return (
-                                                <Option 
-                                                value={v.deviceTypeId} 
-                                                key={v.deviceTypeId}>
-                                                {v.name}
+                                                <Option
+                                                    value={v.deviceTypeId}
+                                                    key={v.deviceTypeId}>
+                                                    {v.name}
                                                 </Option>
                                             )
-
                                         })
                                 }
-
                             </Select>
                             )
                         }
@@ -466,10 +509,10 @@ const SearchForm = Form.create()(
                                         :
                                         installAddress.map((v, i) => {
                                             return (
-                                                <Option 
-                                                value={v.id} 
-                                                key={v.id}>
-                                                {v.addr}
+                                                <Option
+                                                    value={v.id}
+                                                    key={v.id}>
+                                                    {v.addr}
                                                 </Option>
                                             )
 
@@ -480,14 +523,27 @@ const SearchForm = Form.create()(
                         }
                     </Item>
                     <Item>
-                        {getFieldDecorator('areaName', {
-                            initialValue: ''
-                        })
+                        {getFieldDecorator('relatedBuildingId')
                             (
-                            <Input
+                            <Select
                                 placeholder='关联建筑物'
-                                type='text'
-                            />
+                            >
+                                <Option value=''>全部</Option>
+                                {
+                                    relatedBuilding.length === 0 ? null
+                                        :
+                                        relatedBuilding.map((v, i) => {
+                                            return (
+                                                <Option
+                                                    value={v.buildingId}
+                                                    key={v.buildingId}>
+                                                    {v.name}
+                                                </Option>
+                                            )
+
+                                        })
+                                }
+                            </Select>
                             )
                         }
                     </Item>
@@ -523,10 +579,10 @@ const ShowSetForm = Form.create()(
                     okText='确定'
                     onOk={onOk}
                     onCancel={onCancel}
-                    style={{ marginTop: "250px" }}
+                    centered={true}
                 >
                     <Form>
-                        <Form.Item>
+                        <Form>
                             {getFieldDecorator('dataIndex', {
                                 initialValue: sourceColumns
                             })
@@ -544,7 +600,187 @@ const ShowSetForm = Form.create()(
                                 </CheckboxGroup>
                                 )
                             }
-                        </Form.Item>
+                        </Form>
+                    </Form>
+                </Modal>
+            )
+        }
+    }
+)
+// 添加表单
+const AddForm = Form.create()(
+    class extends Component {
+        state={
+            // 是否选择公司
+            selectCompany:false
+        }
+        s
+        render() {
+            const { visible,
+                form,
+                onOk,
+                onCancel,
+                relatedBuilding,
+                deviceTypeList,
+                installAddress
+            } = this.props
+            const { getFieldDecorator } = form;
+            let today = new Date()
+            let defaultEnd = moment(today).format('YYYY-MM-DD')
+            // console.log(this.props)
+            return (
+                <Modal
+                    visible={visible}
+                    title="添加设备"
+                    cancelText='取消'
+                    okText='确定'
+                    onOk={onOk}
+                    onCancel={onCancel}
+                    className={styles.addModal}
+                    centered={true}
+                >
+                    <Form
+                        className={styles.FlexForm}
+                    >
+                        <Item label="设备型号">
+                            {getFieldDecorator('deviceTypeId',
+                                {
+                                    rules: [{ required: true, message: '设备型号不能为空' }]
+                                }
+                            )
+                                (
+                                <Select
+                                    className={styles.formInput}
+                                    placeholder='设备类型'
+                                >
+                                    <Option value=''>全部</Option>
+                                    {
+                                        deviceTypeList.map((v, i) => {
+                                            return (
+                                                <Option
+                                                    value={v.deviceTypeId}
+                                                    key={v.deviceTypeId}>
+                                                    {v.name}
+                                                </Option>
+                                            )
+                                        })
+                                    }
+
+                                </Select>
+                                )
+                            }
+                        </Item>
+                        <Item label="设备名称">
+                            {getFieldDecorator('name',
+                                {
+                                    rules: [{ required: true, message: '设备名称不能为空' },
+                                    { max: 30, message: '不超过30个字符' }]
+                                }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入设备名称'
+                                />
+                                )
+                            }
+                        </Item>
+                        <Item label="设备安装地">
+                            {getFieldDecorator('installAddrId',
+                                {
+                                    rules: [{ required: true, message: '设备安装地不能为空' }]
+                                }
+                            )
+                                (
+                                <Select
+                                    className={styles.formInput}
+                                    placeholder='设备安装地'
+                                >
+                                    <Option value=''>全部</Option>
+                                    {
+                                        installAddress.map((v, i) => {
+                                            return (
+                                                <Option
+                                                    value={v.id}
+                                                    key={v.id}>
+                                                    {v.addr}
+                                                </Option>
+                                            )
+                                        })
+                                    }
+
+                                </Select>
+                                )
+                            }
+                        </Item>
+                        <Item label="启用日期">
+                            {getFieldDecorator('enableTime',
+                                {
+                                    initialValue: moment(defaultEnd)
+                                }
+                            )
+                                (
+                                <DatePicker
+                                    className={styles.formInput}
+                                    allowClear={false}
+                                />
+                                )
+                            }
+                        </Item>
+                        <Item label="关联建筑物">
+                            {getFieldDecorator('relatedBuildingId', {
+                                rules: [{ required: true, message: '设备安装地不能为空' }]
+                            })
+                                (
+                                <Select
+                                    placeholder='关联建筑物'
+                                    className={styles.formInput}
+                                >
+                                    <Option value=''>全部</Option>
+                                    {
+                                        relatedBuilding.map((v, i) => {
+                                            return (
+                                                <Option
+                                                    value={v.buildingId}
+                                                    key={v.buildingId}>
+                                                    {v.name}
+                                                </Option>
+                                            )
+
+                                        })
+                                    }
+                                </Select>
+                                )
+                            }
+                        </Item>
+                        <Item label='地理经度'>
+                            {getFieldDecorator('longitude',
+                                {
+                                    rules: [{ required: true, message: '地理经度不能为空' }]
+                                }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入地理经度'
+                                />
+                                )
+                            }
+                        </Item>
+                        <Item label='地理纬度'>
+                            {getFieldDecorator('latitude',
+                                {
+                                    rules: [{ required: true, message: '地理纬度不能为空' }]
+                                }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入地理纬度'
+                                />
+                                )
+                            }
+                        </Item>
                     </Form>
                 </Modal>
             )

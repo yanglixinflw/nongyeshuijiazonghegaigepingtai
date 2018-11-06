@@ -1,13 +1,13 @@
 import {
     getDeviceInfo,
     getInstallAddrList,
-    getDeviceTypeList
+    getDeviceTypeList,
+    getRelatedBuilding
 } from '../services/api';
 
 export default {
     namespace:'deviceInformation',
     state:{
-
     },
     effects:{
         *getInfo({payload},{call,put}){
@@ -31,6 +31,13 @@ export default {
                 payload:TypeList
             })
         },
+        *getRelatedBuilding({payload},{call,put}){
+            const relatedBuilding =yield call(getRelatedBuilding,payload)
+            yield put ({
+                type:'fetchRelatedBuilding',
+                payload:relatedBuilding
+            })
+        }
     },
     reducers:{
         fetchOk(state,{payload}){
@@ -43,6 +50,10 @@ export default {
         },
         fetchDeviceType(state,{payload}){
             state.DeviceTypeList=payload
+            return {...state}
+        },
+        fetchRelatedBuilding(state,{payload}){
+            state.relatedBuilding=payload
             return {...state}
         },
         clear(){

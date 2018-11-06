@@ -17,11 +17,23 @@ export default class extends Component {
     }
     render(){
         const {markers} = this.state;
+        const {chosenMarker} = this.props;
+        console.log(chosenMarker)
         return (
             <div>
-                {markers.isWarningMsg?
+                {
+                    chosenMarker?
+                        <i className={styles.chosen}>
+                            <div className={styles.chosenAnimation1}></div>
+                            <div className={styles.chosenAnimation2}></div>
+                            <div className={styles.chosenAnimation3}></div>
+                        </i> 
+                    :
+                    markers.isWarningMsg?
                         <i className={styles.warning}>
-                            <div className={styles.warningAnimation}></div>
+                            <div className={styles.warningAnimation1}></div>
+                            <div className={styles.warningAnimation2}></div>
+                            <div className={styles.warningAnimation3}></div>
                         </i> 
                     : 
                         <i className={styles.normal}></i>

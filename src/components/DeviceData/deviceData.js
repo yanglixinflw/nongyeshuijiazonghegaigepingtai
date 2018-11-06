@@ -97,6 +97,7 @@ export default class extends Component {
             align: 'center',
             fixed: 'right',
             width: 100,
+            className:`${styles.action}`,
             render: (record) => {
                 return (
                     <span>
@@ -393,6 +394,7 @@ const ShowSetForm = Form.create()(
             const CheckboxGroup = Checkbox.Group;
             return (
                 <Modal
+                    centered={true}
                     className={styles.showSet}
                     visible={visible}
                     title="显示设置"

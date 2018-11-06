@@ -7,12 +7,12 @@ class IndexPage extends React.Component {
   }
   render() {
     return (
-      <div>
+      
         <div className={styles.map}>
             <MyMapComponent />   
         </div>
         
-      </div>
+     
 
     );
   }
