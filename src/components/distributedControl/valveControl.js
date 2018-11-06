@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import styles from "./valveControl.less"
 import { Input, Button, Form, Cascader, Table, Divider,Select} from 'antd';
+import { Link } from 'dva/router';
 //表头
 const tableTitle=[
     {index:"valveType",item:"阀门型号"},
@@ -151,12 +152,15 @@ export default class extends Component{
                         >
                             阀门开关
                         </Button>
-                        <Button
-                            icon='environment'
-                            className={styles.fnButton}
-                        >
-                            在地图操作
-                        </Button>
+                        <Link to={`/valveControl/map`} target='_blank'>
+                            <Button
+                                icon='environment'
+                                className={styles.fnButton}
+                            >
+                                在地图操作
+                            </Button>
+                        </Link>
+                        
                     </div> 
                 </div>
                 <Table

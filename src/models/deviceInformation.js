@@ -45,7 +45,6 @@ export default {
         },
         fetchInstallList(state,{payload}){
             state.InstallList=payload
-            
             return {...state}
         },
         fetchDeviceType(state,{payload}){
