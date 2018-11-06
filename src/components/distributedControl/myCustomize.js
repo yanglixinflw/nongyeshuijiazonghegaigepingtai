@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import {Button} from 'antd';
-import styles from './index.less';
+import styles from './mapControl.less';
 import classnames from 'classnames';
 export default class extends Component{
     constructor(props){

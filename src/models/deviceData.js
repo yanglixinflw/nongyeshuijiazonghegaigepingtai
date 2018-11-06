@@ -1,5 +1,4 @@
-import { queryDevice } from '../services/api';
-import { queryDeviceTitle } from '../services/api';
+import { queryDevice ,queryDeviceTitle} from '../services/api';
 export default {
     namespace: 'deviceData',
     state:{

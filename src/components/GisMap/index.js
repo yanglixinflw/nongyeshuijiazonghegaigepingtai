@@ -18,11 +18,7 @@ const homePosition = [
     { position: { longitude: 120.26, latitude: 30.29 } },
     { position: { longitude: 120.27, latitude: 30.17 } },
 ]
-const linePosition = [
-    { longitude: 121.27, latitude: 31.27 },
-    { longitude: 123.27, latitude: 33.27 },
 
-]
 export default class extends Component {
     constructor(props) {
         super(props)
@@ -102,16 +98,6 @@ export default class extends Component {
                 //   console.log('MapsOptions:');
                 //   console.log(MapsOption);
                 //   console.log('marker:');
-                 
-                marker.render=()=>{
-                    return(
-                        <div className={styles.focused}>
-                            <div className={styles.focusedAnimation}></div>
-                        </div>
-                    )
-                    
-                }
-                console.log(marker.render());
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
@@ -242,6 +228,7 @@ export default class extends Component {
                     render={(extData)=>this.renderMarkerLayout(extData)}
                     events={this.cameraEvents}
                 />
+                 {/* 自定义地图控件 */}
                 <MyCustomize />
 
             </Map>
