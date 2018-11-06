@@ -110,3 +110,12 @@ export function getDeviceTypeList(params){
     )
   })
 }
+// 获取设备关联建筑物列表
+export function getRelatedBuilding(params){
+  return request(`${envNet}/api/Building/list`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}

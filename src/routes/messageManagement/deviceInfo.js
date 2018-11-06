@@ -22,6 +22,13 @@ export default class extends React.Component {
     dispatch({
       type: 'deviceInformation/getInstallAddrList',
     })
+    // 获取关联建筑物列表
+    dispatch({
+      type: 'deviceInformation/getRelatedBuilding',
+      payload:{
+        countDevice:false
+      }
+    })
     // 默认全部列表请求方式
     dispatch({
       type: 'deviceInformation/getInfo',
@@ -31,7 +38,7 @@ export default class extends React.Component {
         "deviceTypeId": "",
         "installAddrId": "",
         "warningRules": "",
-        "areaName": "",
+        "relatedBuildingId": "",
         "pageIndex": 0,
         "pageSize": 10
       }
@@ -41,7 +48,7 @@ export default class extends React.Component {
     let { deviceInformation ,loading} = this.props
     // console.log(deviceInformation)
     let arr = Object.keys(deviceInformation)
-    if (arr.length <=2) return deviceInformation = null
+    if (arr.length <=3) return deviceInformation = null
     // console.log(deviceInformation)
     return (
       <Fragment>
