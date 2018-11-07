@@ -37,8 +37,6 @@ export default class extends Component{
         super(props)
         const { farmersInfo } = props;
         this.state = {
-            //表头数据
-            tableTitle,
             title:tableTitle,
             itemCount:farmersInfo.data.data.itemCount,//总数据数
             data:farmersInfo.data.data.items,//表格数据源
@@ -53,7 +51,6 @@ export default class extends Component{
                 "pageSize":10
             },
             //用于增删改查标识字段
-            idCard:'',
             userId:"",
             //删除弹框显示的内容
             delModalText: '删除后信息将无法恢复，是否确认删除。',
@@ -104,6 +101,7 @@ export default class extends Component{
             key: 'action',
             align: 'center',
             fixed: 'right',
+            className: `${styles.action}`,
             width: 200,
             render: (record) => {
                 return (

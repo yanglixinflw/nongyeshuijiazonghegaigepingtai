@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import styles from './warningRecords.less';
 import { Input, Button, Form, Cascader, Table, Modal,Select} from 'antd';
-//ip地址
+//开发地址
 const envNet='http://192.168.30.127:88';
 //生产环境
 // const envNet='';
@@ -70,6 +70,7 @@ export default class extends Component{
             key: 'action',
             align: 'center',
             fixed: 'right',
+            className: `${styles.action}`,
             width: 200,
             render: (record) => {
                 return (
@@ -192,7 +193,7 @@ export default class extends Component{
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableDatas}
-                    // scroll={{ x: 1300 }}
+                    scroll={{ x: 1300 }}
                 />
             </React.Fragment>
         )
