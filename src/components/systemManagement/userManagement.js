@@ -328,7 +328,7 @@ export default class extends Component {
             Promise.resolve(res.json())
                 .then((v) => {
                     if (v.ret == 1) {
-                        // console.log(v)
+                        console.log(v)
                         let modifydata = v.data;
                         this.setState({
                             userId,

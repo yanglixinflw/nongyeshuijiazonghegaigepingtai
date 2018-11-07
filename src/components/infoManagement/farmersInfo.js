@@ -29,7 +29,7 @@ const tableTitle=[
     {index:"realName",item:"姓名"},
     {index:"mobilePhone",item:"电话"},
     {index:"idCard",item:"身份证"},
-    {index:"areaId",item:"归属地区"},
+    {index:"areaName",item:"归属地区"},
     {index:"userType",item:"用户类型"},
     {index:"orgId",item:"所属机构"}
 ]
@@ -52,6 +52,8 @@ export default class extends Component{
             editvisible: false,
             //修改所对应的信息
             editData:[],
+            //修改用户密码弹出框提示
+            editPwdvisible: false,
             //添加用户信息的弹出框显示
             addvisible:false,
             //归属片区列表
@@ -131,7 +133,7 @@ export default class extends Component{
                 realName:v.realName,
                 mobilePhone:v.mobilePhone,
                 idCard:v.idCard,
-                areaId:v.areaId,
+                areaName:v.areaName,
                 userType:v.userType,
                 orgId:v.orgId,
                 userId:v.userId,
@@ -212,21 +214,27 @@ export default class extends Component{
       });
     }
     //修改用户信息的弹出框
-    editInfo(userId){
+    editInfo(index){
         // console.log(userId)
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                userId
+                "userId":index
             })
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
                     if (v.ret == 1) {
-                        // console.log(v)
-                        let editdata = v.data;
+                        console.log(v)
+                        let data = v.data.items;
+                        let editdata=[];
+                        data.map(val=>{
+                            if(val.userId==index){
+                                editdata.push(val)
+                            }
+                        })
                         this.setState({
-                            userId,
+                            userId:index,
                             editData: editdata,
                             editvisible: true,
                         })
@@ -244,8 +252,6 @@ export default class extends Component{
     editOkHandler (){
         const form = this.editForm.props.form;
         let {userId}=this.state;
-        let userIds = [];
-        userIds.push(userId);
         form.validateFields((err) => {
             // values即为表单数据
             if (err) {
@@ -255,7 +261,7 @@ export default class extends Component{
             return fetch(updateUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    userIds
+                    "userId":userId
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
@@ -590,15 +596,11 @@ const formItemLayout = {
 const AddForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, onCancel, onOk, form,areaList,editData} = this.props;
+            const { visible, onCancel, onOk, form,areaList} = this.props;
             const { getFieldDecorator } = form;
             if (areaList.length == 0) {
                 return null
             }
-            if (!editData) {
-                return false
-            }
-            console.log(editData)
             return (
                 <Modal
                     //className={styles.addModal}
@@ -648,7 +650,7 @@ const AddForm = Form.create()(
                             )}
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='归属片区'>
-                            {getFieldDecorator('areaId', {
+                            {getFieldDecorator('areaName', {
                                 initialValue: '请选择归属片区',
                                 rules: [{ required: true}]
                             })(
@@ -677,9 +679,10 @@ const EditForm = Form.create()(
             if (areaList.length == 0) {
                 return null
             }
-            if (!editData) {
-                return false
+            if (editData.length == 0) {
+                return null
             }
+            console.log(editData)
             return (
                 <Modal
                     centered={true}
@@ -694,7 +697,7 @@ const EditForm = Form.create()(
                     <Form>
                         <Form.Item {...formItemLayout} label='姓名'>
                             {getFieldDecorator('realName', {
-                                initialValue: editData.realName,
+                                initialValue: editData[0].realName,
                                 rules: [{ required: true, message: '姓名不能为空' },],
                             })(
                                 <Input
@@ -706,7 +709,7 @@ const EditForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label="手机号">
                             {getFieldDecorator('mobilePhone', {
-                                initialValue: editData.mobilePhone,
+                                initialValue: editData[0].mobilePhone,
                                 rules: [{ required: true, pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
                             })(
                                 <Input
@@ -717,7 +720,7 @@ const EditForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label="身份证">
                             {getFieldDecorator('idCard', {
-                                initialValue: editData.idCard,
+                                initialValue: editData[0].idCard,
                                 rules: [
                                     { pattern:'^(^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$)|(^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])((\\d{4})|\\d{3}[Xx])$)$',message:"请输入正确的身份证号"}
                                 ],
@@ -729,8 +732,8 @@ const EditForm = Form.create()(
                             )}
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='归属片区'>
-                            {getFieldDecorator('attributionArea', {
-                                initialValue: editData.areaId,
+                            {getFieldDecorator('areaName', {
+                                initialValue: editData[0].areaId,
                                 rules: [{ required: true}]
                             })(
                                 <Select>
@@ -748,3 +751,66 @@ const EditForm = Form.create()(
         }
     }
 )
+// //修改密码弹窗
+// const EditPwdForm = Form.create()(
+//     class extends React.Component {
+//         render() {
+//             const { visible, onCancel, onOk, form,editData} = this.props;
+//             const { getFieldDecorator } = form;
+//             if (areaList.length == 0) {
+//                 return null
+//             }
+//             if (editData.length == 0) {
+//                 return null
+//             }
+//             console.log(editData)
+//             return (
+//                 <Modal
+//                     centered={true}
+//                     className={styles.addModal}
+//                     visible={visible}
+//                     title="修改密码"
+//                     onCancel={onCancel}
+//                     onOk={onOk}
+//                     cancelText='取消'
+//                     okText='确定'
+//                 >
+//                     <Form>
+//                         <Form.Item {...formItemLayout} label='新密码'>
+//                             {getFieldDecorator('password', {
+//                                 initialValue: editData[0].password,
+//                                 rules: [
+//                                     { required: true, message: '请输入密码' },
+//                                     { min: 6, message: '不要小于6个字符' },
+//                                     { max: 20, message: '不要超过20个字符' }
+//                                 ],
+//                             })(
+//                                 <Input
+//                                     placeholder='密码由6~20位的字母和数字组成'
+//                                     autoComplete='off'
+//                                     type='Password'
+//                                 />
+//                             )}
+//                         </Form.Item>
+//                         <Form.Item {...formItemLayout} label='确认密码'>
+//                             {getFieldDecorator('realName', {
+//                                 initialValue: editData[0].realName,
+//                                 rules: [
+//                                     { required: true, message: '请输入密码' },
+//                                     { min: 6, message: '不要小于6个字符' },
+//                                     { max: 20, message: '不要超过20个字符' }
+//                                 ],
+//                             })(
+//                                 <Input
+//                                     placeholder='密码由6~20位的字母和数字组成'
+//                                     autoComplete='off'
+//                                     type='Password'
+//                                 />
+//                             )}
+//                         </Form.Item>
+//                     </Form>
+//                 </Modal>
+//             )
+//         }
+//     }
+// )
