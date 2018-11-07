@@ -46,7 +46,7 @@ export default class extends Component {
             //marker是否被点击
             clicked: false,
             //球阀开关弹窗可见性
-            modalVisible:true,
+            modalVisible:false,
             //该球阀开或关
             value:1,
 
@@ -65,6 +65,11 @@ export default class extends Component {
     renderMarkerLayout(extData) {
 
     }
+    _onChange(e){
+        this.setState({
+            value: e.target.value,
+        })
+    }
     //取消
     _onCancel(){
         this.setState({
@@ -78,6 +83,7 @@ export default class extends Component {
             modalVisible:false
         })
     }
+    
     render() {
         const {
             plugins, center,
@@ -115,7 +121,7 @@ export default class extends Component {
                 >
                     <Radio.Group 
                         value={value} 
-                        onChange={()=>this._OnChange}
+                        onChange={(e)=>this._onChange(e)}
                     >
                         <Radio value={1}>开</Radio>
                         <Radio value={2}>关</Radio>

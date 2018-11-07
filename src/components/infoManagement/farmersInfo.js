@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import styles from './farmersInfo.less';
 import { Input, Button, Form, Select,Table, Modal,message} from 'antd';
-//ip地址
+//开发地址
 const envNet='http://192.168.30.127:88';
 //生产环境
 // const envNet='';
@@ -572,6 +572,7 @@ const AddForm = Form.create()(
                     onOk={onOk}
                     cancelText='取消'
                     okText='确定'
+                    centered
                 >
                     <Form>
                         <Form.Item {...formItemLayout} label='姓名'>
