@@ -243,10 +243,10 @@ export default class extends Component{
     //修改用户信息的弹出框点击确定
     editOkHandler (){
         const form = this.editForm.props.form;
-        let {userId,title}=this.state;
+        let {userId}=this.state;
         let userIds = [];
         userIds.push(userId);
-        form.validateFields((err, values) => {
+        form.validateFields((err) => {
             // values即为表单数据
             if (err) {
                 return;
@@ -255,50 +255,17 @@ export default class extends Component{
             return fetch(updateUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    roleIds:values.roleName,
-                    "departmentId": values.department,
-                    userId,
-                    "loginName": values.loginName,
-                    "realName": values.realName,
-                    "mobilePhone": values.mobilePhone,
-                    "password": values.passWord,
+                    userIds
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
                         if (v.ret == 1) {
-                            return fetch(dataUrl, {
-                                ...postOption,
-                                body: JSON.stringify({
-                                    "pageIndex": 0,
-                                    "pageSize": 10
-                                })
-                            }).then((res) => {
-                                Promise.resolve(res.json())
-                                    .then((v) => {
-                                        if (v.ret == 1) {
-                                            // console.log(v)
-                                            let items = v.data.items;
-                                            let itemCount = v.data.itemCount;
-                                            // 给每一条数据添加key
-                                            items.map((v, i) => {
-                                                v.key = i
-                                            })
-                                            this.setState({
-                                                items,
-                                                itemCount,
-                                                modifyVisible: false
-                                            })
-                                            form.resetFields();
-                                            message.success('修改成功', 2);
-                                            this._getTableData(title, items);
-                                        } else {
-                                            this.setState({
-                                                items: []
-                                            })
-                                        }
-                                    })
+                            this.setState({
+                                editvisible: false
                             })
+                            form.resetFields();
+                            message.success('修改成功', 2);
                         } else {
                             message.error(v.msg, 2);
                         }
@@ -309,10 +276,9 @@ export default class extends Component{
         })
     }
     //修改用户信息的弹出框点击取消
-    handleCancel = () => {
-        console.log('Clicked cancel button');
+    editCancelHandler(){
         this.setState({
-            visible: false,
+            editvisible: false,
         });
     }
     //添加用户信息的弹出框
@@ -375,7 +341,6 @@ export default class extends Component{
         })
     }
     addhandleCancel () {
-        console.log('Clicked cancel button');
         this.setState({
             addvisible: false,
         });
@@ -633,6 +598,7 @@ const AddForm = Form.create()(
             if (!editData) {
                 return false
             }
+            console.log(editData)
             return (
                 <Modal
                     //className={styles.addModal}
@@ -705,11 +671,14 @@ const AddForm = Form.create()(
 const EditForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, onCancel, onOk, form,areaList } = this.props;
+            const { visible, onCancel, onOk, form,areaList,editData} = this.props;
             const { getFieldDecorator } = form;
             const Option = Select.Option;
             if (areaList.length == 0) {
                 return null
+            }
+            if (!editData) {
+                return false
             }
             return (
                 <Modal
