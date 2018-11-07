@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import styles from './index.less'
+import styles from './deviceInfo.less'
 import {
     Form,
     Button,
@@ -850,7 +850,6 @@ const AddForm = Form.create()(
                             })
                                 (
                                 <Select
-                                    showSearch
                                     placeholder='管护人员'
                                     className={styles.formInput}
                                 >
@@ -858,7 +857,7 @@ const AddForm = Form.create()(
                                         adminList.map((v, i) => {
                                             return (
                                                 <Option
-                                                    value={v.id}
+                                                    value={v.name}
                                                     key={v.id}>
                                                     {v.id}
                                                 </Option>
@@ -872,6 +871,34 @@ const AddForm = Form.create()(
                             </Item>
                             :null
                         }
+                        <Item label='网关ID'>
+                            {getFieldDecorator('gatewayAddr',
+                                {
+                                    rules: [{ required: true, message: '网关ID不能为空' }]
+                                }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入网关ID'
+                                />
+                                )
+                            }
+                        </Item>
+                        <Item label='出厂编号'>
+                            {getFieldDecorator('factoryNumber',
+                                {
+                                    rules: [{ required: true, message: '出厂编号不能为空' }]
+                                }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入出厂编号'
+                                />
+                                )
+                            }
+                        </Item>
                     </Form>
                 </Modal>
             )
