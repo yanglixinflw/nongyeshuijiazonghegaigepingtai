@@ -10,7 +10,8 @@ import {
     Checkbox,
     Row,
     Col,
-    DatePicker
+    DatePicker,
+    message
 } from 'antd'
 import moment from 'moment'
 import { Link } from 'dva/router';
@@ -35,6 +36,8 @@ const envNet = 'http://192.168.30.127:88'
 const getDataUrl = `${envNet}/api/Device/list`
 // 获取公司管护人列表
 const getManagerUserUrl = `${envNet}/api/BaseInfo/orgUserList`
+const addDataUrl=`${envNet}/api/device/add`
+const deleteUrl=`${envNet}/api/device/delete`
 // 源columns拥有编号
 const sourceColumns = [
     { title: "设备ID", dataIndex: "deviceId" },
@@ -92,12 +95,14 @@ export default class extends Component {
             // 设备类型列表
             deviceTypeList: DeviceTypeList.data.data,
             // 添加弹窗设置
-            // addModalVisible:false
-            addModalVisible: true,
+            addModalVisible:false,
+            // addModalVisible: true,
             // 关联建筑物列表
             relatedBuilding: RelatedBuilding.data.data,
             // 公司列表
-            companyList: CompanyList.data.data
+            companyList: CompanyList.data.data,
+            // 删除弹窗
+            deleteModalVisible:false,
         }
     }
     componentDidMount() {
@@ -143,7 +148,6 @@ export default class extends Component {
                                 预警机制
                         </Button>
                         </Link>
-
                         <Button
                             className={styles.edit}
                             icon='edit'
@@ -153,6 +157,7 @@ export default class extends Component {
                         <Button
                             className={styles.delete}
                             icon='delete'
+                            onClick={()=>this.deleteHandler(record.deviceId)}
                         >
                             删除
                         </Button>
@@ -190,6 +195,31 @@ export default class extends Component {
     _showSetHandler() {
         this.setState({
             showSetVisible: true
+        })
+    }
+    // 点击删除
+    deleteHandler(){
+        this.setState({
+            deleteModalVisible:true
+        })
+    }
+    // 确认删除
+    deleteOk(deviceId){
+        console.log(deviceId)
+        let deviceIds=deviceId
+        return fetch(deleteUrl,{
+            ...postOption,
+            body: JSON.stringify({
+                deviceIds
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+                .then((v)=>{
+                    console.log(v)
+                    if(v.ret==1){
+                        message.success('删除成功', 2)
+                    }
+                })
         })
     }
     // 翻页
@@ -236,10 +266,6 @@ export default class extends Component {
         const { filterColumns } = this.state
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
-            // values即为表单数据
-            if (err) {
-                return;
-            }
             // 未定义时给空值
             if (!values.deviceTypeId) {
                 values.deviceTypeId = ''
@@ -290,9 +316,6 @@ export default class extends Component {
         const form = this.showSetForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
-            if (err) {
-                return;
-            }
             let { dataIndex } = values
             // 过滤后的columns
             let filterColumns = []
@@ -337,10 +360,44 @@ export default class extends Component {
             addModalVisible: true
         })
     }
+    // 确认添加
     _addOk() {
+        const form = this.addForm.props.form;
+        form.validateFields((err, values) => {
+            // console.log(values)
+            if(err){
+                return
+            }else{
+                let enableTime=values.enableTime.format('YYYY-MM-DD') 
+                values.enableTime=enableTime
+                fetch(addDataUrl,{
+                    ...postOption,
+                    body: JSON.stringify({
+                        ...values
+                    })
+                }).then((res) => {
+                        Promise.resolve(res.json())
+                        .then((v) => {
+                            if (v.ret == 1) {
+                                message.success('添加成功',2)
+                                this._searchTableData()
+                                this.setState({
+                                    addModalVisible:false
+                                })
+                            }
+                        })
+                }).catch((err) => {
+                    console.log(err)
+                })
+            }
+        })
+        
 
     }
     _addCancel() {
+        const form = this.addForm.props.form;
+        // 重置表单
+        form.resetFields();
         this.setState({
             addModalVisible: false
         })
@@ -857,9 +914,9 @@ const AddForm = Form.create()(
                                         adminList.map((v, i) => {
                                             return (
                                                 <Option
-                                                    value={v.name}
+                                                    value={v.id}
                                                     key={v.id}>
-                                                    {v.id}
+                                                    {v.name}
                                                 </Option>
                                             )
 
