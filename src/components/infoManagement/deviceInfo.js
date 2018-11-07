@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import styles from './deviceInfo.less'
+import QRCode from  'qrcode.react'
 import {
     Form,
     Button,
@@ -508,7 +509,7 @@ export default class extends Component {
                 >
                     <span>删除后信息将无法恢复，是否确认删除</span>
                 </Modal>
-
+                <QRCode value="http://facebook.github.io/react/" />
                 <div className={styles.header}>
                     <span>|</span>设备信息
                 </div>
