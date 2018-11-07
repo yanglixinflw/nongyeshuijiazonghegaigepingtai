@@ -11,6 +11,8 @@ const dataUrl=`${envNet}/api/PeasantMgr/list`;
 const delUrl=`${envNet}/api/PeasantMgr/delete`;
 //添加调用
 const addUrl=`${envNet}/api/PeasantMgr/add`;
+//修改调用
+const updateUrl=`${envNet}/api/PeasantMgr/update`;
 //获取地址
 const areaUrl=`${envNet}/api/Area/list`;
 // post通用设置
@@ -42,22 +44,14 @@ export default class extends Component{
             data:farmersInfo.data.data.items,//表格数据源
             //表的每一列
             columns: [],
-            //搜索框初始值
-            searchValue: {
-                "name": "",
-                "mobile": "",
-                "roleId": 0,
-                "pageIndex": 0,
-                "pageSize":10
-            },
             //用于增删改查标识字段
             userId:"",
-            //删除弹框显示的内容
-            delModalText: '删除后信息将无法恢复，是否确认删除。',
             //删除的弹出框显示
             delVisible: false,
             //修改用户信息的弹出框显示
             editvisible: false,
+            //修改所对应的信息
+            editData:[],
             //添加用户信息的弹出框显示
             addvisible:false,
             //归属片区列表
@@ -108,7 +102,7 @@ export default class extends Component{
                     <span className={styles.option}>
                         <Button
                             className={styles.edit}
-                            onClick={() => this.editInfo(record.idCard)}
+                            onClick={() => this.editInfo(record.userId)}
                             icon='edit'
                         >
                             修改
@@ -148,10 +142,6 @@ export default class extends Component{
             columns,
             tableDatas,
         });
-    }
-    //修改功能
-    _editFarmerInfo(){
-        console.log("修改")
     }
     //删除功能
     _deleteInfo(userId){ 
@@ -222,17 +212,101 @@ export default class extends Component{
       });
     }
     //修改用户信息的弹出框
-    showModal(){
-        this.setState({
-          visible: true,
-        });
+    editInfo(userId){
+        // console.log(userId)
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                userId
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v)
+                        let editdata = v.data;
+                        this.setState({
+                            userId,
+                            editData: editdata,
+                            editvisible: true,
+                        })
+                    } else {
+                        this.setState({
+                            editData: []
+                        })
+                    }
+                })
+        }).catch((err) => {
+            console.log(err)
+        })
     }
     //修改用户信息的弹出框点击确定
-    handleOk (){
-        this.setState({
-            ModalText: '',
-            confirmLoading: true,
-        });
+    editOkHandler (){
+        const form = this.editForm.props.form;
+        let {userId,title}=this.state;
+        let userIds = [];
+        userIds.push(userId);
+        form.validateFields((err, values) => {
+            // values即为表单数据
+            if (err) {
+                return;
+            }
+            // console.log(values);
+            return fetch(updateUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    roleIds:values.roleName,
+                    "departmentId": values.department,
+                    userId,
+                    "loginName": values.loginName,
+                    "realName": values.realName,
+                    "mobilePhone": values.mobilePhone,
+                    "password": values.passWord,
+                })
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        if (v.ret == 1) {
+                            return fetch(dataUrl, {
+                                ...postOption,
+                                body: JSON.stringify({
+                                    "pageIndex": 0,
+                                    "pageSize": 10
+                                })
+                            }).then((res) => {
+                                Promise.resolve(res.json())
+                                    .then((v) => {
+                                        if (v.ret == 1) {
+                                            // console.log(v)
+                                            let items = v.data.items;
+                                            let itemCount = v.data.itemCount;
+                                            // 给每一条数据添加key
+                                            items.map((v, i) => {
+                                                v.key = i
+                                            })
+                                            this.setState({
+                                                items,
+                                                itemCount,
+                                                modifyVisible: false
+                                            })
+                                            form.resetFields();
+                                            message.success('修改成功', 2);
+                                            this._getTableData(title, items);
+                                        } else {
+                                            this.setState({
+                                                items: []
+                                            })
+                                        }
+                                    })
+                            })
+                        } else {
+                            message.error(v.msg, 2);
+                        }
+                    })
+            }).catch((err) => {
+                console.log(err)
+            })
+        })
     }
     //修改用户信息的弹出框点击取消
     handleCancel = () => {
@@ -248,7 +322,6 @@ export default class extends Component{
         });
     }
     addhandleOk(){
-        const { title } = this.state
         const form = this.addForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
@@ -279,18 +352,10 @@ export default class extends Component{
                                 Promise.resolve(res.json())
                                     .then(v => {
                                         if (v.ret == 1) {
-                                            let items = v.data.items;
-                                            let itemCount = v.data.itemCount;
-                                            // 给每一条数据添加key
-                                            items.map((v, i) => {
-                                                v.key = i
-                                            })
+                                            this._searchTableData()
                                             this.setState({
-                                                addvisible: false,
-                                                itemCount,
-                                                items,
+                                                addVisible: false
                                             });
-                                            this._getTableDatas(title, items);
                                             form.resetFields();
                                             message.success('添加成功', 2);
                                         } else {
@@ -320,23 +385,18 @@ export default class extends Component{
         const { title } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
+            // 未定义时给空值
             if (err) {
                 return
             }
-            // 未定义时给空值
-            values.idCard = undefined || ""
-            values.realName = undefined || ""
-            values.pageIndex = 0;
-            values.pageSize = 10;
-            // console.log(values)
-            // 保存搜索信息 翻页
-            this.setState({
-                searchValue: values
-            })
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    ...values
+                    "name": values.realName,
+                    "mobile": values.mobilePhone,
+                    "idCard": values.idCard,
+                    "pageIndex": 0,
+                    "pageSize": 10
                 })
             }).then(res => {
                 Promise.resolve(res.json())
@@ -400,7 +460,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { delVisible,columns, tableDatas,itemCount,delModalText,addvisible,areaList} = this.state;
+        const { delVisible,columns, tableDatas,itemCount,addvisible,areaList,editvisible,editData} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -455,12 +515,21 @@ export default class extends Component{
                     dataSource={tableDatas}
                     scroll={{ x: 1000}}
                 />
+                {/* 添加弹窗 */}
                 <AddForm
                     wrappedComponentRef={(addForm) => this.addForm = addForm}
                     visible={addvisible}
                     onCancel={() => this.addhandleCancel()}
                     onOk={() => this.addhandleOk()}
                     {...{ areaList }}
+                />
+                {/* 修改弹窗 */}
+                <EditForm
+                    wrappedComponentRef={(editForm) => this.editForm = editForm}
+                    visible={editvisible}
+                    onCancel={() => this.editCancelHandler()}
+                    onOk={() => this.editOkHandler()}
+                    {...{ editData, areaList }}
                 />
                 <Modal 
                     title="删除"
@@ -471,7 +540,7 @@ export default class extends Component{
                     cancelText="取消"
                     centered//居中显示
                 >
-                    <p>{delModalText}</p>
+                    <p>删除后信息将无法恢复，是否确认删除。</p>
                 </Modal>
             </React.Fragment>
         )
@@ -556,16 +625,19 @@ const formItemLayout = {
 const AddForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, onCancel, onOk, form,areaList} = this.props;
+            const { visible, onCancel, onOk, form,areaList,editData} = this.props;
             const { getFieldDecorator } = form;
             if (areaList.length == 0) {
                 return null
+            }
+            if (!editData) {
+                return false
             }
             return (
                 <Modal
                     //className={styles.addModal}
                     visible={visible}
-                    title="添加农户信息"
+                    title="修改农户信息"
                     onCancel={onCancel}
                     onOk={onOk}
                     cancelText='取消'
@@ -619,7 +691,84 @@ const AddForm = Form.create()(
                                         return (
                                             <Option key={i} value={v.areaId}>{v.areaName}</Option>
                                         )
-
+                                    })}
+                                </Select>
+                                )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )
+        }
+    }
+)
+//修改弹窗
+const EditForm = Form.create()(
+    class extends React.Component {
+        render() {
+            const { visible, onCancel, onOk, form,areaList } = this.props;
+            const { getFieldDecorator } = form;
+            const Option = Select.Option;
+            if (areaList.length == 0) {
+                return null
+            }
+            return (
+                <Modal
+                    centered={true}
+                    className={styles.addModal}
+                    visible={visible}
+                    title="修改用户信息"
+                    onCancel={onCancel}
+                    onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
+                >
+                    <Form>
+                        <Form.Item {...formItemLayout} label='姓名'>
+                            {getFieldDecorator('realName', {
+                                initialValue: editData.realName,
+                                rules: [{ required: true, message: '姓名不能为空' },],
+                            })(
+                                <Input
+                                    placeholder='请输入农户的姓名'
+                                    autoComplete='off'
+                                    type='text'
+                                />
+                            )}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="手机号">
+                            {getFieldDecorator('mobilePhone', {
+                                initialValue: editData.mobilePhone,
+                                rules: [{ required: true, pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
+                            })(
+                                <Input
+                                    placeholder='请输入农户的手机号码'
+                                    autoComplete='off'
+                                />
+                            )}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="身份证">
+                            {getFieldDecorator('idCard', {
+                                initialValue: editData.idCard,
+                                rules: [
+                                    { pattern:'^(^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$)|(^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])((\\d{4})|\\d{3}[Xx])$)$',message:"请输入正确的身份证号"}
+                                ],
+                            })(
+                                <Input
+                                    placeholder='请输入农户的身份证号'
+                                    autoComplete='off'
+                                />
+                            )}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label='归属片区'>
+                            {getFieldDecorator('attributionArea', {
+                                initialValue: editData.areaId,
+                                rules: [{ required: true}]
+                            })(
+                                <Select>
+                                    {areaList.map((v, i) => {
+                                        return (
+                                            <Option key={i} value={v.areaId}>{v.areaName}</Option>
+                                        )
                                     })}
                                 </Select>
                                 )}
