@@ -18,13 +18,34 @@
             margin-left: 25px;
             background: #141831;
             color: #fff;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
         }
+    
+        
     }
     .keyWord{
         color:#327DF4;
     }
 }
-
+.dataList{
+    :global{
+        .ant-list{
+            width:288px;
+            background:#1F2E49;
+            left: 25px;
+            top:-1px;
+            .ant-list-item{
+                border-bottom:1px solid #2D4268;
+            }
+            .ant-list-item-meta-description{
+                color:#BBC5D2;
+                padding: 0px 15px;
+                font-size: 12px;
+            }
+        }
+    }
+}
 .btnGroup {
     z-index: 199;
     position: absolute;
