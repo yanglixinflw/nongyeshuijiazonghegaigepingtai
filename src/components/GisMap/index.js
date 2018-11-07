@@ -279,7 +279,7 @@ export default class extends Component {
                                 <List.Item>
                                   <List.Item.Meta
                                     description={
-                                        item.name
+                                        item.name+item.id
                                     }
                                   />
                                 </List.Item>
