@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import styles from './deviceInfo.less'
+import QRCode from  'qrcode.react'
 import {
     Form,
     Button,
@@ -32,7 +33,7 @@ let postOption = {
 const envNet = 'http://192.168.30.127:88'
 // 生产环境
 // const envNet=''
-// 搜索、翻页接口
+// 搜索、翻页接口、重置表单
 const getDataUrl = `${envNet}/api/Device/list`
 // 获取公司管护人列表
 const getManagerUserUrl = `${envNet}/api/BaseInfo/orgUserList`
@@ -47,10 +48,10 @@ const sourceColumns = [
     { title: "关联建筑物", dataIndex: "relatedBuilding" },
     { title: "地理坐标", dataIndex: "IP" },
     { title: "启用日期", dataIndex: "enableTime" },
-    { title: "运维公司", dataIndex: "opsCompony" },
+    { title: "运维公司", dataIndex: "managedCompony" },
     { title: "管护人员", dataIndex: "managerName" },
     { title: "网关地址", dataIndex: "gatewayAddr" },
-    { title: "出厂编号", dataIndex: "factoryNumber" },
+    { title: "出厂编号", dataIndex: "deviceSerial" },
     { title: "预警规则", dataIndex: "warningRules" },
     { title: "更新时间", dataIndex: "lastRequestTime" }
 ]
@@ -102,7 +103,10 @@ export default class extends Component {
             // 公司列表
             companyList: CompanyList.data.data,
             // 删除弹窗
-            deleteModalVisible:false,
+            // deleteModalVisible:false,
+            deleteModalVisible:true,
+            // 修改、删除设备ID
+            modifyDeviceId:''
         }
     }
     componentDidMount() {
@@ -157,7 +161,7 @@ export default class extends Component {
                         <Button
                             className={styles.delete}
                             icon='delete'
-                            onClick={()=>this.deleteHandler(record.deviceId)}
+                            onClick={()=>this._deleteHandler(record.deviceId)}
                         >
                             删除
                         </Button>
@@ -175,10 +179,10 @@ export default class extends Component {
                 installAddr: v.installAddr,
                 IP: `(${v.latitude},${v.longitude})`,
                 enableTime: v.enableTime,
-                opsCompony: v.opsCompony,
+                managedCompony: v.managedCompony,
                 managerName: v.managerName,
                 gatewayAddr: v.gatewayAddr,
-                factoryNumber: v.factoryNumber,
+                deviceSerial: v.deviceSerial,
                 relatedBuilding: v.relatedBuilding,
                 warningRules: v.warningRules,
                 lastRequestTime: v.lastRequestTime,
@@ -198,15 +202,16 @@ export default class extends Component {
         })
     }
     // 点击删除
-    deleteHandler(){
+    _deleteHandler(deviceId){
         this.setState({
-            deleteModalVisible:true
+            deleteModalVisible:true,
+            modifyDeviceId:deviceId
         })
     }
     // 确认删除
-    deleteOk(deviceId){
-        console.log(deviceId)
-        let deviceIds=deviceId
+    _deleteOk(){
+        const {modifyDeviceId}=this.state
+        let deviceIds=modifyDeviceId
         return fetch(deleteUrl,{
             ...postOption,
             body: JSON.stringify({
@@ -218,8 +223,19 @@ export default class extends Component {
                     console.log(v)
                     if(v.ret==1){
                         message.success('删除成功', 2)
+                        // 重置数据
+                        this._resetForm()
+                        this.setState({
+                            deleteModalVisible:false,
+                        })
                     }
                 })
+        })
+    }
+    // 删除取消
+    _deleteCancel(){
+        this.setState({
+            deleteModalVisible:false,
         })
     }
     // 翻页
@@ -257,9 +273,46 @@ export default class extends Component {
     }
     // 重置搜索表单
     _resetForm() {
+        const { filterColumns } = this.state
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
+        this.setState({
+            searchValue: {
+                "deviceId": "",
+                "name": "",
+                "deviceTypeId": "",
+                "installAddrId": "",
+                "warningRules": "",
+                "relatedBuildingId": "",
+            },
+        })
+        return fetch(getDataUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                "deviceId": "",
+                "name": "",
+                "deviceTypeId": "",
+                "installAddrId": "",
+                "warningRules": "",
+                "relatedBuildingId": "",
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+                    .then((v) => {
+                        // console.log(v)
+                        if (v.ret == 1) {
+                            let { items, itemCount } = v.data
+                            this.setState({
+                                itemCount,
+                                data: items
+                            })
+                            this._getTableData(items, filterColumns)
+                        }
+                })
+        }).catch((err) => {
+            console.log(err)
+        })
     }
     // 搜索功能
     _searchTableData() {
@@ -272,6 +325,9 @@ export default class extends Component {
             }
             if (!values.installAddrId) {
                 values.installAddrId = ''
+            }
+            if (!values.relatedBuildingId) {
+                values.relatedBuildingId = ''
             }
             values.pageIndex = 0
             values.pageSize = 10
@@ -356,6 +412,8 @@ export default class extends Component {
     }
     // 添加弹窗
     _addHandler() {
+        const form = this.addForm.props.form;
+        form.resetFields()
         this.setState({
             addModalVisible: true
         })
@@ -380,7 +438,7 @@ export default class extends Component {
                         .then((v) => {
                             if (v.ret == 1) {
                                 message.success('添加成功',2)
-                                this._searchTableData()
+                                this._resetForm()
                                 this.setState({
                                     addModalVisible:false
                                 })
@@ -411,7 +469,8 @@ export default class extends Component {
             deviceTypeList,
             addModalVisible,
             relatedBuilding,
-            companyList
+            companyList,
+            deleteModalVisible
         } = this.state
         const paginationProps = {
             showQuickJumper: true,
@@ -437,6 +496,20 @@ export default class extends Component {
                     relatedBuilding={relatedBuilding}
                     companyList={companyList}
                 />
+                {/* 删除弹窗 */}
+                <Modal
+                visible={deleteModalVisible}
+                title="删除"
+                cancelText='取消'
+                okText='确定'
+                onOk={()=>this._deleteOk()}
+                onCancel={()=>this._deleteCancel()}
+                className={styles.deleteModal}
+                centered={true}
+                >
+                    <span>删除后信息将无法恢复，是否确认删除</span>
+                </Modal>
+                <QRCode value="http://facebook.github.io/react/" />
                 <div className={styles.header}>
                     <span>|</span>设备信息
                 </div>
@@ -647,7 +720,6 @@ const ShowSetForm = Form.create()(
                     centered={true}
                 >
                     <Form>
-                        <Form>
                             {getFieldDecorator('dataIndex', {
                                 initialValue: sourceColumns
                             })
@@ -665,7 +737,7 @@ const ShowSetForm = Form.create()(
                                 </CheckboxGroup>
                                 )
                             }
-                        </Form>
+                        
                     </Form>
                 </Modal>
             )
@@ -943,7 +1015,7 @@ const AddForm = Form.create()(
                             }
                         </Item>
                         <Item label='出厂编号'>
-                            {getFieldDecorator('factoryNumber',
+                            {getFieldDecorator('deviceSerial',
                                 {
                                     rules: [{ required: true, message: '出厂编号不能为空' }]
                                 }
@@ -962,5 +1034,3 @@ const AddForm = Form.create()(
         }
     }
 )
-
-
