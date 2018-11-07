@@ -183,6 +183,52 @@
         }
     }
 }
+.deleteModal{
+    :global{
+        .ant-modal-header{
+            padding: 16px 0;
+            background: #171A39;
+            border-bottom:1px solid #363A69;
+        }
+        .ant-modal-close-x{
+            font-size:14px;
+            color:#fff
+        }
+        .ant-modal-title{
+            padding: 0 20px;
+            border-left: 4px #327DF4 solid;
+            font-size:14px;
+            color:#fff
+        }
+        .ant-modal-content{
+            background: #171A39;
+            
+        }
+        .ant-modal-body{
+            color:white;
+            text-align: center;
+        }
+        .ant-modal-footer{
+            border-top:1px solid #363A69;
+            text-align: center;
+            .ant-btn{
+                color:#327DF4;
+                background: none;
+                border:none;
+                &:hover{
+                    background-color: #327DF4;
+                border-color: #327DF4;
+                color:white;
+                }
+            }
+            .ant-btn-primary{
+                background-color: #327DF4;
+                border-color: #327DF4;
+                color:white;
+            }
+        }
+    }
+}
 :global {
     .ant-table-fixed-right {
         box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
