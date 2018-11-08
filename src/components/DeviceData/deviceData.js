@@ -136,8 +136,11 @@ export default class extends Component {
             if (err) {
                 return
             }
+            console.log(deviceTypeId)
             // 未定义时给空值
-            values.deviceTypeId = undefined || deviceTypeId
+            if(!values.deviceTypeId){
+                values.deviceTypeId = ''
+            }
             values.showColumns = undefined || []
             values.pageIndex = 0;
             values.pageSize = 10;
@@ -174,6 +177,33 @@ export default class extends Component {
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                "deviceId": "",
+                "name": "",
+                "deviceTypeId": "",
+                "installAddrId": "",
+                "warningRules": "",
+                "relatedBuildingId": "",
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    // console.log(v)
+                    if (v.ret == 1) {
+                        let { items, itemCount } = v.data
+                        this.setState({
+                            itemCount,
+                            data: items
+                        })
+                        this._getTableData(items, filterColumns)
+                    }
+                })
+        }).catch((err) => {
+            console.log(err)
+        })
+
     }
     //点击显示设置
     _showSetHandler() {
@@ -395,7 +425,7 @@ const ShowSetForm = Form.create()(
             return (
                 <Modal
                     centered={true}
-                    className={styles.showSet}
+                    className={styles.showSetModal}
                     visible={visible}
                     title="显示设置"
                     onCancel={onCancel}

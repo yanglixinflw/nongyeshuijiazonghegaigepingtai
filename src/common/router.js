@@ -118,7 +118,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/distributedControl/autoRules')),
     },
     '/command/videoMonitoring':{
-      component: dynamicWrapper(app, [], () => import('../routes/command/monitor')),
+      component: dynamicWrapper(app, ['monitor'], () => import('../routes/command/monitor')),
     },
     '/rent/groupAccount':{
       component: dynamicWrapper(app, [], () => import('../routes/waterRate/groupAccount')),
