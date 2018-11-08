@@ -765,7 +765,7 @@ const ModifyForm = Form.create()(
             const Option = Select.Option;
             
             if (!modifyData) {
-                return false
+                return null
             }
             if (roleList.length == 0) {
                 return null

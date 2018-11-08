@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './index.less';
-import { Input, Button, List } from 'antd';
+import { Input, Button, List,Icon} from 'antd';
 import { Map, Markers, InfoWindow } from 'react-amap';
 import IwContent from './infoWindow';
 import MarkerContent from './marker';
@@ -23,7 +23,12 @@ const dataList = [
         name: '宁圩村三组四号水表 ',
         id: '0010200008',
         address: '萧山区-宁围街道=三村二组耕地',
-        icon: 'WIFI'
+        icon: 'wifi'
+    },
+    {
+        name: '宁圩村三组四号水表 ',
+        id: '0010200008',
+        address: '萧山区-宁围街道=三村二组耕地'
     },
     {
         name: '宁圩村三组四号水表 ',
@@ -106,20 +111,28 @@ export default class extends Component {
             //marker是否被点击
             clicked: false,
             //搜索下拉列表数据
+            // dataList:null,
             dataList,
             loading: false,
             hasMore: true,
             //搜索关键字
-            keyWord:'00'
+            keyWord: '三组四号',
+
         }
         //console.log(this.state.markers)
         //地图触发事件
         this.mapEvents = {
-            created: (ins)=>{
-                console.log(ins)
-                console.log(ins.getMapNumber())
-                console.log(ins.getLayers())
-                console.log(ins.getDefaultLayer())
+            created: (ins) => {
+                // console.log(ins)
+                // console.log(ins.getMapNumber())
+                // console.log(ins.getLayers())
+                // console.log(ins.getDefaultLayer())
+                // console.log(ins.getLimitBounds())
+            },
+            click: () => {
+                this.setState({
+                    infoVisible: false
+                })
             }
         }
         //摄像头标记点触发事件
@@ -183,6 +196,15 @@ export default class extends Component {
             },
         }
     }
+    componentDidMount(){
+        this._getDataList(this.state.dataList,this.state.keyWord)
+    }
+    _getDataList(dataList,keyWord) {
+        let re = new RegExp(keyWord,'g')
+        dataList.filter((v,i)=>{
+            v.name = v.name.replace(re,`<span class=${styles.keyWordSt}>${keyWord}</span>`)
+        })
+    }
     //摄像头markers的render方法
     renderMarkerLayout(extData) {
         //判断marker的position是否和map的中心点一致，一致的话即为被选中的marker
@@ -209,6 +231,15 @@ export default class extends Component {
         })
         //    console.log(allCameraMarkers)
     }
+    _WatermeterHandler(e){
+        console.log('水表',e)
+    }
+    _ElectricmeterHandler(){
+        console.log('电表')
+    }
+    _WatervalveHandler(){
+        console.log('水阀')
+    }
     //搜索
     _searchHandler(e) {
         // console.log(e.target.value)
@@ -218,34 +249,8 @@ export default class extends Component {
         //请求接口从后台拿到数据（dataList）后，_getDataList()
         //选择marker后设置map的center为该marker的position
     }
-    _getDataList(dataList) {
-
-    }
-    // _renderdataList() {
-    //     const { dataList,keyWord } = this.state;
-    //     dataList.filter((val, i) => {
-    //         var re = new RegExp(keyWord, 'g');
-    //         val.name = val.name.replace(re, `<span className=${styles.keyWord}>${keyWord}</span>`);
-    //         val.id = val.id.replace(re, `<span className=${styles.keyWord}>${keyWord}</span>`)
-    //     })
-    //     console.log(dataList)
-    //     dataList.map((v, i) => {
-    //         return (
-    //             <List.Item key={i}>
-    //                 <p>{v.name}{v.id}</p>
-    //                 <p>{v.address}</p>
-    //                 {v.icon ?
-    //                     <i></i>
-    //                     : null
-    //                 }
-    //             </List.Item>
-    //         )
-    //     })
-    // }
     render() {
-        
         const {
-            keyWord,
             dataList,
             plugins, center,
             //useCluster,
@@ -253,7 +258,8 @@ export default class extends Component {
             infoVisible,
             infoOffset, isCustom, size, infoPosition,
         } = this.state;
-        let re = new RegExp(keyWord, 'g');
+        
+        // console.log(dataList)
         return (
             <Map
                 amapkey={MY_AMAP_KEY}
@@ -266,37 +272,49 @@ export default class extends Component {
                 events={this.mapEvents}
             >
                 <div className={styles.search}>
+
                     <Input
                         placeholder='请查询设备编号或设备名称'
                         onPressEnter={(e) => this._searchHandler(e)}
                         onChange={(e) => this._searchHandler(e)}
                     />
-                    <div className={styles.dataList}>
-                        <List
-                            itemLayout='vertical'
-                            dataSource={dataList}
-                            renderItem={item => (
-                                <List.Item>
-                                  <List.Item.Meta
-                                    description={
-                                        item.name+item.id
+                    {
+                        dataList ?
+                            <div className={styles.dataList}>
+                                <List
+                                    itemLayout="vertical"
+                                    dataSource={dataList}
+                                    renderItem={(item) => {
+                                        return (
+                                        <List.Item
+                                        >
+                                            <p className={styles.itemName}
+                                                dangerouslySetInnerHTML = {{ __html:item.name }}>
+                                            </p>
+                                            <p className={styles.itemName}
+                                                dangerouslySetInnerHTML = {{ __html:item.id }}
+                                            ></p>
+                                            <Icon type={item.icon} />
+                                            <p className={styles.itemAdress}
+                                                dangerouslySetInnerHTML = {{ __html:item.address }}
+                                            ></p>
+                                        </List.Item>)
                                     }
-                                  />
-                                </List.Item>
-                              )}
-                           
-                        />
-                    </div>
+                                    }
+                                />
+                            </div>
+                            : null
+                    }
                 </div>
                 <div className={styles.btnGroup}>
                     <Button
+                        autoFocus
                         onClick={() => this._cameraHandler()}
-
                     >
                         <i className={styles.camera}></i>
                         <span>摄像头</span>
                     </Button>
-                    <Button onClick={() => this._WatermeterHandler()}>水表</Button>
+                    <Button onClick={(e) => this._WatermeterHandler(e)}>水表</Button>
                     <Button onClick={() => this._ElectricmeterHandler()}>电表</Button>
                     <Button onClick={() => this._WatervalveHandler()}>水阀</Button>
                 </div>

@@ -115,151 +115,153 @@
         }
     }
 }
-
-:global {
-    .ant-table-fixed-right {
-        box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
-        .ant-table-thead {
-            tr {
-                th {
-                    border: 1px solid #2A325E;
-                    font-weight: 600;
-                    background: #2E3459;
-                    color: #DEDEE4;
-                }
-            }
-        }
-        .ant-table-tbody {
-            tr {
-                &:hover td {
-                    background: #1C2241;
-                    color: #0084FF;
-                }
-                &:focus td {
-                    background: #1C2241;
-                    color: #0084FF;
-                }
-                td {
-                    border-left: 0;
-                    border: 1px solid #2A325E;
-                    font-weight: 600;
-                    background: #1C2241;
-                    color: #DEDEE4;
-                    &:hover {
-                        background: #1C2241;
-                        color: #0084FF;
-                    }
-                    &:focus {
-                        background: #1C2241;
-                        color: #0084FF;
-                    }
-                    .ant-btn {
-                        background: #1C2241;
-                        border: 1px solid #327DF4;
-                        color: #327DF4;
-                        height: 28px;
+.deviceData{
+    :global {
+        .ant-table-fixed-right {
+            box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
+            .ant-table-thead {
+                tr {
+                    th {
+                        border: 1px solid #2A325E;
+                        font-weight: 600;
+                        background: #2E3459;
+                        color: #DEDEE4;
                     }
                 }
             }
+            .ant-table-tbody {
+                tr {
+                    &:hover td {
+                        background: #1C2241;
+                        color: #0084FF;
+                    }
+                    &:focus td {
+                        background: #1C2241;
+                        color: #0084FF;
+                    }
+                    td {
+                        border-left: 0;
+                        border: 1px solid #2A325E;
+                        font-weight: 600;
+                        background: #1C2241;
+                        color: #DEDEE4;
+                        &:hover {
+                            background: #1C2241;
+                            color: #0084FF;
+                        }
+                        &:focus {
+                            background: #1C2241;
+                            color: #0084FF;
+                        }
+                        .ant-btn {
+                            background: #1C2241;
+                            border: 1px solid #327DF4;
+                            color: #327DF4;
+                            height: 28px;
+                        }
+                    }
+                }
+            }
         }
-    }
-    .ant-table-wrapper {
-        .ant-table {
-            background: #2E3459;
-            margin: 0 38px;
-            .ant-table-content {
-                .ant-table-body {
-                    &::-webkit-scrollbar {
-                        height: 10px;
+        .ant-table-wrapper {
+            .ant-table {
+                background: #2E3459;
+                margin: 0 38px;
+                .ant-table-content {
+                    .ant-table-body {
+                        &::-webkit-scrollbar {
+                            height: 10px;
+                        }
+                        &::-webkit-scrollbar-button {
+                            display: none;
+                        }
+                        &::-webkit-scrollbar-thumb {
+                            background: #3164BF;
+                            border-radius: 2px;
+                        }
+                        &::-webkit-scrollbar-track {
+                            background: #2E3459;
+                        }
                     }
-                    &::-webkit-scrollbar-button {
-                        display: none;
-                    }
-                    &::-webkit-scrollbar-thumb {
-                        background: #3164BF;
-                        border-radius: 2px;
-                    }
-                    &::-webkit-scrollbar-track {
+                    .ant-table-fixed-right table {
                         background: #2E3459;
                     }
                 }
-                .ant-table-fixed-right table {
-                    background: #2E3459;
-                }
             }
-        }
-        .ant-table-thead {
-            tr {
-                th {
-                    font-weight: 600;
-                    background: #2E3459;
-                    color: #DEDEE4;
-                    border: 1px solid #2A325E;
-                }
-            }
-        }
-        .ant-table-tbody {
-            tr {
-                &:hover td {
-                    color: #0084FF;
-                }
-                &:focus td {
-                    color: #0084FF;
-                }
-                td {
-                    height: 52px ;
-                    padding: 0 16px;
-                    font-size: 12px;
-                    background: #1C2241;
-                    color: #BBC5D2;
-                    border: 1px solid #2A325E;
-                    &:hover {
-                        color: #0084FF;
-                    }
-                    &:focus {
-                        color: #0084FF;
+            .ant-table-thead {
+                tr {
+                    th {
+                        font-weight: 600;
+                        background: #2E3459;
+                        color: #DEDEE4;
+                        border: 1px solid #2A325E;
                     }
                 }
             }
-        }
-        .ant-pagination.ant-table-pagination {
-            margin-top: 24px;
-            margin-bottom: 24px;
-            text-align: center;
-            float: none;
-            color: #637890;
-            .ant-pagination-prev .ant-pagination-item-link,
-            .ant-pagination-next .ant-pagination-item-link {
-                background: #151836;
-                border: 1px solid #637890;
-                color: #637890;
+            .ant-table-tbody {
+                tr {
+                    &:hover td {
+                        color: #0084FF;
+                    }
+                    &:focus td {
+                        color: #0084FF;
+                    }
+                    td {
+                        height: 52px ;
+                        padding: 0 16px;
+                        font-size: 12px;
+                        background: #1C2241;
+                        color: #BBC5D2;
+                        border: 1px solid #2A325E;
+                        &:hover {
+                            color: #0084FF;
+                        }
+                        &:focus {
+                            color: #0084FF;
+                        }
+                    }
+                }
             }
-            .ant-pagination-item {
-                border: 1px solid #637890;
+            .ant-pagination.ant-table-pagination {
+                margin-top: 24px;
+                margin-bottom: 24px;
+                text-align: center;
+                float: none;
                 color: #637890;
-                background: #151836;
-                a {
+                .ant-pagination-prev .ant-pagination-item-link,
+                .ant-pagination-next .ant-pagination-item-link {
+                    background: #151836;
+                    border: 1px solid #637890;
                     color: #637890;
                 }
-            }
-            .ant-pagination-item-active {
-                border: 0;
-                background: #327DF4;
-                a {
-                    color: #fff;
+                .ant-pagination-item {
+                    border: 1px solid #637890;
+                    color: #637890;
+                    background: #151836;
+                    a {
+                        color: #637890;
+                    }
                 }
-            }
-            .ant-pagination-item-ellipsis {
-                color: #637890;
-            }
-            .ant-pagination-options-quick-jumper input {
-                background: #151836;
-                border: 1px solid #637890;
-                color: #637890;
+                .ant-pagination-item-active {
+                    border: 0;
+                    background: #327DF4;
+                    a {
+                        color: #fff;
+                    }
+                }
+                .ant-pagination-item-ellipsis {
+                    color: #637890;
+                }
+                .ant-pagination-options-quick-jumper input {
+                    background: #151836;
+                    border: 1px solid #637890;
+                    color: #637890;
+                }
             }
         }
     }
 }
+
 
 //媒体查询
 @media(max-width:1580px) {
@@ -500,6 +502,150 @@
     // 表格单元最小宽度
     .tbw{
         min-width: 100px;
+    }
+    :global {
+        .ant-table-fixed-right {
+            box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
+            .ant-table-thead {
+                tr {
+                    th {
+                        border: 1px solid #2A325E;
+                        font-weight: 600;
+                        background: #2E3459;
+                        color: #DEDEE4;
+                    }
+                }
+            }
+            .ant-table-tbody {
+                tr {
+                    &:hover td {
+                        background: #1C2241;
+                        color: #0084FF;
+                    }
+                    &:focus td {
+                        background: #1C2241;
+                        color: #0084FF;
+                    }
+                    td {
+                        border-left: 0;
+                        border: 1px solid #2A325E;
+                        font-weight: 600;
+                        background: #1C2241;
+                        color: #DEDEE4;
+                        &:hover {
+                            background: #1C2241;
+                            color: #0084FF;
+                        }
+                        &:focus {
+                            background: #1C2241;
+                            color: #0084FF;
+                        }
+                        .ant-btn {
+                            background: #1C2241;
+                            border: 1px solid #327DF4;
+                            color: #327DF4;
+                            height: 28px;
+                        }
+                    }
+                }
+            }
+        }
+        .ant-table-wrapper {
+            .ant-table {
+                background: #2E3459;
+                margin: 0 38px;
+                .ant-table-content {
+                    .ant-table-body {
+                        &::-webkit-scrollbar {
+                            height: 10px;
+                        }
+                        &::-webkit-scrollbar-button {
+                            display: none;
+                        }
+                        &::-webkit-scrollbar-thumb {
+                            background: #3164BF;
+                            border-radius: 2px;
+                        }
+                        &::-webkit-scrollbar-track {
+                            background: #2E3459;
+                        }
+                    }
+                    .ant-table-fixed-right table {
+                        background: #2E3459;
+                    }
+                }
+            }
+            .ant-table-thead {
+                tr {
+                    th {
+                        font-weight: 600;
+                        background: #2E3459;
+                        color: #DEDEE4;
+                        border: 1px solid #2A325E;
+                    }
+                }
+            }
+            .ant-table-tbody {
+                tr {
+                    &:hover td {
+                        color: #0084FF;
+                    }
+                    &:focus td {
+                        color: #0084FF;
+                    }
+                    td {
+                        height: 52px ;
+                        padding: 0 16px;
+                        font-size: 12px;
+                        background: #1C2241;
+                        color: #BBC5D2;
+                        border: 1px solid #2A325E;
+                        &:hover {
+                            color: #0084FF;
+                        }
+                        &:focus {
+                            color: #0084FF;
+                        }
+                    }
+                }
+            }
+            .ant-pagination.ant-table-pagination {
+                margin-top: 24px;
+                margin-bottom: 24px;
+                text-align: center;
+                float: none;
+                color: #637890;
+                .ant-pagination-prev .ant-pagination-item-link,
+                .ant-pagination-next .ant-pagination-item-link {
+                    background: #151836;
+                    border: 1px solid #637890;
+                    color: #637890;
+                }
+                .ant-pagination-item {
+                    border: 1px solid #637890;
+                    color: #637890;
+                    background: #151836;
+                    a {
+                        color: #637890;
+                    }
+                }
+                .ant-pagination-item-active {
+                    border: 0;
+                    background: #327DF4;
+                    a {
+                        color: #fff;
+                    }
+                }
+                .ant-pagination-item-ellipsis {
+                    color: #637890;
+                }
+                .ant-pagination-options-quick-jumper input {
+                    background: #151836;
+                    border: 1px solid #637890;
+                    color: #637890;
+                }
+            }
+        }
     }
     //设备信息
     .deviceInfo {

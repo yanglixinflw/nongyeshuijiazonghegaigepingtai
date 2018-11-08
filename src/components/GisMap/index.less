@@ -21,31 +21,69 @@
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }
-    
-        
-    }
-    .keyWord{
-        color:#327DF4;
     }
 }
+
 .dataList{
+    max-height: 290px;
+    width: 288px;
+    overflow-y: auto;
+    top: -1px;
+    left: 25px;
+    position: relative;
+    background:#1F2E49;
+    &::-webkit-scrollbar {
+        width: 7px;
+    }
+    &::-webkit-scrollbar-button {
+        display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #3164BF;
+        border-radius: 2px;
+    }
+    &::-webkit-scrollbar-track {
+        background: #2E3459;
+    }
     :global{
         .ant-list{
-            width:288px;
+            width:281px;
             background:#1F2E49;
-            left: 25px;
-            top:-1px;
             .ant-list-item{
                 border-bottom:1px solid #2D4268;
+                height: 58px;
+                padding: 14px;
             }
-            .ant-list-item-meta-description{
-                color:#BBC5D2;
-                padding: 0px 15px;
-                font-size: 12px;
-            }
+        }
+        .ant-list-vertical .ant-list-item-content{
+            display: flex !important;
+            margin:0 !important;
+            flex-wrap: wrap;
+        }
+        .anticon{
+            position: absolute;
+            top:14px;
+            right:14px;
+            font-size: 34px;
+            color:#FF5555;
         }
     }
 }
+.itemName{
+    color:#BBC5D2;
+    font-size: 12px;
+    margin:0 12px 0 0;
+    .keyWordSt{
+        color:#327DF4 !important;
+    }
+}
+.itemAdress{
+    color:#BBC5D2;
+    font-size: 12px;
+    margin:0;
+}
+
+
 .btnGroup {
     z-index: 199;
     position: absolute;
