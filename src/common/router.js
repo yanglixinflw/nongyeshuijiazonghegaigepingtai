@@ -87,9 +87,9 @@ export const getRouterData = app => {
     '/messageManagement/deviceInformation':{
       component: dynamicWrapper(app, ['deviceInformation'], () => import('../routes/messageManagement/deviceInfo')),
     },
-    '/deviceInformation/warningRules:id':{
-      component: dynamicWrapper(app, [], () => import('../routes/messageManagement/deviceInfo')),
-    },
+    // '/deviceInformation/warningRules:id':{
+    //   component: dynamicWrapper(app, [], () => import('../routes/messageManagement/deviceInfo')),
+    // },
     '/messageManagement/farmerInfor':{
       component: dynamicWrapper(app, ['farmersInfo'], () => import('../routes/messageManagement/farmersInfo')),
     },
@@ -118,7 +118,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, [], () => import('../routes/distributedControl/autoRules')),
     },
     '/command/videoMonitoring':{
-      component: dynamicWrapper(app, [], () => import('../routes/command/monitor')),
+      component: dynamicWrapper(app, ['monitor'], () => import('../routes/command/monitor')),
     },
     '/rent/groupAccount':{
       component: dynamicWrapper(app, [], () => import('../routes/waterRate/groupAccount')),
