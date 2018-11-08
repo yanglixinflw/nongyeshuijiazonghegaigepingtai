@@ -113,6 +113,15 @@ export default class extends Component {
             keyWord:'00'
         }
         //console.log(this.state.markers)
+        //地图触发事件
+        this.mapEvents = {
+            created: (ins)=>{
+                console.log(ins)
+                console.log(ins.getMapNumber())
+                console.log(ins.getLayers())
+                console.log(ins.getDefaultLayer())
+            }
+        }
         //摄像头标记点触发事件
         this.cameraEvents = {
             created: (allCameraMarkers) => {
@@ -254,6 +263,7 @@ export default class extends Component {
                 center={center}
                 //地图显示的缩放级别
                 zoom={16}
+                events={this.mapEvents}
             >
                 <div className={styles.search}>
                     <Input
@@ -269,7 +279,7 @@ export default class extends Component {
                                 <List.Item>
                                   <List.Item.Meta
                                     description={
-                                        item.name
+                                        item.name+item.id
                                     }
                                   />
                                 </List.Item>
