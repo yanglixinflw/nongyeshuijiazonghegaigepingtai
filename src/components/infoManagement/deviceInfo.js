@@ -39,6 +39,7 @@ const addDataUrl = `${envNet}/api/device/add`
 const deleteUrl = `${envNet}/api/device/delete`
 // 获取修改信息
 const detailsUrl = `${envNet}/api/device/details`
+const updataUrl=`${envNet}/api/device/update`
 // 源columns拥有编号
 const sourceColumns = [
     { title: "设备ID", dataIndex: "deviceId" },
@@ -113,7 +114,7 @@ export default class extends Component {
             "deviceTypeId": 1, 
             "name": "144", 
             "installAddrId": "10001", 
-            "relatedBuildingId": "1", 
+            "relatedBuildingId": 1, 
             "deviceSerial": "2606", 
             "gatewayAddr": null, 
             "longitude": 0.0, 
@@ -126,8 +127,8 @@ export default class extends Component {
             qrcodeModalVisible: false,
             // qrcodeModalVisible:true,
             // 修改弹窗
-            // modifyModalVisible:false,
-            modifyModalVisible: true,
+            modifyModalVisible:false,
+            // modifyModalVisible: true,
         }
     }
     componentDidMount() {
@@ -505,7 +506,7 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
-                    console.log(v)
+                    // console.log(v)
                     if (v.ret == 1) {
                         this.setState({
                             modifyModalVisible: true,
@@ -519,8 +520,37 @@ export default class extends Component {
     }
     // 确认修改
     _modifyOk() {
-        const { modifyDeviceId, modifyData } = this.state
+        const form = this.modifyForm.props.form;
+        form.validateFields((err,values)=>{
+            if(err){
+                return
+            }else{
+                let enableTime = values.enableTime.format('YYYY-MM-DD')
+                values.enableTime = enableTime
+                fetch(updataUrl, {
+                    ...postOption,
+                    body: JSON.stringify({
+                        ...values
+                    })
+                }).then((res) => {
+                    Promise.resolve(res.json())
+                        .then((v) => {
+                            if (v.ret == 1) {
+                                message.success('修改成功', 2)
+                                this._resetForm()
+                                this.setState({
+                                    modifyModalVisible: false
+                                })
+                            }
+                        })
+                }).catch((err) => {
+                    console.log(err)
+                })
+            }
+            
+        })
     }
+    // 取消修改
     _modifyCancel() {
         this.setState({
             modifyModalVisible: false,
@@ -1173,7 +1203,7 @@ const ModifyForm = Form.create()(
                 companyList,
                 form
             } = this.props
-            const { selectCompany, adminList } = this.state
+            const { adminList } = this.state
             const { getFieldDecorator } = form;
             // console.log(modifyData)
             // console.log(relatedBuilding)
@@ -1195,13 +1225,14 @@ const ModifyForm = Form.create()(
                         <Item label="设备ID">
                             {getFieldDecorator('deviceId',
                                 {
-                                    rules: [{ required: true }]
+                                    rules: [{ required: true }],
+                                    initialValue:modifyData.deviceId
                                 }
                             )
                                 (
                                 <Input
                                     className={styles.formInput}
-                                    placeholder={modifyData.deviceId}
+                                    // placeholder={modifyData.deviceId}
                                     disabled
                                 >
                                 </Input>

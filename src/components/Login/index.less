@@ -170,31 +170,29 @@
     }
 }
 
-@keyframes shake {
-    from,
-    to {
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0);
+@keyframes toast {
+    8%{
+        transform:translate(20px);
     }
-  
-    10%,
-    30%,
-    50%,
-    70%,
-    90% {
-      -webkit-transform: translate3d(-10px, 0, 0);
-      transform: translate3d(-10px, 0, 0);
+    16%{
+        transform:translate(-20px);
     }
-  
-    20%,
-    40%,
-    60%,
-    80% {
-      -webkit-transform: translate3d(10px, 0, 0);
-      transform: translate3d(10px, 0, 0);
+    24%{
+        transform:translate(20px);
+    }
+    32%{
+        transform:translate(-20px);
+    }
+    82.5%{
+        transform:translate(20px);
+    }
+    100%{
+        transform:translate(-20px);
     }
 }
 
 .shake {
-    animation: shake 2s;
+    display: inline-block;
+    animation: toast 2s;
+    // transform:translate(-20px);
 }
