@@ -87,9 +87,9 @@ export const getRouterData = app => {
     '/messageManagement/deviceInformation':{
       component: dynamicWrapper(app, ['deviceInformation'], () => import('../routes/messageManagement/deviceInfo')),
     },
-    '/deviceInformation/warningRules:id':{
-      component: dynamicWrapper(app, [], () => import('../routes/messageManagement/deviceInfo')),
-    },
+    // '/deviceInformation/warningRules:id':{
+    //   component: dynamicWrapper(app, [], () => import('../routes/messageManagement/deviceInfo')),
+    // },
     '/messageManagement/farmerInfor':{
       component: dynamicWrapper(app, ['farmersInfo'], () => import('../routes/messageManagement/farmersInfo')),
     },
