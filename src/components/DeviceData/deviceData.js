@@ -306,7 +306,7 @@ export default class extends Component {
             onChange: (page) => this._pageChange(page)
         };
         return (
-            <Fragment>
+            <div className={styles.deviceData}>
                 <ShowSetForm
                     wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
                     visible={showSetVisible}
@@ -345,7 +345,7 @@ export default class extends Component {
                         { x: columns.length > 10 ? 3200 : false }
                     }
                 />
-            </Fragment>
+            </div>
         )
     }
 }
