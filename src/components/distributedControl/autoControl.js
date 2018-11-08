@@ -68,7 +68,7 @@ export default class extends Component{
             title: '操作',
             key: 'action',
             align: 'center',
-            fixed: 'right',
+            // fixed: 'right',
             className: `${styles.action}`,
             width: 100,
             render: (record) => {
