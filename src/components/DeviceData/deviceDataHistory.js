@@ -248,7 +248,7 @@ const ShowSetForm = Form.create()(
             return (
                 <Modal
                     centered={true}
-                    className={styles.showSet}
+                    className={styles.showSetModal}
                     visible={visible}
                     title="显示设置"
                     onCancel={onCancel}

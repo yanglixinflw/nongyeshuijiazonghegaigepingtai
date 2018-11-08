@@ -181,7 +181,7 @@ export default class extends Component{
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableDatas}
-                    scroll={{ x: 1100 }}
+                    scroll={{ x: 1500 }}
                 />
             </React.Fragment>
         )

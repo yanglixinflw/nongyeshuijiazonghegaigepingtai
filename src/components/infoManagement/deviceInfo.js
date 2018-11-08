@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import styles from './deviceInfo.less'
-import QRCode from  'qrcode.react'
+import QRCode from 'qrcode.react'
 import {
     Form,
     Button,
@@ -18,7 +18,6 @@ import moment from 'moment'
 import { Link } from 'dva/router';
 const Item = Form.Item
 const Option = Select.Option
-
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -28,7 +27,6 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 }
-
 // 开发环境
 const envNet = 'http://192.168.30.127:88'
 // 生产环境
@@ -37,8 +35,11 @@ const envNet = 'http://192.168.30.127:88'
 const getDataUrl = `${envNet}/api/Device/list`
 // 获取公司管护人列表
 const getManagerUserUrl = `${envNet}/api/BaseInfo/orgUserList`
-const addDataUrl=`${envNet}/api/device/add`
-const deleteUrl=`${envNet}/api/device/delete`
+const addDataUrl = `${envNet}/api/device/add`
+const deleteUrl = `${envNet}/api/device/delete`
+// 获取修改信息
+const detailsUrl = `${envNet}/api/device/details`
+const updataUrl=`${envNet}/api/device/update`
 // 源columns拥有编号
 const sourceColumns = [
     { title: "设备ID", dataIndex: "deviceId" },
@@ -96,17 +97,38 @@ export default class extends Component {
             // 设备类型列表
             deviceTypeList: DeviceTypeList.data.data,
             // 添加弹窗设置
-            addModalVisible:false,
+            addModalVisible: false,
             // addModalVisible: true,
             // 关联建筑物列表
             relatedBuilding: RelatedBuilding.data.data,
             // 公司列表
             companyList: CompanyList.data.data,
             // 删除弹窗
-            // deleteModalVisible:false,
-            deleteModalVisible:true,
+            deleteModalVisible: false,
+            // deleteModalVisible:true,
             // 修改、删除设备ID
-            modifyDeviceId:''
+            modifyDeviceId: '',
+            // 修改数据
+            modifyData: { 
+            "deviceId": "E69E8FF2-6896-4807-BB88-4CC501A7ED6B", 
+            "deviceTypeId": 1, 
+            "name": "144", 
+            "installAddrId": "10001", 
+            "relatedBuildingId": 1, 
+            "deviceSerial": "2606", 
+            "gatewayAddr": null, 
+            "longitude": 0.0, 
+            "latitude": 0.0, 
+            "managerUserId": null, 
+            "managedCompanyId": null, 
+            "enableTime": "2018-11-07T12:02:42.487", 
+            "createTime": "2018-10-08T16:03:58.5" },
+            // 二维码弹窗
+            qrcodeModalVisible: false,
+            // qrcodeModalVisible:true,
+            // 修改弹窗
+            modifyModalVisible:false,
+            // modifyModalVisible: true,
         }
     }
     componentDidMount() {
@@ -141,27 +163,29 @@ export default class extends Component {
                         <Button
                             className={styles.scan}
                             icon='scan'
+                            onClick={() => this.qrcodeHandler(record.deviceId)}
                         >
                             生成二维码
                         </Button>
-                        <Link to={`/deviceInformation/warningRules:${record.deviceId}`}>
-                            <Button
-                                className={styles.warn}
-                                icon='exception'
-                            >
-                                预警机制
+                        {/* <Link to={`/deviceInformation/warningRules:${record.deviceId}`}> */}
+                        <Button
+                            className={styles.warn}
+                            icon='exception'
+                        >
+                            预警机制
                         </Button>
-                        </Link>
+                        {/* </Link> */}
                         <Button
                             className={styles.edit}
                             icon='edit'
+                            onClick={() => this._modifyHandler(record.deviceId)}
                         >
                             修改
                         </Button>
                         <Button
                             className={styles.delete}
                             icon='delete'
-                            onClick={()=>this._deleteHandler(record.deviceId)}
+                            onClick={() => this._deleteHandler(record.deviceId)}
                         >
                             删除
                         </Button>
@@ -202,40 +226,39 @@ export default class extends Component {
         })
     }
     // 点击删除
-    _deleteHandler(deviceId){
+    _deleteHandler(deviceId) {
         this.setState({
-            deleteModalVisible:true,
-            modifyDeviceId:deviceId
+            deleteModalVisible: true,
+            modifyDeviceId: deviceId
         })
     }
     // 确认删除
-    _deleteOk(){
-        const {modifyDeviceId}=this.state
-        let deviceIds=modifyDeviceId
-        return fetch(deleteUrl,{
+    _deleteOk() {
+        const { modifyDeviceId } = this.state
+        let deviceIds = modifyDeviceId
+        return fetch(deleteUrl, {
             ...postOption,
             body: JSON.stringify({
                 deviceIds
             })
-        }).then((res)=>{
+        }).then((res) => {
             Promise.resolve(res.json())
-                .then((v)=>{
-                    console.log(v)
-                    if(v.ret==1){
+                .then((v) => {
+                    if (v.ret == 1) {
                         message.success('删除成功', 2)
                         // 重置数据
                         this._resetForm()
                         this.setState({
-                            deleteModalVisible:false,
+                            deleteModalVisible: false,
                         })
                     }
                 })
         })
     }
     // 删除取消
-    _deleteCancel(){
+    _deleteCancel() {
         this.setState({
-            deleteModalVisible:false,
+            deleteModalVisible: false,
         })
     }
     // 翻页
@@ -287,9 +310,9 @@ export default class extends Component {
                 "relatedBuildingId": "",
             },
         })
-        return fetch(getDataUrl,{
+        return fetch(getDataUrl, {
             ...postOption,
-            body:JSON.stringify({
+            body: JSON.stringify({
                 "deviceId": "",
                 "name": "",
                 "deviceTypeId": "",
@@ -297,18 +320,18 @@ export default class extends Component {
                 "warningRules": "",
                 "relatedBuildingId": "",
             })
-        }).then((res)=>{
+        }).then((res) => {
             Promise.resolve(res.json())
-                    .then((v) => {
-                        // console.log(v)
-                        if (v.ret == 1) {
-                            let { items, itemCount } = v.data
-                            this.setState({
-                                itemCount,
-                                data: items
-                            })
-                            this._getTableData(items, filterColumns)
-                        }
+                .then((v) => {
+                    // console.log(v)
+                    if (v.ret == 1) {
+                        let { items, itemCount } = v.data
+                        this.setState({
+                            itemCount,
+                            data: items
+                        })
+                        this._getTableData(items, filterColumns)
+                    }
                 })
         }).catch((err) => {
             console.log(err)
@@ -423,24 +446,24 @@ export default class extends Component {
         const form = this.addForm.props.form;
         form.validateFields((err, values) => {
             // console.log(values)
-            if(err){
+            if (err) {
                 return
-            }else{
-                let enableTime=values.enableTime.format('YYYY-MM-DD') 
-                values.enableTime=enableTime
-                fetch(addDataUrl,{
+            } else {
+                let enableTime = values.enableTime.format('YYYY-MM-DD')
+                values.enableTime = enableTime
+                fetch(addDataUrl, {
                     ...postOption,
                     body: JSON.stringify({
                         ...values
                     })
                 }).then((res) => {
-                        Promise.resolve(res.json())
+                    Promise.resolve(res.json())
                         .then((v) => {
                             if (v.ret == 1) {
-                                message.success('添加成功',2)
+                                message.success('添加成功', 2)
                                 this._resetForm()
                                 this.setState({
-                                    addModalVisible:false
+                                    addModalVisible: false
                                 })
                             }
                         })
@@ -449,7 +472,7 @@ export default class extends Component {
                 })
             }
         })
-        
+
 
     }
     _addCancel() {
@@ -458,6 +481,80 @@ export default class extends Component {
         form.resetFields();
         this.setState({
             addModalVisible: false
+        })
+    }
+    // 二维码弹窗
+    qrcodeHandler(deviceId) {
+        // console.log(deviceId)
+        this.setState({
+            qrcodeModalVisible: true,
+            modifyDeviceId: deviceId
+        })
+    }
+    qrcodeClose() {
+        this.setState({
+            qrcodeModalVisible: false
+        })
+    }
+    // 修改按钮
+    _modifyHandler(deviceId) {
+        fetch(detailsUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                deviceId
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    // console.log(v)
+                    if (v.ret == 1) {
+                        this.setState({
+                            modifyModalVisible: true,
+                            modifyDeviceId: deviceId,
+                            modifyData: v.data
+                        })
+                    }
+                })
+        })
+
+    }
+    // 确认修改
+    _modifyOk() {
+        const form = this.modifyForm.props.form;
+        form.validateFields((err,values)=>{
+            if(err){
+                return
+            }else{
+                let enableTime = values.enableTime.format('YYYY-MM-DD')
+                values.enableTime = enableTime
+                fetch(updataUrl, {
+                    ...postOption,
+                    body: JSON.stringify({
+                        ...values
+                    })
+                }).then((res) => {
+                    Promise.resolve(res.json())
+                        .then((v) => {
+                            if (v.ret == 1) {
+                                message.success('修改成功', 2)
+                                this._resetForm()
+                                this.setState({
+                                    modifyModalVisible: false
+                                })
+                            }
+                        })
+                }).catch((err) => {
+                    console.log(err)
+                })
+            }
+            
+        })
+    }
+    // 取消修改
+    _modifyCancel() {
+        this.setState({
+            modifyModalVisible: false,
+            modifyDeviceId: '',
         })
     }
     render() {
@@ -470,7 +567,11 @@ export default class extends Component {
             addModalVisible,
             relatedBuilding,
             companyList,
-            deleteModalVisible
+            deleteModalVisible,
+            qrcodeModalVisible,
+            modifyDeviceId,
+            modifyData,
+            modifyModalVisible
         } = this.state
         const paginationProps = {
             showQuickJumper: true,
@@ -478,6 +579,7 @@ export default class extends Component {
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
+        // console.log(modifyData)
         return (
             <Fragment>
                 <ShowSetForm
@@ -498,18 +600,42 @@ export default class extends Component {
                 />
                 {/* 删除弹窗 */}
                 <Modal
-                visible={deleteModalVisible}
-                title="删除"
-                cancelText='取消'
-                okText='确定'
-                onOk={()=>this._deleteOk()}
-                onCancel={()=>this._deleteCancel()}
-                className={styles.deleteModal}
-                centered={true}
+                    visible={deleteModalVisible}
+                    title="删除"
+                    cancelText='取消'
+                    okText='确定'
+                    onOk={() => this._deleteOk()}
+                    onCancel={() => this._deleteCancel()}
+                    className={styles.deleteModal}
+                    centered={true}
                 >
                     <span>删除后信息将无法恢复，是否确认删除</span>
                 </Modal>
-                <QRCode value="http://facebook.github.io/react/" />
+                {/* 二维码弹窗 */}
+                <Modal
+                    className={styles.qrcodeModal}
+                    visible={qrcodeModalVisible}
+                    onCancel={() => this.qrcodeClose()}
+                    centered={true}
+                    destroyOnClose={true}
+                    closable={false}
+                    footer={null}
+                >
+                    <QRCode value={`device:${modifyDeviceId}`}> </QRCode>
+                    <div>设备ID为:{modifyDeviceId}</div>
+                </Modal>
+                {/* 修改弹窗 */}
+                <ModifyForm
+                    wrappedComponentRef={(modifyForm) => this.modifyForm = modifyForm}
+                    visible={modifyModalVisible}
+                    onCancel={() => this._modifyCancel()}
+                    onOk={() => this._modifyOk()}
+                    modifyData={modifyData}
+                    installAddress={installAddress}
+                    deviceTypeList={deviceTypeList}
+                    relatedBuilding={relatedBuilding}
+                    companyList={companyList}
+                />
                 <div className={styles.header}>
                     <span>|</span>设备信息
                 </div>
@@ -711,6 +837,7 @@ const ShowSetForm = Form.create()(
             const CheckboxGroup = Checkbox.Group;
             return (
                 <Modal
+                    className={styles.showSetModal}
                     visible={visible}
                     title="显示设置"
                     cancelText='取消'
@@ -720,24 +847,24 @@ const ShowSetForm = Form.create()(
                     centered={true}
                 >
                     <Form>
-                            {getFieldDecorator('dataIndex', {
-                                initialValue: sourceColumns
-                            })
-                                (
-                                <CheckboxGroup>
-                                    <Row>
-                                        {sourceColumns.map((v, i) => {
-                                            return (
-                                                <Col key={i} span={8}>
-                                                    <Checkbox value={sourceColumns[i]}>{v.title}</Checkbox>
-                                                </Col>
-                                            )
-                                        })}
-                                    </Row>
-                                </CheckboxGroup>
-                                )
-                            }
-                        
+                        {getFieldDecorator('dataIndex', {
+                            initialValue: sourceColumns
+                        })
+                            (
+                            <CheckboxGroup>
+                                <Row>
+                                    {sourceColumns.map((v, i) => {
+                                        return (
+                                            <Col key={i} span={8}>
+                                                <Checkbox value={sourceColumns[i]}>{v.title}</Checkbox>
+                                            </Col>
+                                        )
+                                    })}
+                                </Row>
+                            </CheckboxGroup>
+                            )
+                        }
+
                     </Form>
                 </Modal>
             )
@@ -751,7 +878,7 @@ const AddForm = Form.create()(
             // 是否选择公司
             selectCompany: false,
             // 公司管理员列表
-            adminList:[]
+            adminList: []
         }
         showAdmin(id) {
             if (id != '') {
@@ -759,23 +886,23 @@ const AddForm = Form.create()(
                     method: 'GET',
                     mode: 'cors',
                     credentials: "include",
-                }).then((res)=>{
+                }).then((res) => {
                     Promise.resolve(res.json())
-                    .then((v) => {
-                        if (v.ret == 1) {
-                            // console.log(v);
-                            this.setState({
-                                selectCompany:true,
-                                adminList:v.data
-                            })
-                        }
-                    })
+                        .then((v) => {
+                            if (v.ret == 1) {
+                                // console.log(v);
+                                this.setState({
+                                    selectCompany: true,
+                                    adminList: v.data
+                                })
+                            }
+                        })
                 }).catch((err) => {
                     console.log(err)
                 })
-            }else{
+            } else {
                 this.setState({
-                    selectCompany:false,
+                    selectCompany: false,
                 })
             }
         }
@@ -790,7 +917,7 @@ const AddForm = Form.create()(
                 companyList
             } = this.props
             const { getFieldDecorator } = form;
-            const {selectCompany,adminList}=this.state
+            const { selectCompany, adminList } = this.state
             let today = new Date()
             let defaultEnd = moment(today).format('YYYY-MM-DD')
             // console.log(adminList)
@@ -819,7 +946,6 @@ const AddForm = Form.create()(
                                     className={styles.formInput}
                                     placeholder='设备类型'
                                 >
-                                    <Option value=''>全部</Option>
                                     {
                                         deviceTypeList.map((v, i) => {
                                             return (
@@ -862,7 +988,6 @@ const AddForm = Form.create()(
                                     className={styles.formInput}
                                     placeholder='设备安装地'
                                 >
-                                    <Option value=''>全部</Option>
                                     {
                                         installAddress.map((v, i) => {
                                             return (
@@ -882,6 +1007,7 @@ const AddForm = Form.create()(
                         <Item label="启用日期">
                             {getFieldDecorator('enableTime',
                                 {
+                                    rules:[{ required: true}],
                                     initialValue: moment(defaultEnd)
                                 }
                             )
@@ -902,7 +1028,6 @@ const AddForm = Form.create()(
                                     placeholder='关联建筑物'
                                     className={styles.formInput}
                                 >
-                                    <Option value=''>全部</Option>
                                     {
                                         relatedBuilding.map((v, i) => {
                                             return (
@@ -973,9 +1098,323 @@ const AddForm = Form.create()(
                             }
                         </Item>
                         {
-                            selectCompany?
-                            <Item label='管护人员'>
+                            selectCompany ?
+                                <Item label='管护人员'>
+                                    {getFieldDecorator('managerUserId', {
+                                        rules: [{ required: true, message: '管护人员不能为空' }]
+                                    })
+                                        (
+                                        <Select
+                                            placeholder='管护人员'
+                                            className={styles.formInput}
+                                        >
+                                            {
+                                                adminList.map((v, i) => {
+                                                    return (
+                                                        <Option
+                                                            value={v.id}
+                                                            key={v.id}>
+                                                            {v.name}
+                                                        </Option>
+                                                    )
+
+                                                })
+                                            }
+                                        </Select>
+                                        )
+                                    }
+                                </Item>
+                                : null
+                        }
+                        <Item label='网关ID'>
+                            {getFieldDecorator('gatewayAddr',
+                                {
+                                    rules: [{ required: true, message: '网关ID不能为空' }]
+                                }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入网关ID'
+                                />
+                                )
+                            }
+                        </Item>
+                        <Item label='出厂编号'>
+                            {getFieldDecorator('deviceSerial',
+                                {
+                                    rules: [{ required: true, message: '出厂编号不能为空' }]
+                                }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入出厂编号'
+                                />
+                                )
+                            }
+                        </Item>
+                    </Form>
+                </Modal>
+            )
+        }
+    }
+)
+// 修改弹窗
+const ModifyForm = Form.create()(
+    class extends Component {
+        state = {
+            // 公司管理员列表
+            adminList: []
+        }
+        showAdmin(id) {
+            if (id != '') {
+                fetch(`${getManagerUserUrl}?orgId=${id}`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: "include",
+                }).then((res) => {
+                    Promise.resolve(res.json())
+                        .then((v) => {
+                            if (v.ret == 1) {
+                                // console.log(v);
+                                this.setState({
+                                    adminList: v.data
+                                })
+                            }
+                        })
+                }).catch((err) => {
+                    console.log(err)
+                })
+            } else {
+                this.setState({
+                    selectCompany: false,
+                })
+            }
+        }
+        render() {
+            const { visible,
+                onOk,
+                onCancel,
+                modifyData,
+                relatedBuilding,
+                deviceTypeList,
+                installAddress,
+                companyList,
+                form
+            } = this.props
+            const { adminList } = this.state
+            const { getFieldDecorator } = form;
+            // console.log(modifyData)
+            // console.log(relatedBuilding)
+            // console.log(installAddress)
+            return (
+                <Modal
+                    visible={visible}
+                    title="修改设备"
+                    cancelText='取消'
+                    okText='确定'
+                    onOk={onOk}
+                    onCancel={onCancel}
+                    className={styles.addModal}
+                    centered={true}
+                >
+                    <Form
+                        className={styles.FlexForm}
+                    >
+                        <Item label="设备ID">
+                            {getFieldDecorator('deviceId',
+                                {
+                                    rules: [{ required: true }],
+                                    initialValue:modifyData.deviceId
+                                }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    // placeholder={modifyData.deviceId}
+                                    disabled
+                                >
+                                </Input>
+                                )
+                            }
+                        </Item>
+                        <Item label="设备型号">
+                            {getFieldDecorator('deviceTypeId',
+                                {
+                                    rules: [{ required: true, message: '设备型号不能为空' }],
+                                    initialValue:modifyData.deviceTypeId
+                                }
+                            )
+                                (
+                                <Select
+                                    className={styles.formInput}
+                                    placeholder='设备类型'
+                                >
+                                    {
+                                        deviceTypeList.map((v, i) => {
+                                            return (
+                                                <Option
+                                                    value={v.deviceTypeId}
+                                                    key={v.deviceTypeId}>
+                                                    {v.name}
+                                                </Option>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                                )
+                            }
+                        </Item>
+                        <Item label="设备名称">
+                            {getFieldDecorator('name',
+                                {
+                                    rules: [{ required: true, message: '设备名称不能为空' },
+                                    { max: 30, message: '不超过30个字符' }],
+                                    initialValue:modifyData.name
+                                }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入设备名称'
+                                />
+                                )
+                            }
+                        </Item>
+                        <Item label="设备安装地">
+                            {getFieldDecorator('installAddrId',
+                                {
+                                    rules: [{ required: true, message: '设备安装地不能为空' }],
+                                    initialValue:modifyData.installAddrId
+                                }
+                            )
+                                (
+                                <Select
+                                    className={styles.formInput}
+                                    placeholder='设备安装地'
+                                >
+                                    {
+                                        installAddress.map((v, i) => {
+                                            return (
+                                                <Option
+                                                    value={v.id}
+                                                    key={v.id}>
+                                                    {v.addr}
+                                                </Option>
+                                            )
+                                        })
+                                    }
+
+                                </Select>
+                                )
+                            }
+                        </Item>
+                        <Item label="启用日期">
+                            {getFieldDecorator('enableTime',
+                                {
+                                    rules:[{ required: true}],
+                                    initialValue: 
+                                    modifyData.enableTime=='null'?
+                                    ""
+                                    :moment(modifyData.enableTime)
+                                }
+                            )
+                                (
+                                <DatePicker
+                                    className={styles.formInput}
+                                    allowClear={false}
+                                />
+                                )
+                            }
+                        </Item>
+                        <Item label="关联建筑物">
+                            {getFieldDecorator('relatedBuildingId', {
+                                rules: [{ required: true, message: '设备安装地不能为空' }],
+                                initialValue:modifyData.relatedBuildingId
+                            })
+                                (
+                                <Select
+                                    placeholder='关联建筑物'
+                                    className={styles.formInput}
+                                >
+                                    {
+                                        relatedBuilding.map((v, i) => {
+                                            return (
+                                                <Option
+                                                    value={v.buildingId}
+                                                    key={v.buildingId}>
+                                                    {v.name}
+                                                </Option>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                                )
+                            }
+                        </Item>
+                        <Item label='地理经度'>
+                            {getFieldDecorator('longitude',
+                                {
+                                    rules: [{ required: true, message: '地理经度不能为空' }],
+                                    initialValue:modifyData.longitude
+                                }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入地理经度'
+                                />
+                                )
+                            }
+                        </Item>
+                        <Item label='地理纬度'>
+                            {getFieldDecorator('latitude',
+                                {
+                                    rules: [{ required: true, message: '地理纬度不能为空' }],
+                                    initialValue:modifyData.latitude
+                                }
+                            )
+                                (
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入地理纬度'
+                                />
+                                )
+                            }
+                        </Item>
+                        <Item label="运维公司">
+                            {getFieldDecorator('managedCompanyId', {
+                                rules: [{ required: true, message: '运维公司不能为空' }],
+                                initialValue:modifyData.managedCompanyId
+                            })
+                                (
+                                <Select
+                                    placeholder='运维公司'
+                                    className={styles.formInput}
+                                    onChange={id => this.showAdmin(id)}
+                                >
+                                    {
+                                        companyList.map((v, i) => {
+                                            return (
+                                                <Option
+                                                    value={v.id}
+                                                    key={v.id}>
+                                                    {v.name}
+                                                </Option>
+                                            )
+
+                                        })
+                                    }
+                                </Select>
+                                )
+                            }
+                        </Item>
+
+                        <Item label='管护人员'>
                             {getFieldDecorator('managerUserId', {
+                                rules: [{ required: true, message: '管护人员不能为空' }],
+                                initialValue:modifyData.managerUserId
                             })
                                 (
                                 <Select
@@ -997,13 +1436,12 @@ const AddForm = Form.create()(
                                 </Select>
                                 )
                             }
-                            </Item>
-                            :null
-                        }
+                        </Item>
                         <Item label='网关ID'>
                             {getFieldDecorator('gatewayAddr',
                                 {
-                                    rules: [{ required: true, message: '网关ID不能为空' }]
+                                    rules: [{ required: true, message: '网关ID不能为空' }],
+                                    initialValue:modifyData.gatewayAddr
                                 }
                             )
                                 (
@@ -1017,7 +1455,8 @@ const AddForm = Form.create()(
                         <Item label='出厂编号'>
                             {getFieldDecorator('deviceSerial',
                                 {
-                                    rules: [{ required: true, message: '出厂编号不能为空' }]
+                                    rules: [{ required: true, message: '出厂编号不能为空' }],
+                                    initialValue:modifyData.deviceSerial
                                 }
                             )
                                 (
