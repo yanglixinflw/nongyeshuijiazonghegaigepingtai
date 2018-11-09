@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import styles from './index.less';
-import { Input, Button, List,Icon} from 'antd';
+import { Input, Button, List, Icon } from 'antd';
 import { Map, Markers, InfoWindow } from 'react-amap';
+import Geolocation from 'react-amap-plugin-geolocation'
 import IwContent from './infoWindow';
 import MarkerContent from './marker';
 import MyCustomize from './myCustomize';
@@ -60,31 +61,29 @@ export default class extends Component {
             //鹰眼
             'OverView',
             // 地图类型切换
-            {
-                name: 'MapType',
-                options: {
-                    visible: false,  // 不设置该属性默认就是 true
-                    defaultType: 1,    //底图默认 0位平面2D，1为卫星
-                    onCreated(ins) {
-                        // console.log(ins);
-                    },
-                },
-            },
-            //缩放控件
             // {
-            //     name: 'ToolBar',
+            //     name: 'MapType',
             //     options: {
-            //       visible: true,  // 不设置该属性默认就是 true
-            //       onCreated(ins){
-            //         // console.log(ins);
-            //       },
+            //         visible: false,  // 不设置该属性默认就是 true
+            //         defaultType: 1,    //底图默认 0位平面2D，1为卫星
+            //         onCreated(ins) {
+            //             // console.log(ins);
+            //         },
             //     },
             // },
-
         ]
-
+        const pluginProps = {
+            enableHighAccuracy: true,//是否使用高精度定位，默认:true
+            showButton: false,        //显示定位按钮，默认：true
+            showMarker: false,        //定位成功后在定位到的位置显示点标记，默认：true
+            // showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
+            panToLocation: false,     //定位成功后将定位到的位置作为地图中心点，默认：true
+            // zoomToAccuracy:true,//定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：f
+            extensions: 'all'
+        }
         // console.log(map)
         this.state = {
+            pluginProps,
             //标记可见性
             markerVisible: true,
             //信息窗位置偏移量
@@ -95,13 +94,13 @@ export default class extends Component {
             infoPosition: '',
             //信息窗大小
             size: {
-                width: 284,
-                height: 169
+                width: 286,
+                height: 168
             },
             //信息窗组件是否可用子组件
             isCustom: false,
             // 地图中心点
-            center: { longitude: 120.26, latitude: 30.29 },
+            center: { longitude: 116.33719, latitude: 39.942384 },
             //控件插件
             plugins,
             //多个Marker经纬度
@@ -123,11 +122,7 @@ export default class extends Component {
         //地图触发事件
         this.mapEvents = {
             created: (ins) => {
-                // console.log(ins)
-                // console.log(ins.getMapNumber())
-                // console.log(ins.getLayers())
-                // console.log(ins.getDefaultLayer())
-                // console.log(ins.getLimitBounds())
+                console.log(ins)
             },
             click: () => {
                 this.setState({
@@ -196,13 +191,14 @@ export default class extends Component {
             },
         }
     }
-    componentDidMount(){
-        this._getDataList(this.state.dataList,this.state.keyWord)
+    componentDidMount() {
+        this._getDataList(this.state.dataList, this.state.keyWord)
     }
-    _getDataList(dataList,keyWord) {
-        let re = new RegExp(keyWord,'g')
-        dataList.filter((v,i)=>{
-            v.name = v.name.replace(re,`<span class=${styles.keyWordSt}>${keyWord}</span>`)
+    //搜索结果处理
+    _getDataList(dataList, keyWord) {
+        let re = new RegExp(keyWord, 'g')
+        dataList.filter((v, i) => {
+            v.name = v.name.replace(re, `<span class=${styles.keyWordSt}>${keyWord}</span>`)
         })
     }
     //摄像头markers的render方法
@@ -231,13 +227,13 @@ export default class extends Component {
         })
         //    console.log(allCameraMarkers)
     }
-    _WatermeterHandler(e){
-        console.log('水表',e)
+    _WatermeterHandler(e) {
+        console.log('水表', e)
     }
-    _ElectricmeterHandler(){
+    _ElectricmeterHandler() {
         console.log('电表')
     }
-    _WatervalveHandler(){
+    _WatervalveHandler() {
         console.log('水阀')
     }
     //搜索
@@ -251,6 +247,7 @@ export default class extends Component {
     }
     render() {
         const {
+            pluginProps,
             dataList,
             plugins, center,
             //useCluster,
@@ -258,7 +255,7 @@ export default class extends Component {
             infoVisible,
             infoOffset, isCustom, size, infoPosition,
         } = this.state;
-        
+
         // console.log(dataList)
         return (
             <Map
@@ -268,11 +265,13 @@ export default class extends Component {
                 // 地图中心点设置
                 center={center}
                 //地图显示的缩放级别
-                zoom={16}
+                zoom={15}
                 events={this.mapEvents}
             >
+                <Geolocation
+                    {...pluginProps}
+                />
                 <div className={styles.search}>
-
                     <Input
                         placeholder='请查询设备编号或设备名称'
                         onPressEnter={(e) => this._searchHandler(e)}
@@ -286,19 +285,19 @@ export default class extends Component {
                                     dataSource={dataList}
                                     renderItem={(item) => {
                                         return (
-                                        <List.Item
-                                        >
-                                            <p className={styles.itemName}
-                                                dangerouslySetInnerHTML = {{ __html:item.name }}>
-                                            </p>
-                                            <p className={styles.itemName}
-                                                dangerouslySetInnerHTML = {{ __html:item.id }}
-                                            ></p>
-                                            <Icon type={item.icon} />
-                                            <p className={styles.itemAdress}
-                                                dangerouslySetInnerHTML = {{ __html:item.address }}
-                                            ></p>
-                                        </List.Item>)
+                                            <List.Item
+                                            >
+                                                <p className={styles.itemName}
+                                                    dangerouslySetInnerHTML={{ __html: item.name }}>
+                                                </p>
+                                                <p className={styles.itemName}
+                                                    dangerouslySetInnerHTML={{ __html: item.id }}
+                                                ></p>
+                                                <Icon type={item.icon} />
+                                                <p className={styles.itemAdress}
+                                                    dangerouslySetInnerHTML={{ __html: item.address }}
+                                                ></p>
+                                            </List.Item>)
                                     }
                                     }
                                 />

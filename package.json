@@ -24,6 +24,7 @@
     "qs": "^6.5.2",
     "react": "^16.2.0",
     "react-amap": "^1.2.7",
+    "react-amap-plugin-geolocation": "0.0.2",
     "react-container-query": "^0.11.0",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.2.0",

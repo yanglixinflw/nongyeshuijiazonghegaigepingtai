@@ -317,12 +317,18 @@
                 color:#fff;
             }
         }
+        .ant-form-item{
+            margin-bottom:21px;
+        }
         .ant-modal-body{
             text-align: center;
-            padding: 38px 50px ;
+            padding: 25px 50px ;
             background: #171A39;
             .ant-form-item-label label{
                 color:#fff;
+            }
+            .ant-form-item:last-child {
+                margin-bottom: 0;
             }
             .ant-input{
                 background: #272D52;
@@ -384,6 +390,9 @@
         }
         .ant-select-selection__choice__remove{
             color: #C8C8C8;
+            &:hover{
+                color:#E94B5E;
+            }
         }
         .has-error .ant-form-explain, .has-error .ant-form-split{
             text-align: left;
@@ -392,5 +401,8 @@
         .has-error .ant-input, .has-error .ant-input:hover{
             border:1px solid #E94B5E;
         }
+        
     }
 }
+
+
