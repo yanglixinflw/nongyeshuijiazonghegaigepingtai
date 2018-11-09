@@ -81,7 +81,7 @@ export default class extends Component{
             title: '操作',
             key: 'action',
             align: 'center',
-            fixed: 'right',
+            // fixed: 'right',
             className: `${styles.action}`,
             width: 220,
             render: (record) => {
@@ -165,7 +165,7 @@ export default class extends Component{
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableDatas}
-                    scroll={{ x: 1100 }}
+                    // scroll={{ x: 1100 }}
                 />
             </React.Fragment>
         )
