@@ -127,9 +127,19 @@ export function getCompanyList(){
     credentials: "include",
   })
 }
-// 获取视频监控建筑物列表
-export function getMonitorList(){
+// 获取视频监控下拉列表
+export function getMonitorSelectList(){
   return request(`${envNet}/api/CamerasMonitor/buildings`,{
     ...postOption
+  })
+}
+export function getMonitorList(){
+  return request(`${envNet}/api/CamerasMonitor/cameras`,{
+    ...postOption,
+    body:JSON.stringify(
+      {
+        buildingId:0
+      }
+    )
   })
 }

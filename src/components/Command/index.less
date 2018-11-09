@@ -61,16 +61,19 @@
             width: 33%;
             height: 33%;
             background: #29305E;
+            position: relative;
         }
         .playBox4 {
             width: 49.5%;
             height: 49.5%;
             background: #29305E;
+            position: relative;
         }
         .playBox1 {
             width: 100%;
             height: 100%;
             background: #29305E;
+            position: relative;
         }
     }
     .operateArea {
@@ -238,7 +241,7 @@
         line-height: 26px;
     }
 }
-.video{
+.videoCover{
     width: 310px;
     height: 170px;
     // 测试使用
@@ -272,5 +275,23 @@
         text-align: center;
         height: 32px;
         line-height: 32px;
+    }
+}
+// 视频
+.video{
+    cursor: pointer;
+    &:focus{
+        border:1px rgb(20,125,224) solid;
+    }
+    &:hover{
+        .closeButton{
+            position: absolute;
+            right: 0;
+            display: block
+        }
+        
+    }
+    .closeButton{
+        display: none;
     }
 }
