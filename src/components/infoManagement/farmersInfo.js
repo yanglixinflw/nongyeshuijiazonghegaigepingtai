@@ -11,8 +11,10 @@ const dataUrl=`${envNet}/api/PeasantMgr/list`;
 const delUrl=`${envNet}/api/PeasantMgr/delete`;
 //添加调用
 const addUrl=`${envNet}/api/PeasantMgr/add`;
-//修改调用
+//修改农户信息调用
 const updateUrl=`${envNet}/api/PeasantMgr/update`;
+//修改密码调用
+const changePwdUrl=`${envNet}/api/PeasantMgr/changePwd`;
 //获取地址
 const areaUrl=`${envNet}/api/Area/list`;
 // post通用设置
@@ -30,8 +32,7 @@ const tableTitle=[
     {index:"mobilePhone",item:"电话"},
     {index:"idCard",item:"身份证"},
     {index:"areaName",item:"归属地区"},
-    {index:"userType",item:"用户类型"},
-    {index:"orgId",item:"所属机构"}
+    {index:"isActivated",item:"是否激活"},
 ]
 const { Option } = Select;
 export default class extends Component{
@@ -54,10 +55,16 @@ export default class extends Component{
             editData:[],
             //修改用户密码弹出框提示
             editPwdvisible: false,
+            //密码是否一致
+            confirmDirty:false,
             //添加用户信息的弹出框显示
             addvisible:false,
             //归属片区列表
-            areaList:[]
+            areaList:[],
+            //搜索框默认值、
+            searchValue:{
+
+            }
           };
     }
     componentDidMount() {
@@ -118,6 +125,7 @@ export default class extends Component{
                         </Button>
                         <Button
                             className={styles.editPsw}
+                            onClick={() => this.editPwdInfo(record.userId)}
                             icon='form'
                         >
                             修改密码
@@ -129,16 +137,27 @@ export default class extends Component{
         let tableDatas = [];
         //表单数据
         data.map((v, i) => {
-            tableDatas.push({
-                realName:v.realName,
-                mobilePhone:v.mobilePhone,
-                idCard:v.idCard,
-                areaName:v.areaName,
-                userType:v.userType,
-                orgId:v.orgId,
-                userId:v.userId,
-                key: i,
-            });
+            if(v.isActivated==false){
+                tableDatas.push({
+                    realName:v.realName,
+                    mobilePhone:v.mobilePhone,
+                    idCard:v.idCard,
+                    areaName:v.areaName,
+                    isActivated:"未激活",
+                    userId:v.userId,
+                    key: i,
+                });
+            }else{
+                tableDatas.push({
+                    realName:v.realName,
+                    mobilePhone:v.mobilePhone,
+                    idCard:v.idCard,
+                    areaName:v.areaName,
+                    isActivated:"已激活",
+                    userId:v.userId,
+                    key: i,
+                });
+            }
         })
         this.setState({
             columns,
@@ -225,7 +244,7 @@ export default class extends Component{
             Promise.resolve(res.json())
                 .then((v) => {
                     if (v.ret == 1) {
-                        console.log(v)
+                        // console.log(v)
                         let data = v.data.items;
                         let editdata=[];
                         data.map(val=>{
@@ -287,6 +306,55 @@ export default class extends Component{
             editvisible: false,
         });
     }
+    //修改密码点击
+    editPwdInfo(userId){
+        this.setState({
+            userId:userId,
+            editPwdvisible: true,
+        })
+    }
+    //修改密码点击确定
+    editPwdOkHandler(){
+        const form = this.editPwdForm.props.form;
+        let {userId}=this.state;
+        form.validateFields((err,values) => {
+            // values即为表单数据
+            if (err) {
+                return;
+            }
+            console.log(values.password);
+            console.log(userId)
+            return fetch(changePwdUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "userId":userId,
+                    "newPwd":values.password
+                })
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        if (v.ret == 1) {
+                            this.setState({
+                                editPwdvisible: false
+                            })
+                            form.resetFields();
+                            message.success('修改成功', 2);
+                        } else {
+                            message.error(v.msg, 2);
+                        }
+                    })
+            }).catch((err) => {
+                console.log(err)
+            })
+        })
+    }
+    //修改密码点击取消
+    editPwdCancelHandler(){
+        this.setState({
+            editPwdvisible: false,
+        });
+    }
+    
     //添加用户信息的弹出框
     add(){
         this.setState({
@@ -390,9 +458,36 @@ export default class extends Component{
     }
     //重置
     _resetForm() {
+        const { title } = this.state;
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                "pageIndex": 0,
+                "pageSize": 10
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v)
+                        let data = v.data.items;
+                        let itemCount = v.data.itemCount;
+                        // 给每一条数据添加key
+                        data.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            data,
+                            itemCount,
+                            searchValue:{}
+                        })
+                        this._getTableDatas(title, data);
+                    }
+                })
+        })
     }
     //导出数据
     _exportDataHandler() {
@@ -431,7 +526,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { delVisible,columns, tableDatas,itemCount,addvisible,areaList,editvisible,editData} = this.state;
+        const { delVisible,columns, tableDatas,itemCount,addvisible,areaList,editvisible,editData,editPwdvisible} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -502,6 +597,14 @@ export default class extends Component{
                     onOk={() => this.editOkHandler()}
                     {...{ editData, areaList }}
                 />
+                {/* 修改密码弹窗 */}
+                <EditPwdForm
+                    wrappedComponentRef={(editPwdForm) => this.editPwdForm = editPwdForm}
+                    visible={editPwdvisible}
+                    onCancel={() => this.editPwdCancelHandler()}
+                    onOk={() => this.editPwdOkHandler()}
+                />
+                {/* 删除弹窗 */}
                 <Modal 
                     title="删除"
                     visible={delVisible}
@@ -751,66 +854,88 @@ const EditForm = Form.create()(
         }
     }
 )
-// //修改密码弹窗
-// const EditPwdForm = Form.create()(
-//     class extends React.Component {
-//         render() {
-//             const { visible, onCancel, onOk, form,editData} = this.props;
-//             const { getFieldDecorator } = form;
-//             if (areaList.length == 0) {
-//                 return null
-//             }
-//             if (editData.length == 0) {
-//                 return null
-//             }
-//             console.log(editData)
-//             return (
-//                 <Modal
-//                     centered={true}
-//                     className={styles.addModal}
-//                     visible={visible}
-//                     title="修改密码"
-//                     onCancel={onCancel}
-//                     onOk={onOk}
-//                     cancelText='取消'
-//                     okText='确定'
-//                 >
-//                     <Form>
-//                         <Form.Item {...formItemLayout} label='新密码'>
-//                             {getFieldDecorator('password', {
-//                                 initialValue: editData[0].password,
-//                                 rules: [
-//                                     { required: true, message: '请输入密码' },
-//                                     { min: 6, message: '不要小于6个字符' },
-//                                     { max: 20, message: '不要超过20个字符' }
-//                                 ],
-//                             })(
-//                                 <Input
-//                                     placeholder='密码由6~20位的字母和数字组成'
-//                                     autoComplete='off'
-//                                     type='Password'
-//                                 />
-//                             )}
-//                         </Form.Item>
-//                         <Form.Item {...formItemLayout} label='确认密码'>
-//                             {getFieldDecorator('realName', {
-//                                 initialValue: editData[0].realName,
-//                                 rules: [
-//                                     { required: true, message: '请输入密码' },
-//                                     { min: 6, message: '不要小于6个字符' },
-//                                     { max: 20, message: '不要超过20个字符' }
-//                                 ],
-//                             })(
-//                                 <Input
-//                                     placeholder='密码由6~20位的字母和数字组成'
-//                                     autoComplete='off'
-//                                     type='Password'
-//                                 />
-//                             )}
-//                         </Form.Item>
-//                     </Form>
-//                 </Modal>
-//             )
-//         }
-//     }
-// )
+//修改密码弹窗
+const EditPwdForm = Form.create()(
+    class extends React.Component {
+        state = {
+            confirmDirty: false,
+          };
+          handleSubmit = (e) => {
+            e.preventDefault();
+            this.props.form.validateFieldsAndScroll((err, values) => {
+              if (!err) {
+                console.log('Received values of form: ', values);
+              }
+            });
+          }
+        
+          handleConfirmBlur = (e) => {
+            const value = e.target.value;
+            this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+          }
+        
+          compareToFirstPassword = (rule, value, callback) => {
+            const form = this.props.form;
+            if (value && value !== form.getFieldValue('password')) {
+              callback('Two passwords that you enter is inconsistent!');
+            } else {
+              callback();
+            }
+          }
+        
+          validateToNextPassword = (rule, value, callback) => {
+            const form = this.props.form;
+            if (value && this.state.confirmDirty) {
+              form.validateFields(['confirm'], { force: true });
+            }
+            callback();
+          }
+        render() {
+            const { visible, onCancel, onOk, form } = this.props;
+            const { getFieldDecorator } = form;
+            return (
+                <Modal
+                    centered={true}
+                    className={styles.addModal}
+                    visible={visible}
+                    title="修改密码"
+                    onCancel={onCancel}
+                    onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
+                >
+                    <Form>
+                        <Form.Item
+                            {...formItemLayout}
+                            label="新密码"
+                            >
+                            {getFieldDecorator('password', {
+                                rules: [{
+                                required: true, message: '请输入新密码'}, 
+                                { min: 6, message: '不要小于6个字符' },
+                                { max: 20, message: '不要超过20个字符'},
+                                {validator: this.validateToNextPassword}
+                            ],
+                            })(
+                                <Input type="password"/>
+                            )}
+                        </Form.Item>
+                        <Form.Item
+                            {...formItemLayout}
+                            label="确认密码"
+                            >
+                            {getFieldDecorator('confirm', {
+                                rules: [
+                                    {required: true, message: '请再次输入新密码',}, 
+                                    {validator: this.compareToFirstPassword}
+                                ],
+                            })(
+                                <Input type="password" onBlur={this.onBlur}/>
+                            )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )
+        }
+    }
+)

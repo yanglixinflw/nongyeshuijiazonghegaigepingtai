@@ -10,33 +10,6 @@ export default class extends Component {
             
         }
     }
-    //删除一行
-    remove(k){
-        const { form } = this.props;
-        // can use data-binding to get
-        const keys = form.getFieldValue('keys');
-        // We need at least one passenger
-        if (keys.length === 1) {
-          return;
-        }
-    
-        // can use data-binding to set
-        form.setFieldsValue({
-          keys: keys.filter(key => key !== k),
-        });
-    }
-    //添加一行
-    add(){
-        const { form } = this.props;
-        // can use data-binding to get
-        const keys = form.getFieldValue('keys');
-        const nextKeys = keys.concat(keys.length);
-        // can use data-binding to set
-        // important! notify form to detect changes
-        form.setFieldsValue({
-          keys: nextKeys,
-        });
-    }
     render() {
         return (
             <React.Fragment>
@@ -98,20 +71,46 @@ export default class extends Component {
 //搜索表单
 const SearchForm = Form.create()(
     class extends React.Component {
+        remove = (k) => {
+            const { form } = this.props;
+            // can use data-binding to get
+            const keys = form.getFieldValue('keys');
+            // We need at least one passenger
+            if (keys.length === 1) {
+              return;
+            }
+        
+            // can use data-binding to set
+            form.setFieldsValue({
+              keys: keys.filter(key => key !== k),
+            });
+          }
+        
+          add = () => {
+            const { form } = this.props;
+            // can use data-binding to get
+            const keys = form.getFieldValue('keys');
+            const nextKeys = keys.concat(keys.length);
+            // can use data-binding to set
+            // important! notify form to detect changes
+            form.setFieldsValue({
+              keys: nextKeys,
+            });
+          }
         render() {
             const { getFieldDecorator, getFieldValue } = this.props.form;
             getFieldDecorator('keys', { initialValue: [] });
             const keys = getFieldValue('keys');
-            const formItems = keys.map((k, index) => {
+            const formItems = keys.map((k) => {
                 return (
                     <div className={styles.line}  key={k}>
                         <Form.Item className={styles.search}>
-                            {getFieldDecorator(`deviceId[${k}]`, {initialValue:''})
+                            {getFieldDecorator('deviceId', {initialValue:''})
                                 (<Input placeholder="设备名称/ID"/>)
                             }
                         </Form.Item>
                         <Form.Item className={styles.search}>
-                            {getFieldDecorator(`what[${k}]`, {initialValue:'power'})
+                            {getFieldDecorator('what', {initialValue:'power'})
                                 (<Select>
                                     <Option value="power">电量</Option>
                                     <Option value="water">水量</Option>
@@ -120,7 +119,7 @@ const SearchForm = Form.create()(
                             }
                         </Form.Item>
                         <Form.Item className={styles.end}>
-                            {getFieldDecorator(`condition[${k}]`, {initialValue:'judge'})
+                            {getFieldDecorator('condition', {initialValue:'judge'})
                                 (<Select>
                                     <Option value="judge">判断</Option>
                                     <Option value="high">&gt;</Option>
@@ -133,12 +132,12 @@ const SearchForm = Form.create()(
                             }
                         </Form.Item>
                         <Form.Item className={styles.end}>
-                            {getFieldDecorator(`value[${k}]`, {initialValue:''})
+                            {getFieldDecorator('value', {initialValue:''})
                                 (<Input placeholder="值"/>)
                             }
                         </Form.Item>
                         <Icon 
-                            type="plus-circle" 
+                            type="minus-circle" 
                             theme="filled" 
                             disabled={keys.length === 1}
                             onClick={() => this.remove(k)}
@@ -157,7 +156,7 @@ const SearchForm = Form.create()(
                             )
                         }
                     </Form.Item>
-                    <div className={styles.line}>
+                    {/* <div className={styles.line}>
                         <Form.Item className={styles.search}>
                             {getFieldDecorator('deviceId', {initialValue:''})
                                 (
@@ -204,7 +203,7 @@ const SearchForm = Form.create()(
                             disabled={keys.length === 1}
                             onClick={() => this.remove(k)}
                         />
-                    </div>
+                    </div> */}
                     {formItems}
                     <div className={styles.line}>
                         <Form.Item className={styles.search}>
@@ -249,7 +248,7 @@ const SearchForm = Form.create()(
                         <Icon 
                             type="plus-circle" 
                             theme="filled" 
-                            onClick={() => this.add()}/>
+                            onClick={this.add}/>
                     </div>
                 </Form>
             )
@@ -280,7 +279,7 @@ const DoForm = Form.create()(
                     <Icon 
                         type="minus-circle" 
                         theme="filled" 
-                        onClick={() => this.remove(k)}/>
+                        />
                 </Form>
             )
         }

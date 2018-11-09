@@ -31,9 +31,13 @@ const mockselectList = [
 export default class extends Component {
     constructor(props) {
         super(props)
+        const {data}=this.props
+        const monitorList=data.data
+        console.log(monitorList)
         // 初始等待队列
-        let initAwit = mockselectList.filter(item => item.id === 'all')
-        let count = initAwit[0].count
+        let initAwit = monitorList.filter(item => item.buildingId === 0)
+        let count = initAwit[0].deviceCount
+        console.log(count)
         let awaitArray = []
         for (let i = 1; i <= count; i++) {
             awaitArray.push({id:i,value:i})
@@ -88,6 +92,7 @@ export default class extends Component {
         if (monitorNum === 1) {
             playBoxStyle = styles.playBox1
         }
+        // console.log(monitorArr)
         this.setState({
             monitorArr,
             playBoxStyle
@@ -143,7 +148,7 @@ export default class extends Component {
                                 // console.log(v)
                                 return (
                                     <div className={playBoxStyle} key={i} onClick={()=>{
-                                        console.log(v)
+                                        // console.log(v)
                                     }}>
                                         {v}
                                     </div>
