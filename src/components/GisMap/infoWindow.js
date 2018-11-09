@@ -13,6 +13,7 @@ export default class extends Component{
         return (
             <div> 
                 <i className={classnames('dyhsicon', 'dyhs-bofang', `${styles.playIcon}`)}></i>
+                <div className={styles.mask}></div>
             </div>
         )
     }

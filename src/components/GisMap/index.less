@@ -5,7 +5,7 @@
     line-height: 40px;
     z-index: 199;
     position: absolute;
-    top: 38px;
+    top: 36px;
     left: 20px;
     height: 40px;
     line-height: 40px;
@@ -87,7 +87,7 @@
 .btnGroup {
     z-index: 199;
     position: absolute;
-    top: 20px;
+    top: 36px;
     right: 283px;
     :global {
         .ant-btn {
@@ -133,6 +133,9 @@
 }
 
 :global {
+    .amap-info-close{
+        right:0;
+    }
     .amap-info-outer,
     .amap-menu-outer {
         box-shadow: none;
@@ -141,6 +144,7 @@
         overflow: hidden;
         background: #141831;
         border: 0;
+        padding: 9px;
     }
     .amap-info-sharp {
         width: 0;
@@ -151,6 +155,10 @@
     }
     .amap-maptype-check {
         background: url(../../assets/ysj.png) -30px 4px no-repeat;
+    }
+    .amap-maptype-wrap{
+        width: 0;
+        height: 0;
     }
     .amap-maptype-con {
         display: none;
@@ -299,7 +307,7 @@
 //切换地图类型 卫星|地图
 .btnMapType {
     position: absolute;
-    top: 27px;
+    top: 36px;
     right: 35px;
     z-index: 199;
     :global {
@@ -341,7 +349,13 @@
     left: 122px;
     cursor: pointer;
 }
-
+.mask{
+    position: absolute;
+    bottom:33px;
+    width:270px;
+    height: 30px;
+    background: rgba(0,0,0,0.4);
+}
 .btnMapZoom {
     position: absolute;
     top: 690px;
@@ -367,5 +381,46 @@
     .btnLess {
         top: 80px;
         left: -64px;
+    }
+}
+//媒体查询
+@media(max-width:1299px){
+    .btnGroup{
+        right: 195px;
+    }
+}
+@media(max-width:1199px){
+    .btnGroup{
+       :global{
+           .ant-btn{
+               margin-right:15px;
+           }
+       }
+    }
+}
+@media(max-width:1099px){
+    .search{
+        :global{
+            .ant-input{
+                width:244px;
+            }
+        }
+        .dataList{
+            width:244px;
+            :global{
+                .ant-list{
+                    width:234px;
+                }
+            }
+        }
+    }
+    .btnGroup{
+       :global{
+           .ant-btn{
+               width:58px;
+               height: 58px;
+               margin-right:10px;
+           }
+       }
     }
 }

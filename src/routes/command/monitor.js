@@ -10,16 +10,29 @@ export default class extends Component{
     componentDidMount(){
         const { dispatch } = this.props;
         dispatch({
-            type: 'monitor/fetch',
+            type: 'monitor/clear',
         });
+        // 下拉列表
+        dispatch({
+            type: 'monitor/fetchSelect',
+        });
+        // 初始摄像头列表
+        dispatch({
+            type: 'monitor/fetchMonitor',
+        })
     }
     render(){
         let { monitor, loading } = this.props;
-        console.log(monitor)
+        let arr=Object.keys(monitor)
+        if(arr.length<=1) return monitor=null
+        // console.log(monitor)
         return(
             <Fragment> 
                 <Spin size='large' spinning={loading}>
-                <VideoMonitor></VideoMonitor>
+                <VideoMonitor
+                    {...monitor}
+                >
+                </VideoMonitor>
                 </Spin>
             </Fragment>
         )

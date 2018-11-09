@@ -520,6 +520,7 @@ export default class extends Component {
                 />
                 {/* 添加弹窗 */}
                 <AddForm
+                    className={styles.addForm}
                     wrappedComponentRef={(addForm) => this.addForm = addForm}
                     visible={addVisible}
                     onCancel={() => this._addCancelHandler()}
