@@ -163,7 +163,8 @@
             }
         }
         if(this.opt.sources.length < 1){
-            throw new Error('no source found in video tag.');
+            // throw new Error('no source found in video tag.');
+            // console.log(this.opt.sources)
         }
         this.opt.cur = 0;
 
