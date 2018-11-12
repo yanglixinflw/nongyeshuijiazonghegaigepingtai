@@ -30,7 +30,7 @@ export default class extends Component {
         let awaitArray = monitorList.data.data
         this.state = {
             // 初始显示格数
-            monitorNum: 9,
+            monitorNum: localStorage.getItem('monitorNum'),
             // 格子数显示数组
             monitorArr: [],
             // 显示区域ClassName
@@ -62,8 +62,6 @@ export default class extends Component {
                 //  newPlayer.push(new EZUIPlayer('CAM00001'))
                 newPlayer.push(new EZUIPlayer(v.video[0].deviceId))
             }
-
-
         })
     }
     // 设置画面数量
@@ -76,13 +74,20 @@ export default class extends Component {
             for (let i = 1; i <= monitorNum; i++) {
                 newMonitorArr.push({ order: i })
             }
-            playBoxStyle = styles.playBox9
+            if (monitorNum == 9) {
+                playBoxStyle = styles.playBox9
+            }
+            if (monitorNum == 4) {
+                playBoxStyle = styles.playBox4
+            }
+            if (monitorNum == 1) {
+                playBoxStyle = styles.playBox1
+            }
             this.setState({
                 monitorArr: newMonitorArr,
                 playBoxStyle,
             })
         }else{
-            // console.log(monitorArr)
             // 空白屏幕数量
             let blackScreen=0
             monitorArr.map((v,i)=>{
@@ -91,27 +96,74 @@ export default class extends Component {
                     blackScreen++
                 }
             })
+            // 正在播放视频数
+            // let playScreen=monitorArr.length-blackScreen
             if(blackScreen<monitorArr.length){
-                console.log('有视频播放')
+                if(monitorNum!=monitorArr.length){
+                    location.reload() 
+                    localStorage.setItem('monitorNum',monitorNum)
+                }
+                
+                // if(monitorNum==9){
+                //     location.reload() 
+                //     localStorage.setItem('monitorNum',9)
+                // }
+                // if(monitorNum == 4){
+                //     // console.log(4)
+                //     location.reload() 
+                //     localStorage.setItem('monitorNum',4)
+                // }
+                // if(monitorNum==1){
+                //     location.reload() 
+                //     localStorage.setItem('monitorNum',1)
+                // }
+                // 播放视频数大于即将设置空白屏幕
+                // if(playScreen>monitorNum){
+                //     if (monitorNum == 4) {
+                //         location.reload() 
+                //         playBoxStyle = styles.playBox4
+                //         let newMonitorArr=monitorArr.slice(0,4)
+                //         this.setState({
+                //             monitorArr:newMonitorArr,
+                //             playBoxStyle
+                //         })
+                //         localStorage.setItem('monitorNum',4)
+                //     }
+                //     if (monitorNum == 1) {
+                //         playBoxStyle = styles.playBox1
+                //         let newMonitorArr=monitorArr.slice(0,1)
+                //         this.setState({
+                //             monitorArr:newMonitorArr,
+                //             playBoxStyle
+                //         })
+                //     }
+                // }
+
             }else{
-                console.log('无视频播放')
+                // console.log(monitorArr)
+                // 无视频播放时
+                let newMonitorArr = []
+                for (let i = 1; i <= monitorNum; i++) {
+                    newMonitorArr.push({ order: i })
+                }
+                if (monitorNum == 9) {
+                    playBoxStyle = styles.playBox9
+                    localStorage.setItem('monitorNum',9)
+                }
+                if (monitorNum == 4) {
+                    playBoxStyle = styles.playBox4
+                    localStorage.setItem('monitorNum',4)
+                }
+                if (monitorNum == 1) {
+                    playBoxStyle = styles.playBox1
+                    localStorage.setItem('monitorNum',1)
+                }
+                this.setState({
+                    monitorArr: newMonitorArr,
+                    playBoxStyle,
+                })
             }
-            console.log(blackScreen)
-            let newMonitorArr=[]
-            if (monitorNum === 9) {
-                playBoxStyle = styles.playBox9
-            }
-            if (monitorNum === 4) {
-                playBoxStyle = styles.playBox4
-            }
-            if (monitorNum === 1) {
-                playBoxStyle = styles.playBox1
-            }
-            // console.log(monitorArr)
         }
-
-        // console.log(monitorArr)
-
     }
     //显示等待队列
     getAwaitArray(buildingId) {
@@ -154,14 +206,14 @@ export default class extends Component {
                 return
             }
             // 判断视频重复性
-            if (v.video[0].deviceId == playVideo[0].deviceId) {
-                alert('此视频正在播放，请勿重复点击')
-                playOrder.push(i)
-                monitorArr[playOrder[0]] = {
-                    order: i,
-                }
-                return
-            }
+            // if (v.video[0].deviceId == playVideo[0].deviceId) {
+            //     alert('此视频正在播放，请勿重复点击')
+            //     playOrder.push(i)
+            //     monitorArr[playOrder[0]] = {
+            //         order: i,
+            //     }
+            //     return
+            // }
 
         })
         // 进一步monitorArr处理
@@ -194,7 +246,21 @@ export default class extends Component {
             yuntaiSpeed,
             selectList,
             awaitArray,
+            monitorNum
         } = this.state
+        // let videoStlye={}
+        // if (monitorNum==9){
+        //     videoStlye={
+        //         width:'100%',
+        //         height:'237px'
+        //     }
+        // }
+        // if(monitorNum==4){
+        //     videoStlye={
+        //         width:'100%',
+        //         height:'353px'
+        //     }
+        // }
         // 云台速度选择
         const speed = (
             <div className={styles.speedList}>
@@ -236,9 +302,10 @@ export default class extends Component {
                                                 controls
                                                 // playsInline 
                                                 autoPlay
+                                                // style={videoStlye}
                                                 style={{
-                                                    width: '100%',
-                                                    height: '100%',
+                                                    width:'100%',
+                                                    height:'100%'
                                                 }}
                                             >
                                                 {/* <source src="rtmp://rtmp.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b" type="rtmp/flv" />
