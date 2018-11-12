@@ -193,7 +193,7 @@ export default class extends Component {
             
             values.pageIndex = 0;
             values.pageSize = 10;
-            // console.log(values)
+            console.log(values)
             //保存搜索框信息
             this.setState({
                 searchValue: values
@@ -419,6 +419,9 @@ export default class extends Component {
                 .then((v) => {
                     if (v.ret == 1) {
                         this._resetForm()
+                        this.setState({
+                            deleteVisible: false,
+                        })
                         message.success('删除成功', 2);
                     } else {
                         message.error(v.msg, 2);
@@ -565,7 +568,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('realName', {
+                        {getFieldDecorator('name', {
                             initialValue: ''
                         })
                             (
@@ -596,7 +599,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('mobilePhone', {
+                        {getFieldDecorator('mobile', {
                             initialValue: ''
                         })
                             (

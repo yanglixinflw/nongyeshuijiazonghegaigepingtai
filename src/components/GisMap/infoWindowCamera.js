@@ -13,7 +13,7 @@ export default class extends Component{
         return (
             <div> 
                 <i className={classnames('dyhsicon', 'dyhs-bofang', `${styles.playIcon}`)}></i>
-                <div className={styles.mask}></div>
+                <div className={styles.mask}>摄像头名称</div>
             </div>
         )
     }

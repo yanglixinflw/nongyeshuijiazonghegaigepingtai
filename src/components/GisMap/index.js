@@ -3,27 +3,41 @@ import styles from './index.less';
 import { Input, Button, List, Icon } from 'antd';
 import { Map, Markers, InfoWindow } from 'react-amap';
 import Geolocation from 'react-amap-plugin-geolocation'
-import IwContent from './infoWindow';
-import MarkerContent from './marker';
+import IwContentCamera from './infoWindowCamera';
+import IwContentWaterV from './infoWindowWaterV';
+import Camera from './markerCamera';
+import WaterValve from './markerWaterV';
 import MyCustomize from './myCustomize';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
-const homePosition = [
+const cameraPosition = [
     { position: { longitude: 120.27, latitude: 30.27 }, isWarningMsg: true },
-    { position: { longitude: 120.26, latitude: 30.27 } },
-    { position: { longitude: 120.27, latitude: 30.26 } },
-    { position: { longitude: 120.26, latitude: 30.28 } },
-    { position: { longitude: 120.27, latitude: 30.28 } },
-    { position: { longitude: 120.28, latitude: 30.27 } },
-    { position: { longitude: 120.27, latitude: 30.29 } },
-    { position: { longitude: 120.29, latitude: 30.27 } },
-    { position: { longitude: 120.26, latitude: 30.29 } },
-    { position: { longitude: 120.27, latitude: 30.17 } },
+    { position: { longitude: 130.26, latitude: 35.27 } },
+    { position: { longitude: 123.27, latitude: 34.26 } },
+    { position: { longitude: 128.26, latitude: 41.28 } },
+    { position: { longitude: 124.27, latitude: 39.28 } },
+    { position: { longitude: 122.28, latitude: 35.27 } },
+    { position: { longitude: 124.27, latitude: 37.29 } },
+    { position: { longitude: 130.29, latitude: 36.27 } },
+    { position: { longitude: 132.26, latitude: 33.29 } },
+    { position: { longitude: 127.27, latitude: 32.17 } },
+]
+const waterValvePosition = [
+    { position: { longitude: 126.27, latitude: 35.27 }, isWarningMsg: true },
+    { position: { longitude: 125.26, latitude: 34.27 } },
+    { position: { longitude: 123.27, latitude: 33.26 } },
+    { position: { longitude: 124.26, latitude: 32.28 } },
+    { position: { longitude: 128.27, latitude: 35.28 } },
+    { position: { longitude: 130.28, latitude: 36.27 } },
+    { position: { longitude: 129.27, latitude: 32.29 } },
+    { position: { longitude: 132.29, latitude: 33.27 } },
+    { position: { longitude: 121.26, latitude: 38.29 } },
+    { position: { longitude: 132.27, latitude: 37.17 } },
 ]
 const dataList = [
     {
-        name: '宁圩村三组四号水表 ',
+        name: '水表 ',
         id: '0010200008',
-        address: '萧山区-宁围街道=三村二组耕地',
+        address: '三村二组耕地',
         icon: 'wifi'
     },
     {
@@ -60,17 +74,6 @@ export default class extends Component {
             'Scale',
             //鹰眼
             'OverView',
-            // 地图类型切换
-            // {
-            //     name: 'MapType',
-            //     options: {
-            //         visible: false,  // 不设置该属性默认就是 true
-            //         defaultType: 1,    //底图默认 0位平面2D，1为卫星
-            //         onCreated(ins) {
-            //             // console.log(ins);
-            //         },
-            //     },
-            // },
         ]
         const pluginProps = {
             enableHighAccuracy: true,//是否使用高精度定位，默认:true
@@ -89,31 +92,34 @@ export default class extends Component {
             //信息窗位置偏移量
             infoOffset: [0, -21],
             //信息窗可见性
-            infoVisible: false,
-            //信息窗位置，根据点击marker时 赋值
-            infoPosition: '',
+            infoVisibleCamera: false,
+            infoVisibleWaterValve: false,
+            //摄像头信息窗位置，根据点击marker时 赋值
+            infoPositionCamera: '',
+            infoPositionWaterValve: '',
             //信息窗大小
             size: {
-                width: 286,
-                height: 168
+                width: 285,
+                height: 169
             },
-            //信息窗组件是否可用子组件
+            //信息窗组件是否可用子组件,false即在系统默认的信息窗体外框中显示content内容
             isCustom: false,
             // 地图中心点
             center: { longitude: 116.33719, latitude: 39.942384 },
             //控件插件
             plugins,
             //多个Marker经纬度
-            cameraMarkers: homePosition,
+            cameraMarkers: cameraPosition,
+            waterValveMarkers:waterValvePosition,
             //所有摄像头markers实例
             allCameraMarkers: '',
+            //所有水阀markers实例
+            allWaterValveMarkers:'',
             //marker是否被点击
-            clicked: false,
+            isClicked: false,
             //搜索下拉列表数据
             // dataList:null,
             dataList,
-            loading: false,
-            hasMore: true,
             //搜索关键字
             keyWord: '三组四号',
 
@@ -122,11 +128,12 @@ export default class extends Component {
         //地图触发事件
         this.mapEvents = {
             created: (ins) => {
-                console.log(ins)
+                // console.log(ins)
             },
             click: () => {
                 this.setState({
-                    infoVisible: false
+                    infoVisibleCamera: false,
+                    infoVisibleWaterValve:false,
                 })
             }
         }
@@ -141,34 +148,30 @@ export default class extends Component {
             },
             click: (MapsOption, marker) => {
                 this.setState({
-                    infoPosition: marker.F.extData.position,
-                    infoVisible: true,
-                    clicked: true
+                    infoVisibleWaterValve: false,
+                    infoPositionCamera: marker.F.extData.position,
+                    infoVisibleCamera: true,
+                    isClicked: true
                 })
-                //   console.log('MapsOptions:');
-                //   console.log(MapsOption);
-                //   console.log('marker:');
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
                 this.setState({
-                    infoPosition: marker.F.extData.position,
-                    infoVisible: true
+                    infoVisibleWaterValve: false,
+                    infoPositionCamera: marker.F.extData.position,
+                    infoVisibleCamera: true
                 })
             },
             mouseout: (MapsOption, marker) => {
-                if (this.state.clicked) {
+                if (this.state.isClicked) {
                     this.setState({
-                        infoPosition: marker.F.extData.position,
-                        infoVisible: true
+                        infoVisibleCamera: true
                     })
                 } else {
                     this.setState({
-                        infoPosition: marker.F.extData.position,
-                        infoVisible: false
+                        infoVisibleCamera: false
                     })
                 }
-
             }
         }
         //信息窗触发事件
@@ -182,38 +185,95 @@ export default class extends Component {
             close: () => {
                 // console.log('InfoWindow closed')
                 this.setState({
-                    infoVisible: false,
-                    clicked: false
+                    infoVisibleCamera:false,
+                    infoVisibleWaterValve: false,
+                    isClicked: false
                 })
             },
             change: () => {
                 // console.log('InfoWindow prop changed')
             },
         }
+        //水阀标记点触发事件
+        this.WaterValveEvents = {
+            created: (allWaterValveMarkers) => {
+                //   console.log('All Markers Instance Are Below');
+                // console.log(MapsOption)
+                this.setState({
+                    allWaterValveMarkers
+                })
+            },
+            click: (MapsOption, marker) => {
+                this.setState({
+                    infoVisibleCamera:false,
+                    infoPositionWaterValve: marker.F.extData.position,
+                    infoVisibleWaterValve: true,
+                    isClicked: true
+                })
+            },
+            dragend: (MapsOption, marker) => { /* ... */ },
+            mouseover: (MapsOption, marker) => {
+                this.setState({
+                    infoVisibleCamera:false,
+                    infoPositionWaterValve: marker.F.extData.position,
+                    infoVisibleWaterValve: true
+                })
+            },
+            mouseout: (MapsOption, marker) => {
+                if (this.state.isClicked) {
+                    this.setState({
+                        infoVisibleWaterValve: true
+                    })
+                } else {
+                    this.setState({
+                        infoVisibleWaterValve: false
+                    })
+                }
+
+            }
+        }
     }
     componentDidMount() {
-        this._getDataList(this.state.dataList, this.state.keyWord)
+        if(dataList){
+            this._getDataList(this.state.dataList, this.state.keyWord)
+        }
+        
     }
     //搜索结果处理
     _getDataList(dataList, keyWord) {
-        let re = new RegExp(keyWord, 'g')
-        dataList.filter((v, i) => {
-            v.name = v.name.replace(re, `<span class=${styles.keyWordSt}>${keyWord}</span>`)
-        })
+        if(dataList){
+            let re = new RegExp(keyWord, 'g')
+            dataList.filter((v, i) => {
+                v.name = v.name.replace(re, `<span class=${styles.keyWordSt}>${keyWord}</span>`)
+            })
+        }
+        
     }
     //摄像头markers的render方法
-    renderMarkerLayout(extData) {
+    renderCamerMarker(extData) {
         //判断marker的position是否和map的中心点一致，一致的话即为被选中的marker
         if (
             extData.position.latitude == this.state.center.latitude
             &&
             extData.position.longitude == this.state.center.longitude
         ) {
-            return <MarkerContent markers={extData} chosenMarker={true} />
+            return <Camera markers={extData} chosenMarker={true} />
         } else {
-            return <MarkerContent markers={extData} chosenMarker={false} />
+            return <Camera markers={extData} chosenMarker={false} />
         }
-
+    }
+    //水阀markers的render方法
+    renderWaterValveMarker(extData) {
+        //判断marker的position是否和map的中心点一致，一致的话即为被选中的marker
+        if (
+            extData.position.latitude == this.state.center.latitude
+            &&
+            extData.position.longitude == this.state.center.longitude
+        ) {
+            return <WaterValve markers={extData} chosenMarker={true} />
+        } else {
+            return <WaterValve markers={extData} chosenMarker={false} />
+        }
     }
     //图标记显示/隐藏
     _cameraHandler() {
@@ -251,9 +311,9 @@ export default class extends Component {
             dataList,
             plugins, center,
             //useCluster,
-            cameraMarkers,
-            infoVisible,
-            infoOffset, isCustom, size, infoPosition,
+            cameraMarkers,waterValveMarkers,
+            infoVisibleCamera,infoVisibleWaterValve,
+            infoOffset, isCustom, size, infoPositionCamera,infoPositionWaterValve,
         } = this.state;
 
         // console.log(dataList)
@@ -315,24 +375,44 @@ export default class extends Component {
                     </Button>
                     <Button onClick={(e) => this._WatermeterHandler(e)}>水表</Button>
                     <Button onClick={() => this._ElectricmeterHandler()}>电表</Button>
-                    <Button onClick={() => this._WatervalveHandler()}>水阀</Button>
+                    <Button onClick={() => this._WatervalveHandler()}>
+                        <i className={styles.waterValve}></i>
+                        <span>水阀</span>
+                    </Button>
                 </div>
-                {/* 信息窗 */}
+                {/* 摄像头信息窗 高德地图规定同时最多只能显示一个信息窗*/}
                 <InfoWindow
-                    position={infoPosition}
-                    visible={infoVisible}
+                    position={infoPositionCamera}
+                    visible={infoVisibleCamera}
                     offset={infoOffset}
                     isCustom={isCustom}
                     size={size}
                     events={this.windowEvents}
                 >
-                    <IwContent />
+                    <IwContentCamera />
                 </InfoWindow>
-                {/* marker */}
+                {/* 摄像头marker */}
                 <Markers
                     markers={cameraMarkers}
-                    render={(extData) => this.renderMarkerLayout(extData)}
+                    render={(extData) => this.renderCamerMarker(extData)}
                     events={this.cameraEvents}
+                />
+                {/* 水阀信息窗 高德地图规定同时最多只能显示一个信息窗*/}
+                <InfoWindow
+                    position={infoPositionWaterValve}
+                    visible={infoVisibleWaterValve}
+                    offset={infoOffset}
+                    isCustom={isCustom}
+                    size={size}
+                    events={this.windowEvents}
+                >
+                    <IwContentWaterV isWarningMsg={waterValveMarkers}/>
+                </InfoWindow>
+                {/* 水阀Marker */}
+                <Markers 
+                    markers={waterValveMarkers}
+                    render={(extData) => this.renderWaterValveMarker(extData)}
+                    events={this.WaterValveEvents}
                 />
                 {/* 自定义地图控件 */}
                 <MyCustomize />
