@@ -9,6 +9,7 @@ import {Spin} from 'antd'
 export default class extends Component{
     componentDidMount() {
         const { dispatch } = this.props;
+        //请求数据
         dispatch({
             type: 'warningRecords/fetch',
             payload:{

@@ -15,7 +15,7 @@ const addUrl=`${envNet}/api/PeasantMgr/add`;
 const updateUrl=`${envNet}/api/PeasantMgr/update`;
 //修改密码调用
 const changePwdUrl=`${envNet}/api/PeasantMgr/changePwd`;
-//获取地址
+//获取归属地地址
 const areaUrl=`${envNet}/api/Area/list`;
 // post通用设置
 let postOption = {
@@ -61,6 +61,8 @@ export default class extends Component{
             addvisible:false,
             //归属片区列表
             areaList:[],
+            //是否激活
+            isActivated:'',
             //搜索框默认值、
             searchValue:{
 
@@ -103,7 +105,6 @@ export default class extends Component{
             title: '操作',
             key: 'action',
             align: 'center',
-            fixed: 'right',
             className: `${styles.action}`,
             width: 200,
             render: (record) => {
@@ -322,8 +323,6 @@ export default class extends Component{
             if (err) {
                 return;
             }
-            console.log(values.password);
-            console.log(userId)
             return fetch(changePwdUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -354,13 +353,13 @@ export default class extends Component{
             editPwdvisible: false,
         });
     }
-    
     //添加用户信息的弹出框
     add(){
         this.setState({
           addvisible: true,
         });
     }
+    //添加用户信息确认
     addhandleOk(){
         const form = this.addForm.props.form;
         form.validateFields((err, values) => {
@@ -414,6 +413,7 @@ export default class extends Component{
             })
         })
     }
+    //添加用户信息取消
     addhandleCancel () {
         this.setState({
             addvisible: false,
@@ -428,12 +428,29 @@ export default class extends Component{
             if (err) {
                 return
             }
+            if(values.realName==undefined){
+                values.realName=''
+            }
+            if(values.mobilePhone==undefined){
+                values.mobilePhone=''
+            }
+            if(values.idCard==undefined){
+                values.idCard=''
+            }
+            if(values.areaId=='area'){
+                values.areaId=''
+            }
+            if(values.isActivated=='isActivated'){
+                values.isActivated=''
+            }
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
                     "name": values.realName,
                     "mobile": values.mobilePhone,
                     "idCard": values.idCard,
+                    "areaId": values.areaId,
+                    "isActivated": values.isActivated,
                     "pageIndex": 0,
                     "pageSize": 10
                 })
@@ -542,6 +559,7 @@ export default class extends Component{
                     {/* 表单信息 */}
                     <SearchForm
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
+                        {...{areaList}}
                     />
                     <div className={styles.buttonGroup}>
                         <Button
@@ -579,7 +597,7 @@ export default class extends Component{
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableDatas}
-                    scroll={{ x: 1000}}
+                    // scroll={{ x: 1000}}
                 />
                 {/* 添加弹窗 */}
                 <AddForm
@@ -608,6 +626,7 @@ export default class extends Component{
                 <Modal 
                     title="删除"
                     visible={delVisible}
+                    className={styles.delModal}
                     onOk={()=>this.delHandleOk()}
                     onCancel={()=>this.delHandleCancel()}
                     okText="确认"
@@ -624,8 +643,12 @@ export default class extends Component{
 const SearchForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form } = this.props;
+            const { form, areaList} = this.props;
             const { getFieldDecorator } = form;
+            const Option = Select.Option;
+            if (areaList.length == 0) {
+                return null
+            }
             return (
                 <Form 
                     layout='inline'
@@ -670,18 +693,23 @@ const SearchForm = Form.create()(
                             (
                             <Select>
                                 <Option value="area">归属地区</Option>
-                                <Option value="all">全部</Option>
+                                {areaList.map((v, i) => {
+                                    return (
+                                        <Option key={i} value={v.areaId}>{v.areaName}</Option>
+                                    )
+
+                                })}
                             </Select>
                             )
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('state', {initialValue:'all'})
+                        {getFieldDecorator('isActivated', {initialValue:'isActivated'})
                             (
                             <Select>
-                                <Option value="all">全部状态</Option>
-                                <Option value="jihuo">激活</Option>
-                                <Option value="weijihuo">未激活</Option>
+                                <Option value="isActivated">是否激活</Option>
+                                <Option value="true" key='1'>激活</Option>
+                                <Option value="false" key='2'>未激活</Option>
                             </Select>
                             )
                         }
@@ -706,9 +734,9 @@ const AddForm = Form.create()(
             }
             return (
                 <Modal
-                    //className={styles.addModal}
+                    className={styles.addModal}
                     visible={visible}
-                    title="修改农户信息"
+                    title="添加农户信息"
                     onCancel={onCancel}
                     onOk={onOk}
                     cancelText='取消'
@@ -789,9 +817,9 @@ const EditForm = Form.create()(
             return (
                 <Modal
                     centered={true}
-                    className={styles.addModal}
+                    className={styles.editModal}
                     visible={visible}
-                    title="修改用户信息"
+                    title="修改农户信息"
                     onCancel={onCancel}
                     onOk={onOk}
                     cancelText='取消'
@@ -836,7 +864,7 @@ const EditForm = Form.create()(
                         </Form.Item>
                         <Form.Item {...formItemLayout} label='归属片区'>
                             {getFieldDecorator('areaName', {
-                                initialValue: editData[0].areaId,
+                                initialValue: editData[0].areaName,
                                 rules: [{ required: true}]
                             })(
                                 <Select>
@@ -896,7 +924,7 @@ const EditPwdForm = Form.create()(
             return (
                 <Modal
                     centered={true}
-                    className={styles.addModal}
+                    className={styles.editPwdModal}
                     visible={visible}
                     title="修改密码"
                     onCancel={onCancel}

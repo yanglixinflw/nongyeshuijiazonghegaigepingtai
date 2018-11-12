@@ -2,6 +2,12 @@ import React,{Component} from 'react';
 import styles from "./valveControl.less"
 import { Input, Button, Form, Cascader, Table, Divider,Select} from 'antd';
 import { Link } from 'dva/router';
+//开发地址
+const envNet='http://192.168.30.127:88';
+//生产环境
+// const envNet='';
+//设备安装地列表
+const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`
 //表头
 const tableTitle=[
     {index:"valveType",item:"阀门型号"},
@@ -39,11 +45,30 @@ export default class extends Component{
             tableTitle,
             tableDatas:[],
             columns: [],
-            title:tableTitle
+            title:tableTitle,
+            //设备安装地列表
+            installAddrList:[],
         }
     }
     componentDidMount() {
         this._getTableDatas(this.state.title, this.state.items);
+        fetch(installAddrUrl, {
+            method:'GET',
+            mode:'cors',
+            credentials: "include",
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        let installAddrList = v.data
+                        this.setState({
+                            installAddrList
+                        })
+                    }
+                })
+        }).catch((err) => {
+            console.log(err)
+        })
     }
     _getTableDatas(title, items) {
         let columns = [];
@@ -81,7 +106,7 @@ export default class extends Component{
             title: '操作',
             key: 'action',
             align: 'center',
-            fixed: 'right',
+            // fixed: 'right',
             className: `${styles.action}`,
             width: 100,
             render: (record) => {
@@ -99,24 +124,95 @@ export default class extends Component{
             }
         })
     }
-    //搜索功能
-    _searchTableDatas() {
+     // 搜索功能
+     _searchTableData() {
+        const { title } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
+            // 未定义时给空值
             if (err) {
                 return
             }
-            // console.log(values)
+            //搜索字段
+            // if(values.waringType=="waringType"){
+            //     values.waringType=''
+            // }
+            // if(values.warningStatus=="state"){
+            //     values.warningStatus=''
+            // }
+            // if(values.deviceId==undefined){
+            //     values.deviceId=''
+            // }
+            // if(values.installAddr=='installAddress'){
+            //     values.installAddr=''
+            // }
+            // if(values.building==undefined){
+            //     values.building=''
+            // }
+            return fetch(dataUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    // "waringType": values.waringType,
+                    // "warningStatus": values.warningStatus,
+                    // "deviceId": values.deviceId,
+                    // "installAddr": values.installAddr,
+                    // "building": values.building,
+                    // "pageIndex": 0,
+                    // "pageSize": 10
+                })
+            }).then(res => {
+                Promise.resolve(res.json())
+                    .then(v => {
+                        if (v.ret == 1) {
+                            // 设置页面显示的元素
+                            let itemCount = v.data.itemCount
+                            let data = v.data.items
+                            this.setState({
+                                itemCount,
+                                data
+                            })
+                            this._getTableDatas(title,data);
+                        }
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
         })
     }
     //重置
     _resetForm() {
+        const { title } = this.state;
         const form = this.searchForm.props.form;
-        // 重置表单
-        form.resetFields();
+        form.resetFields(); // 重置表单
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                "pageIndex": 0,
+                "pageSize": 10
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v)
+                        let data = v.data.items;
+                        let itemCount = v.data.itemCount;
+                        // 给每一条数据添加key
+                        data.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            data,
+                            itemCount,
+                            searchValue:{}
+                        })
+                        this._getTableDatas(title, data);
+                    }
+                })
+        })
     }
     render(){
-        const { columns, tableDatas } = this.state;
+        const { columns, tableDatas, installAddrList} = this.state;
         const paginationProps = {
             showQuickJumper: true,
         };
@@ -129,14 +225,13 @@ export default class extends Component{
                     {/* 表单信息 */}
                     <SearchForm
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        searchHandler={() => this._searchTableDatas()}
-                        resetHandler={() => this._resetForm()}
+                        {...{installAddrList}}
                     />
                     <div className={styles.buttonGroup}>
                         <Button
                             className={styles.fnButton}
                             icon="search"
-                            onClick={() => this._searchTableDatas()}
+                            onClick={() => this._searchTableData()}
                         >
                             搜索
                         </Button>
@@ -169,7 +264,7 @@ export default class extends Component{
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableDatas}
-                    scroll={{ x: 1300 }}
+                    // scroll={{ x: 1300 }}
                 />
             </React.Fragment>
         )
@@ -179,7 +274,7 @@ export default class extends Component{
 const SearchForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, searchHandler, resetHandler } = this.props;
+            const { form, searchHandler, resetHandler, installAddrList} = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Form 
@@ -211,11 +306,15 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('areaId', {initialValue:'area'})
+                        {getFieldDecorator('installAddr', {initialValue:'installAddress'})
                             (
                             <Select>
-                                <Option value='area'>设备安装地</Option>
-                                <Option value='all'>全部</Option>
+                                <Option value='installAddress'>设备安装地</Option>
+                                {
+                                    installAddrList.map((v,i)=>{
+                                        return(<Option key={i} value={v.id}>{v.addr}</Option>)
+                                    })
+                                }
                             </Select>
                             )
                         }
