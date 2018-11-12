@@ -7,9 +7,27 @@ export default class extends Component {
     constructor(props) {
         super(props)
         this.state={
-            
+            //遍历数组增删表格行
+            arr:[]
         }
     }
+    //可输入的select框执行的方法
+    handleChange(value) {
+        console.log(`selected ${value}`);
+    }
+    handleBlur() {
+        console.log('blur');
+    } 
+    handleFocus() {
+        console.log('focus');
+    }
+    _save () {
+        this.ruleForm.props.form.validateFields((err, values) => {
+          if (!err) {
+            console.log('Received values of form: ', values);
+          }
+        });
+      }
     render() {
         return (
             <React.Fragment>
@@ -52,14 +70,11 @@ export default class extends Component {
                     </div>
                     <div className={styles.judge}>
                         <div className={styles.if}>条件</div>
-                        <SearchForm
-                            wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        />
-                    </div>
-                    <div className={styles.execute}>
-                        <div>执行</div>
-                        <DoForm
-                            wrappedComponentRef={(doForm) => this.doForm = doForm}
+                        <RuleForm
+                            wrappedComponentRef={(ruleForm) => this.ruleForm = ruleForm}
+                            onChange={()=>this.handleChange()}
+                            onFocus={()=>this.handleFocus()}
+                            onBlur={()=>this.handleBlur()}
                         />
                     </div>
                 </div>
@@ -69,48 +84,61 @@ export default class extends Component {
 }
 
 //搜索表单
-const SearchForm = Form.create()(
+const RuleForm = Form.create()(
     class extends React.Component {
-        remove = (k) => {
+        remove = (v) => {
             const { form } = this.props;
-            // can use data-binding to get
             const keys = form.getFieldValue('keys');
-            // We need at least one passenger
-            if (keys.length === 1) {
+            if (keys.length === 0) {
               return;
             }
-        
-            // can use data-binding to set
+            //可以使用数据绑定来设置
             form.setFieldsValue({
-              keys: keys.filter(key => key !== k),
+              keys: keys.filter(key => key !== v),
             });
           }
-        
-          add = () => {
+         add = () => {
             const { form } = this.props;
-            // can use data-binding to get
             const keys = form.getFieldValue('keys');
+            //得到添加数量的数组
+            // console.log(keys)
             const nextKeys = keys.concat(keys.length);
-            // can use data-binding to set
-            // important! notify form to detect changes
+            console.log(nextKeys)
+            // 可以使用数据绑定来设置
+            // 重要!通知表单以检测更改
             form.setFieldsValue({
               keys: nextKeys,
             });
-          }
+        }
         render() {
-            const { getFieldDecorator, getFieldValue } = this.props.form;
+            const { getFieldDecorator, getFieldValue,handleChange,handleFocus,handleBlur} = this.props.form;
             getFieldDecorator('keys', { initialValue: [] });
             const keys = getFieldValue('keys');
-            const formItems = keys.map((k) => {
+            const formItems = keys.map((v,i) => {
                 return (
-                    <div className={styles.line}  key={k}>
+                    <div className={styles.line} key={v}>
                         <Form.Item className={styles.search}>
-                            {getFieldDecorator('deviceId', {initialValue:''})
-                                (<Input placeholder="设备名称/ID"/>)
+                            {getFieldDecorator(`deviceId${v}`, {initialValue:'设备名称/ID'})
+                                (
+                                <Select
+                                    showSearch
+                                    // style={{ width: 200 }}
+                                    // placeholder=""
+                                    optionFilterProp="children"
+                                    onChange={handleChange}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
+                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    <Option value="1">1</Option>
+                                    <Option value="2">2</Option>
+                                    <Option value="3">3</Option>
+                                </Select>
+                                )
                             }
                         </Form.Item>
                         <Form.Item className={styles.search}>
-                            {getFieldDecorator('what', {initialValue:'power'})
+                            {getFieldDecorator(`variate${v}`, {initialValue:'power'})
                                 (<Select>
                                     <Option value="power">电量</Option>
                                     <Option value="water">水量</Option>
@@ -119,7 +147,7 @@ const SearchForm = Form.create()(
                             }
                         </Form.Item>
                         <Form.Item className={styles.end}>
-                            {getFieldDecorator('condition', {initialValue:'judge'})
+                            {getFieldDecorator(`condition${v}`, {initialValue:'judge'})
                                 (<Select>
                                     <Option value="judge">判断</Option>
                                     <Option value="high">&gt;</Option>
@@ -132,15 +160,14 @@ const SearchForm = Form.create()(
                             }
                         </Form.Item>
                         <Form.Item className={styles.end}>
-                            {getFieldDecorator('value', {initialValue:''})
+                            {getFieldDecorator(`value${v}`, {initialValue:''})
                                 (<Input placeholder="值"/>)
                             }
                         </Form.Item>
                         <Icon 
                             type="minus-circle" 
                             theme="filled" 
-                            disabled={keys.length === 1}
-                            onClick={() => this.remove(k)}
+                            onClick={() => this.remove(v)}
                         />
                     </div>
                 );
@@ -151,70 +178,35 @@ const SearchForm = Form.create()(
                         {getFieldDecorator('condition', {initialValue:'all'})
                             (
                             <Select>
-                                <Option value="all">全部条件</Option>
+                                <Option value="all">所有条件</Option>
                             </Select>
                             )
                         }
                     </Form.Item>
-                    {/* <div className={styles.line}>
-                        <Form.Item className={styles.search}>
-                            {getFieldDecorator('deviceId', {initialValue:''})
-                                (
-                                <Input placeholder="设备名称/ID"/>
-                                )
-                            }
-                        </Form.Item>
-                        <Form.Item className={styles.search}>
-                            {getFieldDecorator('state', {initialValue:'power'})
-                                (
-                                <Select>
-                                    <Option value="power">电量</Option>
-                                    <Option value="water">水量</Option>
-                                    <Option value="state">状态</Option>
-                                </Select>
-                                )
-                            }
-                        </Form.Item>
-                        <Form.Item className={styles.end}>
-                            {getFieldDecorator('judge', {initialValue:'judge'})
-                                (
-                                <Select>
-                                    <Option value="judge">判断</Option>
-                                    <Option value="high">&gt;</Option>
-                                    <Option value="low">&lt;</Option>
-                                    <Option value="equal">=</Option>
-                                    <Option value="heq">&gt;=</Option>
-                                    <Option value="leq">&lt;=</Option>
-                                    <Option value="neq">≠</Option>
-                                </Select>
-                                )
-                            }
-                        </Form.Item>
-                        <Form.Item className={styles.end}>
-                            {getFieldDecorator('value', {initialValue:''})
-                                (
-                                <Input placeholder="值"/>
-                                )
-                            }
-                        </Form.Item>
-                        <Icon 
-                            type="minus-circle" 
-                            theme="filled" 
-                            disabled={keys.length === 1}
-                            onClick={() => this.remove(k)}
-                        />
-                    </div> */}
                     {formItems}
                     <div className={styles.line}>
                         <Form.Item className={styles.search}>
-                            {getFieldDecorator('deviceId', {initialValue:''})
+                            {getFieldDecorator('deviceId', {initialValue:'设备名称/ID'})
                                 (
-                                <Input placeholder="设备名称/ID"/>
+                                <Select
+                                    showSearch
+                                    // style={{ width: 200 }}
+                                    // placeholder=""
+                                    optionFilterProp="children"
+                                    onChange={handleChange}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
+                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    <Option value="1">1</Option>
+                                    <Option value="2">2</Option>
+                                    <Option value="3">3</Option>
+                                </Select>
                                 )
                             }
                         </Form.Item>
                         <Form.Item className={styles.search}>
-                            {getFieldDecorator('state', {initialValue:'power'})
+                            {getFieldDecorator('variate', {initialValue:'参数'})
                                 (
                                 <Select>
                                     <Option value="param1">参数1</Option>
@@ -241,7 +233,7 @@ const SearchForm = Form.create()(
                         <Form.Item className={styles.end}>
                             {getFieldDecorator('value', {initialValue:''})
                                 (
-                                <Input placeholder="值"/>
+                                <Input placeholder="值" type="number"/>
                                 )
                             }
                         </Form.Item>
@@ -250,36 +242,41 @@ const SearchForm = Form.create()(
                             theme="filled" 
                             onClick={this.add}/>
                     </div>
-                </Form>
-            )
-        }
-    }
-)
-//执行表单
-const DoForm = Form.create()(
-    class extends React.Component {
-        render() {
-            const { form } = this.props;
-            const { getFieldDecorator } = form;
-            return (
-                <Form className={styles.form}>
-                    <Form.Item className={styles.search}>
-                        {getFieldDecorator('deviceId', {initialValue:''})
-                            (<Input placeholder="设备名称/ID"/>)
-                        }
-                    </Form.Item>
-                    <Form.Item className={styles.search}>
-                       {getFieldDecorator('switch', {initialValue:'open'})
-                            (<Select>
-                                <Option value="open">开阀</Option>
-                                <Option value="close">关阀</Option>
-                            </Select>)
-                        }
-                    </Form.Item>
-                    <Icon 
-                        type="minus-circle" 
-                        theme="filled" 
-                        />
+                    <div className={styles.do}>执行</div>
+                    <div className={styles.line}>
+                        <Form.Item className={styles.search}>
+                            {getFieldDecorator('deviceId', {initialValue:'设备名称/ID'})
+                                (
+                                <Select
+                                    showSearch
+                                    // style={{ width: 200 }}
+                                    // placeholder=""
+                                    optionFilterProp="children"
+                                    onChange={handleChange}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
+                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    <Option value="1">1</Option>
+                                    <Option value="2">2</Option>
+                                    <Option value="3">3</Option>
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                        <Form.Item className={styles.search}>
+                        {getFieldDecorator('switch', {initialValue:'open'})
+                                (<Select>
+                                    <Option value="open">开阀</Option>
+                                    <Option value="close">关阀</Option>
+                                </Select>)
+                            }
+                        </Form.Item>
+                        <Icon 
+                            type="minus-circle" 
+                            theme="filled" 
+                        />    
+                    </div>
                 </Form>
             )
         }

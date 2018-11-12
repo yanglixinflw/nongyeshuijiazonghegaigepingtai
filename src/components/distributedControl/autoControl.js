@@ -107,21 +107,92 @@ export default class extends Component{
             }
         })
     }
-    //搜索功能
-    _searchTableDatas() {
-        const form = this.searchForm.props.form;
-        form.validateFields((err, values) => {
-            if (err) {
-                return
-            }
-            // console.log(values)
+  // 搜索功能
+  _searchTableDatas() {
+    const { title } = this.state;
+    const form = this.searchForm.props.form;
+    form.validateFields((err, values) => {
+        // 未定义时给空值
+        if (err) {
+            return
+        }
+        // if(values.realName==undefined){
+        //     values.realName=''
+        // }
+        // if(values.mobilePhone==undefined){
+        //     values.mobilePhone=''
+        // }
+        // if(values.idCard==undefined){
+        //     values.idCard=''
+        // }
+        // if(values.areaId=='area'){
+        //     values.areaId=''
+        // }
+        // if(values.isActivated=='isActivated'){
+        //     values.isActivated=''
+        // }
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                // "name": values.realName,
+                // "mobile": values.mobilePhone,
+                // "idCard": values.idCard,
+                // "areaId": values.areaId,
+                // "isActivated": values.isActivated,
+                // "pageIndex": 0,
+                // "pageSize": 10
+            })
+        }).then(res => {
+            Promise.resolve(res.json())
+                .then(v => {
+                    if (v.ret == 1) {
+                        // 设置页面显示的元素
+                        let itemCount = v.data.itemCount
+                        let data = v.data.items
+                        this.setState({
+                            itemCount,
+                            data
+                        })
+                        this._getTableDatas(title,data);
+                    }
+                })
+        }).catch(err => {
+            console.log(err)
         })
-    }
-    //重置
-    _resetForm() {
+    })
+}
+     //重置
+     _resetForm() {
+        const { title } = this.state;
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                "pageIndex": 0,
+                "pageSize": 10
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v)
+                        let data = v.data.items;
+                        let itemCount = v.data.itemCount;
+                        // 给每一条数据添加key
+                        data.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            data,
+                            itemCount,
+                            searchValue:{}
+                        })
+                        this._getTableDatas(title, data);
+                    }
+                })
+        })
     }
     render(){
         const { columns, tableDatas } = this.state;
@@ -137,8 +208,6 @@ export default class extends Component{
                     {/* 表单信息 */}
                     <SearchForm
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        searchHandler={() => this._searchTableDatas()}
-                        resetHandler={() => this._resetForm()}
                     />
                     <div className={styles.buttonGroup}>
                         <Button
