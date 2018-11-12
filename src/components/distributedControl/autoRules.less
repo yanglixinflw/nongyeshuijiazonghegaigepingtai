@@ -77,7 +77,7 @@
        }
        .form{
            width: auto;
-           height:170px;
+           height:auto;
            .all{
                 width: 276px;
                 :global{
@@ -126,6 +126,28 @@
                             border: none;
                             outline: none;
                         }
+                        .anticon-minus-circle{
+                            width: 29px;
+                            height: 29px;
+                            border-radius: 50%;
+                            border:1px solid #1c2241;
+                            display: table;
+                            font-size: 30px;
+                            margin-top:6px;
+                            color:#ff5062;
+                            background: #fff;
+                        }
+                        .anticon-plus-circle{
+                            width: 29px;
+                            height: 29px;
+                            border-radius: 50%;
+                            border:1px solid #1c2241;
+                            display: table;
+                            font-size: 30px;
+                            margin-top:6px;
+                            color:#327df4;
+                            background: #fff;
+                        }
                     }
                 }
                 .end{
@@ -158,18 +180,22 @@
                 }
                 :global{
                     .anticon-minus-circle{
-                        width: 30px;
-                        height: 30px;
+                        width: 29px;
+                        height: 29px;
                         border-radius: 50%;
+                        border:1px solid #1c2241;
+                        display: table;
                         font-size: 30px;
                         margin-top:6px;
                         color:#ff5062;
                         background: #fff;
                     }
                     .anticon-plus-circle{
-                        width: 30px;
-                        height: 30px;
+                        width: 29px;
+                        height: 29px;
+                        display: table;
                         border-radius: 50%;
+                        border:1px solid #1c2241;
                         font-size: 30px;
                         margin-top:6px;
                         color:#327df4;
@@ -177,59 +203,13 @@
                     }
                 }
            }
-       }
-    }
-    .execute{
-        width: 100%;
-        height: auto;
-        padding:20px 20px;
-        div{
+           .do{
+            font-size: 18px;
             color:#ababb4;
-            padding-bottom: 20px;
+            width: 100%;
+            height: 18px;
+            margin: 40px auto 20px;
         }
-        .form{
-            width: auto;
-            height:42px;
-            display: flex;
-            .search{
-                width: 276px;
-                margin-right: 20px;
-                :global{
-                    .ant-select-selection,.ant-select-selection--single{
-                        width: 276px;
-                        height:42px;
-                        padding-top:6px;
-                        padding-left: 6px;
-                        background: #141831;
-                        color:#46556d;
-                        border: none;
-                        outline: none;
-                    }
-                    .anticon,.anticon-down,.ant-select-arrow-icon{
-                        color:#46556d;
-                    }
-                    .ant-input{
-                        width: 276px;
-                        height:42px;
-                        padding-top:6px;
-                        padding-left: 14px;
-                        background: #141831;
-                        border: none;
-                        outline: none;
-                    }
-                }
-            }
-            :global{
-                .anticon-minus-circle{
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 50%;
-                    font-size: 30px;
-                    margin-top:6px;
-                    color:#ff5062;
-                    background: #fff;
-                }
-            }
-        }
+       }
     }
 }
