@@ -19,6 +19,8 @@ export default {
                 let yzNumber=Math.floor(Math.random()*100+100)
                 // 使用islogin保存登录状态
                 localStorage.setItem('welcome',yzNumber)
+                // 保存屏幕数
+                localStorage.setItem('monitorNum',9)
                 // console.log('登录成功--models')
             }else{
                 console.log('登录失败')

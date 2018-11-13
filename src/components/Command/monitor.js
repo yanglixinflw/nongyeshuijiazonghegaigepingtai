@@ -2,8 +2,6 @@ import React, { Component, Fragment } from 'react';
 import styles from './index.less'
 import ysj from '../../assets/ysj.png'
 import up from '../../assets/up.png'
-import play from '../../assets/play.png'
-import pause from '../../assets/pause.png'
 import close from '../../assets/close.png'
 import EZUIPlayer from '../../assets/ezuikit'
 import classnames from 'classnames'
@@ -32,7 +30,7 @@ export default class extends Component {
         let awaitArray = monitorList.data.data
         this.state = {
             // 初始显示格数
-            monitorNum: 9,
+            monitorNum: localStorage.getItem('monitorNum'),
             // 格子数显示数组
             monitorArr: [],
             // 显示区域ClassName
@@ -44,8 +42,6 @@ export default class extends Component {
             // 受控视频
             controlVideoId: "",
             // controlVideoId:'1',
-            // 受控视频播放状态
-            controlPlay: true,
             // 下拉选项列表
             selectList
         }
@@ -54,51 +50,120 @@ export default class extends Component {
     componentDidMount() {
         // 渲染初始化格子
         this.setScreenNum(this.state.monitorNum)
-        // let { awaitArray } = this.state
-        // console.log(awaitArray)
-        // // 实例化所有的player
-        // let newPlayer = []
-        // awaitArray.map((v, i) => {
-        //     console.log(v.deviceId)
-        //     // newPlayer.push(new EZUIPlayer(v.deviceId.toString()))
-        // })
     }
-    componentDidUpdate(){
-        const {monitorArr}=this.state
-        console.log(monitorArr)
+    componentDidUpdate() {
+        const { monitorArr } = this.state
+        // console.log(monitorArr)
         // 实例化监控
-         let newPlayer=[]
-         monitorArr.map((v, i) => {
-             if(v.video){
-                 console.log(v.video[0].deviceId.toString())
+        let newPlayer = []
+        monitorArr.map((v, i) => {
+            if (typeof v.video == 'object') {
+                //  console.log(v.video[0].deviceId.toString())
                 //  newPlayer.push(new EZUIPlayer('CAM00001'))
-                 newPlayer.push(new EZUIPlayer(v.video[0].deviceId))
-             }
-             
-             
-         })
+                newPlayer.push(new EZUIPlayer(v.video[0].deviceId))
+            }
+        })
     }
     // 设置画面数量
     setScreenNum(monitorNum) {
-        let { playBoxStyle } = this.state
-        let monitorArr = []
-        for (let i = 1; i <= monitorNum; i++) {
-            monitorArr.push({id:i,value:i})
+        let { playBoxStyle, monitorArr } = this.state
+        // 初始化视频画面
+        if (monitorArr.length == 0) {
+            // console.log('初始化空数组')
+            let newMonitorArr = []
+            for (let i = 1; i <= monitorNum; i++) {
+                newMonitorArr.push({ order: i })
+            }
+            if (monitorNum == 9) {
+                playBoxStyle = styles.playBox9
+            }
+            if (monitorNum == 4) {
+                playBoxStyle = styles.playBox4
+            }
+            if (monitorNum == 1) {
+                playBoxStyle = styles.playBox1
+            }
+            this.setState({
+                monitorArr: newMonitorArr,
+                playBoxStyle,
+            })
+        }else{
+            // 空白屏幕数量
+            let blackScreen=0
+            monitorArr.map((v,i)=>{
+                // 监控画面无视频正在播放
+                if(typeof v.video=='undefined'){
+                    blackScreen++
+                }
+            })
+            // 正在播放视频数
+            // let playScreen=monitorArr.length-blackScreen
+            if(blackScreen<monitorArr.length){
+                if(monitorNum!=monitorArr.length){
+                    location.reload() 
+                    localStorage.setItem('monitorNum',monitorNum)
+                }
+                
+                // if(monitorNum==9){
+                //     location.reload() 
+                //     localStorage.setItem('monitorNum',9)
+                // }
+                // if(monitorNum == 4){
+                //     // console.log(4)
+                //     location.reload() 
+                //     localStorage.setItem('monitorNum',4)
+                // }
+                // if(monitorNum==1){
+                //     location.reload() 
+                //     localStorage.setItem('monitorNum',1)
+                // }
+                // 播放视频数大于即将设置空白屏幕
+                // if(playScreen>monitorNum){
+                //     if (monitorNum == 4) {
+                //         location.reload() 
+                //         playBoxStyle = styles.playBox4
+                //         let newMonitorArr=monitorArr.slice(0,4)
+                //         this.setState({
+                //             monitorArr:newMonitorArr,
+                //             playBoxStyle
+                //         })
+                //         localStorage.setItem('monitorNum',4)
+                //     }
+                //     if (monitorNum == 1) {
+                //         playBoxStyle = styles.playBox1
+                //         let newMonitorArr=monitorArr.slice(0,1)
+                //         this.setState({
+                //             monitorArr:newMonitorArr,
+                //             playBoxStyle
+                //         })
+                //     }
+                // }
+
+            }else{
+                // console.log(monitorArr)
+                // 无视频播放时
+                let newMonitorArr = []
+                for (let i = 1; i <= monitorNum; i++) {
+                    newMonitorArr.push({ order: i })
+                }
+                if (monitorNum == 9) {
+                    playBoxStyle = styles.playBox9
+                    localStorage.setItem('monitorNum',9)
+                }
+                if (monitorNum == 4) {
+                    playBoxStyle = styles.playBox4
+                    localStorage.setItem('monitorNum',4)
+                }
+                if (monitorNum == 1) {
+                    playBoxStyle = styles.playBox1
+                    localStorage.setItem('monitorNum',1)
+                }
+                this.setState({
+                    monitorArr: newMonitorArr,
+                    playBoxStyle,
+                })
+            }
         }
-        if (monitorNum === 9) {
-            playBoxStyle = styles.playBox9
-        }
-        if (monitorNum === 4) {
-            playBoxStyle = styles.playBox4
-        }
-        if (monitorNum === 1) {
-            playBoxStyle = styles.playBox1
-        }
-        // console.log(monitorArr)
-        this.setState({
-            monitorArr,
-            playBoxStyle
-        })
     }
     //显示等待队列
     getAwaitArray(buildingId) {
@@ -130,48 +195,72 @@ export default class extends Component {
         const { awaitArray, monitorArr } = this.state
         // 要播放的视频
         let playVideo = awaitArray.filter(item => item.deviceId === deviceId)
+        // console.log(playVideo)
         // 获取空余可以播放位置的序号
         let playOrder = []
         monitorArr.map((v, i) => {
-            if(v.video==undefined){
+            if (v.video == undefined) {
                 playOrder.push(i)
+                // console.log(playOrder)
+                monitorArr[playOrder[0]].video = playVideo
                 return
             }
+            // 判断视频重复性
+            // if (v.video[0].deviceId == playVideo[0].deviceId) {
+            //     alert('此视频正在播放，请勿重复点击')
+            //     playOrder.push(i)
+            //     monitorArr[playOrder[0]] = {
+            //         order: i,
+            //     }
+            //     return
+            // }
+
         })
-        // console.log(monitorArr[playOrder[0]])
-        monitorArr[playOrder[0]].video=playVideo
-       
+        // 进一步monitorArr处理
+        monitorArr.map((v, i) => {
+            // console.log(v)
+            v.order = i + 1
+        })
+        // console.log(monitorArr)
         this.setState({
             monitorArr
         })
-
-
-
     }
     // 获取焦点视频ID
     getFocousVideo(deviceId) {
         // console.log(deviceId)
-            this.setState({
-                controlVideoId: deviceId
-            })
+        this.setState({
+            controlVideoId: deviceId
+        })
 
     }
     // 关闭视频
-    closeVideo(deviceId){
-        const {monitorArr}=this.state
-        // console.log(deviceId)
+    closeVideo(deviceId) {
+        const { monitorArr } = this.state
+        console.log(deviceId)
     }
     render() {
-        const { 
+        const {
             monitorArr,
             playBoxStyle,
             yuntaiSpeed,
-            controlPlay,
-            controlVideoId,
             selectList,
-            awaitArray
+            awaitArray,
+            monitorNum
         } = this.state
-        // console.log(monitorArr)
+        // let videoStlye={}
+        // if (monitorNum==9){
+        //     videoStlye={
+        //         width:'100%',
+        //         height:'237px'
+        //     }
+        // }
+        // if(monitorNum==4){
+        //     videoStlye={
+        //         width:'100%',
+        //         height:'353px'
+        //     }
+        // }
         // 云台速度选择
         const speed = (
             <div className={styles.speedList}>
@@ -197,19 +286,30 @@ export default class extends Component {
                                         </div>
                                     )
                                 } else {
-                                    // console.log(typeof v.video[0].deviceId)
                                     return (
                                         <div className={classnames(`${playBoxStyle}`, `${styles.video}`)}
                                             key={i}
                                             onFocus={() => this.getFocousVideo(v.video[0].deviceId)}
                                             tabIndex='0'
                                         >
-                                            <div className={styles.closeButton} 
-                                            onClick={()=>this.closeVideo(v.video[0].deviceId)}>
+                                            <div className={styles.closeButton}
+                                                onClick={() => this.closeVideo(v.video[0].deviceId)}>
                                                 <img src={close}></img>
                                             </div>
-                                            <video 
-                                            id= {v.video[0].deviceId} poster={v.video[0].coverUrl} controls playsInline autoPlay>
+                                            <video
+                                                id={v.video[0].deviceId}
+                                                poster={v.video[0].coverUrl}
+                                                controls
+                                                // playsInline 
+                                                autoPlay
+                                                // style={videoStlye}
+                                                style={{
+                                                    width:'100%',
+                                                    height:'100%'
+                                                }}
+                                            >
+                                                {/* <source src="rtmp://rtmp.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b" type="rtmp/flv" />
+                                                        <source src="http://hls.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.m3u8" type="application/x-mpegURL" /> */}
                                                 <source src={v.video[0].playList.rtmp} type="rtmp/flv" />
                                                 <source src={v.video[0].playList.hls} type="application/x-mpegURL" />
                                             </video>
@@ -287,11 +387,6 @@ export default class extends Component {
                                         />
                                     </div>
                                     <div className={styles.operateButton}>
-                                        {controlVideoId == '' ? null :
-                                            <img
-                                                src={controlPlay ? pause : play} title={controlPlay ? '暂停' : '播放'}
-                                            />
-                                        }
                                     </div>
                                     <div className={styles.operateButton}>
                                         <img src={up} title='向右移动'
