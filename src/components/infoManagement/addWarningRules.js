@@ -1,0 +1,162 @@
+import React,{Component} from 'react';
+import styles from './addWarningRules.less';
+import { Input, Button, Form, Select,Icon} from 'antd';
+import {Link} from 'dva/router';
+const Option = Select.Option;
+export default class extends Component{
+    // constructor(props) {
+    //     super(props)
+    componentDidMount() {}
+    render(){
+        return(
+            <React.Fragment>
+                <div className={styles.headers}>
+                    <div className={styles.left}>
+                        <Link to={`/messageManagement/warningRules`}>
+                            <div className={styles.arrowLeft}>
+                                <Icon type="arrow-left" theme="outlined" style={{marginTop:'22px',fontSize:'18px'}}/>
+                                <div>预警规则</div>
+                            </div>
+                        </Link>
+                        <Link to={`/warningRules/addWarningRules`}>
+                            <div className={styles.warningRules}>
+                                <div>/</div>
+                                <div className={styles.addRules}>添加预警规则</div>
+                            </div>
+                        </Link>
+                    </div>
+                </div>
+                <div className={styles.mbody}>
+                    <div className={styles.Rules}>
+                        <div className={styles.rulesName}>预警规则</div>
+                        <div className={styles.border}></div>
+                    </div>
+                    <AddForm
+                        wrappedComponentRef={(addForm) => this.addForm = addForm}
+                    />
+                </div>
+            </React.Fragment>
+        )
+    }
+}
+//添加表单
+const AddForm = Form.create()(
+    class extends React.Component {
+        render(){
+            const { getFieldDecorator } = this.props.form;
+            return(
+                <Form className={styles.form}>
+                    <div className={styles.head}>
+                        <div className={styles.flag}></div>
+                        <input className={styles.formRule} placeholder='预警规则'/>
+                    </div>
+                    <div className={styles.type1}>
+                        <div className={styles.based}>条件</div>
+                        <div className={styles.type}>
+                            <div className={styles.typeName}>类型</div>
+                            <Form.Item className={styles.standard1}>
+                                {getFieldDecorator('type', {initialValue:'fn'})
+                                    (<Select>
+                                        <Option value="fn">功能预警</Option>
+                                        <Option value="run">运营预警</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                        </div>
+                        <div className={styles.limited}>
+                            <div className={styles.limitedName}>判断规则</div>
+                            <Form.Item className={styles.standard1}>
+                                {getFieldDecorator('param', {initialValue:'param1'})
+                                    (<Select>
+                                        <Option value="param1">参数1</Option>
+                                        <Option value="param2">参数2</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.standard2}>
+                                {getFieldDecorator('condition', {initialValue:'judge'})
+                                    (<Select>
+                                        <Option value="judge">判断</Option>
+                                        <Option value="high">&gt;</Option>
+                                        <Option value="low">&lt;</Option>
+                                        <Option value="equal">=</Option>
+                                        <Option value="heq">&gt;=</Option>
+                                        <Option value="leq">&lt;=</Option>
+                                        <Option value="neq">≠</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.standard2}>
+                                {getFieldDecorator('value', {initialValue:''})
+                                    (<Input placeholder="值" type='number'/>)
+                                }
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className={styles.type1}>
+                        <div className={styles.based}>短信</div>
+                        <div className={styles.type}>
+                            <div className={styles.typeName}>频率</div>
+                            <Form.Item className={styles.standard1}>
+                                {getFieldDecorator('frequency', {initialValue:'no'})
+                                    (<Select>
+                                        <Option value="no">不通知</Option>
+                                        <Option value="one">仅通知一次</Option>
+                                        <Option value="five">五分钟通知一次</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                        </div>
+                        <div className={styles.limited}>
+                            <div className={styles.limitedName}>通知人</div>
+                            <Form.Item className={styles.standard1}>
+                                {getFieldDecorator('people', {initialValue:'people1'})
+                                    (<Select>
+                                        <Option value="people1">慧水老李</Option>
+                                        <Option value="people2">慧水老王</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.standard3}>
+                                {getFieldDecorator('other', {initialValue:''})
+                                    (<Input placeholder="需通知的其他人" type='text'/>)
+                                }
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className={styles.type1}>
+                        <div className={styles.based}>电话</div>
+                        <div className={styles.type}>
+                            <div className={styles.typeName}>频率</div>
+                            <Form.Item className={styles.standard1}>
+                                {getFieldDecorator('frequency', {initialValue:'no'})
+                                    (<Select>
+                                        <Option value="no">不通知</Option>
+                                        <Option value="one">仅通知一次</Option>
+                                        <Option value="five">五分钟通知一次</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                        </div>
+                        <div className={styles.limited}>
+                            <div className={styles.limitedName}>通知人</div>
+                            <Form.Item className={styles.standard1}>
+                                {getFieldDecorator('people', {initialValue:'people1'})
+                                    (<Select>
+                                        <Option value="people1">慧水老李</Option>
+                                        <Option value="people2">慧水老王</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.standard3}>
+                                {getFieldDecorator('other', {initialValue:''})
+                                    (<Input placeholder="需通知的其他人" type='text'/>)
+                                }
+                            </Form.Item>
+                        </div>
+                    </div>
+                </Form>
+            )
+        }
+    }
+)

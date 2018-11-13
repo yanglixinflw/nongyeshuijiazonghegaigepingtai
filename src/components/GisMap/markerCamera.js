@@ -1,5 +1,4 @@
 import React,{ Component} from 'react';
-import { Icon } from 'antd';
 import styles from './index.less';
 export default class extends Component {
     constructor(props){
@@ -20,7 +19,7 @@ export default class extends Component {
         const {chosenMarker} = this.props;
         // console.log(chosenMarker)
         return (
-            <div>
+            <div className={styles.markerCamera}>
                 {
                     chosenMarker?
                         <i className={styles.chosen}>

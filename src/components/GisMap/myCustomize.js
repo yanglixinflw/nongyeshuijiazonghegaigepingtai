@@ -38,7 +38,7 @@ export default class extends Component{
                 [116.342659, 39.946275]
             ),
             opacity:1,
-            zIndex:100,
+            zIndex:2,
             zooms: [15, 18],
             visible:true,
             map:map
@@ -62,7 +62,7 @@ export default class extends Component{
                 [116.342659, 39.946275]
             ),
             opacity:1,
-            zIndex:100,
+            zIndex:2,
             zooms: [15, 18],
             visible:true,
             map:map

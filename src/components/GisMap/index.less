@@ -23,7 +23,7 @@
         }
     }
 }
-
+//搜索下拉列表
 .dataList{
     max-height: 290px;
     width: 288px;
@@ -81,9 +81,9 @@
     color:#BBC5D2;
     font-size: 12px;
     margin:0;
+    width: 253px;
 }
-
-
+//设备类型
 .btnGroup {
     z-index: 199;
     position: absolute;
@@ -127,8 +127,12 @@
         height: 28px;
         background: url(../../assets/camera.png) no-repeat;
     }
-    .pipeClass {
-        display: none;
+    .waterValve{
+        margin: 4px 11px;
+        display: block;
+        width: 40px;
+        height: 28px;
+        background: url(../../assets/waterValve.png) no-repeat;
     }
 }
 
@@ -144,7 +148,7 @@
         overflow: hidden;
         background: #141831;
         border: 0;
-        padding: 9px;
+        padding: 0px;
     }
     .amap-info-sharp {
         width: 0;
@@ -171,98 +175,195 @@
     }
 }
 
-.warning {
-    // transform: rotate(-90deg);
-    display: block;
-    width: 44px;
-    height: 56px;
-    background: url(../../assets/warningCamera.png) no-repeat;
-    .warningAnimation1 {
-        position: absolute;
-        top: 33px;
-        left: -6px;
-        width: 56px;
-        height: 44px;
-        border: 4px solid #FF5555;
-        border-radius: 50%;
-        animation: flashPoint1 2s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
+.markerCamera{
+    //预警显示摄像头
+    .warning {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/warningCamera.png) no-repeat;
+        .warningAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 3px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
     }
-    .warningAnimation2 {
-        position: absolute;
-        top: 33px;
-        left: -6px;
-        width: 56px;
-        height: 44px;
-        border: 4px solid #FF5555;
-        border-radius: 50%;
-        animation: flashPoint2 2s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
+    //被选中的摄像头
+    .chosen {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/ssCamera.png) no-repeat;
+        .chosenAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
     }
-    .warningAnimation3 {
-        position: absolute;
-        top: 33px;
-        left: -6px;
-        width: 56px;
-        height: 44px;
-        border: 3px solid #FF5555;
-        border-radius: 50%;
-        animation: flashPoint3 2s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
+    //普通显示摄像头
+    .normal {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/normalCamera.png) no-repeat;
     }
 }
-
-.chosen {
-    display: block;
-    width: 44px;
-    height: 56px;
-    background: url(../../assets/ssCamera.png) no-repeat;
-    .chosenAnimation1 {
-        position: absolute;
-        top: 33px;
-        left: -6px;
-        width: 56px;
-        height: 44px;
-        border: 4px solid #327DF4;
-        border-radius: 50%;
-        animation: flashPoint1 2s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
+.markerWaterV{
+    //预警显示水阀
+    .warning {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/warningWValve.png) no-repeat;
+        .warningAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 3px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
     }
-    .chosenAnimation2 {
-        position: absolute;
-        top: 33px;
-        left: -6px;
-        width: 56px;
-        height: 44px;
-        border: 4px solid #327DF4;
-        border-radius: 50%;
-        animation: flashPoint2 2s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
+    //被选中的水阀
+    .chosen {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/ssWValve.png) no-repeat;
+        .chosenAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
     }
-    .chosenAnimation3 {
-        position: absolute;
-        top: 33px;
-        left: -6px;
-        width: 56px;
-        height: 44px;
-        border: 4px solid #327DF4;
-        border-radius: 50%;
-        animation: flashPoint3 2s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
+    //普通显示水阀
+    .normal {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/normalWValve.png) no-repeat;
     }
-}
-
-.normal {
-    display: block;
-    width: 44px;
-    height: 56px;
-    background: url(../../assets/normalCamera.png) no-repeat;
 }
 
 @keyframes flashPoint1 {
@@ -349,13 +450,87 @@
     left: 122px;
     cursor: pointer;
 }
+.infoTitle{
+    height: 40px;
+    border-bottom: 1px solid #363A69;
+    padding: 8px 0px;
+    .deviceName{
+        border-left:4px solid #327DF4;
+        padding:0px 13px;
+        color:#fff;
+        font-size: 17px;
+        margin: 0; 
+    }
+}
+.infoContent{
+    height:129px;
+    padding: 15px;
+    .labelName{
+        color:#fff;
+        font-size: 15px;
+        margin-bottom: 20px;
+        span{
+            margin-left:20px;
+            color:#F4AF1D;
+        }
+        :global{
+            .ant-switch-checked{
+                width: 48px;
+                margin-left:20px;
+                background-color: #272D52;
+                border:1px solid #327DF4;
+            }
+            .ant-switch-checked:after{
+                background-color:#327DF4 !important;
+            }
+            .ant-switch-loading-icon, .ant-switch:after{
+                background-color:rgb(57,64,107)
+            }
+            .ant-switch{
+                width: 48px;
+                margin-left:20px;
+                background-color: #272D52;
+            }
+        }
+    }
+    .checkMore{
+        margin:0 auto;
+        text-align: center;
+        a{
+            color:#BBC5D2;
+            font-size: 12px;
+            font-weight: 700;
+            //transform: scale(0.99);
+            &:hover{
+                color:#327DF4;
+            }
+        }
+        span{
+            margin-left:5px;
+        }
+    }
+    .warinngMsg{
+        margin-top:20px;
+        margin-bottom: 45px;
+        font-size: 16px;
+        color: #FF5555;
+        text-align: center;
+    }
+}
+//遮罩层
 .mask{
     position: absolute;
+    left:8px;
     bottom:33px;
     width:270px;
     height: 30px;
     background: rgba(0,0,0,0.4);
+    color:#fff;
+    text-align: center;
+    font-size: 16px;
+    padding: 5px 0px;
 }
+//地图放大缩小
 .btnMapZoom {
     position: absolute;
     top: 690px;

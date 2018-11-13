@@ -64,19 +64,12 @@ export default class extends Component {
                     </div>
                 </div>
                 <div className={styles.mbody}>
-                    <div className={styles.impoundRules}>
-                        <div className={styles.rulesName}>蓄水池自动化蓄水规则</div>
-                        <div className={styles.border}></div>
-                    </div>
-                    <div className={styles.judge}>
-                        <div className={styles.if}>条件</div>
-                        <RuleForm
-                            wrappedComponentRef={(ruleForm) => this.ruleForm = ruleForm}
-                            onChange={()=>this.handleChange()}
-                            onFocus={()=>this.handleFocus()}
-                            onBlur={()=>this.handleBlur()}
-                        />
-                    </div>
+                    <RuleForm
+                        wrappedComponentRef={(ruleForm) => this.ruleForm = ruleForm}
+                        onChange={()=>this.handleChange()}
+                        onFocus={()=>this.handleFocus()}
+                        onBlur={()=>this.handleBlur()}
+                    />
                 </div>
             </React.Fragment>
         )
@@ -86,6 +79,7 @@ export default class extends Component {
 //搜索表单
 const RuleForm = Form.create()(
     class extends React.Component {
+        //条件的++ --
         remove = (v) => {
             const { form } = this.props;
             const keys = form.getFieldValue('keys');
@@ -110,10 +104,76 @@ const RuleForm = Form.create()(
               keys: nextKeys,
             });
         }
+//执行的++--
+        removes = (v) => {
+            const { form } = this.props;
+            const key = form.getFieldValue('key');
+            if (key.length === 0) {
+            return;
+            }
+            //可以使用数据绑定来设置
+            form.setFieldsValue({
+            key: key.filter(key => key !== v),
+            });
+        }
+        adds = () => {
+            const { form } = this.props;
+            const key = form.getFieldValue('key');
+            //得到添加数量的数组
+            // console.log(key)
+            const nextKey = key.concat(key.length);
+            console.log(nextKey)
+            // 可以使用数据绑定来设置
+            // 重要!通知表单以检测更改
+            form.setFieldsValue({
+            key: nextKey,
+            });
+        }
         render() {
             const { getFieldDecorator, getFieldValue,handleChange,handleFocus,handleBlur} = this.props.form;
             getFieldDecorator('keys', { initialValue: [] });
             const keys = getFieldValue('keys');
+            getFieldDecorator('key', { initialValue: [] });
+            const key = getFieldValue('key');
+            const formItem = key.map((v,i) => {
+                return (
+                    <div className={styles.line} key={v}>
+                        <Form.Item className={styles.search}>
+                            {getFieldDecorator('deviceId', {initialValue:'设备名称/ID'})
+                                (
+                                <Select
+                                    showSearch
+                                    // style={{ width: 200 }}
+                                    // placeholder=""
+                                    optionFilterProp="children"
+                                    onChange={handleChange}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
+                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                    <Option value="1">1</Option>
+                                    <Option value="2">2</Option>
+                                    <Option value="3">3</Option>
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                        <Form.Item className={styles.search}>
+                        {getFieldDecorator('switch', {initialValue:'open'})
+                                (<Select>
+                                    <Option value="open">开阀</Option>
+                                    <Option value="close">关阀</Option>
+                                </Select>)
+                            }
+                        </Form.Item>
+                        <Icon 
+                            type="minus-circle" 
+                            theme="filled" 
+                            onClick={() => this.removes(v)}
+                        />
+                    </div>
+                );
+              });
             const formItems = keys.map((v,i) => {
                 return (
                     <div className={styles.line} key={v}>
@@ -161,7 +221,7 @@ const RuleForm = Form.create()(
                         </Form.Item>
                         <Form.Item className={styles.end}>
                             {getFieldDecorator(`value${v}`, {initialValue:''})
-                                (<Input placeholder="值"/>)
+                                (<Input placeholder="值" type='number'/>)
                             }
                         </Form.Item>
                         <Icon 
@@ -174,108 +234,117 @@ const RuleForm = Form.create()(
               });
             return (
                 <Form className={styles.form}>
-                    <Form.Item className={styles.all}>
-                        {getFieldDecorator('condition', {initialValue:'all'})
-                            (
-                            <Select>
-                                <Option value="all">所有条件</Option>
-                            </Select>
-                            )
-                        }
-                    </Form.Item>
-                    {formItems}
-                    <div className={styles.line}>
-                        <Form.Item className={styles.search}>
-                            {getFieldDecorator('deviceId', {initialValue:'设备名称/ID'})
-                                (
-                                <Select
-                                    showSearch
-                                    // style={{ width: 200 }}
-                                    // placeholder=""
-                                    optionFilterProp="children"
-                                    onChange={handleChange}
-                                    onFocus={handleFocus}
-                                    onBlur={handleBlur}
-                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                >
-                                    <Option value="1">1</Option>
-                                    <Option value="2">2</Option>
-                                    <Option value="3">3</Option>
-                                </Select>
-                                )
-                            }
-                        </Form.Item>
-                        <Form.Item className={styles.search}>
-                            {getFieldDecorator('variate', {initialValue:'参数'})
-                                (
-                                <Select>
-                                    <Option value="param1">参数1</Option>
-                                    <Option value="param2">参数2</Option>
-                                </Select>
-                                )
-                            }
-                        </Form.Item>
-                        <Form.Item className={styles.end}>
-                            {getFieldDecorator('judge', {initialValue:'judge'})
-                                (
-                                <Select>
-                                    <Option value="judge">判断</Option>
-                                    <Option value="high">&gt;</Option>
-                                    <Option value="low">&lt;</Option>
-                                    <Option value="equal">=</Option>
-                                    <Option value="heq">&gt;=</Option>
-                                    <Option value="leq">&lt;=</Option>
-                                    <Option value="neq">≠</Option>
-                                </Select>
-                                )
-                            }
-                        </Form.Item>
-                        <Form.Item className={styles.end}>
-                            {getFieldDecorator('value', {initialValue:''})
-                                (
-                                <Input placeholder="值" type="number"/>
-                                )
-                            }
-                        </Form.Item>
-                        <Icon 
-                            type="plus-circle" 
-                            theme="filled" 
-                            onClick={this.add}/>
+                    <div className={styles.Rules}>
+                        <input type='text' className={styles.rulesName} placeholder='蓄水池自动化蓄水规则'/>
+                        <div className={styles.border}></div>
                     </div>
-                    <div className={styles.do}>执行</div>
-                    <div className={styles.line}>
-                        <Form.Item className={styles.search}>
-                            {getFieldDecorator('deviceId', {initialValue:'设备名称/ID'})
+                    <div className={styles.inner}>
+                        <div className={styles.if}>条件</div>
+                        <Form.Item className={styles.all}>
+                            {getFieldDecorator('condition', {initialValue:'all'})
                                 (
-                                <Select
-                                    showSearch
-                                    // style={{ width: 200 }}
-                                    // placeholder=""
-                                    optionFilterProp="children"
-                                    onChange={handleChange}
-                                    onFocus={handleFocus}
-                                    onBlur={handleBlur}
-                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                >
-                                    <Option value="1">1</Option>
-                                    <Option value="2">2</Option>
-                                    <Option value="3">3</Option>
+                                <Select>
+                                    <Option value="all">所有条件</Option>
                                 </Select>
                                 )
                             }
                         </Form.Item>
-                        <Form.Item className={styles.search}>
-                        {getFieldDecorator('switch', {initialValue:'open'})
-                                (<Select>
-                                    <Option value="open">开阀</Option>
-                                    <Option value="close">关阀</Option>
-                                </Select>)
-                            }
-                        </Form.Item>
-                        <Icon 
-                            type="minus-circle" 
-                            theme="filled" 
-                        />    
+                        {formItems}
+                        <div className={styles.line}>
+                            <Form.Item className={styles.search}>
+                                {getFieldDecorator('deviceId', {initialValue:'设备名称/ID'})
+                                    (
+                                    <Select
+                                        showSearch
+                                        // style={{ width: 200 }}
+                                        // placeholder=""
+                                        optionFilterProp="children"
+                                        onChange={handleChange}
+                                        onFocus={handleFocus}
+                                        onBlur={handleBlur}
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        <Option value="1">1</Option>
+                                        <Option value="2">2</Option>
+                                        <Option value="3">3</Option>
+                                    </Select>
+                                    )
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.search}>
+                                {getFieldDecorator('variate', {initialValue:'参数'})
+                                    (
+                                    <Select>
+                                        <Option value="param1">参数1</Option>
+                                        <Option value="param2">参数2</Option>
+                                    </Select>
+                                    )
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.end}>
+                                {getFieldDecorator('judge', {initialValue:'judge'})
+                                    (
+                                    <Select>
+                                        <Option value="judge">判断</Option>
+                                        <Option value="high">&gt;</Option>
+                                        <Option value="low">&lt;</Option>
+                                        <Option value="equal">=</Option>
+                                        <Option value="heq">&gt;=</Option>
+                                        <Option value="leq">&lt;=</Option>
+                                        <Option value="neq">≠</Option>
+                                    </Select>
+                                    )
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.end}>
+                                {getFieldDecorator('value', {initialValue:''})
+                                    (
+                                    <Input placeholder="值" type="number"/>
+                                    )
+                                }
+                            </Form.Item>
+                            <Icon 
+                                type="plus-circle" 
+                                theme="filled" 
+                                onClick={this.add}/>
+                        </div>
+                        <div className={styles.do}>执行</div>
+                        {formItem}
+                        <div className={styles.line}>
+                            <Form.Item className={styles.search}>
+                                {getFieldDecorator('deviceId', {initialValue:'设备名称/ID'})
+                                    (
+                                    <Select
+                                        showSearch
+                                        // style={{ width: 200 }}
+                                        // placeholder=""
+                                        optionFilterProp="children"
+                                        onChange={handleChange}
+                                        onFocus={handleFocus}
+                                        onBlur={handleBlur}
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        <Option value="1">1</Option>
+                                        <Option value="2">2</Option>
+                                        <Option value="3">3</Option>
+                                    </Select>
+                                    )
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.search}>
+                                {getFieldDecorator('switch', {initialValue:'open'})
+                                    (<Select>
+                                        <Option value="open">开阀</Option>
+                                        <Option value="close">关阀</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                            <Icon 
+                                type="plus-circle" 
+                                theme="filled" 
+                                onClick={this.adds}
+                            />
+                        </div>
                     </div>
                 </Form>
             )
