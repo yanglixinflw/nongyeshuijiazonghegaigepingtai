@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import styles from "./warningRules.less"
 import { Input, Button, Form, Cascader, Table, Modal} from 'antd';
+import { Link } from 'dva/router';
 //ip地址
 const envNet='http://192.168.30.127:88';
 //生产环境
@@ -66,13 +67,14 @@ export default class extends Component{
             render: (record) => {
                 return (
                     <span className={styles.option}>
-                        <Button
-                            className={styles.edit}
-                            onClick={() => this.ruleDetails()}
-                            icon='file-text'
-                        >
-                            规则详情
-                        </Button>
+                        <Link to={`/warningRules/addWarningRules`}>
+                            <Button
+                                className={styles.edit}
+                                icon='file-text'
+                            >
+                                规则详情
+                            </Button>
+                        </Link>
                         <Button
                             className={styles.delete}
                             onClick={()=>this.delete()}

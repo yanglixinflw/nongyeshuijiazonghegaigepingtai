@@ -3,9 +3,9 @@
     line-height: 60px;
     background: #151836;
     width: 100%;
-    font-size: 16px;
     display: flex;
     justify-content: space-between;
+    font-size: 16px;
     padding-left: 35px;
     margin-bottom: 20px;
     box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
@@ -47,169 +47,181 @@
     }
 }
 .mbody{
-    width: 95%;
+    width: 96%;
     height:100%;
-    margin:auto;
+    margin: auto;
     font-size: 18px;
     background: #1c2241;
-    .impoundRules{
-        width: 100%;
-        height: auto;
-        padding: 20px 20px;
-        color: #ababb4;
-        border-bottom: 1px solid #2a325e;
-        position: relative;
-        .border{
-            width: 180px;
-            height:2px;
-            position: absolute;
-            background: #327df4;
-            bottom:0;
-        }
-    }
-    .judge{
-       width: 100%;
-       height: auto;
-       padding:40px 20px;
-       .if{
-           color:#ababb4;
-           padding-bottom: 20px;
-       }
        .form{
-           width: auto;
+           width: 100%;
            height:auto;
-           .all{
-                width: 276px;
-                :global{
-                    .ant-select-selection,.ant-select-selection--single{
-                        height:42px;
-                        padding-top:6px;
-                        padding-left: 6px;
-                        background: #141831;
-                        color:#46556d;
-                        border: none;
-                        outline: none;
-                    }
-                    .anticon,.anticon-down,.ant-select-arrow-icon{
-                        color:#46556d;
-                    }
-                }
-           }
-           .line{
-                margin-top: 22px;
-                height:42px;
-                display: flex;
-                justify-content: flex-start;
-                .search{
-                    width: 276px;
-                    margin-right: 20px;
-                    :global{
-                        .ant-select-selection,.ant-select-selection--single{
-                            width: 276px;
-                            height:42px;
-                            padding-top:6px;
-                            padding-left: 6px;
-                            background: #141831;
-                            color:#46556d;
-                            border: none;
-                            outline: none;
-                        }
-                        .anticon,.anticon-down,.ant-select-arrow-icon{
-                            color:#46556d;
-                        }
-                        .ant-input{
-                            width: 276px;
-                            height:42px;
-                            padding-top:6px;
-                            padding-left: 14px;
-                            background: #141831;
-                            border: none;
-                            outline: none;
-                        }
-                        .anticon-minus-circle{
-                            width: 29px;
-                            height: 29px;
-                            border-radius: 50%;
-                            border:1px solid #1c2241;
-                            display: table;
-                            font-size: 30px;
-                            margin-top:6px;
-                            color:#ff5062;
-                            background: #fff;
-                        }
-                        .anticon-plus-circle{
-                            width: 29px;
-                            height: 29px;
-                            border-radius: 50%;
-                            border:1px solid #1c2241;
-                            display: table;
-                            font-size: 30px;
-                            margin-top:6px;
-                            color:#327df4;
-                            background: #fff;
-                        }
-                    }
-                }
-                .end{
-                    width: 138px;
-                    margin-right: 20px;
-                    :global{
-                        .ant-select-selection,.ant-select-selection--single{
-                            width: 138px;
-                            height:42px;
-                            padding-top:6px;
-                            padding-left: 6px;
-                            background: #141831;
-                            color:#46556d;
-                            border: none;
-                            outline: none;
-                        }
-                        .anticon,.anticon-down,.ant-select-arrow-icon{
-                            color:#46556d;
-                        }
-                        .ant-input{
-                            width: 138px;
-                            height:42px;
-                            padding-top:6px;
-                            padding-left: 14px;
-                            background: #141831;
-                            border: none;
-                            outline: none;
-                        }
-                    }
-                }
-                :global{
-                    .anticon-minus-circle{
-                        width: 29px;
-                        height: 29px;
-                        border-radius: 50%;
-                        border:1px solid #1c2241;
-                        display: table;
-                        font-size: 30px;
-                        margin-top:6px;
-                        color:#ff5062;
-                        background: #fff;
-                    }
-                    .anticon-plus-circle{
-                        width: 29px;
-                        height: 29px;
-                        display: table;
-                        border-radius: 50%;
-                        border:1px solid #1c2241;
-                        font-size: 30px;
-                        margin-top:6px;
-                        color:#327df4;
-                        background: #fff;
-                    }
-                }
-           }
-           .do{
-            font-size: 18px;
-            color:#ababb4;
+           .Rules{
             width: 100%;
-            height: 18px;
-            margin: 40px auto 20px;
+            height: auto;
+            padding: 20px 20px;
+            color: #ababb4;
+            border-bottom: 1px solid #2a325e;
+            position: relative;
+                .rulesName{
+                    width: 180px;
+                    background:#1c2241;
+                    border:none;
+                    outline: none;
+                }
+                input::-webkit-input-placeholder{
+                    font-size: 18px;
+                    color:#ababb4
+                }
+                .border{
+                    width: 180px;
+                    height:2px;
+                    position: absolute;
+                    background: #327df4;
+                    bottom:0;
+                }
+            }
+            .inner{
+                width: auto;
+                height:auto;
+                padding: 40px 20px;
+                .if{
+                    font-size: 18px;
+                    color:#ababb4;
+                    padding-bottom: 20px;
+                    }
+                   .all{
+                        width: 276px;
+                        :global{
+                            .ant-select-selection,.ant-select-selection--single{
+                                height:42px;
+                                padding-top:6px;
+                                padding-left: 6px;
+                                background: #141831;
+                                color:#46556d;
+                                border: none;
+                                outline: none;
+                            }
+                            .anticon,.anticon-down,.ant-select-arrow-icon{
+                                color:#46556d;
+                            }
+                        }
+                   }
+                   .line{
+                        margin-top: 22px;
+                        height:42px;
+                        display: flex;
+                        justify-content: flex-start;
+                        .search{
+                            width: 276px;
+                            margin-right: 20px;
+                            :global{
+                                .ant-select-selection,.ant-select-selection--single{
+                                    width: 276px;
+                                    height:42px;
+                                    padding-top:6px;
+                                    padding-left: 6px;
+                                    background: #141831;
+                                    color:#46556d;
+                                    border: none;
+                                    outline: none;
+                                }
+                                .anticon,.anticon-down,.ant-select-arrow-icon{
+                                    color:#46556d;
+                                }
+                                .ant-input{
+                                    width: 276px;
+                                    height:42px;
+                                    padding-top:6px;
+                                    padding-left: 14px;
+                                    background: #141831;
+                                    border: none;
+                                    outline: none;
+                                }
+                                .anticon-minus-circle{
+                                    width: 29px;
+                                    height: 29px;
+                                    border-radius: 50%;
+                                    border:1px solid #1c2241;
+                                    display: table;
+                                    font-size: 30px;
+                                    margin-top:6px;
+                                    color:#ff5062;
+                                    background: #fff;
+                                }
+                                .anticon-plus-circle{
+                                    width: 29px;
+                                    height: 29px;
+                                    border-radius: 50%;
+                                    border:1px solid #1c2241;
+                                    display: table;
+                                    font-size: 30px;
+                                    margin-top:6px;
+                                    color:#327df4;
+                                    background: #fff;
+                                }
+                            }
+                        }
+                        .end{
+                            width: 138px;
+                            margin-right: 20px;
+                            :global{
+                                .ant-select-selection,.ant-select-selection--single{
+                                    width: 138px;
+                                    height:42px;
+                                    padding-top:6px;
+                                    padding-left: 6px;
+                                    background: #141831;
+                                    color:#46556d;
+                                    border: none;
+                                    outline: none;
+                                }
+                                .anticon,.anticon-down,.ant-select-arrow-icon{
+                                    color:#46556d;
+                                }
+                                .ant-input{
+                                    width: 138px;
+                                    height:42px;
+                                    padding-top:6px;
+                                    padding-left: 14px;
+                                    background: #141831;
+                                    border: none;
+                                    outline: none;
+                                }
+                            }
+                        }
+                        :global{
+                            .anticon-minus-circle{
+                                width: 29px;
+                                height: 29px;
+                                border-radius: 50%;
+                                border:1px solid #1c2241;
+                                display: table;
+                                font-size: 30px;
+                                margin-top:6px;
+                                color:#ff5062;
+                                background: #fff;
+                            }
+                            .anticon-plus-circle{
+                                width: 29px;
+                                height: 29px;
+                                display: table;
+                                border-radius: 50%;
+                                border:1px solid #1c2241;
+                                font-size: 30px;
+                                margin-top:6px;
+                                color:#327df4;
+                                background: #fff;
+                            }
+                        }
+                   }
+                   .do{
+                    font-size: 18px;
+                    color:#ababb4;
+                    width: 100%;
+                    height: 18px;
+                    margin: 40px auto 20px;
+                }
+            }
+           
         }
-       }
-    }
 }

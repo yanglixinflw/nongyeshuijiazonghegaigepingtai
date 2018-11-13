@@ -45,6 +45,7 @@ export default class extends Component{
             tableTitle,
             tableDatas:[],
             columns: [],
+            rowSelection:{},
             title:tableTitle,
             //设备安装地列表
             installAddrList:[],
@@ -97,9 +98,21 @@ export default class extends Component{
                 key: i,
             });
         })
+        const rowSelection = {
+            onChange: (selectedRowKeys, selectedRows) => {
+              console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            },
+            onSelect: (record, selected, selectedRows) => {
+              console.log(record, selected, selectedRows);
+            },
+            onSelectAll: (selected, selectedRows, changeRows) => {
+              console.log(selected, selectedRows, changeRows);
+            },
+          };
         this.setState({
             columns,
             tableDatas,
+            rowSelection
         });
         //操作列
         columns.push({
@@ -212,7 +225,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { columns, tableDatas, installAddrList} = this.state;
+        const { columns, tableDatas, installAddrList,rowSelection} = this.state;
         const paginationProps = {
             showQuickJumper: true,
         };
@@ -261,6 +274,7 @@ export default class extends Component{
                 </div>
                 <Table
                     columns={columns}
+                    rowSelection={rowSelection}
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableDatas}
