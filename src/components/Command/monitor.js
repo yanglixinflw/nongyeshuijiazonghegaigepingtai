@@ -237,7 +237,7 @@ export default class extends Component {
     // 关闭视频
     closeVideo(deviceId) {
         const { monitorArr } = this.state
-        console.log(deviceId)
+        console.log(monitorArr)
     }
     render() {
         const {
@@ -246,7 +246,7 @@ export default class extends Component {
             yuntaiSpeed,
             selectList,
             awaitArray,
-            monitorNum
+            // monitorNum
         } = this.state
         // let videoStlye={}
         // if (monitorNum==9){
