@@ -231,55 +231,57 @@ export default class extends Component{
         };
         return(
             <React.Fragment>
-                <div className={styles.header}>
-                    <span>|</span>阀门控制
-                </div>
-                <div className={styles.searchForm}>
-                    {/* 表单信息 */}
-                    <SearchForm
-                        wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        {...{installAddrList}}
-                    />
-                    <div className={styles.buttonGroup}>
-                        <Button
-                            className={styles.fnButton}
-                            icon="search"
-                            onClick={() => this._searchTableData()}
-                        >
-                            搜索
-                        </Button>
-                        <Button
-                            icon='reload'
-                            className={styles.fnButton}
-                            onClick={() => this._resetForm()}
-                        >
-                            重置
-                        </Button>
-                        <Button
-                            icon='poweroff'
-                            className={styles.fnButton}
-                        >
-                            阀门开关
-                        </Button>
-                        <Link to={`/valveControl/map`} target='_blank'>
+                <div className={styles.valveControl}>
+                    <div className={styles.header}>
+                        <span>|</span>阀门控制
+                    </div>
+                    <div className={styles.searchForm}>
+                        {/* 表单信息 */}
+                        <SearchForm
+                            wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
+                            {...{installAddrList}}
+                        />
+                        <div className={styles.buttonGroup}>
                             <Button
-                                icon='environment'
+                                className={styles.fnButton}
+                                icon="search"
+                                onClick={() => this._searchTableData()}
+                            >
+                                搜索
+                            </Button>
+                            <Button
+                                icon='reload'
+                                className={styles.fnButton}
+                                onClick={() => this._resetForm()}
+                            >
+                                重置
+                            </Button>
+                            <Button
+                                icon='poweroff'
                                 className={styles.fnButton}
                             >
-                                在地图操作
+                                阀门开关
                             </Button>
-                        </Link>
-                        
-                    </div> 
+                            <Link to={`/valveControl/map`} target='_blank'>
+                                <Button
+                                    icon='environment'
+                                    className={styles.fnButton}
+                                >
+                                    在地图操作
+                                </Button>
+                            </Link>
+                            
+                        </div> 
+                    </div>
+                    <Table
+                        columns={columns}
+                        rowSelection={rowSelection}
+                        className={styles.table}
+                        pagination={paginationProps}
+                        dataSource={tableDatas}
+                        // scroll={{ x: 1300 }}
+                    />
                 </div>
-                <Table
-                    columns={columns}
-                    rowSelection={rowSelection}
-                    className={styles.table}
-                    pagination={paginationProps}
-                    dataSource={tableDatas}
-                    // scroll={{ x: 1300 }}
-                />
             </React.Fragment>
         )
     }

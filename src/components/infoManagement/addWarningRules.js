@@ -174,7 +174,7 @@ const AddForm = Form.create()(
                         <div className={styles.based}>通知内容</div>
                         <div className={styles.type}>
                             <div className={styles.typeName}>通知内容</div>
-                            <Form.Item className={styles.standard1}>
+                            <Form.Item className={styles.standard4}>
                                 {getFieldDecorator('content', {initialValue:'all'})
                                     (<Select>
                                         <Option value="all">没钱啦</Option>
@@ -184,6 +184,45 @@ const AddForm = Form.create()(
                                 }
                             </Form.Item>
                         </div>
+                    </div>
+                    <div className={styles.type1}>
+                        <div className={styles.based}>控制</div>
+                        <div className={styles.type}>
+                            <div className={styles.typeName}>关联设备</div>
+                            <Form.Item className={styles.standard5}>
+                                {getFieldDecorator('deviceId', {initialValue:'设备名称/ID'})
+                                    (<Select>
+                                        <Option value="water">宁围街道水表</Option>
+                                        <Option value="elect">宁围街道电表</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.standard1}>
+                                {getFieldDecorator('info', {initialValue:'请选择指令'})
+                                    (<Select>
+                                        <Option value="open">慧水老李</Option>
+                                        <Option value="close">慧水老王</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className={styles.borderBot}></div>
+                    <div className={styles.fn}>
+                        <Button
+                            className={styles.delete}
+                            // onClick={()=>this._deleteInfo(record.userId)}
+                            icon='delete'
+                        >
+                            删除
+                        </Button>
+                        <Button
+                            className={styles.save}
+                            // onClick={() => this.save(record.userId)}
+                            icon='save'
+                        >
+                            保存
+                        </Button>
                     </div>
                 </Form>
             )
