@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styles from './index.less'
-import { Button, Table, Form, Input, Select, Modal, message, Radio } from 'antd';
+import { Button, Table, Form, Input, Select, Modal, message } from 'antd';
+import { timeOut } from '../../utils/timeOut';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
 // 生产环境
@@ -88,8 +89,10 @@ export default class extends Component {
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
+                        // 判断是否超时
+                        timeOut(v.ret)
+                        // console.log(v)
                         if (v.ret == 1) {
-                            // console.log(v)
                             let roleList = v.data
                             this.setState({
                                 roleList
@@ -104,6 +107,8 @@ export default class extends Component {
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
+                        // 判断是否超时
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // console.log(v)
                             let deptList = v.data
@@ -135,6 +140,7 @@ export default class extends Component {
                 // 给表头添加字段名 必须一一对应
                 dataIndex: dataIndex[i],
                 align: 'center',
+                className: `${styles.tbw}`,
             })
         })
         //操作列
@@ -193,7 +199,7 @@ export default class extends Component {
             
             values.pageIndex = 0;
             values.pageSize = 10;
-            console.log(values)
+            // console.log(values)
             //保存搜索框信息
             this.setState({
                 searchValue: values
@@ -206,6 +212,8 @@ export default class extends Component {
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
+                        // 判断是否超时
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             let items = v.data.items;
                             let itemCount = v.data.itemCount;
@@ -240,6 +248,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    // 判断是否超时
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         // console.log(v)
                         let items = v.data.items;
@@ -287,6 +297,8 @@ export default class extends Component {
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
+                        // 判断是否超时
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // console.log(v)
                             this._searchTableData();
@@ -327,8 +339,10 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    // 判断是否超时
+                    timeOut(v.ret)
                     if (v.ret == 1) {
-                        console.log(v)
+                        // console.log(v)
                         let modifydata = v.data;
                         this.setState({
                             userId,
@@ -370,6 +384,8 @@ export default class extends Component {
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
+                        // 判断是否超时
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             this._searchTableData();
                             this.setState({
@@ -417,6 +433,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    // 判断是否超时
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         this._resetForm()
                         this.setState({
@@ -449,6 +467,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    // 判断是否超时
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         let items = v.data.items;
                         let itemCount = v.data.itemCount;

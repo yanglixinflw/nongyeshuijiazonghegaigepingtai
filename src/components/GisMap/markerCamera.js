@@ -7,7 +7,6 @@ export default class extends Component {
         if(!markers){
             return null
         }
-        // console.log(isWarningMsg)
         // const {type} = props;
         this.state = {
             markers,
@@ -28,7 +27,7 @@ export default class extends Component {
                             <div className={styles.chosenAnimation3}></div>
                         </i> 
                     :
-                    markers.isWarningMsg?
+                    markers.isWarning?
                         <i className={styles.warning}>
                             <div className={styles.warningAnimation1}></div>
                             <div className={styles.warningAnimation2}></div>
