@@ -156,8 +156,9 @@
             for(var i = 0; i < l; i++){
                 // 移动端删除rtmp地址
                 if(isMobile && RTMP_REG.test(sources[i].src)){
-                    this.video.removeChild(sources[i]);
+                    // this.video.removeChild(sources[i]);
                 }else{
+                    
                     this.opt.sources.push(sources[i].src);
                 }
             }

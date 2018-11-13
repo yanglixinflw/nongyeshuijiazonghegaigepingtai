@@ -87,23 +87,23 @@ export default class extends Component {
                 monitorArr: newMonitorArr,
                 playBoxStyle,
             })
-        }else{
+        } else {
             // 空白屏幕数量
-            let blackScreen=0
-            monitorArr.map((v,i)=>{
+            let blackScreen = 0
+            monitorArr.map((v, i) => {
                 // 监控画面无视频正在播放
-                if(typeof v.video=='undefined'){
+                if (typeof v.video == 'undefined') {
                     blackScreen++
                 }
             })
             // 正在播放视频数
             // let playScreen=monitorArr.length-blackScreen
-            if(blackScreen<monitorArr.length){
-                if(monitorNum!=monitorArr.length){
-                    location.reload() 
-                    localStorage.setItem('monitorNum',monitorNum)
+            if (blackScreen < monitorArr.length) {
+                if (monitorNum != monitorArr.length) {
+                    location.reload()
+                    localStorage.setItem('monitorNum', monitorNum)
                 }
-                
+
                 // if(monitorNum==9){
                 //     location.reload() 
                 //     localStorage.setItem('monitorNum',9)
@@ -139,7 +139,7 @@ export default class extends Component {
                 //     }
                 // }
 
-            }else{
+            } else {
                 // console.log(monitorArr)
                 // 无视频播放时
                 let newMonitorArr = []
@@ -148,15 +148,15 @@ export default class extends Component {
                 }
                 if (monitorNum == 9) {
                     playBoxStyle = styles.playBox9
-                    localStorage.setItem('monitorNum',9)
+                    localStorage.setItem('monitorNum', 9)
                 }
                 if (monitorNum == 4) {
                     playBoxStyle = styles.playBox4
-                    localStorage.setItem('monitorNum',4)
+                    localStorage.setItem('monitorNum', 4)
                 }
                 if (monitorNum == 1) {
                     playBoxStyle = styles.playBox1
-                    localStorage.setItem('monitorNum',1)
+                    localStorage.setItem('monitorNum', 1)
                 }
                 this.setState({
                     monitorArr: newMonitorArr,
@@ -192,7 +192,7 @@ export default class extends Component {
     }
     // 点击等待队列播放
     playHandler(deviceId) {
-        const { awaitArray, monitorArr } = this.state
+        const { awaitArray, monitorArr, monitorNum } = this.state
         // 要播放的视频
         let playVideo = awaitArray.filter(item => item.deviceId === deviceId)
         // console.log(playVideo)
@@ -206,14 +206,19 @@ export default class extends Component {
                 return
             }
             // 判断视频重复性
-            // if (v.video[0].deviceId == playVideo[0].deviceId) {
-            //     alert('此视频正在播放，请勿重复点击')
-            //     playOrder.push(i)
-            //     monitorArr[playOrder[0]] = {
-            //         order: i,
-            //     }
-            //     return
-            // }
+            if (v.video[0].deviceId == playVideo[0].deviceId) {
+                alert('此视频正在播放，请勿重复点击')
+                if (monitorNum == 1) {
+                    return
+                } else {
+                    playOrder.push(i)
+                    monitorArr[playOrder[0]] = {
+                        order: i,
+                    }
+                    return
+                }
+
+            }
 
         })
         // 进一步monitorArr处理
@@ -237,7 +242,40 @@ export default class extends Component {
     // 关闭视频
     closeVideo(deviceId) {
         const { monitorArr } = this.state
-        console.log(monitorArr)
+        let videoArr=[]
+        let blackArr=[]
+        // 遍历出拥有视频的数组
+        monitorArr.map((v,i)=>{
+            if(v.video){
+                videoArr.push(v)
+            }else{
+                blackArr.push(v)
+            }
+        })
+        // let restMonitor=videoArr.filter(item=>item.video[0].deviceId!=deviceId)
+        let closeMonitor=videoArr.filter(item=>item.video[0].deviceId==deviceId)
+        console.log(restMonitor)
+        console.log(deviceId)
+        // newArr.push(keepOrder)
+        // // 排序
+        // // 排序函数
+        // let compare = function (prop) {
+        //     return function (obj1, obj2) {
+        //         let val1 = obj1[prop];
+        //         let val2 = obj2[prop];
+        //         if (val1 < val2) {
+        //             return -1;
+        //         } else if (val1 > val2) {
+        //             return 1;
+        //         } else {
+        //             return 0;
+        //         }
+        //     }
+        // }
+        // newArr.sort(compare('order'))
+        // this.setState({
+        //     monitorArr:newArr
+        // })
     }
     render() {
         const {
@@ -304,8 +342,8 @@ export default class extends Component {
                                                 autoPlay
                                                 // style={videoStlye}
                                                 style={{
-                                                    width:'100%',
-                                                    height:'100%'
+                                                    width: '100%',
+                                                    height: '100%'
                                                 }}
                                             >
                                                 {/* <source src="rtmp://rtmp.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b" type="rtmp/flv" />

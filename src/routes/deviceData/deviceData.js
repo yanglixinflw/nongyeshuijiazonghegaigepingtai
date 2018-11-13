@@ -87,7 +87,7 @@ export default class extends Component {
                     "deviceTypeId": deviceTypeId,
                     "deviceId": "",
                     "name": "",
-                    "installAddrId": 0,
+                    "installAddrId": '',
                     "showColumns": [],
                     "pageIndex": 0,
                     "pageSize": 10
