@@ -305,6 +305,9 @@ export default class extends Component {
         //请求接口从后台拿到数据（dataList）后，_getDataList()
         //选择marker后设置map的center为该marker的position
     }
+    _chosenHandler(e){
+        console.log(e)
+    }
     render() {
         const {
             pluginProps,
@@ -346,6 +349,7 @@ export default class extends Component {
                                     renderItem={(item) => {
                                         return (
                                             <List.Item
+                                                onClick={(e)=>this._chosenHandler(e)}
                                             >
                                                 <p className={styles.itemName}
                                                     dangerouslySetInnerHTML={{ __html: item.name }}>
@@ -406,7 +410,7 @@ export default class extends Component {
                     size={size}
                     events={this.windowEvents}
                 >
-                    <IwContentWaterV isWarningMsg={waterValveMarkers}/>
+                    <IwContentWaterV isWarningMsg={waterValveMarkers.filter(item=>item.position==infoPositionWaterValve)}/>
                 </InfoWindow>
                 {/* 水阀Marker */}
                 <Markers 

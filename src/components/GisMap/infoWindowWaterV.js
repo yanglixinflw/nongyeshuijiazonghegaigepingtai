@@ -5,14 +5,11 @@ import { Switch } from 'antd';
 export default class extends Component {
     constructor(props) {
         super(props)
-        //console.log(props)
-        // const map = props.__map__;
-
-        // console.log(map)
+        // console.log(props)
     }
     render() {
-        const { isWarningMsg } = this.props;
-        console.log(isWarningMsg)
+        const { isWarningMsg } = this.props.isWarningMsg[0];
+        //console.log(isWarningMsg)
         return (
             <div>
                 <div className={styles.infoTitle}>
