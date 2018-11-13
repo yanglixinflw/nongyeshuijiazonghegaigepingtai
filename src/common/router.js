@@ -96,6 +96,9 @@ export const getRouterData = app => {
     '/messageManagement/warningRules':{
       component: dynamicWrapper(app, ['warningRules'], () => import('../routes/messageManagement/warningRules')),
     },
+    '/warningRules/addWarningRules':{
+      component: dynamicWrapper(app, [], () => import('../routes/messageManagement/addWarningRules')),
+    },
     '/system/userManagement':{
       component: dynamicWrapper(app, ['userManagement'], () => import('../routes/systemManagement/userManagement')),
     },
