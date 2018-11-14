@@ -167,14 +167,14 @@ export default class extends Component {
                         >
                             生成二维码
                         </Button>
-                        {/* <Link to={`/deviceInformation/warningRules:${record.deviceId}`}> */}
+                        <Link to={`/deviceInformation/warningDetail:${record.deviceId}`}>
                         <Button
                             className={styles.warn}
                             icon='exception'
                         >
                             预警机制
                         </Button>
-                        {/* </Link> */}
+                        </Link>
                         <Button
                             className={styles.edit}
                             icon='edit'

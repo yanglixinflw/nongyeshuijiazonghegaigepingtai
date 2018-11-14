@@ -94,7 +94,7 @@ const menuData = [
     children: [
       {
         name: '设备信息',
-        path: 'deviceInformation'
+        path: 'deviceInformation',
       },
       {
         name: '农户信息',
