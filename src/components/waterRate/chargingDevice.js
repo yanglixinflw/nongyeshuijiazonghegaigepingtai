@@ -35,12 +35,12 @@ export default class extends Component{
             tableIndex.push(v.index)
         })
         this.state={
-            chargingDevice,
             items:chargingDevice,
-            tableTitle,
             tableDatas:[],
             columns: [],
-            title:tableTitle
+            title:tableTitle,
+            //搜索框默认值
+            searchValue:{}
         }
     }
     componentDidMount() {
@@ -104,21 +104,92 @@ export default class extends Component{
             }
         })
     }
-     //搜索功能
-     _searchTableDatas() {
-        const form = this.searchForm.props.form;
-        form.validateFields((err, values) => {
-            if (err) {
-                return
-            }
-            // console.log(values)
+// 搜索功能
+_searchTableData() {
+    const { title } = this.state;
+    const form = this.searchForm.props.form;
+    form.validateFields((err, values) => {
+        // 未定义时给空值
+        if (err) {
+            return
+        }
+        // if(values.realName==undefined){
+        //     values.realName=''
+        // }
+        // if(values.mobilePhone==undefined){
+        //     values.mobilePhone=''
+        // }
+        // if(values.idCard==undefined){
+        //     values.idCard=''
+        // }
+        // if(values.areaId=='area'){
+        //     values.areaId=''
+        // }
+        // if(values.isActivated=='isActivated'){
+        //     values.isActivated=''
+        // }
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                // "name": values.realName,
+                // "mobile": values.mobilePhone,
+                // "idCard": values.idCard,
+                // "areaId": values.areaId,
+                // "isActivated": values.isActivated,
+                // "pageIndex": 0,
+                // "pageSize": 10
+            })
+        }).then(res => {
+            Promise.resolve(res.json())
+                .then(v => {
+                    if (v.ret == 1) {
+                        // 设置页面显示的元素
+                        let itemCount = v.data.itemCount
+                        let data = v.data.items
+                        this.setState({
+                            itemCount,
+                            data
+                        })
+                        this._getTableDatas(title,data);
+                    }
+                })
+        }).catch(err => {
+            console.log(err)
         })
-    }
+    })
+}
     //重置
     _resetForm() {
+        const { title } = this.state;
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                "pageIndex": 0,
+                "pageSize": 10
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v)
+                        let data = v.data.items;
+                        let itemCount = v.data.itemCount;
+                        // 给每一条数据添加key
+                        data.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            data,
+                            itemCount,
+                            searchValue:{}
+                        })
+                        this._getTableDatas(title, data);
+                    }
+                })
+        })
     }
     render(){
         const { columns, tableDatas } = this.state;
@@ -127,46 +198,49 @@ export default class extends Component{
         };
         return(
             <React.Fragment>
-               <div className={styles.header}>
-                    <span>|</span>计费设施
-                </div>
-                <div className={styles.searchForm}>
-                    {/* 表单信息 */}
-                    <SearchForm
-                        wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        searchHandler={() => this._searchTableDatas()}
-                        resetHandler={() => this._resetForm()}
+                <div className={styles.chargingDevice}>
+                    <div className={styles.header}>
+                        <span>|</span>计费设施
+                    </div>
+                    <div className={styles.searchForm}>
+                        {/* 表单信息 */}
+                        <SearchForm
+                            wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
+                            searchHandler={() => this._searchTableDatas()}
+                            resetHandler={() => this._resetForm()}
+                        />
+                        <div className={styles.buttonGroup}>
+                            <Button
+                                className={styles.fnButton}
+                                icon="search"
+                                onClick={() => this._searchTableDatas()}
+                            >
+                                搜索
+                            </Button>
+                            <Button
+                                icon='reload'
+                                className={styles.fnButton}
+                                onClick={() => this._resetForm()}
+                            >
+                                重置
+                            </Button>
+                            <Button
+                                icon='upload'
+                                className={styles.fnButton}
+                            >
+                                导出数据
+                            </Button>
+                        </div> 
+                    </div>
+                    <Table
+                        columns={columns}
+                        className={styles.tables}
+                        pagination={paginationProps}
+                        dataSource={tableDatas}
+                        // scroll={{ x:"<1200"?true:false}}
                     />
-                    <div className={styles.buttonGroup}>
-                        <Button
-                            className={styles.fnButton}
-                            icon="search"
-                            onClick={() => this._searchTableDatas()}
-                        >
-                            搜索
-                        </Button>
-                        <Button
-                            icon='reload'
-                            className={styles.fnButton}
-                            onClick={() => this._resetForm()}
-                        >
-                            重置
-                        </Button>
-                        <Button
-                            icon='upload'
-                            className={styles.fnButton}
-                        >
-                            导出数据
-                        </Button>
-                    </div> 
                 </div>
-                <Table
-                    columns={columns}
-                    className={styles.table}
-                    pagination={paginationProps}
-                    dataSource={tableDatas}
-                    // scroll={{ x: 1100 }}
-                />
+               
             </React.Fragment>
         )
     }

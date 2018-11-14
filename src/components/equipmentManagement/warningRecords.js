@@ -380,7 +380,7 @@ export default class extends Component{
                     pagination={paginationProps}
                     dataSource={tableDatas}
                     scroll={
-                        { x: '100%' }
+                        { x: columns.length <4 ? false : 2000 }
                     }
                 />
             </React.Fragment>
