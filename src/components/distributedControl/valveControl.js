@@ -10,14 +10,14 @@ const envNet='http://192.168.30.127:88';
 const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`
 //表头
 const tableTitle=[
-    {index:"valveType",item:"阀门型号"},
-    {index:"id",item:"阀门ID"},
-    {index:"name",item:"阀门名称"},
-    {index:"area",item:"阀门安装地"},
+    {index:"valveType",item:"设备型号"},
+    {index:"id",item:"设备ID"},
+    {index:"name",item:"设备名称"},
+    {index:"area",item:"设备安装地"},
     {index:"build",item:"关联建筑物"},
     {index:"inter",item:"网络"},
     {index:"electric",item:"电量"},
-    {index:"state",item:"阀门状态"},
+    {index:"state",item:"状态"},
     {index:"updateTime",item:"更新时间"},
 ]
 //假数据
@@ -302,10 +302,19 @@ const SearchForm = Form.create()(
                         marginRight:"10px"
                     }}>
                     <Form.Item>
+                        {getFieldDecorator('installAddr', {initialValue:'installAddress'})
+                            (
+                            <Select>
+                                <Option value='installAddress'>大禹阀门</Option>
+                            </Select>
+                            )
+                        }
+                    </Form.Item>
+                    <Form.Item>
                         {getFieldDecorator('id', {})
                             (
                             <Input
-                                placeholder='阀门ID'
+                                placeholder='设备ID'
                                 type='text'
                             />
                             )
@@ -315,7 +324,7 @@ const SearchForm = Form.create()(
                         {getFieldDecorator('name', {})
                             (
                             <Input
-                                placeholder='阀门名称'
+                                placeholder='设备名称'
                                 type='text'
                             />
                             )
