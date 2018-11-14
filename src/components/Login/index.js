@@ -23,7 +23,7 @@ export default class extends React.Component {
     }
     render() {
         const {
-            errorMassage,
+            errorMessage,
             CAPTCHA,
             reloadCAPTCHA
         }=this.props
@@ -48,7 +48,7 @@ export default class extends React.Component {
                                     submitHandler={(e) => {
                                         this._loginSumbit(e)
                                     }}
-                                    errorMassage={errorMassage}
+                                    errorMessage={errorMessage}
                                     {...CAPTCHA}
                                     reloadCAPTCHA={reloadCAPTCHA}
                                 />
@@ -96,7 +96,7 @@ const LoginForm = Form.create()(
         }
         render() {
             const { showYzm, isLoading } = this.state
-            const { form, submitHandler,errorMassage ,url,reloadCAPTCHA} = this.props
+            const { form, submitHandler,errorMessage ,url,reloadCAPTCHA} = this.props
             const { getFieldDecorator } = form;
             // 设置输入密码的外边距
             let passWordMargin
@@ -204,8 +204,8 @@ const LoginForm = Form.create()(
                         </FormItem>
                         <FormItem style={{ marginBottom: 0, marginLeft: 50, color: 'white' }}>
                             {
-                                errorMassage === '' ? null : 
-                                <span className={errorMassage === '' ? null : styles.shake}>{errorMassage}
+                                errorMessage === '' ? null : 
+                                <span className={errorMessage === '' ? null : styles.shake}>{errorMessage}
                                 </span>
                             }
                             {/* 显示区域 */}
