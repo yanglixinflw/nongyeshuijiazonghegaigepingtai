@@ -217,6 +217,7 @@ export default class extends Component {
             columns,
             tableData,
         })
+        console.log(columns)
 
     }
     //点击显示设置
@@ -558,7 +559,8 @@ export default class extends Component {
         })
     }
     render() {
-        const { columns,
+        const { 
+            columns,
             showSetVisible,
             tableData,
             itemCount,
@@ -686,7 +688,9 @@ export default class extends Component {
                     dataSource={tableData}
                     pagination={paginationProps}
                     scroll={
-                        { x: columns.length > 10 ? 2000 : false }
+                        // { x: columns.length > 10 ?2000: false }
+                        { x: columns.length<4 ? false : 2000 }
+                        // { x: 2000 }
                     }
                 />
             </Fragment>

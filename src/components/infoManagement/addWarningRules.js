@@ -98,7 +98,7 @@ const AddForm = Form.create()(
                         <div className={styles.type}>
                             <div className={styles.typeName}>频率</div>
                             <Form.Item className={styles.standard1}>
-                                {getFieldDecorator('frequency', {initialValue:'no'})
+                                {getFieldDecorator('noteInfo', {initialValue:'no'})
                                     (<Select>
                                         <Option value="no">不通知</Option>
                                         <Option value="one">仅通知一次</Option>
@@ -110,7 +110,7 @@ const AddForm = Form.create()(
                         <div className={styles.limited}>
                             <div className={styles.limitedName}>通知人</div>
                             <Form.Item className={styles.standard1}>
-                                {getFieldDecorator('people', {initialValue:'people1'})
+                                {getFieldDecorator('notePeople', {initialValue:'people1'})
                                     (<Select>
                                         <Option value="people1">慧水老李</Option>
                                         <Option value="people2">慧水老王</Option>
@@ -118,7 +118,7 @@ const AddForm = Form.create()(
                                 }
                             </Form.Item>
                             <Form.Item className={styles.standard3}>
-                                {getFieldDecorator('other', {initialValue:''})
+                                {getFieldDecorator('noteOther', {initialValue:''})
                                     (<Input placeholder="需通知的其他人" type='text'/>)
                                 }
                             </Form.Item>
@@ -129,7 +129,7 @@ const AddForm = Form.create()(
                         <div className={styles.type}>
                             <div className={styles.typeName}>频率</div>
                             <Form.Item className={styles.standard1}>
-                                {getFieldDecorator('frequency', {initialValue:'no'})
+                                {getFieldDecorator('phoneInfo', {initialValue:'no'})
                                     (<Select>
                                         <Option value="no">不通知</Option>
                                         <Option value="one">仅通知一次</Option>
@@ -141,7 +141,7 @@ const AddForm = Form.create()(
                         <div className={styles.limited}>
                             <div className={styles.limitedName}>通知人</div>
                             <Form.Item className={styles.standard1}>
-                                {getFieldDecorator('people', {initialValue:'people1'})
+                                {getFieldDecorator('phonePeople', {initialValue:'people1'})
                                     (<Select>
                                         <Option value="people1">慧水老李</Option>
                                         <Option value="people2">慧水老王</Option>
@@ -149,11 +149,80 @@ const AddForm = Form.create()(
                                 }
                             </Form.Item>
                             <Form.Item className={styles.standard3}>
-                                {getFieldDecorator('other', {initialValue:''})
+                                {getFieldDecorator('phoneOther', {initialValue:''})
                                     (<Input placeholder="需通知的其他人" type='text'/>)
                                 }
                             </Form.Item>
                         </div>
+                    </div>
+                    <div className={styles.type1}>
+                        <div className={styles.based}>通知</div>
+                        <div className={styles.type}>
+                            <div className={styles.typeName}>通知范围</div>
+                            <Form.Item className={styles.standard1}>
+                                {getFieldDecorator('range', {initialValue:'all'})
+                                    (<Select>
+                                        <Option value="all">全部</Option>
+                                        <Option value="ordinary">一般管理员</Option>
+                                        <Option value="super">超级管理员</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className={styles.type1}>
+                        <div className={styles.based}>通知内容</div>
+                        <div className={styles.type}>
+                            <div className={styles.typeName}>通知内容</div>
+                            <Form.Item className={styles.standard4}>
+                                {getFieldDecorator('content', {initialValue:'all'})
+                                    (<Select>
+                                        <Option value="all">没钱啦</Option>
+                                        <Option value="ordinary">没电啦</Option>
+                                        <Option value="super">坏啦</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className={styles.type1}>
+                        <div className={styles.based}>控制</div>
+                        <div className={styles.type}>
+                            <div className={styles.typeName}>关联设备</div>
+                            <Form.Item className={styles.standard5}>
+                                {getFieldDecorator('deviceId', {initialValue:'设备名称/ID'})
+                                    (<Select>
+                                        <Option value="water">宁围街道水表</Option>
+                                        <Option value="elect">宁围街道电表</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.standard1}>
+                                {getFieldDecorator('info', {initialValue:'请选择指令'})
+                                    (<Select>
+                                        <Option value="open">慧水老李</Option>
+                                        <Option value="close">慧水老王</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className={styles.borderBot}></div>
+                    <div className={styles.fn}>
+                        <Button
+                            className={styles.delete}
+                            // onClick={()=>this._deleteInfo(record.userId)}
+                            icon='delete'
+                        >
+                            删除
+                        </Button>
+                        <Button
+                            className={styles.save}
+                            // onClick={() => this.save(record.userId)}
+                            icon='save'
+                        >
+                            保存
+                        </Button>
                     </div>
                 </Form>
             )

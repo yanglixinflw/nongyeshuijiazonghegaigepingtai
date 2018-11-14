@@ -56,7 +56,7 @@ export default class extends Component {
                 "deviceTypeId": deviceTypeId,
                 "deviceId": "",
                 "name": "",
-                "installAddrId": 0,
+                "installAddrId": '',
                 "showColumns": [],
                 "pageIndex": 0,
                 "pageSize": 10
@@ -115,12 +115,15 @@ export default class extends Component {
         })
         // 操作数据源
         tableData.map((v, i) => {
-            let realTimeKeys = Object.keys(v.realTimeData)
+            if(v.realTimeData!=null){
+                let realTimeKeys = Object.keys(v.realTimeData)
             let realTimeData = Object.values(v.realTimeData)
             realTimeKeys.map((val, i) => {
                 v[val] = realTimeData[i]
             })
             v.key = i
+            }
+            
         })
 
         this.setState({
@@ -293,7 +296,8 @@ export default class extends Component {
         })
     }
     render() {
-        const { columns, 
+        const { 
+            columns, 
             tableData, 
             showSetVisible, 
             itemCount, 
@@ -342,7 +346,7 @@ export default class extends Component {
                     dataSource={tableData}
                     rowKey={record => record.deviceId}
                     scroll={
-                        { x: columns.length > 10 ? 3200 : false }
+                        { x: columns.length<4 ? false : 2000 }
                     }
                 />
             </div>

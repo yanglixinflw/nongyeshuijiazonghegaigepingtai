@@ -73,7 +73,7 @@ export default class extends Component{
             width: 100,
             render: (record) => {
                 return (
-                    <span className={styles.option}>
+                    <div className={styles.option}>
                         <Link to={`/automation/autoRules`}>
                             <Button
                                 className={styles.set}
@@ -102,7 +102,7 @@ export default class extends Component{
                             删除
                         </Button>
                         
-                    </span>
+                    </div>
                 )
             }
         })
@@ -201,44 +201,46 @@ export default class extends Component{
         };
         return(
             <React.Fragment>
-                <div className={styles.header}>
-                    <span>|</span>自动化控制
-                </div>
-                <div className={styles.searchForm}>
-                    {/* 表单信息 */}
-                    <SearchForm
-                        wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
+                <div className={styles.autoControl}>
+                    <div className={styles.header}>
+                        <span>|</span>自动化控制
+                    </div>
+                    <div className={styles.searchForm}>
+                        {/* 表单信息 */}
+                        <SearchForm
+                            wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
+                        />
+                        <div className={styles.buttonGroup}>
+                            <Button
+                                className={styles.fnButton}
+                                icon="search"
+                                onClick={() => this._searchTableDatas()}
+                            >
+                                搜索
+                            </Button>
+                            <Button
+                                icon='reload'
+                                className={styles.fnButton}
+                                onClick={() => this._resetForm()}
+                            >
+                                重置
+                            </Button>
+                            <Button
+                                icon='plus'
+                                className={styles.fnButton}
+                            >
+                                添加
+                            </Button>
+                        </div> 
+                    </div>
+                    <Table
+                        columns={columns}
+                        className={styles.table}
+                        pagination={paginationProps}
+                        dataSource={tableDatas}
+                        // scroll={{ x: 1300 }}
                     />
-                    <div className={styles.buttonGroup}>
-                        <Button
-                            className={styles.fnButton}
-                            icon="search"
-                            onClick={() => this._searchTableDatas()}
-                        >
-                            搜索
-                        </Button>
-                        <Button
-                            icon='reload'
-                            className={styles.fnButton}
-                            onClick={() => this._resetForm()}
-                        >
-                            重置
-                        </Button>
-                        <Button
-                            icon='plus'
-                            className={styles.fnButton}
-                        >
-                            添加
-                        </Button>
-                    </div> 
                 </div>
-                <Table
-                    columns={columns}
-                    className={styles.table}
-                    pagination={paginationProps}
-                    dataSource={tableDatas}
-                    // scroll={{ x: 1300 }}
-                />
             </React.Fragment>
         )
     }
