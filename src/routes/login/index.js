@@ -73,7 +73,7 @@ export default class extends React.Component {
       <Fragment>
         <Login
           loginFunc={this.submitHandler}
-          errorMassage={msg}
+          errorMessage={msg}
           submitting={submitting}
           CAPTCHA={this.state}
           reloadCAPTCHA={this.reloadCAPTCHA}
