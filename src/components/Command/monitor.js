@@ -5,7 +5,7 @@ import up from '../../assets/up.png'
 import close from '../../assets/close.png'
 import EZUIPlayer from '../../assets/ezuikit'
 import classnames from 'classnames'
-import { Dropdown, Select,message } from 'antd'
+import { Dropdown, Select, message } from 'antd'
 import _ from 'lodash'
 const Option = Select.Option
 //开发地址
@@ -24,9 +24,9 @@ message.config({
     top: 100,
     // duration: 2,
     maxCount: 1,
-  });
+});
 // 控制接口
-const contorlUrl=`${envNet}/api/CamerasMonitor/ptz/start`
+const contorlUrl = `${envNet}/api/CamerasMonitor/ptz/start`
 // 获取视频列表
 const getMonitorUrl = `${envNet}/api/CamerasMonitor/cameras`
 export default class extends Component {
@@ -63,7 +63,7 @@ export default class extends Component {
     }
     componentDidUpdate() {
         const { monitorArr } = this.state
-        let newArr=_.cloneDeep(monitorArr)
+        let newArr = _.cloneDeep(monitorArr)
         // console.log(monitorArr)
         // 实例化监控
         let newPlayer = []
@@ -197,17 +197,17 @@ export default class extends Component {
     }
     //设置云台速度 
     setSpeed(speed) {
-        let yuntaiSpeedNumber=0
-        switch (speed){
+        let yuntaiSpeedNumber = 0
+        switch (speed) {
             case '慢':
-            yuntaiSpeedNumber=0
-            break;
+                yuntaiSpeedNumber = 0
+                break;
             case '中':
-            yuntaiSpeedNumber=1
-            break;
+                yuntaiSpeedNumber = 1
+                break;
             case '快':
-            yuntaiSpeedNumber=2
-            break;
+                yuntaiSpeedNumber = 2
+                break;
         }
         this.setState({
             yuntaiSpeed: speed,
@@ -227,7 +227,7 @@ export default class extends Component {
                 playOrder.push(i)
                 // console.log( monitorArr[playOrder[0]])
                 monitorArr[playOrder[0]].video = playVideo
-                monitorArr[playOrder[0]].video.order=monitorArr[playOrder[0]].order
+                monitorArr[playOrder[0]].video.order = monitorArr[playOrder[0]].order
                 return
             }
             // 判断视频重复性
@@ -242,7 +242,6 @@ export default class extends Component {
                     }
                     return
                 }
-
             }
 
         })
@@ -265,30 +264,30 @@ export default class extends Component {
 
     }
     // 云台控制
-    yunControl(direction){
-        const{yuntaiSpeedNumber,controlVideoId}=this.state
+    yunControl(direction) {
+        const { yuntaiSpeedNumber, controlVideoId } = this.state
         // 操作命令(上:0,下:1,左:2,右:3,左上:4,左下:5,右上:6,右下:7,放大:8,缩小:9,近焦距:10,远焦距:11)
         // console.log(direction)
-        if(controlVideoId==''){
+        if (controlVideoId == '') {
             alert('请先选中控制的摄像头')
-        }else{
-            fetch(contorlUrl,{
+        } else {
+            fetch(contorlUrl, {
                 ...postOption,
-                body:JSON.stringify({
-                    deviceId:controlVideoId,
-                    direction:direction,
-                    speed:yuntaiSpeedNumber
+                body: JSON.stringify({
+                    deviceId: controlVideoId,
+                    direction: direction,
+                    speed: yuntaiSpeedNumber
                 })
-            }).then((res)=>{
+            }).then((res) => {
                 Promise.resolve(res.json())
-                .then((v) => {
+                    .then((v) => {
 
-                    if (v.ret == 1) {
-                        message.success(v.msg,2)
-                    }else{
-                        message.error(v.msg,3)
-                    }
-                })
+                        if (v.ret == 1) {
+                            message.success(v.msg, 2)
+                        } else {
+                            message.error(v.msg, 3)
+                        }
+                    })
             })
         }
     }
@@ -380,20 +379,27 @@ export default class extends Component {
                                     )
                                 } else {
                                     return (
-                                        <div className={classnames(`${playBoxStyle}`, `${styles.video}`)}
+                                        <div
+                                            className={classnames(`${playBoxStyle}`, `${styles.video}`)}
                                             key={i}
                                             onFocus={() => this.getFocousVideo(v.video[0].deviceId)}
                                             tabIndex='0'
+                                            // onBlur={() => {
+                                            //     console.log('失去焦点')
+                                            // }}
+
                                         >
                                             {/* <div className={styles.closeButton}
                                                 onClick={() => this.closeVideo(v.video[0].deviceId)}>
                                                 <img src={close}></img>
                                             </div> */}
                                             <video
+                                                // className={styles.video}
+                                                // onFocus={() => this.getFocousVideo(v.video[0].deviceId)}
+                                                // tabIndex='0'
                                                 id={v.video[0].deviceId}
                                                 poster={v.video[0].coverUrl}
                                                 controls
-                                                // playsInline 
                                                 autoPlay
                                                 // style={videoStlye}
                                                 style={{
@@ -401,8 +407,6 @@ export default class extends Component {
                                                     height: '100%',
                                                 }}
                                             >
-                                                {/* <source src="rtmp://rtmp.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b" type="rtmp/flv" />
-                                                        <source src="http://hls.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.m3u8" type="application/x-mpegURL" /> */}
                                                 <source src={v.video[0].playList.rtmp} type="rtmp/flv" />
                                                 <source src={v.video[0].playList.hls} type="application/x-mpegURL" />
                                             </video>
@@ -460,61 +464,61 @@ export default class extends Component {
                             </div>
                             <div className={styles.picOperate}>
                                 <div className={styles.operateLeft}>
-                                    <div 
+                                    <div
                                         className={styles.operateButton}
-                                        onClick={()=>this.yunControl(4)}
+                                        onClick={() => this.yunControl(4)}
                                     >
                                         <img src={ysj} title='左上移动'
                                             style={{ transform: 'rotate(-90deg)' }}
                                         />
                                     </div>
                                     <div className={styles.operateButton}
-                                    onClick={()=>this.yunControl(0)}
+                                        onClick={() => this.yunControl(0)}
                                     >
                                         <img src={up} title='向上移动'
                                         />
                                     </div>
                                     <div className={styles.operateButton}
-                                    onClick={()=>this.yunControl(6)}
+                                        onClick={() => this.yunControl(6)}
                                     >
                                         <img src={ysj} title='右上移动'
 
                                         />
                                     </div>
                                     <div className={styles.operateButton}
-                                    onClick={()=>this.yunControl(2)}
+                                        onClick={() => this.yunControl(2)}
                                     >
                                         <img src={up} title='向左移动'
                                             style={{ transform: 'rotate(-90deg)' }}
                                         />
                                     </div>
                                     <div className={styles.operateButton}
-                                    
+
                                     >
                                     </div>
                                     <div className={styles.operateButton}
-                                    onClick={()=>this.yunControl(3)}
+                                        onClick={() => this.yunControl(3)}
                                     >
                                         <img src={up} title='向右移动'
                                             style={{ transform: 'rotate(90deg)' }}
                                         />
                                     </div>
                                     <div className={styles.operateButton}
-                                    onClick={()=>this.yunControl(5)}
+                                        onClick={() => this.yunControl(5)}
                                     >
                                         <img src={ysj} title='左下移动'
                                             style={{ transform: 'rotate(180deg)' }}
                                         />
                                     </div>
                                     <div className={styles.operateButton}
-                                    onClick={()=>this.yunControl(1)}
+                                        onClick={() => this.yunControl(1)}
                                     >
                                         <img src={up} title='向下移动'
                                             style={{ transform: 'rotate(180deg)' }}
                                         />
                                     </div>
                                     <div className={styles.operateButton}
-                                    onClick={()=>this.yunControl(7)}
+                                        onClick={() => this.yunControl(7)}
                                     >
                                         <img src={ysj} title='右下移动'
                                             style={{ transform: 'rotate(90deg)' }}
@@ -524,21 +528,21 @@ export default class extends Component {
                                 <div className={styles.operateRight}>
                                     <div className={styles.operateAdd}>
                                         <div className={styles.plus}
-                                        onClick={()=>this.yunControl(8)}
+                                            onClick={() => this.yunControl(8)}
                                         >
                                             <i className={classnames('dyhsicon', 'dyhs-fangda')}>
                                             </i>
                                         </div>
                                         <div>画面</div>
                                         <div className={styles.minus}
-                                        onClick={()=>this.yunControl(9)}
+                                            onClick={() => this.yunControl(9)}
                                         >
                                             <i className={classnames('dyhsicon', 'dyhs-suoxiao')}>
                                             </i>
                                         </div>
                                     </div>
                                     <div className={styles.operateAdd}
-                                    onClick={()=>this.yunControl(10)}
+                                        onClick={() => this.yunControl(10)}
                                     >
                                         <div className={styles.plus}>
                                             <i className={classnames('dyhsicon', 'dyhs-fangda')}>
@@ -546,7 +550,7 @@ export default class extends Component {
                                         </div>
                                         <div>焦距</div>
                                         <div className={styles.minus}
-                                        onClick={()=>this.yunControl(11)}
+                                            onClick={() => this.yunControl(11)}
                                         >
                                             <i className={classnames('dyhsicon', 'dyhs-suoxiao')}>
                                             </i>
