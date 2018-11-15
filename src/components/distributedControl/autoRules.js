@@ -81,7 +81,7 @@ const RuleForm = Form.create()(
         remove = (v) => {
             const { form } = this.props;
             const keys = form.getFieldValue('keys');
-            if (keys.length === 1) {
+            if (keys.length === 0) {
               return;
             }
             //可以使用数据绑定来设置
@@ -106,7 +106,7 @@ const RuleForm = Form.create()(
         removes = (v) => {
             const { form } = this.props;
             const key = form.getFieldValue('key');
-            if (key.length === 1) {
+            if (key.length === 0) {
             return;
             }
             //可以使用数据绑定来设置
@@ -225,7 +225,7 @@ const RuleForm = Form.create()(
                                 (<Input placeholder="值" type='number'/>)
                             }
                         </Form.Item>
-                        {keys.length > 1 ? (
+                        {keys.length > 0 ? (
                             <Icon 
                                 type="minus" 
                                 disabled={keys.length === 1}

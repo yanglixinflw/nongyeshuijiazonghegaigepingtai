@@ -328,61 +328,63 @@ export default class extends Component{
         };
         return(      
             <React.Fragment>
-                <div className={styles.header}>
-                    <span>|</span>预警事件记录
-                </div>
-                <div className={styles.searchForm}>
-                    {/* 表单信息 */}
-                    <SearchForm
-                        wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        {...{installAddrList}}
+                <div className={styles.warningRecords}>
+                    <div className={styles.header}>
+                        <span>|</span>预警事件记录
+                    </div>
+                    <div className={styles.searchForm}>
+                        {/* 表单信息 */}
+                        <SearchForm
+                            wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
+                            {...{installAddrList}}
+                        />
+                        <div className={styles.buttonGroup}>
+                            <Button
+                                icon='search'
+                                className={styles.fnButton}
+                                onClick={()=>this._searchTableData()}
+                            >
+                                搜索
+                            </Button>
+                            <Button
+                                icon='reload'
+                                className={styles.fnButton}
+                                onClick={()=>this._resetForm()}
+                            >
+                                重置
+                            </Button>
+                            <Button
+                                icon='eye'
+                                className={styles.fnButton}
+                                onClick={()=>this.onShow()}
+                            >
+                                显示设置
+                            </Button>
+                            <Button
+                                icon='upload'
+                                className={styles.fnButton}
+                            >
+                                数据导出
+                            </Button>
+                        </div> 
+                    </div>
+                    {/* 显示设置 */}
+                    <ShowSetForm
+                        wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
+                        visible={showvisible}
+                        onCancel={() => this.showCancel()}
+                        onOk={() => this.showOk()}
                     />
-                    <div className={styles.buttonGroup}>
-                        <Button
-                            icon='search'
-                            className={styles.fnButton}
-                            onClick={()=>this._searchTableData()}
-                        >
-                            搜索
-                        </Button>
-                        <Button
-                            icon='reload'
-                            className={styles.fnButton}
-                            onClick={()=>this._resetForm()}
-                        >
-                            重置
-                        </Button>
-                        <Button
-                            icon='eye'
-                            className={styles.fnButton}
-                            onClick={()=>this.onShow()}
-                        >
-                            显示设置
-                        </Button>
-                        <Button
-                            icon='upload'
-                            className={styles.fnButton}
-                        >
-                            数据导出
-                        </Button>
-                    </div> 
-                </div>
-                {/* 显示设置 */}
-                <ShowSetForm
-                    wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
-                    visible={showvisible}
-                    onCancel={() => this.showCancel()}
-                    onOk={() => this.showOk()}
-                />
-                <Table
-                    columns={columns}
-                    className={styles.table}
-                    pagination={paginationProps}
-                    dataSource={tableDatas}
-                    scroll={
-                        { x: columns.length <4 ? false : 2000 }
-                    }
-                />
+                    <Table
+                        columns={columns}
+                        className={styles.table}
+                        pagination={paginationProps}
+                        dataSource={tableDatas}
+                        scroll={
+                            { x: columns.length <4 ? false : 2000 }
+                        }
+                    />
+                </div> 
             </React.Fragment>
         )
     }
