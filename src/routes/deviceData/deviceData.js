@@ -19,6 +19,7 @@ export default class extends Component {
     componentDidMount() {
         // 初始化
         const deviceTypeId = parse(window.location.href.split(':'))[3]
+        // console.log(deviceTypeId)
         const { dispatch } = this.props;
         dispatch({
             type: 'deviceData/fetch',
@@ -26,13 +27,16 @@ export default class extends Component {
                  deviceTypeId,
                 "deviceId": "",
                 "name": "",
-                "installAddrId": 0,
+                "installAddrId":"",
                 "showColumns": [],
                 "pageIndex": 0,
                 "pageSize": 10
             }
         });
-        
+        // 获取安装地列表
+        dispatch({
+        type: 'deviceData/getInstallAddrList',
+        })
         // 获取name
         let pathName=this.props.location.pathname
         const pathSnippets = urlToList(pathName);
@@ -93,6 +97,10 @@ export default class extends Component {
                     "pageSize": 10
                 }
             });
+            // 获取安装地列表
+            dispatch({
+            type: 'deviceData/getInstallAddrList',
+            })
             // 获取name
             let pathName = nextProps.location.pathname
             const pathSnippets = urlToList(pathName);
@@ -109,7 +117,7 @@ export default class extends Component {
             // console.log(childrenName)
             // 匹配到name
             let title = childrenName.filter(item => item.path === pathName)
-            // console.log(title[0].name)
+            console.log(title[0].name)
             this.setState({
                 deviceTypeId,
                 pageTitle:title[0].name
@@ -120,7 +128,10 @@ export default class extends Component {
         let { deviceData, loading } = this.props;
         let {deviceTypeId,pageTitle}=this.state
         let arr = Object.keys(deviceData);
-        if (arr.length <= 1) return deviceData = null;
+        if (arr.length <= 2) return false;
+        if(!deviceTypeId&&!pageTitle) {
+            return false
+        }
         return (
             <Fragment>
                 <Spin size='large' spinning={loading}>

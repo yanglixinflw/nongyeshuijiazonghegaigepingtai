@@ -30,7 +30,8 @@ export default class extends React.Component {
     dispatch({
       type: 'deviceInformation/getRelatedBuilding',
       payload:{
-        countDevice:false
+        countDevice:false,
+        name:''
       }
     })
     // 默认全部列表请求方式
