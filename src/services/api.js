@@ -161,3 +161,12 @@ export function getMonitorList(){
     )
   })
 }
+//设备信息预警机制
+export function queryWarningDetail(params){
+  return request(`${envNet}/api/device/warningRuleDetails`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}

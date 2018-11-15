@@ -16,6 +16,7 @@ class BreadcrumbView extends PureComponent {
     let breadcrumbChildrenData = [];
     let breadcrumbGrandsonData = [];
     const historyName = "历史记录";
+    const warningDetail= "预警机制";
     if (!location) {
       return null
     }
@@ -65,6 +66,11 @@ class BreadcrumbView extends PureComponent {
           {location.pathname.indexOf("/history") !== -1 ?
             <Breadcrumb.Item key={3}>
               {<Link to={pathSnippets[pathSnippets.length - 1]}>{historyName}</Link>}
+            </Breadcrumb.Item> : ''
+          }
+          {location.pathname.indexOf("/warningDetail") !== -1 ?
+            <Breadcrumb.Item key={4}>
+              {<Link to={pathSnippets[pathSnippets.length - 1]}>{warningDetail}</Link>}
             </Breadcrumb.Item> : ''
           }
         </Breadcrumb>
