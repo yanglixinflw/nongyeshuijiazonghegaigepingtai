@@ -114,6 +114,9 @@ export const getRouterData = app => {
     '/valveControl/map':{
       component: dynamicWrapper(app, [], () => import('../routes/distributedControl/mapControl')),
     },
+    '/valveControl/operatingRecord:id':{
+      component: dynamicWrapper(app, ['operatingRecord'], () => import('../routes/distributedControl/operatingRecord')),
+    },
     '/dcs/automation':{
       component: dynamicWrapper(app, [], () => import('../routes/distributedControl/autoControl')),
     },
