@@ -257,7 +257,7 @@ export default class extends Component {
     }
     // 获取焦点视频ID
     getFocousVideo(deviceId) {
-        console.log(deviceId)
+        // console.log(deviceId)
         this.setState({
             controlVideoId: deviceId
         })

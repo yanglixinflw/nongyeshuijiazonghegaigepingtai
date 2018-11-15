@@ -12,6 +12,8 @@ export function timeOut(v){
         const { dispatch } = store;
         // 未登录直接跳转登录页面
     if(localStorage.getItem('welcome')===null){
+        message.error('长时间未操作已超时，请重新登录',4)
+        localStorage.clear()
         dispatch(routerRedux.push(`/login`))
     }
     //  请求超时跳转用户登录页面

@@ -63,8 +63,8 @@ export default class extends Component {
             addVisible: false,
             // addVisible: true,
             // 修改弹窗
-            // modifyVisible: false,
-            modifyVisible: true,
+            modifyVisible: false,
+            // modifyVisible: true,
             // 删除弹窗
             deleteVisible: false,
             // 点击修改/删除 数据ID
@@ -196,7 +196,6 @@ export default class extends Component {
             if (err) {
                 return
             }
-            
             values.pageIndex = 0;
             values.pageSize = 10;
             // console.log(values)

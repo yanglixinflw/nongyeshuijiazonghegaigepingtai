@@ -1,7 +1,8 @@
-import React, { Component ,Fragment} from 'react';
+import React, { Component} from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Select, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
+import _ from 'lodash'
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
 // 生产环境
@@ -17,11 +18,11 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 }
-const Option=Select.Option
+const Option = Select.Option
 export default class extends Component {
     constructor(props) {
         super(props)
-        let { pageTitle, deviceTypeId ,title} = props
+        let { pageTitle, deviceTypeId, title, InstallList } = props
         // console.log(props)
         // 公用Columns
         let commonColumns = [
@@ -31,11 +32,11 @@ export default class extends Component {
             { name: "updateTime", displayName: "更新时间" }
         ]
         // 中间段columns
-        let difColumns=title.data.data
-        commonColumns.splice(3,0,...difColumns)
+        let difColumns = title.data.data
+        commonColumns.splice(3, 0, ...difColumns)
         // 添加序号
-        commonColumns.map((v,i)=>{
-            v.number=i
+        commonColumns.map((v, i) => {
+            v.number = i
         })
         //获取标题和数据
         this.state = {
@@ -64,9 +65,11 @@ export default class extends Component {
             // 页面typeId
             deviceTypeId,
             // 历史记录路径
-            history:'',
+            history: '',
             // 设置过滤后的表头
-            filterColumns: commonColumns
+            filterColumns: commonColumns,
+            // 设备安装地列表
+            installAddress: InstallList.data.data,
         }
     }
     componentDidMount() {
@@ -79,9 +82,10 @@ export default class extends Component {
     }
     //获取表的数据
     _getTableData(tableData, commonColumns) {
-        const {deviceTypeId}=this.props
+        const { deviceTypeId } = this.props
         let columns = [];
         commonColumns.map((v, i) => {
+            console.log(v.name)
             columns.push({
                 title: v.displayName,
                 // 给表头添加字段名 必须一一对应
@@ -97,7 +101,7 @@ export default class extends Component {
             align: 'center',
             fixed: 'right',
             width: 100,
-            className:`${styles.action}`,
+            className: `${styles.action}`,
             render: (record) => {
                 return (
                     <span>
@@ -115,17 +119,15 @@ export default class extends Component {
         })
         // 操作数据源
         tableData.map((v, i) => {
-            if(v.realTimeData!=null){
+            if (v.realTimeData != null) {
                 let realTimeKeys = Object.keys(v.realTimeData)
-            let realTimeData = Object.values(v.realTimeData)
-            realTimeKeys.map((val, i) => {
-                v[val] = realTimeData[i]
-            })
-            v.key = i
+                let realTimeData = Object.values(v.realTimeData)
+                realTimeKeys.map((val, i) => {
+                    v[val] = realTimeData[i]
+                })
+                v.key = i
             }
-            
         })
-
         this.setState({
             columns,
             tableData
@@ -133,17 +135,19 @@ export default class extends Component {
     }
     // 搜索功能
     _searchTableData() {
-        const {filterColumns,deviceTypeId } = this.state;
+        const { filterColumns, deviceTypeId } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
+            // console.log(values)
             if (err) {
                 return
             }
-            console.log(deviceTypeId)
+            // console.log(deviceTypeId)
             // 未定义时给空值
-            if(!values.deviceTypeId){
-                values.deviceTypeId = ''
+            if (!values.installAddrId) {
+                values.installAddrId = ''
             }
+            values.deviceTypeId = deviceTypeId
             values.showColumns = undefined || []
             values.pageIndex = 0;
             values.pageSize = 10;
@@ -165,9 +169,9 @@ export default class extends Component {
                             let { items, itemCount } = v.data;
                             this.setState({
                                 itemCount,
-                                tableData:items
+                                tableData: items
                             })
-                            this._getTableData( items, filterColumns);
+                            this._getTableData(items, filterColumns);
                         }
                     })
             }).catch((err) => {
@@ -177,7 +181,9 @@ export default class extends Component {
     }
     //重置
     _resetForm() {
+        const { filterColumns, deviceTypeId } = this.state;
         const form = this.searchForm.props.form;
+        console.log(deviceTypeId)
         // 重置表单
         form.resetFields();
         return fetch(dataUrl, {
@@ -185,7 +191,7 @@ export default class extends Component {
             body: JSON.stringify({
                 "deviceId": "",
                 "name": "",
-                "deviceTypeId": "",
+                "deviceTypeId":deviceTypeId,
                 "installAddrId": "",
                 "warningRules": "",
                 "relatedBuildingId": "",
@@ -198,7 +204,16 @@ export default class extends Component {
                         let { items, itemCount } = v.data
                         this.setState({
                             itemCount,
-                            data: items
+                            data: items,
+                            searchValue: {
+                                "deviceTypeId": deviceTypeId,
+                                "deviceId": "",
+                                "name": "",
+                                "installAddrId": '',
+                                "showColumns": [],
+                                "pageIndex": 0,
+                                "pageSize": 10
+                            },
                         })
                         this._getTableData(items, filterColumns)
                     }
@@ -216,7 +231,7 @@ export default class extends Component {
     }
     //显示设置点击确定
     _showSetOkHandler() {
-        const { tableData ,commonColumns} = this.state;
+        const { tableData, commonColumns } = this.state;
         const form = this.showSetForm.props.form;
         form.validateFields((err, values) => {
             // values即为表单数据
@@ -286,7 +301,7 @@ export default class extends Component {
                         })
                         this.setState({
                             itemCount,
-                            tableData:items
+                            tableData: items
                         })
                         this._getTableData(items, filterColumns);
                     }
@@ -296,13 +311,14 @@ export default class extends Component {
         })
     }
     render() {
-        const { 
-            columns, 
-            tableData, 
-            showSetVisible, 
-            itemCount, 
-            pageTitle ,
-            commonColumns} = this.state;
+        const {
+            columns,
+            tableData,
+            showSetVisible,
+            itemCount,
+            pageTitle,
+            installAddress,
+            commonColumns } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -326,6 +342,7 @@ export default class extends Component {
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
                         searchHandler={() => this._searchTableData()}
                         resetHandler={() => this._resetForm()}
+                        installAddress={installAddress}
                     />
                     <Button
                         icon='eye'
@@ -346,7 +363,7 @@ export default class extends Component {
                     dataSource={tableData}
                     rowKey={record => record.deviceId}
                     scroll={
-                        { x: columns.length<4 ? false : 2000 }
+                        { x: columns.length < 4 ? false : 2000 }
                     }
                 />
             </div>
@@ -357,8 +374,9 @@ export default class extends Component {
 const SearchForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, searchHandler, resetHandler } = this.props;
+            const { form, searchHandler, resetHandler, installAddress } = this.props;
             const { getFieldDecorator } = form;
+            // console.log(installAddress)
             return (
                 <Form layout='inline'>
                     <Form.Item>
@@ -391,7 +409,21 @@ const SearchForm = Form.create()(
                             <Select
                                 placeholder='设备安装地'
                             >
-                            <Option value=''>全部</Option>
+                                <Option value=''>全部</Option>
+                                {
+                                    installAddress.length === 0 ? null
+                                        :
+                                        installAddress.map((v, i) => {
+                                            return (
+                                                <Option
+                                                    value={v.id}
+                                                    key={v.id}>
+                                                    {v.addr}
+                                                </Option>
+                                            )
+
+                                        })
+                                }
                             </Select>
                             )
                         }
@@ -423,7 +455,7 @@ const SearchForm = Form.create()(
 const ShowSetForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, visible, onCancel, onOk ,commonColumns} = this.props;
+            const { form, visible, onCancel, onOk, commonColumns } = this.props;
             const { getFieldDecorator } = form;
             const CheckboxGroup = Checkbox.Group;
             return (

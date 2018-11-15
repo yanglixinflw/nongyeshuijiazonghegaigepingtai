@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import styles from "./warningRules.less"
-import { Input, Button, Form, Cascader, Table, Modal} from 'antd';
+import { Input, Button, Form,  Table, Modal} from 'antd';
 import { Link } from 'dva/router';
 //ip地址
 const envNet='http://192.168.30.127:88';
@@ -18,28 +18,22 @@ let postOption = {
     }),
 }
 //头信息
-const tableTitle=[
+const title=[
     {index:"deviceTypeName",item:"设备型号"},
     {index:"name",item:"规则名称"},
 ]
 export default class extends Component{
     constructor(props){
         super(props)
-        const {warningRules}=props;
+        const {data}=props;
         // console.log(this.props)
         this.state = {
-            //表头数据
-            tableTitle,
-            title:tableTitle,
-            itemCount:warningRules.data.data.itemCount,//总数据数
-            data:warningRules.data.data.items,//表格数据源
+            //表头
+            title,
+            itemCount:data.data.itemCount,//总数据数
+            data:data.data.items,//表格数据源
             //表的每一列
             columns: [],
-            //搜索框初始值
-            searchValue: {
-                "pageIndex": 0,
-                "pageSize":10
-            },
         };
     }
     componentDidMount() {
@@ -67,14 +61,14 @@ export default class extends Component{
             render: (record) => {
                 return (
                     <span className={styles.option}>
-                        <Link to={`/warningRules/addWarningRules`}>
+                        
                             <Button
                                 className={styles.edit}
                                 icon='file-text'
                             >
                                 规则详情
                             </Button>
-                        </Link>
+                        
                         <Button
                             className={styles.delete}
                             onClick={()=>this.delete()}
@@ -82,12 +76,12 @@ export default class extends Component{
                         >
                             删除
                         </Button>
-                        <Button
+                        {/* <Button
                             className={styles.editPsw}
                             icon='appstore'
                         >
                             批量应用
-                        </Button>
+                        </Button> */}
                     </span>
                 )
             }
@@ -107,12 +101,16 @@ export default class extends Component{
         });
     }
     _pageChange(page){
-        const { searchValue } = this.state;
-        searchValue.pageIndex = page - 1;
+        // 翻页传递参数
+        let postObject={
+            "pageIndex": 0,
+            "pageSize":10
+            }
+            postObject.pageIndex = page - 1;
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                ...searchValue
+                ...postObject
             })
         }).then((res)=>{
             Promise.resolve(res.json())
@@ -152,13 +150,16 @@ export default class extends Component{
                 </div>
                 <div className={styles.searchForm}>
                     <div className={styles.buttonGroup}>
+                    <Link to={`/warningRules/addWarningRules`}>
                         <Button
                             icon='plus'
                             className={styles.fnButton}
                         >
                             添加
                         </Button>
-                    </div> 
+                    </Link>
+                    </div>
+                    
                 </div>
                 <Table
                     columns={columns}

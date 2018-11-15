@@ -71,7 +71,7 @@ export default class extends Component {
                 className: `${styles.tbw}`
             })
         })
-        columns[columns.length - 1].fixed = columns.length > 10 ? 'right' : null;
+        // columns[columns.length - 1].fixed = columns.length > 10 ? 'right' : null;
         tableData.map((v, i) => {
             v.key = i
         })
@@ -227,9 +227,11 @@ export default class extends Component {
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableData}
-                    rowKey={record => record.updateTime}
+                    // rowKey={record => record.key}
+                    rowKey={()=>Math.random()}
                     scroll={
-                        { x: columns.length > 10 ? 2800 : false }
+                        // { x: columns.length > 10 ? 2800 : false }
+                        { x: columns.length<4 ? false : 2000 }
                     }
                 />
             </div>
