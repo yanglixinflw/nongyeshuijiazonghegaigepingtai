@@ -31,249 +31,413 @@
         }
     }
 }
-.mbody{
-    width: 96%;
+.warningDetail {
+    margin: 0 40px;
     height: 100%;
-    margin: auto;
     background: #1c2241;
     font-size: 18px;
-    .Rules{
-        // height: auto;
+    .title {
+        width: 100%;
         padding: 20px 20px;
         color: #ababb4;
         border-bottom: 1px solid #2a325e;
-            .rulesName{
-                border-bottom: 2px #327df4 solid;
-                padding-bottom: 20px;
-            }
-            input::-webkit-input-placeholder{
-                font-size: 18px;
-                color:#ababb4
-            }
-
+        position: relative;
+        .rulesName {
+            padding-bottom: 20px;
+            border-bottom: 2px #327df4 solid
+        }
     }
-    .form{
-        width: 1010px;
-        height:636px;
-        margin:30px auto;
-        background: #202649;
-        .head{
-            width: 100%;
-            height: 54px;
-            border-bottom:1px solid #2e3768;
-            display: flex;
-            .flag{
-                margin: 17px 17px;
-                width: 2px;
-                height: 21px;
-                background: #337df6;
+    .content {
+        margin: 35px 280px;
+        .labelName {
+            display: inline-block;
+            color: #D1D2D6;
+            margin-right: 20px;
+            font-size: 16px;
+        }
+        :global {
+            .ant-select {
+                width: 300px;
+                color: #BBBBC0;
+                margin-right: 26px;
             }
-            .formRule{
-                width: 170px;
-                height: 25px;
-                margin: 14px 17px;
-                border:none;
-                outline: none;
-                border-bottom: 1px solid #2e3768;
+            .ant-select-selection--single {
+                height: 40px;
+                background: #141831;
+                border: 1px solid #141831;
+            }
+            .ant-select-selection__rendered {
+                line-height: 40px;
+            }
+            .ant-select-selection__placeholder,
+            .ant-select-search__field__placeholder {
+                color: #46556D;
+            }
+            .ant-select-arrow {
+                color: #B9C3D1;
+            }
+            .ant-btn {
+                padding: 0 10px;
+                border: 1px solid #327DF4;
+                height: 40px;
+                width: 124px;
+                color: #2F74E2;
+                background: #1C2241;
+                &:hover {
+                    color: #fff;
+                    background: #337DF6;
+                }
+            }
+            .ant-form {
+                margin-top: 30px;
                 background: #202649;
-                color:#ababb4
-            }
-            input::-webkit-input-placeholder{
-                font-size: 18px;
-                color:#ababb4
             }
         }
-        .type1{
-            margin: 30px 17px;
-            width: auto;
-            height: 44px;
+        .items {
             display: flex;
-            .based{
-                width: 103px;
+            margin: 24px 0px 30px 18px;
+            height: 45px;
+            line-height: 45px;
+            .itemName {
+                width: 104px;
                 height: 44px;
-                font-size: 16px;
                 line-height: 44px;
+                color: #DADBE0;
+                background: #2A325E;
                 text-align: center;
-                background: #2a325e;
-                color: #c0c1ca;
-                margin-right: 73px;
+                font-size: 18px;
+                margin-right: 72px;
             }
-            .type{
-                width: auto;
-                height: 44px;
-                line-height: 44px;
-                font-size: 14px;
-                color: #c0c1ca;
-                display: flex;
-                .typeName{
-                    width: 56px;
-                    margin-right: 18px;
-                    text-align: right;
+            :global {
+                .ant-form-item-label label,
+                .ant-form-item {
+                    color: #DADADF;
                 }
-                .standard1{
-                    margin-top: -2px;
-                    margin-right: 66px;
-                    :global{
-                        .ant-select-selection,.ant-select-selection--single{
-                            background: #141831;
-                            color: #c0c1ca;
-                            border:none;
-                            outline: none;
-                            width: 158px;
-                            height: 38px;
-                        }
-                        .ant-select-selection-selected-value{
-                            line-height: 38px
-                        }
-                        .anticon,.anticon-down,.ant-select-arrow-icon{
-                            color:#46556d;
-                        }
-                    }
+                .ant-select {
+                    width: 160px;
                 }
-                .standard4{
-                    margin-top: -2px;
-                    :global{
-                        .ant-select-selection,.ant-select-selection--single{
-                            background: #141831;
-                            color: #c0c1ca;
-                            border:none;
-                            outline: none;
-                            width: 721px;
-                            height: 38px;
-                        }
-                        .ant-select-selection-selected-value{
-                            line-height: 38px
-                        }
-                        .anticon,.anticon-down,.ant-select-arrow-icon{
-                            color:#46556d;
-                        }
-                    }
-                }
-                .standard5{
-                    margin-top: -2px;
-                    margin-right: 16px;
-                    :global{
-                        .ant-select-selection,.ant-select-selection--single{
-                            background: #141831;
-                            color: #c0c1ca;
-                            border:none;
-                            outline: none;
-                            width: 158px;
-                            height: 38px;
-                        }
-                        .ant-select-selection-selected-value{
-                            line-height: 38px
-                        }
-                        .anticon,.anticon-down,.ant-select-arrow-icon{
-                            color:#46556d;
-                        }
-                    }
-                }
-            }
-            .limited{
-                width: auto;
-                height: 44px;
-                line-height: 44px;
-                font-size: 14px;
-                color: #c0c1ca;
-                display: flex;
-                .limitedName{
-                    width: 56px;
-                    text-align: left;
-                    margin-right: 18px;
-                }
-                .standard1{
-                    margin-right: 11px;
-                    margin-top: -2px;
-                    :global{
-                        .ant-select-selection,.ant-select-selection--single{
-                            background: #141831;
-                            color: #c0c1ca;
-                            border:none;
-                            outline: none;
-                            width: 158px;
-                            height: 38px;
-                        }
-                        .ant-select-selection-selected-value{
-                            line-height: 38px
-                        }
-                        .anticon,.anticon-down,.ant-select-arrow-icon{
-                            color:#46556d;
-                        }
-                    }
-                }
-                .standard2{
-                    margin-right: 11px;
-                    margin-top: -2px;
-                    :global{
-                        .ant-select-selection,.ant-select-selection--single{
-                            background: #141831;
-                            color: #c0c1ca;
-                            border:none;
-                            outline: none;
-                            width: 120px;
-                            height: 38px;
-                        }
-                        .ant-select-selection-selected-value{
-                            line-height: 38px
-                        }
-                        .anticon,.anticon-down,.ant-select-arrow-icon{
-                            color:#46556d;
-                        }
-                        .ant-input{
-                            margin-top: 5px;
-                            background: #141831;
-                            color: #c0c1ca;
-                            border:none;
-                            outline: none;
-                            width: 120px;
-                            height: 38px;
-                        }
-                    }
-                }
-                .standard3{
-                    margin-right: 11px;
-                    margin-top: -2px;
-                    :global{
-                        .ant-input{
-                            margin-top: 5px;
-                            background: #141831;
-                            color: #c0c1ca;
-                            border:none;
-                            outline: none;
-                            width: 251px;
-                            height: 38px;
-                        }
+                .ant-select-selection--single {
+                    &:focus {
+                        border: 1px solid #337DF6;
+                        box-shadow: none;
                     }
                 }
             }
         }
-        .borderBot{
-            width: 100%;
-            height:1px;
-            margin-top:52px;
-            background: #2e3768;
-        }
-        .fn{
-            width: 100%;
-            height:76px;
-            .save,.delete{
-                float: right;
-                width: 88px;
-                height:36px;
-                margin-top:20px;
-                margin-right: 24px;
-                border:1px solid #327df4;
-                color:#327df4;
+    }
+}
+
+.formTitle {
+    border-bottom: 1px solid #2E3768;
+    height: 58px;
+    padding: 18px;
+    .formName {
+        height: 23px;
+        line-height: 23px;
+        border-left: 2px solid #337DF6;
+        color: #BFC0C7;
+        padding-left: 10px;
+        font-size: 16px;
+        position: relative;
+        :global {
+            .ant-form-item {
+                height: 25px;
+                position: absolute;
+                top: -6px;
+            }
+            .ant-input {
+                color: #BFC0C7;
+                height: 25px;
+                border: 0;
+                border-radius: 0%;
+                border-bottom: 1px solid #2E3768;
                 background: #202649;
-                :hover{
-                    background: #327df4;
-                    color:#ffffff;
+                font-size: 16px;
+                padding-left: 0;
+                margin-left: 8px;
+            }
+        }
+    }
+}
+
+.judgmentRule {
+    margin-left: 107px;
+    .judge {
+        width: 118px !important;
+    }
+}
+
+.informer {
+    margin-left: 94px;
+}
+
+.formFooter {
+    margin-top: 50px;
+    border-top: 1px solid #2E3768;
+    height: 75px;
+    line-height: 75px;
+    position: relative;
+    :global {
+        .ant-btn {
+            width: 90px !important;
+            height: 40px !important;
+            position: absolute;
+            top: 20px;
+        }
+    }
+    .btnmodify {
+        right: 155px;
+    }
+    .btndelete {
+        right: 41px;
+    }
+}
+
+//添加表单
+.addForm {
+    .itemName1 {
+        width: 104px;
+        height: 45px;
+        line-height: 45px;
+        color: #DADBE0;
+        background: #2A325E;
+        text-align: center;
+        font-size:16px;
+        margin-right: 75px;
+    }
+    .itemName2 {
+        width: 104px;
+        height: 45px;
+        line-height: 45px;
+        color: #DADBE0;
+        background: #2A325E;
+        text-align: center;
+        font-size: 16px;
+        margin-right: 49px;
+    }
+    .informContent {
+        background: #141831;
+        height: 42px;
+        width: 708px;
+        border: 1px solid #141831;
+        color: #BBBBC0;
+        &::-webkit-input-placeholder {
+            color: #46556D;
+        }
+        &:focus {
+            border: 1px solid #337DF6 !important;
+            box-shadow: none;
+        }
+    }
+    :global {
+        .ant-form-item {
+            margin-right: 0px;
+        }
+        .ant-form-item-label label:after {
+            content: ''
+        }
+        .ant-select-selection--multiple {
+            min-height: 42px;
+            background: #141831;
+            border: 1px solid #141831;
+            line-height: 42px;
+            &:active {
+                border: 1px solid #337DF6 !important;
+                box-shadow: none;
+            }
+            &:focus {
+                border: 1px solid #337DF6 !important;
+                box-shadow: none;
+            }
+        }
+        .ant-select-open .ant-select-selection {
+            border: 1px solid #337DF6 !important;
+            box-shadow: none;
+        }
+    }
+    .judgmentRule {
+        margin-left: 40px;
+        :global {
+            .ant-input {
+                width: 120px;
+                height: 40px;
+                background: #141831;
+                border: 1px solid #141831;
+                color: #46556D;
+                &:focus {
+                    border: 1px solid #337DF6 !important;
+                    box-shadow: none;
+                }
+                &::-webkit-input-placeholder {
+                    color: #46556D;
                 }
             }
-            .delete{
-                margin-right: 40px;
+            .ant-select {
+                margin-right: 10px !important;
             }
+        }
+    }
+    .informer {
+        margin-left: 54px;
+        :global {
+            .ant-input {
+                width: 250px;
+                height: 40px;
+                background: #141831;
+                border: 1px solid #141831;
+                color: #46556D;
+                &::-webkit-input-placeholder {
+                    color: #46556D;
+                }
+                &:focus {
+                    border: 1px solid #337DF6 !important;
+                    box-shadow: none;
+                }
+            }
+            .ant-select {
+                margin-right: 10px !important;
+            }
+        }
+    }
+    .formFooter {
+        margin-top: 50px;
+        border-top: 1px solid #2E3768;
+        height: 75px;
+        line-height: 75px;
+        position: relative;
+        :global {
+            .ant-btn {
+                width: 90px !important;
+                height: 40px !important;
+                position: absolute;
+                top: 20px;
+            }
+        }
+        .btnsave {
+            right: 155px;
+        }
+        .btndelete {
+            right: 41px;
+        }
+    }
+}
+
+//媒体查询
+@media(max-width:1699px) {
+    .judgmentRule {
+        margin-left: 77px;
+    }
+    .informer {
+        margin-left: 64px;
+    }
+    .content {
+        margin: 35px 100px !important;
+        .items {
+            .itemName {
+                margin-right: 42px !important;
+            }
+        }
+    }
+}
+
+@media(max-width:1499px) {
+    .content {
+        margin: 35px 50px !important;
+    }
+    .judgmentRule {
+        margin-left: 47px;
+    }
+    .informer {
+        margin-left: 34px;
+    }
+}
+
+@media(max-width:1399px) {
+    .content {
+        margin: 35px 10px !important;
+    }
+    .judgmentRule {
+        margin-left: 47px;
+    }
+    .informer {
+        margin-left: 34px;
+    }
+}
+
+@media(max-width:1299px) {
+    .content {
+        margin: 35px 10px !important;
+    }
+    .judgmentRule {
+        margin-left: 47px;
+    }
+    .informer {
+        margin-left: 34px;
+    }
+    .addForm {
+        .itemName1 {
+            margin-right: 55px;
+        }
+        .judgmentRule {
+            margin-left: 20px;
+            :global {
+                .ant-input {
+                    width: 80px;
+                }
+            }
+        }
+        .informer {
+            margin-left: 34px;
+            :global {
+                .ant-input {
+                    width: 210px;
+                }
+            }
+        }
+        .informContent {
+            width: 650px;
+        }
+        .itemName2 {
+            margin-right: 29px;
+        }
+    }
+}
+
+@media(max-width:1199px) {
+    .addForm {
+        .items {
+            :global {
+                .ant-select {
+                    margin-right: 10px;
+                }
+            }
+        }
+        .judgmentRule {
+            margin-left: 20px;
+            .params{
+                width:100px !important;
+            }
+            .judge{
+                width:80px !important;
+            }
+            :global {
+                .ant-input {
+                    width: 80px;
+                }
+            }
+        }
+        .informer{
+            :global{
+                .ant-select{
+                    width:100px !important;
+                }
+                .ant-input{
+                    width:170px;
+                }
+            }
+        }
+        .informContent {
+            width: 532px;
         }
     }
 }
