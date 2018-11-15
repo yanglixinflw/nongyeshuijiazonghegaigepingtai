@@ -56,7 +56,7 @@ export default class extends Component{
             switchvisible:false,
             //默认搜索框
             searchValue:{
-                
+
             }
         }
     }
@@ -151,13 +151,14 @@ export default class extends Component{
             render: (record) => {
                 return (
                     <span className={styles.option}>
-                        <Button
-                            className={styles.set}
-                            // onClick={() => this._set()}
-                            icon='file-text'
-                        >
-                            操作记录
-                        </Button>
+                        <Link to={`/valveControl/operatingRecord:${record.deviceId}`}>
+                            <Button
+                                className={styles.set}
+                                icon='file-text'
+                            >
+                                操作记录
+                            </Button>
+                        </Link>
                     </span>
                 )
             }

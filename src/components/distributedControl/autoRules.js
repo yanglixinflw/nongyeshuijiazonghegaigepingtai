@@ -165,7 +165,7 @@ const RuleForm = Form.create()(
                                 </Select>)
                             }
                         </Form.Item>
-                        {key.length > 1 ? (
+                        {key.length > 0 ? (
                             <Icon 
                                 type="minus" 
                                 disabled={keys.length === 1}
@@ -255,12 +255,88 @@ const RuleForm = Form.create()(
                         {/* 条件的添加 */}
                         {formItems}
                         <div className={styles.line}>
+                            <Form.Item className={styles.search}>
+                                {getFieldDecorator('deviceId1', {initialValue:''})
+                                    (
+                                    <Select
+                                        showSearch
+                                        // style={{ width: 200 }}
+                                        optionFilterProp="children"
+                                        onChange={handleChange}
+                                        onFocus={handleFocus}
+                                        onBlur={handleBlur}
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        <Option value='' disabled selected style={{display:'none'}}>设备名称/ID</Option>  
+                                        <Option value="1">1</Option>
+                                        <Option value="2">2</Option>
+                                        <Option value="3">3</Option>
+                                    </Select>
+                                    )
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.search}>
+                                {getFieldDecorator('variate1', {initialValue:''})
+                                    (<Select>
+                                        <Option value='' disabled selected style={{display:'none'}}>状态</Option>  
+                                        <Option value="power">电量</Option>
+                                        <Option value="water">水量</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.end}>
+                                {getFieldDecorator('judge1', {initialValue:''})
+                                    (<Select>
+                                        <Option value='' disabled selected style={{display:'none'}}>判断</Option>  
+                                        <Option value="high">&gt;</Option>
+                                        <Option value="low">&lt;</Option>
+                                        <Option value="equal">=</Option>
+                                        <Option value="highEq">&gt;=</Option>
+                                        <Option value="lowEq">&lt;=</Option>
+                                        <Option value="notEq">≠</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.end}>
+                                {getFieldDecorator('value1', {initialValue:''})
+                                    (<Input placeholder="值" type='number'/>)
+                                }
+                            </Form.Item>
                             <Icon type="plus" onClick={this.add}/>
                         </div>
                         <div className={styles.do}>执行</div>
                         {/* 执行的添加 */}
                         {formItem}
                         <div className={styles.line}>
+                            <Form.Item className={styles.search}>
+                                {getFieldDecorator('deviceId2', {initialValue:''})
+                                    (
+                                    <Select
+                                        showSearch
+                                        // style={{ width: 200 }}
+                                        optionFilterProp="children"
+                                        onChange={handleChange}
+                                        onFocus={handleFocus}
+                                        onBlur={handleBlur}
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        <Option value='' disabled selected style={{display:'none'}}>设备名称/ID</Option>  
+                                        <Option value="1">1</Option>
+                                        <Option value="2">2</Option>
+                                        <Option value="3">3</Option>
+                                    </Select>
+                                    )
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.search}>
+                                {getFieldDecorator('switch1', {initialValue:''})
+                                    (<Select>
+                                        <Option value='' disabled selected style={{display:'none'}}>开关阀</Option>  
+                                        <Option value="open">开阀</Option>
+                                        <Option value="close">关阀</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
                             <Icon 
                                 type="plus" 
                                 onClick={this.adds}
