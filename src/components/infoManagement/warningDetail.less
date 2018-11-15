@@ -71,7 +71,9 @@
         }
         .items {
             display: flex;
-            margin: 24px 18px 30px;
+            margin: 24px 0px 30px 18px;
+            height: 45px;
+            line-height: 45px;
             .itemName {
                 width: 104px;
                 height: 44px;
@@ -171,8 +173,8 @@
 .addForm {
     .itemName1 {
         width: 104px;
-        height: 44px;
-        line-height: 44px;
+        height: 45px;
+        line-height: 45px;
         color: #DADBE0;
         background: #2A325E;
         text-align: center;
@@ -181,8 +183,8 @@
     }
     .itemName2 {
         width: 104px;
-        height: 44px;
-        line-height: 44px;
+        height: 45px;
+        line-height: 45px;
         color: #DADBE0;
         background: #2A325E;
         text-align: center;
@@ -192,7 +194,7 @@
     .informContent {
         background: #141831;
         height: 42px;
-        width: 722px;
+        width: 708px;
         border: 1px solid #141831;
         color: #BBBBC0;
         &::-webkit-input-placeholder {
@@ -215,7 +217,6 @@
             background: #141831;
             border: 1px solid #141831;
             line-height: 42px;
-            // padding-top:5px;
             &:active {
                 border: 1px solid #337DF6 !important;
                 box-shadow: none;
@@ -225,9 +226,6 @@
                 box-shadow: none;
             }
         }
-        // .ant-select-selection--multiple .ant-select-selection__placeholder{
-        //     top:44%;
-        // }
         .ant-select-open .ant-select-selection {
             border: 1px solid #337DF6 !important;
             box-shadow: none;
@@ -301,7 +299,7 @@
 }
 
 //媒体查询
-@media(max-width:1599px) {
+@media(max-width:1699px) {
     .judgmentRule {
         margin-left: 77px;
     }
@@ -309,7 +307,7 @@
         margin-left: 64px;
     }
     .content {
-        margin: 35px 200px !important;
+        margin: 35px 100px !important;
         .items {
             .itemName {
                 margin-right: 42px !important;
@@ -320,7 +318,7 @@
 
 @media(max-width:1499px) {
     .content {
-        margin: 35px 100px !important;
+        margin: 35px 50px !important;
     }
     .judgmentRule {
         margin-left: 47px;
@@ -330,14 +328,92 @@
     }
 }
 
-@media(max-width:1099px) {
+@media(max-width:1399px) {
     .content {
-        margin: 35px 50px !important;
+        margin: 35px 10px !important;
     }
     .judgmentRule {
         margin-left: 47px;
     }
     .informer {
         margin-left: 34px;
+    }
+}
+
+@media(max-width:1299px) {
+    .content {
+        margin: 35px 10px !important;
+    }
+    .judgmentRule {
+        margin-left: 47px;
+    }
+    .informer {
+        margin-left: 34px;
+    }
+    .addForm {
+        .itemName1 {
+            margin-right: 55px;
+        }
+        .judgmentRule {
+            margin-left: 20px;
+            :global {
+                .ant-input {
+                    width: 80px;
+                }
+            }
+        }
+        .informer {
+            margin-left: 34px;
+            :global {
+                .ant-input {
+                    width: 210px;
+                }
+            }
+        }
+        .informContent {
+            width: 650px;
+        }
+        .itemName2 {
+            margin-right: 29px;
+        }
+    }
+}
+
+@media(max-width:1199px) {
+    .addForm {
+        .items {
+            :global {
+                .ant-select {
+                    margin-right: 10px;
+                }
+            }
+        }
+        .judgmentRule {
+            margin-left: 20px;
+            .params{
+                width:100px !important;
+            }
+            .judge{
+                width:80px !important;
+            }
+            :global {
+                .ant-input {
+                    width: 80px;
+                }
+            }
+        }
+        .informer{
+            :global{
+                .ant-select{
+                    width:100px !important;
+                }
+                .ant-input{
+                    width:170px;
+                }
+            }
+        }
+        .informContent {
+            width: 532px;
+        }
     }
 }

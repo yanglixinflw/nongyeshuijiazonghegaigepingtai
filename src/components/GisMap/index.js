@@ -8,7 +8,12 @@ import IwContentWaterV from './infoWindowWaterV';
 import Camera from './markerCamera';
 import WaterValve from './markerWaterV';
 import MyCustomize from './myCustomize';
+import { timeOut } from '../../utils/timeOut';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
+// 开发环境
+const envNet = 'http://192.168.30.127:88';
+//搜索
+const searchUrl = `${envNet}/api/device/gisDeviceList`;
 const cameraPosition = [
     { position: { longitude: 120.27, latitude: 30.27 }, isWarning: true },
     { position: { longitude: 130.26, latitude: 35.27 } },
@@ -315,8 +320,12 @@ export default class extends Component {
     //搜索
     _searchHandler(e) {
         // console.log(e.target.value)
+        let keyword = e.target.value;
+        return fetch(searchUrl,{
+
+        })
         this.setState({
-            keyWord: e.target.value
+            keyWord: keyword
         })
         //请求接口从后台拿到数据（dataList）后，_getDataList()
         //选择marker后设置map的center为该marker的position

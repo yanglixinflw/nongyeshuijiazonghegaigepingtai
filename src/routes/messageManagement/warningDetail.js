@@ -12,6 +12,9 @@ export default class extends Component {
     constructor(props){
         super(props)
         // console.log(props)
+        this.state = {
+            deviceId:''
+        }
     }
     componentDidMount() {
         let deviceId = parse(window.location.href.split(':'))[3];
@@ -23,19 +26,23 @@ export default class extends Component {
                 deviceId,
             }
         });
+        this.setState({
+            deviceId
+        })
     }
     render() {
         let { warningDetail, loading } = this.props;
+        let {deviceId} = this.state;
         let arr = Object.keys(warningDetail);
         if (arr.length == 0) return warningDetail = null;
-        // console.log(warningDetail)
+        // console.log(deviceId)
         return (
             <Fragment>
                 <Spin size='large' spinning={loading}>
                     <BreadcrumbView
                         {...this.props}
                     />
-                    <WarningDetail {...this.props}/>
+                    <WarningDetail {...{warningDetail,deviceId}}/>
                 </Spin>
             </Fragment>
         )
