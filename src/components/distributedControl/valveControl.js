@@ -2,57 +2,66 @@ import React,{Component} from 'react';
 import styles from "./valveControl.less"
 import { Input, Button, Form, Cascader, Table, Divider,Select} from 'antd';
 import { Link } from 'dva/router';
+
 //开发地址
 const envNet='http://192.168.30.127:88';
 //生产环境
 // const envNet='';
 //设备安装地列表
 const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`
+//翻页调用
+const dataUrl=`${envNet}/api/device/control/list`;
+//设备类型列表
+const deviceTypeUrl=`${envNet}/api/device/control/deviceTypeList`
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+}
 //表头
 const tableTitle=[
-    {index:"valveType",item:"设备型号"},
-    {index:"id",item:"设备ID"},
+    {index:"deviceTypeName",item:"设备型号"},
+    {index:"deviceId",item:"设备ID"},
     {index:"name",item:"设备名称"},
-    {index:"area",item:"设备安装地"},
-    {index:"build",item:"关联建筑物"},
-    {index:"inter",item:"网络"},
-    {index:"electric",item:"电量"},
-    {index:"state",item:"状态"},
+    {index:"installAddr",item:"设备安装地"},
+    {index:"ownerBuilding",item:"关联建筑物"},
+    {index:"networkStatusText",item:"网络"},
+    {index:"electricQuantity",item:"电量"},
+    {index:"statusDisplay",item:"状态"},
+    {index:"operateStatusText" ,item:"操作状态"},
     {index:"updateTime",item:"更新时间"},
-]
-//假数据
-const data=[
-    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"A开",updateTime:"2018-07-02 08:09:21"},
-    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"B开",updateTime:"2018-07-02 08:09:21"},
-    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"B开",updateTime:"2018-07-02 08:09:21"},
-    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"全关",updateTime:"2018-07-02 08:09:21"},
-    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"A开",updateTime:"2018-07-02 08:09:21"},
-    {valveType:"大禹水阀",id:"123456789",name:"宁圩村水阀",area:"杭州市-萧山区-宁围街道",build:"一号闸阀井",inter:"正常",electric:"90%",state:"A开",updateTime:"2018-07-02 08:09:21"},
 ]
 const { Option } = Select;
 export default class extends Component{
     constructor(props) {
         super(props)
-        const valveControl=data;
-        var tableData=[],tableIndex=[];//数据表的item 和 index
-        tableTitle.map(v=>{
-            tableData.push(v.item);
-            tableIndex.push(v.index)
-        })
+        const {valveControl}=props;
         this.state={
-            valveControl,
-            items:valveControl,
-            tableTitle,
-            tableDatas:[],
+            title:tableTitle,
+            itemCount:valveControl.data.data.itemCount,//总数据数
+            data:valveControl.data.data.items,//表格数据源
             columns: [],
             rowSelection:{},
-            title:tableTitle,
             //设备安装地列表
             installAddrList:[],
+            //设备类型列表
+            deviceTypeList:[],
+            //开关阀携带信息
+            deviceIdList:[],
+            //开关阀显示
+            switchvisible:false,
+            //默认搜索框
+            searchValue:{
+                
+            }
         }
     }
     componentDidMount() {
-        this._getTableDatas(this.state.title, this.state.items);
+        this._getTableDatas(this.state.title, this.state.data);
         fetch(installAddrUrl, {
             method:'GET',
             mode:'cors',
@@ -70,8 +79,24 @@ export default class extends Component{
         }).catch((err) => {
             console.log(err)
         })
+        fetch(deviceTypeUrl,{
+            ...postOption,
+            body: JSON.stringify({
+                "countDevice":false
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+                .then(v=>{
+                    if(v.ret==1){
+                        let deviceTypeList=v.data
+                        this.setState({
+                            deviceTypeList
+                        })
+                    }
+                })
+        })
     }
-    _getTableDatas(title, items) {
+    _getTableDatas(title, data) {
         let columns = [];
         title.map(v => {//把title里面的数据push到column里面
             columns.push({
@@ -84,16 +109,17 @@ export default class extends Component{
         })
         //把数据都push到tableDatas里
         let tableDatas = [];
-        items.map((v, i) => {
+        data.map((v, i) => {
             tableDatas.push({
-                valveType:v.valveType,
-                id:v.id,
+                deviceTypeName:v.deviceTypeName,
+                deviceId:v.deviceId,
                 name:v.name,
-                area:v.area,
-                build:v.build,
-                inter:v.inter,
-                electric:v.electric,
-                state:v.state,
+                installAddr:v.installAddr,
+                ownerBuilding:v.ownerBuilding,
+                networkStatusText:v.networkStatusText,
+                electricQuantity:v.electricQuantity,
+                statusDisplay:v.statusDisplay,
+                operateStatusText:v.operateStatusText,
                 updateTime:v.updateTime,
                 key: i,
             });
@@ -128,9 +154,9 @@ export default class extends Component{
                         <Button
                             className={styles.set}
                             // onClick={() => this._set()}
-                            icon='tool'
+                            icon='file-text'
                         >
-                            操作
+                            操作记录
                         </Button>
                     </span>
                 )
@@ -147,31 +173,25 @@ export default class extends Component{
                 return
             }
             //搜索字段
-            // if(values.waringType=="waringType"){
-            //     values.waringType=''
-            // }
-            // if(values.warningStatus=="state"){
-            //     values.warningStatus=''
-            // }
-            // if(values.deviceId==undefined){
-            //     values.deviceId=''
-            // }
-            // if(values.installAddr=='installAddress'){
-            //     values.installAddr=''
-            // }
-            // if(values.building==undefined){
-            //     values.building=''
-            // }
+            if(values.deviceId==undefined){
+                values.deviceId=''
+            }
+            if(values.name==undefined){
+                values.name=''
+            }
+            if(values.relatedBuilding==undefined){
+                values.relatedBuilding=''
+            }
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    // "waringType": values.waringType,
-                    // "warningStatus": values.warningStatus,
-                    // "deviceId": values.deviceId,
-                    // "installAddr": values.installAddr,
-                    // "building": values.building,
-                    // "pageIndex": 0,
-                    // "pageSize": 10
+                    "deviceTypeId": values.deviceTypeId,
+                    "name": values.name,
+                    "deviceId": values.deviceId,
+                    "installAddrId": values.installAddrId,
+                    "relatedBuilding": values.relatedBuilding,
+                    "pageIndex": 0,
+                    "pageSize": 10
                 })
             }).then(res => {
                 Promise.resolve(res.json())
@@ -200,6 +220,7 @@ export default class extends Component{
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
+                "deviceTypeId": 1,
                 "pageIndex": 0,
                 "pageSize": 10
             })
@@ -224,8 +245,46 @@ export default class extends Component{
                 })
         })
     }
+    //换页
+    _pageChange(page){
+        const { searchValue } = this.state;
+        searchValue.pageIndex = page - 1;
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                ...searchValue
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                if(v.ret==1){
+                    // console.log(v);
+                    // 设置页面显示的元素
+                    let data = v.data.items;
+                    //添加key
+                    data.map((v, i) => {
+                        v.key = i
+                    })
+                    this.setState({
+                        itemCount:v.data.itemCount,
+                        data
+                    })
+                    this._getTableDatas(this.state.title, this.state.data);
+                }
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+        })
+    }
+    //开关阀按钮点击
+    valveSwitch(){ 
+        this.setState({
+          switchvisible: true,
+        });
+    }
     render(){
-        const { columns, tableDatas, installAddrList,rowSelection} = this.state;
+        const { columns, tableDatas, installAddrList,rowSelection,deviceTypeList} = this.state;
         const paginationProps = {
             showQuickJumper: true,
         };
@@ -239,7 +298,7 @@ export default class extends Component{
                         {/* 表单信息 */}
                         <SearchForm
                             wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                            {...{installAddrList}}
+                            {...{installAddrList,deviceTypeList}}
                         />
                         <div className={styles.buttonGroup}>
                             <Button
@@ -259,6 +318,7 @@ export default class extends Component{
                             <Button
                                 icon='poweroff'
                                 className={styles.fnButton}
+                                onClick={()=>this.valveSwitch()}
                             >
                                 阀门开关
                             </Button>
@@ -270,7 +330,6 @@ export default class extends Component{
                                     在地图操作
                                 </Button>
                             </Link>
-                            
                         </div> 
                     </div>
                     <Table
@@ -290,7 +349,7 @@ export default class extends Component{
 const SearchForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, searchHandler, resetHandler, installAddrList} = this.props;
+            const { form,installAddrList,deviceTypeList} = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Form 
@@ -302,10 +361,15 @@ const SearchForm = Form.create()(
                         marginRight:"10px"
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('installAddr', {initialValue:'installAddress'})
+                        {getFieldDecorator('deviceTypeId', {initialValue:''})
                             (
                             <Select>
-                                <Option value='installAddress'>大禹阀门</Option>
+                                <Option value='' disabled selected style={{display:'none'}}>设备类型</Option>
+                                {
+                                    deviceTypeList.map((v,i)=>{
+                                        return(<Option key={i} value={v.deviceTypeId}>{v.name}</Option>)
+                                    })
+                                }  
                             </Select>
                             )
                         }
@@ -331,10 +395,10 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('installAddr', {initialValue:'installAddress'})
+                        {getFieldDecorator('installAddrId', {initialValue:''})
                             (
                             <Select>
-                                <Option value='installAddress'>设备安装地</Option>
+                                <Option value='' disabled selected style={{display:'none'}}>设备安装地</Option>
                                 {
                                     installAddrList.map((v,i)=>{
                                         return(<Option key={i} value={v.id}>{v.addr}</Option>)
@@ -345,7 +409,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('build', {})
+                        {getFieldDecorator('relatedBuildingId', {})
                             (
                             <Input
                                 placeholder='关联建筑物'

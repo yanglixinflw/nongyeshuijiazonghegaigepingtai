@@ -127,6 +127,24 @@ export function getCompanyList(){
     credentials: "include",
   })
 }
+//获取设备列表（阀门控制页面）
+export function getValveList(params){
+  return request(`${envNet}/api/device/control/list`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
+//获取操作记录
+export function getOperatingRecord(params){
+  return request(`${envNet}/api/device/control/operateLogs`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
 // 获取视频监控下拉列表
 export function getMonitorSelectList(){
   return request(`${envNet}/api/CamerasMonitor/buildings`,{

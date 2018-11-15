@@ -166,7 +166,7 @@ export default class extends Component{
             tableDatas,
         });
     }
-    //删除功能
+    //删除按钮点击
     _deleteInfo(userId){ 
       this.setState({
         delVisible: true,
