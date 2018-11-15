@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './warningDetail.less';
-import { Select, Button, Form, Modal,Input } from 'antd';
+import { Select, Button, Form, Modal, Input } from 'antd';
 export default class extends Component {
     constructor(props) {
         super(props)
@@ -10,7 +10,9 @@ export default class extends Component {
             //数据源
             data: warningDetail.data.data,
             //添加自定义规则弹窗可见性
-            addVisible:false,
+            addVisible: false,
+            //修改规则弹窗可见性
+            modifyVisible: false,
             // 修改对应ruleId的预警规则
             modifyData: [],
         }
@@ -19,36 +21,76 @@ export default class extends Component {
     //添加自定义规则
     _addRules() {
         this.setState({
-            addVisible:true
+            addVisible: true
         })
     }
-    // 添加取消
-    _addCancelHandler() {
-        // console.log('点击取消按钮');
-        const form = this.addForm.props.form;
+    // 添加删除
+    _addDeleteHandler() {
+        // console.log('点击删除按钮');
+        const form = this.addRulesForm.props.form;
         // 重置表单
         form.resetFields();
         this.setState({
             addVisible: false
         })
     }
-    //修改
-    _modifyHandler(ruleId){
+    //添加保存
+    _addSaveHandler() {
+        const form = this.addRulesForm.props.form;
+        form.validateFields((err, values) => {
+            if (err) {
+                return;
+            }
+            console.log(values)
+        })
+        // 重置表单
+        form.resetFields();
+        this.setState({
+            addVisible: false
+        })
+    }
+    //修改表单删除
+    _modifyDeleteHandler(){
+        const form = this.modifyRulesForm.props.form;
+        // 重置表单
+        form.resetFields();
+        this.setState({
+            modifyVisible: false
+        })
+    }
+    //修改表单保存
+    _modifySaveHandler(){
+        const form = this.modifyRulesForm.props.form;
+        form.validateFields((err, values) => {
+            if (err) {
+                return;
+            }
+            console.log(values)
+        })
+        // 重置表单
+        form.resetFields();
+        this.setState({
+            addVisible: false
+        })
+    }
+    //自定义规则表单修改
+    _modifyHandler(ruleId) {
         const { data } = this.state;
-        let modifyData= [];
+        let modifyData = [];
         modifyData = data.filter(item => item.ruleId === ruleId);
         // console.log(modifyData)
         this.setState({
             modifyData,
+            modifyVisible: true
         })
-       
+
     }
     //删除
-    _deleteHandler(ruleId){
+    _deleteHandler(ruleId) {
         console.log(ruleId)
     }
     render() {
-        const { data,addVisible } = this.state;
+        const { data, addVisible,modifyVisible,modifyData } = this.state;
         const Option = Select.Option;
         return (
             <div className={styles.warningDetail}>
@@ -66,20 +108,32 @@ export default class extends Component {
                     <Button
                         onClick={() => this._addRules()}
                     >添加自定义规则</Button>
-                    {/* 添加弹窗 */}
-                    <AddRulesForm
-                        wrappedComponentRef={(addRulesForm) => this.addRulesForm = addRulesForm}
-                        visible={addVisible}
-                        onCancel={() => this._addCancelHandler()}
-                        onSave = {()=>this._addSaveHandler()}
-                    />
+                    {/* 添加表单 */}
+                    {addVisible ?
+                        <AddRulesForm
+                            wrappedComponentRef={(addRulesForm) => this.addRulesForm = addRulesForm}
+                            onDelete={() => this._addDeleteHandler()}
+                            onSave={() => this._addSaveHandler()}
+                        />
+                        : null
+                    }
+                    {/* 修改表单 */}
+                    {modifyVisible ?
+                        <ModifyRulesForm
+                            wrappedComponentRef={(modifyRulesForm) => this.modifyRulesForm = modifyRulesForm}
+                            onDelete={() => this._modifyDeleteHandler()}
+                            onSave={() => this._modifySaveHandler()}
+                            {...{modifyData}}
+                        />
+                        : null
+                    }
                     {data.map((v, i) => {
                         return (
                             <RulesForm
                                 key={i}
                                 wrappedComponentRef={(rulesForm) => this.rulesForm = rulesForm}
-                                onModify={(ruleId)=>this._modifyHandler(ruleId)}
-                                onDelete={(ruleId)=>this._deleteHandler(ruleId)}
+                                onModify={(ruleId) => this._modifyHandler(ruleId)}
+                                onDelete={(ruleId) => this._deleteHandler(ruleId)}
                                 {...{ v, i }}
                             />
                         )
@@ -94,8 +148,7 @@ export default class extends Component {
 const RulesForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, v, i,onDelete, onModify } = this.props;
-            
+            const { v, i, onDelete, onModify } = this.props;
             // console.log(v)
             return (
                 <Form layout='inline'>
@@ -132,15 +185,14 @@ const RulesForm = Form.create()(
                         <Button
                             icon='edit'
                             className={styles.btnmodify}
-                            onClick={() =>onModify(v.ruleId)}
+                            onClick={() => onModify(v.ruleId)}
                         >修改</Button>
                         <Button
                             icon='delete'
                             className={styles.btndelete}
-                            onClick={() =>onDelete(v.ruleId) }
+                            onClick={() => onDelete(v.ruleId)}
                         >删除</Button>
                     </div>
-
                 </Form>
             )
         }
@@ -148,120 +200,461 @@ const RulesForm = Form.create()(
 )
 //添加自定义规则表单
 const AddRulesForm = Form.create()(
-    class extends React.Component{
-        render(){
-            const { visible, form, onSave, onCancel } = this.props;
+    class extends React.Component {
+        render() {
+            const { form, onSave, onDelete } = this.props;
             const { getFieldDecorator } = form;
-            return(
-                <Form className={styles.form}>
-                    <div className={styles.head}>
-                        <div className={styles.flag}></div>
-                        <input className={styles.formRule} placeholder='预警规则'/>
-                    </div>
-                    <div className={styles.type1}>
-                        <div className={styles.based}>条件</div>
-                        <div className={styles.type}>
-                            <div className={styles.typeName}>类型</div>
-                            <Form.Item className={styles.standard1}>
-                                {getFieldDecorator('type', {initialValue:'fn'})
-                                    (<Select>
-                                        <Option value="fn">功能预警</Option>
-                                        <Option value="run">运营预警</Option>
-                                    </Select>)
-                                }
-                            </Form.Item>
-                        </div>
-                        <div className={styles.limited}>
-                            <div className={styles.limitedName}>判断规则</div>
-                            <Form.Item className={styles.standard1}>
-                                {getFieldDecorator('param', {initialValue:'param1'})
-                                    (<Select>
-                                        <Option value="param1">参数1</Option>
-                                        <Option value="param2">参数2</Option>
-                                    </Select>)
-                                }
-                            </Form.Item>
-                            <Form.Item className={styles.standard2}>
-                                {getFieldDecorator('condition', {initialValue:'judge'})
-                                    (<Select>
-                                        <Option value="judge">判断</Option>
-                                        <Option value="high">&gt;</Option>
-                                        <Option value="low">&lt;</Option>
-                                        <Option value="equal">=</Option>
-                                        <Option value="heq">&gt;=</Option>
-                                        <Option value="leq">&lt;=</Option>
-                                        <Option value="neq">≠</Option>
-                                    </Select>)
-                                }
-                            </Form.Item>
-                            <Form.Item className={styles.standard2}>
-                                {getFieldDecorator('value', {initialValue:''})
-                                    (<Input placeholder="值" type='number'/>)
-                                }
+            const Option = Select.Option;
+            return (
+                <Form layout='inline' className={styles.addForm}>
+                    <div className={styles.formTitle}>
+                        <div className={styles.formName}>
+                            <Form.Item>
+                                {getFieldDecorator('warningTitle', {
+                                    initialValue: '',
+                                })(
+                                    <Input
+                                        placeholder="预警规则"
+                                    />
+                                )}
                             </Form.Item>
                         </div>
                     </div>
-                    <div className={styles.type1}>
-                        <div className={styles.based}>短信</div>
-                        <div className={styles.type}>
-                            <div className={styles.typeName}>频率</div>
-                            <Form.Item className={styles.standard1}>
-                                {getFieldDecorator('frequency', {initialValue:'no'})
-                                    (<Select>
-                                        <Option value="no">不通知</Option>
-                                        <Option value="one">仅通知一次</Option>
-                                        <Option value="five">五分钟通知一次</Option>
-                                    </Select>)
-                                }
+                    <div className={styles.formContent}>
+                        <div className={styles.items}>
+                            <div className={styles.itemName1}>条件</div>
+                            <Form.Item label='类型'>
+                                {getFieldDecorator('warningType', {
+                                    initialValue: '0',
+                                })(
+                                    <Select>
+                                        <Option key='0'>功能预警</Option>
+                                        <Option key='1'>运营预警</Option>
+                                    </Select>
+                                )}
+                            </Form.Item>
+                            <Form.Item label='判断规则' className={styles.judgmentRule}>
+                                <Form.Item>
+                                    {getFieldDecorator('params', {
+                                        initialValue: '',
+                                    })(
+                                        <Select
+                                            className={styles.params}
+                                        >
+                                            <Option value=''>参数1</Option>
+                                        </Select>
+                                    )}
+
+                                </Form.Item>
+                                <Form.Item>
+                                    {getFieldDecorator('judge', {
+                                        initialValue: ''
+                                    })(
+                                        <Select
+                                            className={styles.judge}
+                                        >
+                                            <Option value=''>判断</Option>
+                                            <Option key='='>=</Option>
+                                            <Option key='>'>></Option>
+                                            <Option key='<'>{'<'}</Option>
+                                            <Option key='<='>{'<='}</Option>
+                                            <Option key='>='>{'>='}</Option>
+                                            <Option key='≠'>{'≠'}</Option>
+                                        </Select>
+                                    )}
+
+                                </Form.Item>
+                                <Form.Item>
+                                    {getFieldDecorator('judgeValue', {
+                                        initialValue: ''
+                                    })(
+                                        <Input
+                                            placeholder='值'
+                                        />
+                                    )}
+                                </Form.Item>
                             </Form.Item>
                         </div>
-                        <div className={styles.limited}>
-                            <div className={styles.limitedName}>通知人</div>
-                            <Form.Item className={styles.standard1}>
-                                {getFieldDecorator('people', {initialValue:'people1'})
-                                    (<Select>
-                                        <Option value="people1">慧水老李</Option>
-                                        <Option value="people2">慧水老王</Option>
-                                    </Select>)
-                                }
+                        <div className={styles.items}>
+                            <div className={styles.itemName1}>短信</div>
+                            <Form.Item label='频率'>
+                                {getFieldDecorator('SMSRate', {
+                                    initialValue: '0',
+                                })(
+                                    <Select>
+                                        <Option key='0'>不通知</Option>
+                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='2'>1小时通知一次</Option>
+                                        <Option key='3'>12小时通知一次</Option>
+                                        <Option key='4'>一天通知一次</Option>
+                                    </Select>
+                                )}
                             </Form.Item>
-                            <Form.Item className={styles.standard3}>
-                                {getFieldDecorator('other', {initialValue:''})
-                                    (<Input placeholder="需通知的其他人" type='text'/>)
-                                }
+                            <Form.Item label='通知人' className={styles.informer}>
+                                <Form.Item>
+                                    {getFieldDecorator('SMSInformer', {
+                                        initialValue: ''
+                                    })(
+                                        <Select>
+
+                                        </Select>
+                                    )}
+                                </Form.Item>
+                                <Form.Item>
+                                    {getFieldDecorator('otherSMSInformer', {
+                                        initialValue: ''
+                                    })(
+                                        <Input
+                                            placeholder='需通知的其他联系人'
+                                        />
+                                    )}
+                                </Form.Item>
+                            </Form.Item>
+                        </div>
+                        <div className={styles.items}>
+                            <div className={styles.itemName1}>电话</div>
+                            <Form.Item label='频率'>
+                                {getFieldDecorator('phoneRate', {
+                                    initialValue: '0',
+                                })(
+                                    <Select>
+                                        <Option key='0'>不通知</Option>
+                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='2'>1小时通知一次</Option>
+                                        <Option key='3'>12小时通知一次</Option>
+                                        <Option key='4'>一天通知一次</Option>
+                                    </Select>
+                                )}
+                            </Form.Item>
+                            <Form.Item label='通知人' className={styles.informer}>
+                                <Form.Item>
+                                    {getFieldDecorator('phoneInformer', {
+                                        initialValue: ''
+                                    })(
+                                        <Select>
+
+                                        </Select>
+                                    )}
+
+                                </Form.Item>
+                                <Form.Item>
+                                    {getFieldDecorator('otherPhoneInformer', {
+                                        initialValue: ''
+                                    })(
+                                        <Input
+                                            placeholder='需通知的其他联系人'
+                                        />
+                                    )}
+                                </Form.Item>
+
+                            </Form.Item>
+                        </div>
+                        <div className={styles.items}>
+                            <div className={styles.itemName2}>通知</div>
+                            <Form.Item label='通知范围' >
+                                {getFieldDecorator('informRange', {
+                                    //initialValue: '',
+                                })(
+                                    <Select
+                                        mode="multiple"
+                                        placeholder='全部'
+                                    >
+                                    <Option key='0'>不通知</Option>
+                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='2'>1小时通知一次</Option>
+                                        <Option key='3'>12小时通知一次</Option>
+                                        <Option key='4'>一天通知一次</Option>
+                                    </Select>
+                                )}
+                            </Form.Item>
+                        </div>
+                        <div className={styles.items}>
+                            <div className={styles.itemName2}>通知内容</div>
+                            <Form.Item label='通知内容' >
+                                {getFieldDecorator('informContent', {
+                                    initialValue: '',
+                                })(
+                                    <Input
+                                        className={styles.informContent}
+                                        placeholder='请输入通知内容，如需调用参数请用<>表示'
+                                    />
+                                )}
+                            </Form.Item>
+                        </div>
+                        <div className={styles.items}>
+                            <div className={styles.itemName2}>控制</div>
+                            <Form.Item label='关联设备' >
+                                <Form.Item>
+                                    {getFieldDecorator('Device', {
+                                        //initialValue: '',
+                                    })(
+                                        <Select
+                                            placeholder='设备名称/ID'
+                                        >
+
+                                        </Select>
+
+                                    )}
+                                </Form.Item>
+                                <Form.Item>
+                                    {getFieldDecorator('order', {
+                                        //initialValue: '',
+                                    })(
+                                        <Select
+                                            placeholder='选择指令'
+                                        >
+
+                                        </Select>
+                                    )}
+
+                                </Form.Item>
+
                             </Form.Item>
                         </div>
                     </div>
-                    <div className={styles.type1}>
-                        <div className={styles.based}>电话</div>
-                        <div className={styles.type}>
-                            <div className={styles.typeName}>频率</div>
-                            <Form.Item className={styles.standard1}>
-                                {getFieldDecorator('frequency', {initialValue:'no'})
-                                    (<Select>
-                                        <Option value="no">不通知</Option>
-                                        <Option value="one">仅通知一次</Option>
-                                        <Option value="five">五分钟通知一次</Option>
-                                    </Select>)
-                                }
+                    <div className={styles.formFooter}>
+                        <Button
+                            icon='save'
+                            className={styles.btnsave}
+                            onClick={() => onSave()}
+                        >保存</Button>
+                        <Button
+                            icon='delete'
+                            className={styles.btndelete}
+                            onClick={() => onDelete()}
+                        >删除</Button>
+                    </div>
+                </Form>
+            )
+        }
+    }
+)
+//修改自定义规则表单
+const ModifyRulesForm = Form.create()(
+    class extends React.Component {
+        render() {
+            const { form, onSave, onDelete,modifyData } = this.props;
+            const { getFieldDecorator } = form;
+            const Option = Select.Option;
+            console.log(modifyData)
+            return (
+                <Form layout='inline' className={styles.addForm}>
+                    <div className={styles.formTitle}>
+                        <div className={styles.formName}>
+                            <Form.Item>
+                                {getFieldDecorator('warningTitle', {
+                                    initialValue: '',
+                                })(
+                                    <Input
+                                        placeholder="预警规则"
+                                    />
+                                )}
                             </Form.Item>
                         </div>
-                        <div className={styles.limited}>
-                            <div className={styles.limitedName}>通知人</div>
-                            <Form.Item className={styles.standard1}>
-                                {getFieldDecorator('people', {initialValue:'people1'})
-                                    (<Select>
-                                        <Option value="people1">慧水老李</Option>
-                                        <Option value="people2">慧水老王</Option>
-                                    </Select>)
-                                }
+                    </div>
+                    <div className={styles.formContent}>
+                        <div className={styles.items}>
+                            <div className={styles.itemName1}>条件</div>
+                            <Form.Item label='类型'>
+                                {getFieldDecorator('warningType', {
+                                    initialValue: '0',
+                                })(
+                                    <Select>
+                                        <Option key='0'>功能预警</Option>
+                                        <Option key='1'>运营预警</Option>
+                                    </Select>
+                                )}
                             </Form.Item>
-                            <Form.Item className={styles.standard3}>
-                                {getFieldDecorator('other', {initialValue:''})
-                                    (<Input placeholder="需通知的其他人" type='text'/>)
-                                }
+                            <Form.Item label='判断规则' className={styles.judgmentRule}>
+                                <Form.Item>
+                                    {getFieldDecorator('params', {
+                                        initialValue: '',
+                                    })(
+                                        <Select
+                                            className={styles.params}
+                                        >
+                                            <Option value=''>参数1</Option>
+                                        </Select>
+                                    )}
+
+                                </Form.Item>
+                                <Form.Item>
+                                    {getFieldDecorator('judge', {
+                                        initialValue: ''
+                                    })(
+                                        <Select
+                                            className={styles.judge}
+                                        >
+                                            <Option value=''>判断</Option>
+                                            <Option key='='>=</Option>
+                                            <Option key='>'>></Option>
+                                            <Option key='<'>{'<'}</Option>
+                                            <Option key='<='>{'<='}</Option>
+                                            <Option key='>='>{'>='}</Option>
+                                            <Option key='≠'>{'≠'}</Option>
+                                        </Select>
+                                    )}
+
+                                </Form.Item>
+                                <Form.Item>
+                                    {getFieldDecorator('judgeValue', {
+                                        initialValue: ''
+                                    })(
+                                        <Input
+                                            placeholder='值'
+                                        />
+                                    )}
+                                </Form.Item>
                             </Form.Item>
                         </div>
+                        <div className={styles.items}>
+                            <div className={styles.itemName1}>短信</div>
+                            <Form.Item label='频率'>
+                                {getFieldDecorator('SMSRate', {
+                                    initialValue: '0',
+                                })(
+                                    <Select>
+                                        <Option key='0'>不通知</Option>
+                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='2'>1小时通知一次</Option>
+                                        <Option key='3'>12小时通知一次</Option>
+                                        <Option key='4'>一天通知一次</Option>
+                                    </Select>
+                                )}
+                            </Form.Item>
+                            <Form.Item label='通知人' className={styles.informer}>
+                                <Form.Item>
+                                    {getFieldDecorator('SMSInformer', {
+                                        initialValue: ''
+                                    })(
+                                        <Select>
+
+                                        </Select>
+                                    )}
+                                </Form.Item>
+                                <Form.Item>
+                                    {getFieldDecorator('otherSMSInformer', {
+                                        initialValue: ''
+                                    })(
+                                        <Input
+                                            placeholder='需通知的其他联系人'
+                                        />
+                                    )}
+                                </Form.Item>
+                            </Form.Item>
+                        </div>
+                        <div className={styles.items}>
+                            <div className={styles.itemName1}>电话</div>
+                            <Form.Item label='频率'>
+                                {getFieldDecorator('phoneRate', {
+                                    initialValue: '0',
+                                })(
+                                    <Select>
+                                        <Option key='0'>不通知</Option>
+                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='2'>1小时通知一次</Option>
+                                        <Option key='3'>12小时通知一次</Option>
+                                        <Option key='4'>一天通知一次</Option>
+                                    </Select>
+                                )}
+                            </Form.Item>
+                            <Form.Item label='通知人' className={styles.informer}>
+                                <Form.Item>
+                                    {getFieldDecorator('phoneInformer', {
+                                        initialValue: ''
+                                    })(
+                                        <Select>
+
+                                        </Select>
+                                    )}
+
+                                </Form.Item>
+                                <Form.Item>
+                                    {getFieldDecorator('otherPhoneInformer', {
+                                        initialValue: ''
+                                    })(
+                                        <Input
+                                            placeholder='需通知的其他联系人'
+                                        />
+                                    )}
+                                </Form.Item>
+
+                            </Form.Item>
+                        </div>
+                        <div className={styles.items}>
+                            <div className={styles.itemName2}>通知</div>
+                            <Form.Item label='通知范围' >
+                                {getFieldDecorator('informRange', {
+                                    //initialValue: '',
+                                })(
+                                    <Select
+                                        mode="multiple"
+                                        placeholder='全部'
+                                    >
+                                    <Option key='0'>不通知</Option>
+                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='2'>1小时通知一次</Option>
+                                        <Option key='3'>12小时通知一次</Option>
+                                        <Option key='4'>一天通知一次</Option>
+                                    </Select>
+                                )}
+                            </Form.Item>
+                        </div>
+                        <div className={styles.items}>
+                            <div className={styles.itemName2}>通知内容</div>
+                            <Form.Item label='通知内容' >
+                                {getFieldDecorator('informContent', {
+                                    initialValue: '',
+                                })(
+                                    <Input
+                                        className={styles.informContent}
+                                        placeholder='请输入通知内容，如需调用参数请用<>表示'
+                                    />
+                                )}
+                            </Form.Item>
+                        </div>
+                        <div className={styles.items}>
+                            <div className={styles.itemName2}>控制</div>
+                            <Form.Item label='关联设备' >
+                                <Form.Item>
+                                    {getFieldDecorator('Device', {
+                                        //initialValue: '',
+                                    })(
+                                        <Select
+                                            placeholder='设备名称/ID'
+                                        >
+
+                                        </Select>
+
+                                    )}
+                                </Form.Item>
+                                <Form.Item>
+                                    {getFieldDecorator('order', {
+                                        //initialValue: '',
+                                    })(
+                                        <Select
+                                            placeholder='选择指令'
+                                        >
+
+                                        </Select>
+                                    )}
+
+                                </Form.Item>
+
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className={styles.formFooter}>
+                        <Button
+                            icon='save'
+                            className={styles.btnsave}
+                            onClick={() => onSave()}
+                        >保存</Button>
+                        <Button
+                            icon='delete'
+                            className={styles.btndelete}
+                            onClick={() => onDelete()}
+                        >删除</Button>
                     </div>
                 </Form>
             )

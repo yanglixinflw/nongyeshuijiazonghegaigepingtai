@@ -88,7 +88,7 @@ export default class extends Component {
         this.state = {
             pluginProps,
             //标记可见性
-            markerVisible: true,
+            markerVisible: false,
             //信息窗位置偏移量
             infoOffset: [0, -21],
             //信息窗可见性
@@ -122,6 +122,8 @@ export default class extends Component {
             dataList,
             //搜索关键字
             keyWord: '三组四号',
+            //当前设备类型ID
+            deviceTypeId: [1]
 
         }
         //console.log(this.state.markers)
@@ -245,6 +247,7 @@ export default class extends Component {
             let re = new RegExp(keyWord, 'g')
             dataList.filter((v, i) => {
                 v.name = v.name.replace(re, `<span class=${styles.keyWordSt}>${keyWord}</span>`)
+                v.id = v.id.replace(re, `<span class=${styles.keyWordSt}>${keyWord}</span>`)
             })
         }
 
@@ -276,32 +279,38 @@ export default class extends Component {
         }
     }
     //图标记显示/隐藏
+    //摄像头
     _cameraHandler() {
-        const { allCameraMarkers } = this.state;
+        const { allCameraMarkers, deviceTypeId } = this.state;
         allCameraMarkers.map((v, i) => {
             if (v.Pg.visible == true) {
                 v.hide();
             } else {
-                v.show()
+                v.show();
             }
         })
-        //    console.log(allCameraMarkers)
+           console.log(allCameraMarkers)
+        console.log(this.state.deviceTypeId)
     }
+    //水表
     _WatermeterHandler(e) {
         console.log('水表', e)
     }
+    //电表
     _ElectricmeterHandler() {
         console.log('电表')
     }
+    //水阀
     _WatervalveHandler() {
-        const { allWaterValveMarkers } = this.state;
+        const { allWaterValveMarkers, deviceTypeId } = this.state;
         allWaterValveMarkers.map((v, i) => {
             if (v.Pg.visible == true) {
                 v.hide();
             } else {
-                v.show()
+                v.show();
             }
         })
+        console.log(this.state.deviceTypeId)
     }
     //搜索
     _searchHandler(e) {
@@ -322,6 +331,7 @@ export default class extends Component {
             dataList,
             plugins, center,
             //useCluster,
+            markerVisible,
             cameraMarkers, waterValveMarkers,
             infoVisibleCamera, infoVisibleWaterValve,
             infoOffset, isCustom, size, infoPositionCamera, infoPositionWaterValve,
@@ -425,6 +435,7 @@ export default class extends Component {
                     markers={waterValveMarkers}
                     render={(extData) => this.renderWaterValveMarker(extData)}
                     events={this.WaterValveEvents}
+                    visible={markerVisible}
                 />
                 {/* 自定义地图控件 */}
                 <MyCustomize />
