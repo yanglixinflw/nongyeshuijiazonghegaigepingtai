@@ -4,7 +4,7 @@ import { Select, Button, Form, Modal, Input } from 'antd';
 export default class extends Component {
     constructor(props) {
         super(props)
-        const { warningDetail } = props
+        const { warningDetail,deviceId } = props
 
         this.state = {
             //数据源
@@ -15,6 +15,8 @@ export default class extends Component {
             modifyVisible: false,
             // 修改对应ruleId的预警规则
             modifyData: [],
+            //设备Id
+            deviceId
         }
         console.log(this.state.data)
     }
