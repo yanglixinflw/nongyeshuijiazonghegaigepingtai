@@ -109,20 +109,7 @@ export default class extends Component {
             // 修改、删除设备ID
             modifyDeviceId: '',
             // 修改数据
-            modifyData: { 
-            "deviceId": "E69E8FF2-6896-4807-BB88-4CC501A7ED6B", 
-            "deviceTypeId": 1, 
-            "name": "144", 
-            "installAddrId": "10001", 
-            "relatedBuildingId": 1, 
-            "deviceSerial": "2606", 
-            "gatewayAddr": null, 
-            "longitude": 0.0, 
-            "latitude": 0.0, 
-            "managerUserId": null, 
-            "managedCompanyId": null, 
-            "enableTime": "2018-11-07T12:02:42.487", 
-            "createTime": "2018-10-08T16:03:58.5" },
+            modifyData: {},
             // 二维码弹窗
             qrcodeModalVisible: false,
             // qrcodeModalVisible:true,
@@ -217,7 +204,7 @@ export default class extends Component {
             columns,
             tableData,
         })
-        console.log(columns)
+        // console.log(columns)
 
     }
     //点击显示设置

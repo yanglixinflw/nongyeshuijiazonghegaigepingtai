@@ -1,4 +1,7 @@
-import { queryDevice ,queryDeviceTitle} from '../services/api';
+import { queryDevice,
+  queryDeviceTitle,
+  getInstallAddrList
+} from '../services/api';
 export default {
     namespace: 'deviceData',
     state:{
@@ -12,7 +15,15 @@ export default {
         *fetchTitle({ payload }, { call, put }) {  // eslint-disable-line
           const Title = yield call(queryDeviceTitle, payload)
           yield put({ type: 'fetchTitleOk', payload: Title })
-        }
+        },
+        // 安装地址
+        *getInstallAddrList({payload},{call,put}){
+          const list =yield call(getInstallAddrList,payload)
+          yield put ({
+              type:'fetchInstallList',
+              payload:list
+          })
+      },
       },
     
       reducers: {
@@ -21,10 +32,12 @@ export default {
           return {  ...state,...payload }   
         },
         fetchTitleOk (state, { payload }) {
-          state={
-            'title':payload
-          }
+          state.title=payload
           return { ...state } 
+        },
+        fetchInstallList(state,{payload}){
+          state.InstallList=payload
+          return {...state}
         },
         clear(){
           return {}
