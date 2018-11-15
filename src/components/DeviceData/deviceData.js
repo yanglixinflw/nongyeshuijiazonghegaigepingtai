@@ -85,6 +85,7 @@ export default class extends Component {
         const { deviceTypeId } = this.props
         let columns = [];
         commonColumns.map((v, i) => {
+            console.log(v.name)
             columns.push({
                 title: v.displayName,
                 // 给表头添加字段名 必须一一对应
