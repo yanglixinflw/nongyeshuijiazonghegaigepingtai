@@ -109,7 +109,7 @@ export const getRouterData = app => {
     //   component: dynamicWrapper(app, [], () => import('../routes/distributedControl/remoteControl')),
     // },
     '/dcs/valveControl':{
-      component: dynamicWrapper(app, [], () => import('../routes/distributedControl/valveControl')),
+      component: dynamicWrapper(app, ['valveControl'], () => import('../routes/distributedControl/valveControl')),
     },
     '/valveControl/map':{
       component: dynamicWrapper(app, [], () => import('../routes/distributedControl/mapControl')),
