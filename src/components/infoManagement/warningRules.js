@@ -61,14 +61,14 @@ export default class extends Component{
             render: (record) => {
                 return (
                     <span className={styles.option}>
-                        <Link to={`/warningRules/addWarningRules`}>
+                        
                             <Button
                                 className={styles.edit}
                                 icon='file-text'
                             >
                                 规则详情
                             </Button>
-                        </Link>
+                        
                         <Button
                             className={styles.delete}
                             onClick={()=>this.delete()}
@@ -76,12 +76,12 @@ export default class extends Component{
                         >
                             删除
                         </Button>
-                        <Button
+                        {/* <Button
                             className={styles.editPsw}
                             icon='appstore'
                         >
                             批量应用
-                        </Button>
+                        </Button> */}
                     </span>
                 )
             }
@@ -150,13 +150,16 @@ export default class extends Component{
                 </div>
                 <div className={styles.searchForm}>
                     <div className={styles.buttonGroup}>
+                    <Link to={`/warningRules/addWarningRules`}>
                         <Button
                             icon='plus'
                             className={styles.fnButton}
                         >
                             添加
                         </Button>
-                    </div> 
+                    </Link>
+                    </div>
+                    
                 </div>
                 <Table
                     columns={columns}

@@ -9,6 +9,7 @@ export default class extends Component {
         this.state = {
             //数据源
             data: warningDetail.data.data,
+            // data: [],
             //添加自定义规则弹窗可见性
             addVisible: false,
             //修改规则弹窗可见性
@@ -127,17 +128,23 @@ export default class extends Component {
                         />
                         : null
                     }
-                    {data.map((v, i) => {
-                        return (
-                            <RulesForm
-                                key={i}
-                                wrappedComponentRef={(rulesForm) => this.rulesForm = rulesForm}
-                                onModify={(ruleId) => this._modifyHandler(ruleId)}
-                                onDelete={(ruleId) => this._deleteHandler(ruleId)}
-                                {...{ v, i }}
-                            />
-                        )
-                    })}
+                    {
+                        data.length==0?
+                        null
+                        :
+                        data.map((v, i) => {
+                            return (
+                                <RulesForm
+                                    key={i}
+                                    wrappedComponentRef={(rulesForm) => this.rulesForm = rulesForm}
+                                    onModify={(ruleId) => this._modifyHandler(ruleId)}
+                                    onDelete={(ruleId) => this._deleteHandler(ruleId)}
+                                    {...{ v, i }}
+                                />
+                            )
+                        })
+                    }
+                    
 
                 </div>
             </div>
