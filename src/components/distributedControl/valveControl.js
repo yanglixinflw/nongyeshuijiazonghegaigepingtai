@@ -311,27 +311,29 @@ export default class extends Component{
         // console.log(this.state.deviceIds)
         // console.log(this.state.deviceTypeId)
       //获取设备型号可执行的指令
-        if(this.state.deviceIds=[]){
-            console.log(22222)
-        }
-        fetch(instructUrl,{
-            ...postOption,
-            body: JSON.stringify({
-                "deviceTypeId":this.state.deviceTypeId
-            })
-        }).then(res=>{
-            Promise.resolve(res.json())
-                .then(v=>{
-                    if(v.ret==1){
-                        let cmd=v.data
-                        console.log(cmd)
-                        this.setState({
-                            cmd,
-                            switchvisible: true,
-                        })
-                    }
+      console.log(this.state.deviceIds)
+        if(this.state.deviceIds.length==0){
+            alert("请先选择设备")
+        }else{
+            fetch(instructUrl,{
+                ...postOption,
+                body: JSON.stringify({
+                    "deviceTypeId":this.state.deviceTypeId
                 })
-        })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                    .then(v=>{
+                        if(v.ret==1){
+                            let cmd=v.data
+                            console.log(cmd)
+                            this.setState({
+                                cmd,
+                                switchvisible: true,
+                            })
+                        }
+                    })
+            })
+        }
     }
     //点击开关阀确定
     switchHandleOk(){
