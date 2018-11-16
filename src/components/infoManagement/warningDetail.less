@@ -10,17 +10,8 @@
         border-bottom: 1px solid #2a325e;
         position: relative;
         .rulesName {
-            width: 180px;
-            background: #1c2241;
-            border: none;
-            outline: none;
-        }
-        .border {
-            width: 74px;
-            height: 2px;
-            position: absolute;
-            background: #327df4;
-            bottom: 0;
+           padding-bottom:20px;
+           border-bottom:2px solid #327DF4;  
         }
     }
     .content {
@@ -81,7 +72,7 @@
                 color: #DADBE0;
                 background: #2A325E;
                 text-align: center;
-                font-size: 18px;
+                font-size: 16px;
                 margin-right: 72px;
             }
             :global {
@@ -171,6 +162,44 @@
 
 //添加表单
 .addForm {
+    .formTitle {
+        border-bottom: 1px solid #2E3768;
+        height: 58px;
+        padding: 18px;
+        .formName {
+            height: 23px;
+            line-height: 23px;
+            border-left: 2px solid #337DF6;
+            color: #BFC0C7;
+            padding-left: 10px;
+            font-size: 16px;
+            position: relative;
+            :global {
+                .ant-form-item {
+                    height: 25px;
+                    position: absolute;
+                    top: -6px;
+                }
+                .ant-input {
+                    color: #BFC0C7;
+                    height: 25px;
+                    border: 0;
+                    border-radius: 0%;
+                    border-bottom: 1px solid #2E3768;
+                    background: #202649;
+                    font-size: 16px;
+                    padding-left: 0;
+                    margin-left: 8px;
+                }
+            }
+        }
+    }
+    .items {
+        display: flex;
+        margin: 24px 0px 30px 18px;
+        height: 45px;
+        line-height: 45px;
+    }
     .itemName1 {
         width: 104px;
         height: 45px;
@@ -178,7 +207,7 @@
         color: #DADBE0;
         background: #2A325E;
         text-align: center;
-        font-size: 18px;
+        font-size: 16px;
         margin-right: 75px;
     }
     .itemName2 {
@@ -188,7 +217,7 @@
         color: #DADBE0;
         background: #2A325E;
         text-align: center;
-        font-size: 18px;
+        font-size: 16px;
         margin-right: 49px;
     }
     .informContent {

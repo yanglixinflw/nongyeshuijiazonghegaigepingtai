@@ -1,6 +1,26 @@
 import React, { Component } from 'react';
 import styles from './warningDetail.less';
-import { Select, Button, Form, Modal, Input } from 'antd';
+import { Select, Button, Form, Modal, Input, message } from 'antd';
+import { timeOut } from '../../utils/timeOut';
+// 开发环境
+const envNet = 'http://192.168.30.127:88';
+// 生产环境
+// const envNet = '';
+//保存/添加Url
+const addUrl = `${envNet}/api/DeviceWaringRule/add`;
+//修改Url
+const updateUrl = `${envNet}/api/DeviceWaringRule/update`;
+//删除Url
+const deleteUrl = `${envNet}/api/DeviceWaringRule/delete`;
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+};
 export default class extends Component {
     constructor(props) {
         super(props)
@@ -9,10 +29,14 @@ export default class extends Component {
             //数据源
             data: warningDetail.data.data,
             // data: [],
+            //删除弹窗可见性
+            deleteVisible: false,
             //添加自定义规则弹窗可见性
             addVisible: false,
             //修改规则弹窗可见性
             modifyVisible: false,
+            //预警规则Id
+            ruleId: '',
             // 修改对应ruleId的预警规则
             modifyData: [],
             //设备Id
@@ -26,9 +50,9 @@ export default class extends Component {
             addVisible: true
         })
     }
-    // 添加删除
-    _addDeleteHandler() {
-        // console.log('点击删除按钮');
+    // 添加取消
+    _addCancelHandler() {
+        // console.log('点击取消按钮');
         const form = this.addRulesForm.props.form;
         // 重置表单
         form.resetFields();
@@ -51,8 +75,8 @@ export default class extends Component {
             addVisible: false
         })
     }
-    //修改表单删除
-    _modifyDeleteHandler(){
+    //修改表单取消
+    _modifyCancelHandler() {
         const form = this.modifyRulesForm.props.form;
         // 重置表单
         form.resetFields();
@@ -61,7 +85,7 @@ export default class extends Component {
         })
     }
     //修改表单保存
-    _modifySaveHandler(){
+    _modifySaveHandler() {
         const form = this.modifyRulesForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
@@ -87,18 +111,45 @@ export default class extends Component {
         })
 
     }
-    //删除
+    //已有预警规则删除
     _deleteHandler(ruleId) {
-        console.log(ruleId)
+        this.setState({
+            deleteVisible: true,
+            ruleId
+        })
+    }
+    //确认删除预警规则
+    _deleteOkHandler() {
+        const { ruleId } = this.state;
+        message.success('删除成功', 2);
+        this.setState({
+            deleteVisible: false
+        })
+    }
+    //取消删除预警规则
+    _deleteCancelHandler() {
+        this.setState({
+            deleteVisible: false
+        })
     }
     render() {
-        const { data, addVisible,modifyVisible,modifyData } = this.state;
+        const { data, deleteVisible, addVisible, modifyVisible, modifyData } = this.state;
         const Option = Select.Option;
         return (
             <div className={styles.warningDetail}>
+                <Modal
+                    centered={true}
+                    visible={deleteVisible}
+                    onOk={() => this._deleteOkHandler()}
+                    onCancel={() => this._deleteCancelHandler()}
+                    title='删除'
+                    cancelText='取消'
+                    okText='确定'
+                >
+                    <span>确认删除此预警规则</span>
+                </Modal>
                 <div className={styles.title}>
-                    <div className={styles.rulesName}>预警机制</div>
-                    <div className={styles.border}></div>
+                    <span className={styles.rulesName}>预警机制</span>
                 </div>
                 <div className={styles.content}>
                     <div className={styles.labelName}>预警规则</div>
@@ -114,7 +165,7 @@ export default class extends Component {
                     {addVisible ?
                         <AddRulesForm
                             wrappedComponentRef={(addRulesForm) => this.addRulesForm = addRulesForm}
-                            onDelete={() => this._addDeleteHandler()}
+                            onCancel={() => this._addCancelHandler()}
                             onSave={() => this._addSaveHandler()}
                         />
                         : null
@@ -123,29 +174,29 @@ export default class extends Component {
                     {modifyVisible ?
                         <ModifyRulesForm
                             wrappedComponentRef={(modifyRulesForm) => this.modifyRulesForm = modifyRulesForm}
-                            onDelete={() => this._modifyDeleteHandler()}
+                            onCancel={() => this._modifyCancelHandler()}
                             onSave={() => this._modifySaveHandler()}
-                            {...{modifyData}}
+                            {...{ modifyData }}
                         />
                         : null
                     }
                     {
-                        data.length==0?
-                        null
-                        :
-                        data.map((v, i) => {
-                            return (
-                                <RulesForm
-                                    key={i}
-                                    wrappedComponentRef={(rulesForm) => this.rulesForm = rulesForm}
-                                    onModify={(ruleId) => this._modifyHandler(ruleId)}
-                                    onDelete={(ruleId) => this._deleteHandler(ruleId)}
-                                    {...{ v, i }}
-                                />
-                            )
-                        })
+                        data.length == 0 ?
+                            null
+                            :
+                            data.map((v, i) => {
+                                return (
+                                    <RulesForm
+                                        key={i}
+                                        wrappedComponentRef={(rulesForm) => this.rulesForm = rulesForm}
+                                        onModify={(ruleId) => this._modifyHandler(ruleId)}
+                                        onDelete={(ruleId) => this._deleteHandler(ruleId)}
+                                        {...{ v, i }}
+                                    />
+                                )
+                            })
                     }
-                    
+
 
                 </div>
             </div>
@@ -210,7 +261,7 @@ const RulesForm = Form.create()(
 const AddRulesForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, onSave, onDelete } = this.props;
+            const { form, onSave, onCancel } = this.props;
             const { getFieldDecorator } = form;
             const Option = Select.Option;
             return (
@@ -367,7 +418,7 @@ const AddRulesForm = Form.create()(
                                         mode="multiple"
                                         placeholder='全部'
                                     >
-                                    <Option key='0'>不通知</Option>
+                                        <Option key='0'>不通知</Option>
                                         <Option key='1'>仅通知一次</Option>
                                         <Option key='2'>1小时通知一次</Option>
                                         <Option key='3'>12小时通知一次</Option>
@@ -429,8 +480,8 @@ const AddRulesForm = Form.create()(
                         <Button
                             icon='delete'
                             className={styles.btndelete}
-                            onClick={() => onDelete()}
-                        >删除</Button>
+                            onClick={() => onCancel()}
+                        >取消</Button>
                     </div>
                 </Form>
             )
@@ -441,7 +492,7 @@ const AddRulesForm = Form.create()(
 const ModifyRulesForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, onSave, onDelete,modifyData } = this.props;
+            const { form, onSave, onCancel, modifyData } = this.props;
             const { getFieldDecorator } = form;
             const Option = Select.Option;
             console.log(modifyData)
@@ -599,7 +650,7 @@ const ModifyRulesForm = Form.create()(
                                         mode="multiple"
                                         placeholder='全部'
                                     >
-                                    <Option key='0'>不通知</Option>
+                                        <Option key='0'>不通知</Option>
                                         <Option key='1'>仅通知一次</Option>
                                         <Option key='2'>1小时通知一次</Option>
                                         <Option key='3'>12小时通知一次</Option>
@@ -661,8 +712,8 @@ const ModifyRulesForm = Form.create()(
                         <Button
                             icon='delete'
                             className={styles.btndelete}
-                            onClick={() => onDelete()}
-                        >删除</Button>
+                            onClick={() => onCancel()}
+                        >取消</Button>
                     </div>
                 </Form>
             )
