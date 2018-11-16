@@ -117,7 +117,7 @@ export default class extends Component {
             // console.log(childrenName)
             // 匹配到name
             let title = childrenName.filter(item => item.path === pathName)
-            console.log(title[0].name)
+            // console.log(title[0].name)
             this.setState({
                 deviceTypeId,
                 pageTitle:title[0].name

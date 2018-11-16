@@ -4,9 +4,13 @@ import { Input, Button, Form, Select, Icon } from 'antd';
 import { Link } from 'dva/router';
 const Option = Select.Option;
 export default class extends Component {
-    // constructor(props) {
-    //     super(props)
-    componentDidMount() { }
+    // 保存当前值
+    _addSaveHandler(){
+        const form = this.addRulesForm.props.form;
+        form.validateFields((err,values)=>{
+            console.log(values)
+        })
+    }
     render() {
         return (
             <React.Fragment>
@@ -33,7 +37,6 @@ export default class extends Component {
                         
                             <AddRulesForm
                                 wrappedComponentRef={(addRulesForm) => this.addRulesForm = addRulesForm}
-                                onDelete={() => this._addDeleteHandler()}
                                 onSave={() => this._addSaveHandler()}
                             />
                     </div>
@@ -47,16 +50,16 @@ export default class extends Component {
 const AddRulesForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, onSave, onDelete } = this.props;
+            const { form, onSave} = this.props;
             const { getFieldDecorator } = form;
-            const Option = Select.Option;
             return (
                 <Form layout='inline' className={styles.addForm}>
                     <div className={styles.formTitle}>
                         <div className={styles.formName}>
                             <Form.Item>
-                                {getFieldDecorator('warningTitle', {
+                                {getFieldDecorator('name', {
                                     initialValue: '',
+                                    rules: [{ required: true, message: '预警规则名称不能为空' }]
                                 })(
                                     <Input
                                         placeholder="请输入预警规则名称"
@@ -263,11 +266,12 @@ const AddRulesForm = Form.create()(
                             className={styles.btnsave}
                             onClick={() => onSave()}
                         >保存</Button>
+                        <Link to='/messageManagement/warningRules'>
                         <Button
                             icon='delete'
                             className={styles.btndelete}
-                            onClick={() => onDelete()}
-                        >删除</Button>
+                        >取消</Button>
+                        </Link>
                     </div>
                 </Form>
             )
