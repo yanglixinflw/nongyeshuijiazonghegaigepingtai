@@ -16,12 +16,6 @@
     }
     .content {
         margin: 35px 280px;
-        .labelName {
-            display: inline-block;
-            color: #D1D2D6;
-            margin-right: 20px;
-            font-size: 16px;
-        }
         :global {
             .ant-select {
                 width: 300px;
@@ -50,6 +44,7 @@
                 width: 124px;
                 color: #2F74E2;
                 background: #1C2241;
+                margin-right: 34px;
                 &:hover {
                     color: #fff;
                     background: #337DF6;
@@ -93,7 +88,106 @@
         }
     }
 }
-
+.deleteModal{
+    width: 400px !important;
+    color: #fff;
+    :global {
+        .ant-modal-content {
+            background: #171A39;
+        }
+        .ant-modal-header {
+            background: #171A39;
+            border-bottom: 1px solid #363A69;
+            padding: 16px 0px;
+            .ant-modal-title {
+                color: #fff;
+                border-left: 4px #327DF4 solid;
+                padding: 0px 20px;
+            }
+        }
+        .ant-modal-body {
+            text-align: center;
+            padding: 38px 53px;
+            background: #171A39;
+        }
+        .ant-modal-close-x {
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .ant-modal-footer {
+            background: #171A39;
+            border-top: 1px solid #363A69;
+            text-align: center;
+            div {
+                .ant-btn {
+                    color: #A4AFBC;
+                    width: 70px;
+                }
+                button:first-child {
+                    border: 0;
+                    background: #171A39;
+                    &:hover {
+                        color: #327DF4;
+                    }
+                }
+                button:last-child {
+                    border: 0;
+                    background: #327DF4;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+.selectModal{
+    width: 400px !important;
+    color: #fff;
+    :global {
+        .ant-modal-content {
+            background: #171A39;
+        }
+        .ant-modal-header {
+            background: #171A39;
+            border-bottom: 1px solid #363A69;
+            padding: 13px 0px;
+            .ant-modal-title {
+                color: #fff;
+                text-align: center
+            }
+        }
+        .ant-modal-body {
+            text-align: center;
+            padding: 30px 0;
+            background: #171A39;
+            .ant-btn{
+                background: #272D52;
+                color:#E7E7EC;
+                width:248px;
+                height: 40px;
+                border:1px solid #171A39;
+                margin-bottom: 30px;
+                &:hover{
+                    border:1px solid #327DF4;
+                }
+                &:active{
+                    background: #327DF4;
+                }
+            }
+            .ant-btn:last-child{
+                margin-bottom: 0px;
+            }
+        }
+        .ant-modal-close-x {
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .ant-modal-footer {
+           display: none;
+        }
+    }
+}
 .formTitle {
     border-bottom: 1px solid #2E3768;
     height: 58px;
