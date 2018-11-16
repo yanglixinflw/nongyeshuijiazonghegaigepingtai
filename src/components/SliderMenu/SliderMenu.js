@@ -7,6 +7,7 @@ import { urlToList } from '../_utils/pathTools';
 import classnames from 'classnames'
 import headerlogo from '../../assets/headerlogo.png'
 import menuBg from '../../assets/menubg.png'
+import { parse } from 'qs';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -161,10 +162,11 @@ export default class SiderMenu extends PureComponent {
   // Get the currently selected menu
   getSelectedMenuKeys = () => {
     const {
-      location: { pathname },
+      location: { pathname,hash },
     } = this.props;
-    // console.log(this.props.location)
-    return getMenuMatchKeys(this.flatMenuKeys, urlToList(pathname));
+    let path=parse(hash.split('#'))[1]
+    // console.log(this.flatMenuKeys)
+    return getMenuMatchKeys(this.flatMenuKeys, urlToList(path));
   };
 
   // conversion Path
@@ -228,7 +230,7 @@ export default class SiderMenu extends PureComponent {
         <Menu
           key="Menu"
           theme="dark"
-          mode="vertical"
+          // mode="inline"
           {...menuProps}
           onOpenChange={this.handleOpenChange}
           // selectedKeys={selectedKeys}
