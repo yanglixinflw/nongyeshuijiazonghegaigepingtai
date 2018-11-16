@@ -81,7 +81,7 @@ const RuleForm = Form.create()(
         remove = (v) => {
             const { form } = this.props;
             const keys = form.getFieldValue('keys');
-            if (keys.length === 1) {
+            if (keys.length === 0) {
               return;
             }
             //可以使用数据绑定来设置
@@ -106,7 +106,7 @@ const RuleForm = Form.create()(
         removes = (v) => {
             const { form } = this.props;
             const key = form.getFieldValue('key');
-            if (key.length === 1) {
+            if (key.length === 0) {
             return;
             }
             //可以使用数据绑定来设置
@@ -137,7 +137,7 @@ const RuleForm = Form.create()(
                 return (
                     <div className={styles.line} key={v}>
                         <Form.Item className={styles.search}>
-                            {getFieldDecorator(`deviceId[${v}]`, {initialValue:''})
+                            {getFieldDecorator(`deviceId1[${v}]`, {initialValue:''})
                                 (
                                 <Select
                                     showSearch
@@ -157,7 +157,7 @@ const RuleForm = Form.create()(
                             }
                         </Form.Item>
                         <Form.Item className={styles.search}>
-                        {getFieldDecorator(`switch[${v}]`, {initialValue:''})
+                        {getFieldDecorator(`switch1[${v}]`, {initialValue:''})
                                 (<Select>
                                     <Option value='' disabled selected style={{display:'none'}}>开关阀</Option>  
                                     <Option value="open">开阀</Option>
@@ -179,7 +179,7 @@ const RuleForm = Form.create()(
                 return (
                     <div className={styles.line} key={v}>
                         <Form.Item className={styles.search}>
-                            {getFieldDecorator(`deviceId[${v}]`, {initialValue:''})
+                            {getFieldDecorator(`deviceId1[${v}]`, {initialValue:''})
                                 (
                                 <Select
                                     showSearch
@@ -199,7 +199,7 @@ const RuleForm = Form.create()(
                             }
                         </Form.Item>
                         <Form.Item className={styles.search}>
-                            {getFieldDecorator(`variate[${v}]`, {initialValue:''})
+                            {getFieldDecorator(`variate1[${v}]`, {initialValue:''})
                                 (<Select>
                                     <Option value='' disabled selected style={{display:'none'}}>状态</Option>  
                                     <Option value="power">电量</Option>
@@ -208,7 +208,7 @@ const RuleForm = Form.create()(
                             }
                         </Form.Item>
                         <Form.Item className={styles.end}>
-                            {getFieldDecorator(`judge[${v}]`, {initialValue:''})
+                            {getFieldDecorator(`judge1[${v}]`, {initialValue:''})
                                 (<Select>
                                     <Option value='' disabled selected style={{display:'none'}}>判断</Option>  
                                     <Option value="high">&gt;</Option>
@@ -221,11 +221,11 @@ const RuleForm = Form.create()(
                             }
                         </Form.Item>
                         <Form.Item className={styles.end}>
-                            {getFieldDecorator(`value[${v}]`, {initialValue:''})
+                            {getFieldDecorator(`value1[${v}]`, {initialValue:''})
                                 (<Input placeholder="值" type='number'/>)
                             }
                         </Form.Item>
-                        {keys.length > 1 ? (
+                        {keys.length > 0 ? (
                             <Icon 
                                 type="minus" 
                                 disabled={keys.length === 1}
@@ -256,7 +256,7 @@ const RuleForm = Form.create()(
                         {formItems}
                         <div className={styles.line}>
                             <Form.Item className={styles.search}>
-                                {getFieldDecorator('deviceId1', {initialValue:''})
+                                {getFieldDecorator('deviceId', {initialValue:''})
                                     (
                                     <Select
                                         showSearch
@@ -276,7 +276,7 @@ const RuleForm = Form.create()(
                                 }
                             </Form.Item>
                             <Form.Item className={styles.search}>
-                                {getFieldDecorator('variate1', {initialValue:''})
+                                {getFieldDecorator('variate', {initialValue:''})
                                     (<Select>
                                         <Option value='' disabled selected style={{display:'none'}}>状态</Option>  
                                         <Option value="power">电量</Option>
@@ -285,7 +285,7 @@ const RuleForm = Form.create()(
                                 }
                             </Form.Item>
                             <Form.Item className={styles.end}>
-                                {getFieldDecorator('judge1', {initialValue:''})
+                                {getFieldDecorator('judge', {initialValue:''})
                                     (<Select>
                                         <Option value='' disabled selected style={{display:'none'}}>判断</Option>  
                                         <Option value="high">&gt;</Option>
@@ -293,12 +293,12 @@ const RuleForm = Form.create()(
                                         <Option value="equal">=</Option>
                                         <Option value="highEq">&gt;=</Option>
                                         <Option value="lowEq">&lt;=</Option>
-                                        <Option value="notEq">≠</Option>
+                                        <Option value="notEq">≠</Option> 
                                     </Select>)
                                 }
                             </Form.Item>
                             <Form.Item className={styles.end}>
-                                {getFieldDecorator('value1', {initialValue:''})
+                                {getFieldDecorator('value', {initialValue:''})
                                     (<Input placeholder="值" type='number'/>)
                                 }
                             </Form.Item>
@@ -309,7 +309,7 @@ const RuleForm = Form.create()(
                         {formItem}
                         <div className={styles.line}>
                             <Form.Item className={styles.search}>
-                                {getFieldDecorator('deviceId2', {initialValue:''})
+                                {getFieldDecorator('deviceId', {initialValue:''})
                                     (
                                     <Select
                                         showSearch
@@ -329,7 +329,7 @@ const RuleForm = Form.create()(
                                 }
                             </Form.Item>
                             <Form.Item className={styles.search}>
-                                {getFieldDecorator('switch1', {initialValue:''})
+                                {getFieldDecorator('switch', {initialValue:''})
                                     (<Select>
                                         <Option value='' disabled selected style={{display:'none'}}>开关阀</Option>  
                                         <Option value="open">开阀</Option>

@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from './farmersInfo.less';
-import { Input, Button, Form, Select,Table, Modal,message} from 'antd';
+import { Input,Button,Form,Select,Table,Modal,message} from 'antd';
 //开发地址
 const envNet='http://192.168.30.127:88';
 //生产环境
@@ -553,89 +553,91 @@ export default class extends Component{
         };
         return(      
             <React.Fragment>
-                <div className={styles.header}>
-                    <span>|</span>农户信息
-                </div>
-                <div className={styles.searchForm}>
-                    {/* 表单信息 */}
-                    <SearchForm
-                        wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        {...{areaList}}
+                <div className={styles.farmersInfo}>
+                    <div className={styles.header}>
+                        <span>|</span>农户信息
+                    </div>
+                    <div className={styles.searchForm}>
+                        {/* 表单信息 */}
+                        <SearchForm
+                            wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
+                            {...{areaList}}
+                        />
+                        <div className={styles.buttonGroup}>
+                            <Button
+                                className={styles.fnButton}
+                                icon="search"
+                                onClick={() => this._searchTableData()}
+                            >
+                                搜索
+                            </Button>
+                            <Button
+                                icon='reload'
+                                className={styles.fnButton}
+                                onClick={() => this._resetForm()}
+                            >
+                                重置
+                            </Button>
+                            <Button
+                                icon='plus'
+                                className={styles.fnButton}
+                                onClick={() =>this.add()}
+                            >
+                                添加
+                            </Button>
+                            <Button
+                                icon='upload'
+                                className={styles.fnButton}
+                                onClick={() => this._exportDataHandler()}
+                            >
+                                导出数据
+                            </Button>
+                        </div> 
+                    </div>
+                    <Table
+                        columns={columns}
+                        className={styles.table}
+                        pagination={paginationProps}
+                        dataSource={tableDatas}
+                        // scroll={{ x: 1000}}
                     />
-                    <div className={styles.buttonGroup}>
-                        <Button
-                            className={styles.fnButton}
-                            icon="search"
-                            onClick={() => this._searchTableData()}
-                        >
-                            搜索
-                        </Button>
-                        <Button
-                            icon='reload'
-                            className={styles.fnButton}
-                            onClick={() => this._resetForm()}
-                        >
-                            重置
-                        </Button>
-                        <Button
-                            icon='plus'
-                            className={styles.fnButton}
-                            onClick={() =>this.add()}
-                        >
-                            添加
-                        </Button>
-                        <Button
-                            icon='upload'
-                            className={styles.fnButton}
-                            onClick={() => this._exportDataHandler()}
-                        >
-                            导出数据
-                        </Button>
-                    </div> 
+                    {/* 添加弹窗 */}
+                    <AddForm
+                        wrappedComponentRef={(addForm) => this.addForm = addForm}
+                        visible={addvisible}
+                        onCancel={() => this.addhandleCancel()}
+                        onOk={() => this.addhandleOk()}
+                        {...{ areaList }}
+                    />
+                    {/* 修改弹窗 */}
+                    <EditForm
+                        wrappedComponentRef={(editForm) => this.editForm = editForm}
+                        visible={editvisible}
+                        onCancel={() => this.editCancelHandler()}
+                        onOk={() => this.editOkHandler()}
+                        {...{ editData, areaList }}
+                    />
+                    {/* 修改密码弹窗 */}
+                    <EditPwdForm
+                        wrappedComponentRef={(editPwdForm) => this.editPwdForm = editPwdForm}
+                        visible={editPwdvisible}
+                        onCancel={() => this.editPwdCancelHandler()}
+                        onOk={() => this.editPwdOkHandler()}
+                    />
+                    {/* 删除弹窗 */}
+                    <Modal 
+                        title="删除"
+                        visible={delVisible}
+                        className={styles.delModal}
+                        onOk={()=>this.delHandleOk()}
+                        onCancel={()=>this.delHandleCancel()}
+                        okText="确认"
+                        cancelText="取消"
+                        centered//居中显示
+                    >
+                        <p>删除后信息将无法恢复，是否确认删除。</p>
+                    </Modal>
                 </div>
-                <Table
-                    columns={columns}
-                    className={styles.table}
-                    pagination={paginationProps}
-                    dataSource={tableDatas}
-                    // scroll={{ x: 1000}}
-                />
-                {/* 添加弹窗 */}
-                <AddForm
-                    wrappedComponentRef={(addForm) => this.addForm = addForm}
-                    visible={addvisible}
-                    onCancel={() => this.addhandleCancel()}
-                    onOk={() => this.addhandleOk()}
-                    {...{ areaList }}
-                />
-                {/* 修改弹窗 */}
-                <EditForm
-                    wrappedComponentRef={(editForm) => this.editForm = editForm}
-                    visible={editvisible}
-                    onCancel={() => this.editCancelHandler()}
-                    onOk={() => this.editOkHandler()}
-                    {...{ editData, areaList }}
-                />
-                {/* 修改密码弹窗 */}
-                <EditPwdForm
-                    wrappedComponentRef={(editPwdForm) => this.editPwdForm = editPwdForm}
-                    visible={editPwdvisible}
-                    onCancel={() => this.editPwdCancelHandler()}
-                    onOk={() => this.editPwdOkHandler()}
-                />
-                {/* 删除弹窗 */}
-                <Modal 
-                    title="删除"
-                    visible={delVisible}
-                    className={styles.delModal}
-                    onOk={()=>this.delHandleOk()}
-                    onCancel={()=>this.delHandleCancel()}
-                    okText="确认"
-                    cancelText="取消"
-                    centered//居中显示
-                >
-                    <p>删除后信息将无法恢复，是否确认删除。</p>
-                </Modal>
             </React.Fragment>
         )
     }
