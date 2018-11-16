@@ -187,7 +187,7 @@ export function getDeviceParameters(params){
     )
   })
 }
-// 获取角色列表
+// 获取通知角色列表
 export function getRoleList(params){
   return request(`${envNet}/api/UserMgr/roleList`,{
     ...postOption,
