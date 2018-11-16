@@ -52,14 +52,11 @@ export default class extends Component{
             //设备安装地列表
             installAddrList:[],
             //搜索框初始值
-            searchValue: {
-                "waringType": 1,
-                "warningStatus": 1,
-                "deviceId": "",
-                "installAddr": "",
-                "pageIndex": 0,
-                "pageSize": 10
-            },
+            searchValue: {},
+            //关闭预警字段
+            deviceId:'',
+            //是否显示关闭预警显示
+            closeShowvisible:false
         };
     }
     componentDidMount() {
@@ -106,14 +103,14 @@ export default class extends Component{
                     <span className={styles.option}>
                         <Button
                             className={styles.edit}
-                            onClick={() => this.ruleDetails()}
+                            onClick={() => this.closeWarning(record.deviceId)}
                             icon='stop'
                         >
                             关闭预警
                         </Button>
                         <Button
                             className={styles.delete}
-                            onClick={()=>this.delete()}
+                            onClick={()=>this.location()}
                             icon='environment'
                         >
                             定位至事件地点
@@ -176,7 +173,6 @@ export default class extends Component{
             })
         })
     }
-    
     // 搜索功能
      _searchTableData() {
         const { title } = this.state;
@@ -263,6 +259,25 @@ export default class extends Component{
                 })
         })
     }
+    //点击关闭预警
+    closeWarning(deviceId){
+        this.setState({
+            closeShowvisible:true,
+            deviceId
+        })
+    }
+    //确定关闭预警
+    closeOk(){
+        this.setState({
+            closeShowvisible:false
+        })
+    }
+    //取消关闭预警
+    closeCancel(){
+        this.setState({
+            closeShowvisible:false
+        })
+    }
     //点击显示设置
     onShow(){
         this.setState({
@@ -319,7 +334,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { columns, tableDatas,itemCount,showvisible,installAddrList} = this.state;
+        const { columns, tableDatas,itemCount,showvisible,installAddrList,closeShowvisible} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -328,61 +343,70 @@ export default class extends Component{
         };
         return(      
             <React.Fragment>
-                <div className={styles.header}>
-                    <span>|</span>预警事件记录
-                </div>
-                <div className={styles.searchForm}>
-                    {/* 表单信息 */}
-                    <SearchForm
-                        wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                        {...{installAddrList}}
+                <div className={styles.warningRecords}>
+                    <div className={styles.header}>
+                        <span>|</span>预警事件记录
+                    </div>
+                    <div className={styles.searchForm}>
+                        {/* 表单信息 */}
+                        <SearchForm
+                            wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
+                            {...{installAddrList}}
+                        />
+                        <div className={styles.buttonGroup}>
+                            <Button
+                                icon='search'
+                                className={styles.fnButton}
+                                onClick={()=>this._searchTableData()}
+                            >
+                                搜索
+                            </Button>
+                            <Button
+                                icon='reload'
+                                className={styles.fnButton}
+                                onClick={()=>this._resetForm()}
+                            >
+                                重置
+                            </Button>
+                            <Button
+                                icon='eye'
+                                className={styles.fnButton}
+                                onClick={()=>this.onShow()}
+                            >
+                                显示设置
+                            </Button>
+                            <Button
+                                icon='upload'
+                                className={styles.fnButton}
+                            >
+                                数据导出
+                            </Button>
+                        </div> 
+                    </div>
+                    {/* 显示设置 */}
+                    <ShowSetForm
+                        wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
+                        visible={showvisible}
+                        onCancel={() => this.showCancel()}
+                        onOk={() => this.showOk()}
                     />
-                    <div className={styles.buttonGroup}>
-                        <Button
-                            icon='search'
-                            className={styles.fnButton}
-                            onClick={()=>this._searchTableData()}
-                        >
-                            搜索
-                        </Button>
-                        <Button
-                            icon='reload'
-                            className={styles.fnButton}
-                            onClick={()=>this._resetForm()}
-                        >
-                            重置
-                        </Button>
-                        <Button
-                            icon='eye'
-                            className={styles.fnButton}
-                            onClick={()=>this.onShow()}
-                        >
-                            显示设置
-                        </Button>
-                        <Button
-                            icon='upload'
-                            className={styles.fnButton}
-                        >
-                            数据导出
-                        </Button>
-                    </div> 
-                </div>
-                {/* 显示设置 */}
-                <ShowSetForm
-                    wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
-                    visible={showvisible}
-                    onCancel={() => this.showCancel()}
-                    onOk={() => this.showOk()}
-                />
-                <Table
-                    columns={columns}
-                    className={styles.table}
-                    pagination={paginationProps}
-                    dataSource={tableDatas}
-                    scroll={
-                        { x: columns.length <4 ? false : 2000 }
-                    }
-                />
+                    {/* 关闭预警 */}
+                    <CloseWarningForm
+                        wrappedComponentRef={(closeWarningForm) => this.closeWarningForm = closeWarningForm}
+                        visible={closeShowvisible}
+                        onCancel={() => this.closeCancel()}
+                        onOk={() => this.closeOk()}
+                    />
+                    <Table
+                        columns={columns}
+                        className={styles.table}
+                        pagination={paginationProps}
+                        dataSource={tableDatas}
+                        scroll={
+                            { x: columns.length <4 ? false : 2000 }
+                        }
+                    />
+                </div> 
             </React.Fragment>
         )
     }
@@ -498,6 +522,62 @@ const ShowSetForm = Form.create()(
                             )
                         }
 
+                    </Form>
+                </Modal>
+            )
+        }
+    }
+)
+//关闭预警弹窗
+const CloseWarningForm = Form.create()(
+    class extends React.Component {
+        render() {
+            const { visible, form, onOk, onCancel } = this.props
+            const { getFieldDecorator } = form;
+            return (
+                <Modal
+                    className={styles.closeWarningModal}
+                    visible={visible}
+                    title="关闭预警"
+                    cancelText='取消'
+                    okText='确定'
+                    onOk={onOk}
+                    onCancel={onCancel}
+                    centered={true}
+                >
+                    <Form>
+                        <Form.Item label='关闭理由'>
+                            {getFieldDecorator('reason', {initialValue: ''})
+                                (
+                                <Input
+                                    placeholder='（必填）'
+                                    type='text'
+                                />
+                                )
+                            }
+                        </Form.Item >
+                        <Form.Item label='处理人'>
+                            {getFieldDecorator('people', {initialValue: 'lisi'})
+                                (
+                                <Select>
+                                    <Option value='lisi'>李四</Option>  
+                                    <Option value='zhangsan'>张三</Option>  
+                                    {/* {
+                                        installAddrList.map((v,i)=>{
+                                            return(<Option key={i} value={v.id}>{v.addr}</Option>)
+                                        })
+                                    } */}
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                        <Form.Item>
+                            {getFieldDecorator('print', {
+                                valuePropName: 'checked',
+                            })(
+                                <Checkbox>生成报修订单</Checkbox>
+                            )}
+                        </Form.Item>
                     </Form>
                 </Modal>
             )

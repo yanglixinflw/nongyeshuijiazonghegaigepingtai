@@ -26,6 +26,10 @@ export default class extends Component {
                 deviceId,
             }
         });
+        //获取通知人列表
+        dispatch({
+            type:'warningDetail/getUserList',
+        })
         this.setState({
             deviceId
         })
@@ -34,15 +38,15 @@ export default class extends Component {
         let { warningDetail, loading } = this.props;
         let {deviceId} = this.state;
         let arr = Object.keys(warningDetail);
-        if (arr.length == 0) return warningDetail = null;
-        // console.log(deviceId)
+        if (arr.length >= 1) return warningDetail = null;
+        console.log(this.props)
         return (
             <Fragment>
                 <Spin size='large' spinning={loading}>
                     <BreadcrumbView
                         {...this.props}
                     />
-                    <WarningDetail {...{warningDetail,deviceId}}/>
+                    {/* <WarningDetail {...{warningDetail,deviceId}}/> */}
                 </Spin>
             </Fragment>
         )

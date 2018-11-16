@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from "./valveControl.less"
-import { Input, Button, Form, Cascader, Table, Divider,Select} from 'antd';
+import { Input,Button, Form,Table,Select,Modal,Radio} from 'antd';
 import { Link } from 'dva/router';
 
 //开发地址
@@ -13,6 +13,10 @@ const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`
 const dataUrl=`${envNet}/api/device/control/list`;
 //设备类型列表
 const deviceTypeUrl=`${envNet}/api/device/control/deviceTypeList`
+//获取设备型号可执行的指令列表
+const instructUrl=`${envNet}/api/device/control/cmdList`
+//向设备发送指令
+const sendCmdUrl=`${envNet}/api/device/control/sendCmd`
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -36,6 +40,7 @@ const tableTitle=[
     {index:"updateTime",item:"更新时间"},
 ]
 const { Option } = Select;
+const RadioGroup = Radio.Group;
 export default class extends Component{
     constructor(props) {
         super(props)
@@ -50,18 +55,23 @@ export default class extends Component{
             installAddrList:[],
             //设备类型列表
             deviceTypeList:[],
+            //设备类型Id
+            deviceTypeId:'',
             //开关阀携带信息
             deviceIdList:[],
+            //设备ID
+            deviceIds:[],
             //开关阀显示
             switchvisible:false,
+            //操作指令数据
+            cmd:[],
             //默认搜索框
-            searchValue:{
-
-            }
+            searchValue:{}
         }
     }
     componentDidMount() {
         this._getTableDatas(this.state.title, this.state.data);
+        //获取设备安装地数据
         fetch(installAddrUrl, {
             method:'GET',
             mode:'cors',
@@ -79,6 +89,7 @@ export default class extends Component{
         }).catch((err) => {
             console.log(err)
         })
+        //获取数据类型数据
         fetch(deviceTypeUrl,{
             ...postOption,
             body: JSON.stringify({
@@ -126,11 +137,28 @@ export default class extends Component{
         })
         const rowSelection = {
             onChange: (selectedRowKeys, selectedRows) => {
-              console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+                let data=selectedRows;
+                let deviceIds=[]
+                data.map((v)=>{
+                    if(v.deviceTypeName=="智能球阀"){
+                        this.setState({
+                            deviceTypeId:1
+                        })
+                    }else if(v.deviceTypeName=="井电双控"){
+                        this.setState({
+                            deviceTypeId:2
+                        })
+                    }
+                    deviceIds.push(v.deviceId)
+                    this.setState({
+                        deviceIds
+                    })
+                })
+                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
             },
-            onSelect: (record, selected, selectedRows) => {
-              console.log(record, selected, selectedRows);
-            },
+            // onSelect: (record, selected, selectedRows) => {
+            //   console.log(record, selected, selectedRows);
+            // },
             onSelectAll: (selected, selectedRows, changeRows) => {
               console.log(selected, selectedRows, changeRows);
             },
@@ -280,12 +308,65 @@ export default class extends Component{
     }
     //开关阀按钮点击
     valveSwitch(){ 
+        // console.log(this.state.deviceIds)
+        // console.log(this.state.deviceTypeId)
+      //获取设备型号可执行的指令
+        if(this.state.deviceIds=[]){
+            console.log(22222)
+        }
+        fetch(instructUrl,{
+            ...postOption,
+            body: JSON.stringify({
+                "deviceTypeId":this.state.deviceTypeId
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+                .then(v=>{
+                    if(v.ret==1){
+                        let cmd=v.data
+                        console.log(cmd)
+                        this.setState({
+                            cmd,
+                            switchvisible: true,
+                        })
+                    }
+                })
+        })
+    }
+    //点击开关阀确定
+    switchHandleOk(){
+        const form = this.switchForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            fetch(sendCmdUrl,{
+                ...postOption,
+                body: JSON.stringify({
+                    "deviceIds":this.state.deviceIds,
+                    "strCmd":values.switch
+                })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                    .then(v=>{
+                        if(v.ret==1){
+                            this.setState({
+                                switchvisible: false,
+                            });
+                        }
+                    })
+            })
+        })
+    }
+    //点击开关阀取消
+    switchHandleCancel(){
         this.setState({
-          switchvisible: true,
+            switchvisible: false,
         });
     }
     render(){
-        const { columns, tableDatas, installAddrList,rowSelection,deviceTypeList} = this.state;
+        const { columns, tableDatas, installAddrList,rowSelection,deviceTypeList,switchvisible,cmd} = this.state;
         const paginationProps = {
             showQuickJumper: true,
         };
@@ -341,6 +422,14 @@ export default class extends Component{
                         dataSource={tableDatas}
                         // scroll={{ x: 1300 }}
                     />
+                     {/* 开关阀弹窗 */}
+                     <SwitchForm
+                        wrappedComponentRef={(switchForm) => this.switchForm = switchForm}
+                        visible={switchvisible}
+                        onCancel={() => this.switchHandleCancel()}
+                        onOk={() => this.switchHandleOk()}
+                        {...{cmd}}
+                    />
                 </div>
             </React.Fragment>
         )
@@ -362,10 +451,9 @@ const SearchForm = Form.create()(
                         marginRight:"10px"
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('deviceTypeId', {initialValue:''})
+                        {getFieldDecorator('deviceTypeId', {initialValue:'智能球阀'})
                             (
                             <Select>
-                                <Option value='' disabled selected style={{display:'none'}}>设备类型</Option>
                                 {
                                     deviceTypeList.map((v,i)=>{
                                         return(<Option key={i} value={v.deviceTypeId}>{v.name}</Option>)
@@ -420,6 +508,46 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                 </Form>
+            )
+
+        }
+    }
+)
+//开关阀控制弹窗
+const SwitchForm = Form.create()(
+    class extends React.Component {
+        render() {
+            const { form,visible,onCancel,onOk,cmd } = this.props;
+            const { getFieldDecorator } = form;
+            return (
+                <Modal
+                    centered={true}
+                    className={styles.switchModal}
+                    visible={visible}
+                    title="阀门开关"
+                    onCancel={onCancel}
+                    onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
+                >
+                    <Form>
+                        <Form.Item>
+                            {getFieldDecorator('switch', {initialValue:''})
+                                (
+                                <RadioGroup>
+                                    {
+                                        cmd.map((v,i)=>{
+                                            return(
+                                                <Radio key={i} value={v.cmd}>{v.displayName}</Radio>
+                                            )
+                                        })
+                                    }
+                                </RadioGroup>
+                                )
+                            }
+                        </Form.Item>
+                    </Form>
+                </Modal>
             )
 
         }
