@@ -8,6 +8,8 @@ const envNet = 'http://192.168.30.127:88';
 // const envNet = '';
 //保存/添加预警规则Url
 const addUrl = `${envNet}/api/DeviceWaringRule/add`;
+//获取修改预警规则详情
+const detailUrl = `${envNet}/api/DeviceWaringRule/ruleDetails`
 //修改预警规则Url
 const updateUrl = `${envNet}/api/DeviceWaringRule/update`;
 //删除预警规则Url
@@ -125,39 +127,47 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            console.log(values)
-            let smsNotify = {}
+            let smsNotify = {};
+            let phoneNotify = {};
             smsNotify.frequency=values.smsFrequency;
-            return fetch(addUrl,{
-                ...postOption,
-                body:JSON.stringify({
-
-                })
-            }).then((res)=>{
-                Promise.resolve(res.json())
-                .then((v)=>{
-                    // 判断是否超时
-                    timeOut(v.ret)
-                    if(v.ret==1){
-                        let data = v.data;
-                        //添加key
-                        data.map((v,i)=>{
-                            v.key = i
-                        })
-                        this.setState({
-                            data
-                        })
-                    }
-                })
-            }).catch((err)=>{
-                console.log(err)
-            })
+            smsNotify.receiverIds=values.smsReceiverIds;
+            smsNotify.othersMobile=values.smsOthersMobile;
+            phoneNotify.frequency=values.phoneFrequency;
+            phoneNotify.receiverIds=values.phoneReceiverIds;
+            phoneNotify.othersMobile=values.phoneOthersMobile;
+            values.smsNotify=smsNotify
+            values.phoneNotify=phoneNotify
+            console.log(values)
+            // return fetch(addUrl,{
+            //     ...postOption,
+            //     body:JSON.stringify({
+            //         ...values
+            //     })
+            // }).then((res)=>{
+            //     Promise.resolve(res.json())
+            //     .then((v)=>{
+            //         // 判断是否超时
+            //         timeOut(v.ret)
+            //         if(v.ret==1){
+            //             let data = v.data;
+            //             //添加key
+            //             data.map((v,i)=>{
+            //                 v.key = i
+            //             })
+            //             this.setState({
+            //                 data
+            //             })
+            //         }
+            //     })
+            // }).catch((err)=>{
+            //     console.log(err)
+            // })
         })
-        // 重置表单
-        form.resetFields();
-        this.setState({
-            addVisible: false
-        })
+        // // 重置表单
+        // form.resetFields();
+        // this.setState({
+        //     addVisible: false
+        // })
     }
     //修改表单取消
     _modifyCancelHandler() {
@@ -183,28 +193,58 @@ export default class extends Component {
             addVisible: false
         })
     }
-    //自定义规则表单修改
+    //已有预警规则点击修改
     _modifyHandler(ruleId) {
-        const { data } = this.state;
-        let modifyData = [];
-        modifyData = data.filter(item => item.ruleId === ruleId);
-        // console.log(modifyData)
-        this.setState({
-            modifyData,
-            modifyVisible: true
+        return fetch(detailUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                ruleId
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+            .then((v)=>{
+                // 判断是否超时
+                timeOut(v.ret)
+                if(v.ret==1){
+                    let modifyData = v.data;
+                    this.setState({
+                        modifyData,
+                        modifyVisible: true
+                    })
+                }
+            })
+        }).catch((err)=>{
+            console.log(err)
         })
 
     }
-    //已有预警规则删除
+    //已有预警规则点击删除
     _deleteHandler(ruleId) {
         this.setState({
             deleteVisible: true,
             ruleId
         })
     }
-    //确认删除预警规则
+    //确认删除已有预警规则
     _deleteOkHandler() {
         const { ruleId } = this.state;
+        let userIds = [];
+        userIds.push(userId);
+        return fetch(deleteUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                userIds
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+            .then((v)=>{
+                // 判断是否超时
+                timeOut(v.ret)
+                if(v.ret==1){
+
+                }
+            })
+        })
         message.success('删除成功', 2);
         this.setState({
             deleteVisible: false
@@ -399,6 +439,10 @@ const AddRulesForm = Form.create()(
                             <Form.Item>
                                 {getFieldDecorator('name', {
                                     initialValue: '',
+                                    rules: [
+                                        { required: true,message: '请输入预警规则名称' },
+                                        { max: 30, message: '不要超过30个字符' }
+                                    ],
                                 })(
                                     <Input
                                         placeholder="请输入预警规则名称"
@@ -413,6 +457,7 @@ const AddRulesForm = Form.create()(
                             <Form.Item label='类型'>
                                 {getFieldDecorator('conditionType', {
                                     initialValue: '0',
+                                    rules: [{ required: true, message: '请选择预警类型' },],
                                 })(
                                     <Select>
                                         <Option key='0'>功能预警</Option>
@@ -424,6 +469,7 @@ const AddRulesForm = Form.create()(
                                 <Form.Item>
                                     {getFieldDecorator('parameterName', {
                                         initialValue: '',
+                                        rules: [{ required: true, message: '请选择判断参数名' },],
                                     })(
                                         <Select
                                             className={styles.params}
@@ -435,7 +481,8 @@ const AddRulesForm = Form.create()(
                                 </Form.Item>
                                 <Form.Item>
                                     {getFieldDecorator('operator', {
-                                        initialValue: ''
+                                        initialValue: '',
+                                        rules: [{ required: true, message: '请选择判断符号' },],
                                     })(
                                         <Select
                                             className={styles.judge}
@@ -453,7 +500,8 @@ const AddRulesForm = Form.create()(
                                 </Form.Item>
                                 <Form.Item>
                                     {getFieldDecorator('compareValue', {
-                                        initialValue: ''
+                                        initialValue: '',
+                                        rules: [{ required: true, message: '请选择判断值' },],
                                     })(
                                         <Input
                                             placeholder='值'
@@ -467,6 +515,7 @@ const AddRulesForm = Form.create()(
                             <Form.Item label='频率'>
                                 {getFieldDecorator('smsFrequency', {
                                     initialValue: '0',
+                                    rules: [{ required: true, message: '请选择短信通知频率' },],
                                 })(
                                     <Select>
                                         <Option key='0'>不通知</Option>
@@ -480,7 +529,8 @@ const AddRulesForm = Form.create()(
                             <Form.Item label='通知人' className={styles.informer}>
                                 <Form.Item>
                                     {getFieldDecorator('smsReceiverIds', {
-                                        initialValue: ''
+                                        initialValue: '',
+                                        rules: [{ required: true, message: '请选择短信通知人' },],
                                     })(
                                         <Select>
 
@@ -489,7 +539,9 @@ const AddRulesForm = Form.create()(
                                 </Form.Item>
                                 <Form.Item>
                                     {getFieldDecorator('smsOthersMobile', {
-                                        initialValue: ''
+                                        initialValue: '',
+                                        rules: [{ pattern: '^1[3578][0-9]{9}(,1[3578][0-9]{9})*$', message: '请输入正确的手机号码,多个手机号用英文逗号隔开' }],
+                                        
                                     })(
                                         <Input
                                             placeholder='需通知的其他联系人'
@@ -503,6 +555,7 @@ const AddRulesForm = Form.create()(
                                 <Form.Item label='频率'>
                                     {getFieldDecorator('phoneFrequency', {
                                         initialValue: '0',
+                                        rules: [{ required: true, message: '请选择电话通知频率' },],
                                     })(
                                         <Select>
                                             <Option key='0'>不通知</Option>
@@ -516,7 +569,8 @@ const AddRulesForm = Form.create()(
                                 <Form.Item label='通知人' className={styles.informer}>
                                     <Form.Item>
                                         {getFieldDecorator('phoneReceiverIds', {
-                                            initialValue: ''
+                                            initialValue: '',
+                                            rules: [{ required: true, message: '请选择电话通知人' },],
                                         })(
                                             <Select>
 
@@ -526,7 +580,8 @@ const AddRulesForm = Form.create()(
                                     </Form.Item>
                                     <Form.Item>
                                         {getFieldDecorator('phoneOthersMobile', {
-                                            initialValue: ''
+                                            initialValue: '',
+                                            rules: [{ pattern: '^1[3578][0-9]{9}(,1[3578][0-9]{9})*$', message: '请输入正确的手机号码,多个手机号用英文逗号隔开' }],
                                         })(
                                             <Input
                                                 placeholder='需通知的其他联系人'
@@ -539,7 +594,8 @@ const AddRulesForm = Form.create()(
                             <div className={styles.itemName2}>通知</div>
                             <Form.Item label='通知范围' >
                                 {getFieldDecorator('sysMsgNotify', {
-                                    initialValue: '',
+                                    initialValue: [],
+                                    rules: [{ required: true, message: '请选择通知范围' },],
                                 })(
                                     <Select
                                         mode="multiple"
@@ -557,6 +613,7 @@ const AddRulesForm = Form.create()(
                             <Form.Item label='通知内容' >
                                 {getFieldDecorator('notifyMsgContent', {
                                     initialValue: '',
+                                    rules: [{ required: true, message: '请输入通知内容' },],
                                 })(
                                     <Input
                                         className={styles.informContent}
@@ -571,6 +628,7 @@ const AddRulesForm = Form.create()(
                                 <Form.Item>
                                     {getFieldDecorator('deviceId', {
                                         initialValue: [],
+                                        rules: [{ required: true, message: '请选择关联设备' },],
                                     })(
                                         <Select
                                             //可搜索
@@ -586,7 +644,8 @@ const AddRulesForm = Form.create()(
                                 </Form.Item>
                                 <Form.Item>
                                     {getFieldDecorator('fireControlCmd', {
-                                        //initialValue: '',
+                                        initialValue: '',
+                                        rules: [{ required: true, message: '请选择指令' },],
                                     })(
                                         <Select
                                             placeholder='选择指令'
