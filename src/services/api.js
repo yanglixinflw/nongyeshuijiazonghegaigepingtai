@@ -178,3 +178,12 @@ export function getUserList(params){
     credentials: "include",
   })
 }
+// 获取设备参数列表
+export function getDeviceParameters(params){
+  return request(`${envNet}/api/DeviceType/deviceParameters`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
