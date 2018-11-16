@@ -50,7 +50,9 @@ export default class extends Component {
             //添加表单设备名称搜索值
             addSearchValue:'',
             //模板预警表单数据
-            templateData:''
+            templateData:'',
+            //通知人列表
+            receiverList:[]
         }
         console.log(this.state.data)
     }
@@ -532,7 +534,9 @@ const AddRulesForm = Form.create()(
                                         initialValue: '',
                                         rules: [{ required: true, message: '请选择短信通知人' },],
                                     })(
-                                        <Select>
+                                        <Select
+                                            showSearch={true}
+                                        >
 
                                         </Select>
                                     )}
@@ -572,7 +576,9 @@ const AddRulesForm = Form.create()(
                                             initialValue: '',
                                             rules: [{ required: true, message: '请选择电话通知人' },],
                                         })(
-                                            <Select>
+                                            <Select
+                                                showSearch={true}
+                                            >
 
                                             </Select>
                                         )}
@@ -601,8 +607,8 @@ const AddRulesForm = Form.create()(
                                         mode="multiple"
                                         placeholder='全部'
                                     >
-                                        <Option key='0'>超级管理员</Option>
-                                        <Option key='1'>一般管理员</Option>
+                                        {/* <Option key='0'>超级管理员</Option>
+                                        <Option key='1'>一般管理员</Option> */}
 
                                     </Select>
                                 )}
