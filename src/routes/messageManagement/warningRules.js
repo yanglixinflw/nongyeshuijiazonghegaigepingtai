@@ -22,15 +22,15 @@ export default class extends Component{
         })
     }
     render(){
-        let { warningRules,loading } = this.props;
+        let { warningRules,loading ,dispatch} = this.props;
         let arr = Object.keys(warningRules);
         if (arr.length <2) return warningRules = null;
-        // console.log(warningRules)
+        // console.log(this.props)
         return(
             <React.Fragment>
                 <Spin size='large' spinning={loading}>
                     <WarningRules
-                        {...warningRules}
+                        {...{warningRules,dispatch}}
                     /> 
                 </Spin>  
             </React.Fragment>

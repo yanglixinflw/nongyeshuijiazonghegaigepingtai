@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import styles from "./warningRules.less"
 import {  Button,Select ,Table, Modal} from 'antd';
-import { Link } from 'dva/router';
+import { routerRedux } from 'dva/router';
 //开发环境
 const envNet='http://192.168.30.127:88';
 //生产环境
@@ -26,17 +26,16 @@ const title=[
 export default class extends Component{
     constructor(props){
         super(props)
-        const {data,deviceTypeList}=props;
-        // console.log(this.props)
+        const {warningRules}=props;
         this.state = {
             //表头
             title,
-            itemCount:data.data.itemCount,//总数据数
-            data:data.data.items,//表格数据源
+            itemCount:warningRules.data.data.itemCount,//总数据数
+            data:warningRules.data.data.items,//表格数据源
             //表的每一列
             columns: [],
             // 设备类型列表
-            deviceTypeList:deviceTypeList.data.data,
+            deviceTypeList:warningRules.deviceTypeList.data.data,
             // 添加弹窗
             // addVisible:false,
             addVisible:true,
@@ -112,7 +111,7 @@ export default class extends Component{
     }
     //选择不同的设备类型 
     selectDeviceType(selectDeviceId){
-        console.log(selectDeviceId)
+        // console.log(selectDeviceId)
         this.setState({
             selectDeviceId
         })
@@ -125,12 +124,21 @@ export default class extends Component{
     }
     // 下一步
     _addNext(){
-
+        const {dispatch}=this.props
+        const {selectDeviceId}=this.state
+        if(selectDeviceId==''){
+            alert('请先选择要设置的设备类型')
+        }else{
+            localStorage.setItem('selectDeviceId',selectDeviceId)
+            dispatch(routerRedux.push('/warningRules/addWarningRules'))
+        }
+        // console.log(selectDeviceId)
     }
     // 添加取消
     _addCancel(){
         this.setState({
-            addVisible:false
+            addVisible:false,
+            selectDeviceId:''
         })
     }
     _pageChange(page){

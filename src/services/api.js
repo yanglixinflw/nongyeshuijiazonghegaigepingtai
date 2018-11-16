@@ -170,3 +170,11 @@ export function queryWarningDetail(params){
     )
   })
 }
+// 获取当前机构中的用户列表
+export function getUserList(params){
+  return request(`${envNet}/api/device/warningRuleList?userType=1&keyword=${params}`,{
+    method:'GET',
+    mode:'cors',
+    credentials: "include",
+  })
+}
