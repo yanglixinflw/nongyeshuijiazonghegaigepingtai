@@ -15,12 +15,16 @@ export default class extends Component{
                 "pageIndex": 0,
                 "pageSize": 10
               }
-        });//type来选择请求的接口，payload为传给后台的参数
+        });
+        // 获取设备列表
+        dispatch({
+            type:'warningRules/fetchDeviceTypeList'
+        })
     }
     render(){
         let { warningRules,loading } = this.props;
         let arr = Object.keys(warningRules);
-        if (arr.length <1) return warningRules = null;
+        if (arr.length <2) return warningRules = null;
         // console.log(warningRules)
         return(
             <React.Fragment>

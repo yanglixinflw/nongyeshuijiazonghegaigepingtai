@@ -4,9 +4,6 @@ import { Input, Button, Form, Select, Icon } from 'antd';
 import { Link } from 'dva/router';
 const Option = Select.Option;
 export default class extends Component {
-    // constructor(props) {
-    //     super(props)
-    componentDidMount() { }
     render() {
         return (
             <React.Fragment>

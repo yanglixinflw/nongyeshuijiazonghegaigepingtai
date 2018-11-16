@@ -1,8 +1,8 @@
 import { Component } from 'react';
 import styles from "./warningRules.less"
-import { Input, Button, Form,  Table, Modal} from 'antd';
+import {  Button,Select ,Table, Modal} from 'antd';
 import { Link } from 'dva/router';
-//ip地址
+//开发环境
 const envNet='http://192.168.30.127:88';
 //生产环境
 // const envNet='';
@@ -17,6 +17,7 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 }
+const Option = Select.Option;
 //头信息
 const title=[
     {index:"deviceTypeName",item:"设备型号"},
@@ -25,7 +26,7 @@ const title=[
 export default class extends Component{
     constructor(props){
         super(props)
-        const {data}=props;
+        const {data,deviceTypeList}=props;
         // console.log(this.props)
         this.state = {
             //表头
@@ -34,6 +35,13 @@ export default class extends Component{
             data:data.data.items,//表格数据源
             //表的每一列
             columns: [],
+            // 设备类型列表
+            deviceTypeList:deviceTypeList.data.data,
+            // 添加弹窗
+            // addVisible:false,
+            addVisible:true,
+            // 选择的设备ID
+            selectDeviceId:''
         };
     }
     componentDidMount() {
@@ -59,6 +67,7 @@ export default class extends Component{
             className: `${styles.action}`,
             width: 200,
             render: (record) => {
+                // console.log(record)
                 return (
                     <span className={styles.option}>
                         
@@ -92,6 +101,7 @@ export default class extends Component{
             tableDatas.push({
                 deviceTypeName:v.deviceTypeName,
                 name:v.name,
+                ruleId:v.ruleId,
                 key: i,
             });
         })
@@ -99,6 +109,29 @@ export default class extends Component{
             columns,
             tableDatas,
         });
+    }
+    //选择不同的设备类型 
+    selectDeviceType(selectDeviceId){
+        console.log(selectDeviceId)
+        this.setState({
+            selectDeviceId
+        })
+    }
+    // 点击添加规则
+    addRules(){
+        this.setState({
+            addVisible:true
+        })
+    }
+    // 下一步
+    _addNext(){
+
+    }
+    // 添加取消
+    _addCancel(){
+        this.setState({
+            addVisible:false
+        })
     }
     _pageChange(page){
         // 翻页传递参数
@@ -136,7 +169,13 @@ export default class extends Component{
         })
     }
     render(){
-        const { columns, tableDatas,itemCount } = this.state;
+        const { 
+            columns, 
+            tableDatas,
+            itemCount, 
+            addVisible,
+            deviceTypeList
+        } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total:itemCount,
@@ -150,16 +189,14 @@ export default class extends Component{
                 </div>
                 <div className={styles.searchForm}>
                     <div className={styles.buttonGroup}>
-                    <Link to={`/warningRules/addWarningRules`}>
                         <Button
                             icon='plus'
                             className={styles.fnButton}
+                            onClick={()=>this.addRules()}
                         >
-                            添加
+                            添加预警规则
                         </Button>
-                    </Link>
                     </div>
-                    
                 </div>
                 <Table
                     columns={columns}
@@ -168,6 +205,38 @@ export default class extends Component{
                     dataSource={tableDatas}
                     // scroll={{ x: 1300 }}
                 />
+                <Modal
+                    className={styles.addModal}
+                    visible={addVisible}
+                    title="选择设备类型"
+                    cancelText='取消'
+                    okText='下一步'
+                    onOk={()=>this._addNext()}
+                    onCancel={()=>this._addCancel()}
+                    centered
+                >
+                    <div>
+                    <span className={styles.title}>设备类型</span>
+                    <Select
+                        onChange={(value)=>this.selectDeviceType(value)}
+                        placeholder='请选择设备类型'
+                    >
+                        {
+                            deviceTypeList.map((v,i)=>{
+                                // console.log(v)
+                                return(
+                                    <Option
+                                    value={v.deviceTypeId}
+                                    key={v.deviceTypeId}
+                                    >
+                                    {v.name}
+                                    </Option>
+                                )
+                            })
+                        }
+                    </Select>
+                    </div>
+                </Modal>
             </React.Fragment>
         )
     }
