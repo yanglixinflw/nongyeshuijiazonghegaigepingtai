@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './addWarningRules.less';
-import { Input, Button, Form, Select, Icon } from 'antd';
+import { Input, Button, Form, Select, Icon ,InputNumber} from 'antd';
 import { Link } from 'dva/router';
 import {getUserList,getDeviceParameters,getRoleList} from '../../services/api'
 const Option = Select.Option;
@@ -19,10 +19,17 @@ export default class extends Component {
                 deviceTypeId:localStorage.getItem('selectDeviceId')
             })
         Promise.resolve(parameterList).then((v)=>{
-            console.log(v)
-            if(v.data.data.length==0){
-                alert('该设备暂不支持预警规则设置')
+            // console.log(v)
+            if(v.data.ret===1){
+                if(v.data.data.length==0){
+                    alert('该设备暂不支持预警规则设置')
+                }else{
+                    this.setState({
+                        parameterList:v.data.data
+                    })
+                }
             }
+            
         })
     }
     // 保存当前值
@@ -33,6 +40,8 @@ export default class extends Component {
         })
     }
     render() {
+        const {parameterList}=this.state
+        // console.log(parameterList)
         return (
             <React.Fragment>
                 <div className={styles.headers}>
@@ -59,10 +68,10 @@ export default class extends Component {
                             <AddRulesForm
                                 wrappedComponentRef={(addRulesForm) => this.addRulesForm = addRulesForm}
                                 onSave={() => this._addSaveHandler()}
+                                parameterList={parameterList}
                             />
                     </div>
                 </div>
-
             </React.Fragment>
         )
     }
@@ -71,8 +80,9 @@ export default class extends Component {
 const AddRulesForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, onSave} = this.props;
+            const { form, onSave,parameterList} = this.props;
             const { getFieldDecorator } = form;
+            // console.log(parameterList)
             return (
                 <Form layout='inline' className={styles.addForm}>
                     <div className={styles.formTitle}>
@@ -111,7 +121,16 @@ const AddRulesForm = Form.create()(
                                             className={styles.params}
                                             placeholder='请选择参数'
                                         >
-                                            {/* <Option value=''>参数1</Option> */}
+                                        {
+                                            parameterList.length==0?null:
+                                            parameterList.map((v,i)=>{
+                                                // console.log(v)
+                                                return(
+                                                    <Option key={v.key} value={v.key}>{v.name}</Option>
+                                                )
+                                            })
+                                        }
+                                            
                                         </Select>
                                     )}
 
@@ -123,13 +142,13 @@ const AddRulesForm = Form.create()(
                                         <Select
                                             className={styles.judge}
                                         >
-                                            <Option value=''>判断</Option>
-                                            <Option key='='>=</Option>
-                                            <Option key='>'>></Option>
-                                            <Option key='<'>{'<'}</Option>
-                                            <Option key='<='>{'<='}</Option>
-                                            <Option key='>='>{'>='}</Option>
-                                            <Option key='≠'>{'≠'}</Option>
+                                            <Option value=''>判断符</Option>
+                                            <Option key='=' value='=' >=</Option>
+                                            <Option key='>' value='>'>></Option>
+                                            <Option key='<' value='<'>{'<'}</Option>
+                                            <Option key='<=' value='<='>{'<='}</Option>
+                                            <Option key='>=' value='>='>{'>='}</Option>
+                                            <Option key='≠' value='≠'>{'≠'}</Option>
                                         </Select>
                                     )}
 
@@ -138,7 +157,7 @@ const AddRulesForm = Form.create()(
                                     {getFieldDecorator('judgeValue', {
                                         initialValue: ''
                                     })(
-                                        <Input
+                                        <InputNumber
                                             placeholder='值'
                                         />
                                     )}

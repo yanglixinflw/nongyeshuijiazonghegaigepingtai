@@ -258,12 +258,13 @@
     .judgmentRule {
         margin-left: 40px;
         :global {
-            .ant-input {
+            .ant-input-number {
                 width: 120px;
                 height: 40px;
                 background: #141831;
                 border: 1px solid #141831;
                 color: #46556D;
+                line-height: 40px;
                 &:focus {
                     border: 1px solid #337DF6 !important;
                     box-shadow: none;
@@ -271,6 +272,9 @@
                 &::-webkit-input-placeholder {
                     color: #46556D;
                 }
+            }
+            .ant-input-number-handler-wrap{
+                display: none
             }
             .ant-select {
                 margin-right: 10px !important;
@@ -381,7 +385,7 @@
         .judgmentRule {
             margin-left: 20px;
             :global {
-                .ant-input {
+                .ant-input-number {
                     width: 80px;
                 }
             }
@@ -421,7 +425,7 @@
                 width:80px !important;
             }
             :global {
-                .ant-input {
+                .ant-input-number {
                     width: 80px;
                 }
             }
