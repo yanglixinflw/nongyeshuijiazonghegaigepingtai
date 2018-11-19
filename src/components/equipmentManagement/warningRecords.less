@@ -349,11 +349,37 @@
                                     height: 36px;
                                     background: #272d52;
                                     border:none;
+                                    color:#e7e7ec;
                                     &:focus{
                                         border:1px solid #327df4;
                                     }
                                 }
-                              
+                            }
+                            .ant-form-item-control,.has-success{
+                                .ant-select,.ant-select-enabled{
+                                    .ant-select-selection,.ant-select-selection--single{
+                                        background: #272d52;
+                                        height:36px;
+                                        border:none;
+                                        &:focus{
+                                            border:1px solid #327df4;
+                                        }
+                                        .ant-select-selection-selected-value{
+                                            margin-top:3px;
+                                            color:#e7e7ec;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .ant-checkbox-wrapper{
+                            margin-left: 76px;
+                            span{
+                                color:#e7e7ec;
+                            }
+                            .ant-checkbox-inner{
+                                background: #171a39;
+                                border:1px solid #327df4;
                             }
                         }
                     }

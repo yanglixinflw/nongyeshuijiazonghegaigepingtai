@@ -1,10 +1,13 @@
 import React,{Component} from 'react';
 import styles from "./operatingRecord.less"
-import { Input, Button, Form, Cascader, Table, Divider,Select, Icon,DatePicker} from 'antd';
+import { Input, Button, Form,Table,Icon,DatePicker} from 'antd';
 import { Link } from 'dva/router';
 import { parse } from 'qs';
+import moment from 'moment';
 //开发地址
 const envNet='http://192.168.30.127:88';
+//翻页调用
+const dataUrl=`${envNet}/api/device/control/operateLogs`;
 //生产环境
 // const envNet='';
 //表头
@@ -63,6 +66,107 @@ export default class extends Component{
             tableDatas,
         });
     }
+    //时间控件
+    range(start, end) {
+        const result = [];
+        for (let i = start; i < end; i++) {
+          result.push(i);
+        }
+        return result;
+    }
+    disabledDate(current) {
+        return current && current < moment().endOf('day');
+    }
+    disabledRangeTime(_, type) {
+        if (type === 'start') {
+          return {
+            disabledHours: () => range(0, 60).splice(4, 20),
+            disabledMinutes: () => range(30, 60),
+            disabledSeconds: () => [55, 56],
+          };
+        }
+        return {
+          disabledHours: () => range(0, 60).splice(20, 4),
+          disabledMinutes: () => range(0, 31),
+          disabledSeconds: () => [55, 56],
+        };
+    }
+       // 搜索功能
+    _searchTableData() {
+        const { title } = this.state;
+        const form = this.searchForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            console.log(values)
+            // if(values.operateUserName==undefined){
+            //     values.operateUserName=''
+            // }
+            // return fetch(dataUrl, {
+            //     ...postOption,
+            //     body: JSON.stringify({
+            //         "deviceId": this.state.deviceId,
+            //         "operateUserName":operateUserName,
+            //         "beginTime": beginTime,
+            //         "endTime": endTime,
+            //         "pageIndex": 0,
+            //         "pageSize": 10
+            //     })
+            // }).then(res => {
+            //     Promise.resolve(res.json())
+            //         .then(v => {
+            //             if (v.ret == 1) {
+            //                 // 设置页面显示的元素
+            //                 let itemCount = v.data.itemCount
+            //                 let data = v.data.items
+            //                 this.setState({
+            //                     itemCount,
+            //                     data
+            //                 })
+            //                 this._getTableDatas(title,data);
+            //             }
+            //         })
+            // }).catch(err => {
+            //     console.log(err)
+            // })
+        })
+    }
+    //重置
+    _resetForm() {
+        const { title } = this.state;
+        const form = this.searchForm.props.form;
+        // 重置表单
+        form.resetFields();
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                deviceId,
+                "pageIndex": 0,
+                "pageSize": 10
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v)
+                        let data = v.data.items;
+                        let itemCount = v.data.itemCount;
+                        // 给每一条数据添加key
+                        data.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            data,
+                            itemCount,
+                            searchValue:{}
+                        })
+                        this._getTableDatas(title, data);
+                    }
+                })
+        })
+    }
     render(){
         const {tableDatas,columns,deviceId} = this.state;
         return(
@@ -88,6 +192,8 @@ export default class extends Component{
                         {/* 表单信息 */}
                         <SearchForm
                             wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
+                            disabledDate={()=>this.disabledDate()}
+                            disabledTime={()=>this.disabledRangeTime()}
                         />
                         <div className={styles.buttonGroup}>
                             <Button
@@ -122,10 +228,7 @@ const SearchForm = Form.create()(
     class extends React.Component {
         render() {
             const { form} = this.props;
-            const { getFieldDecorator } = form;
-            const rangeConfig = {
-                rules: [{ type: 'array', required: true, message: 'Please select time!' }],
-            };
+            const { getFieldDecorator,disabledDate,disabledRangeTime } = form;
             return (
                 <Form 
                     layout='inline'
@@ -136,7 +239,7 @@ const SearchForm = Form.create()(
                         marginRight:"10px"
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('id', {})
+                        {getFieldDecorator('operateUserName', {})
                             (
                             <Input
                                 placeholder='操作员'
@@ -146,8 +249,16 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('range-picker', rangeConfig)(
-                            <RangePicker />
+                        {getFieldDecorator('time')(
+                            <RangePicker 
+                                disabledDate={disabledDate}
+                                disabledTime={disabledRangeTime}
+                                showTime={{
+                                    hideDisabledOptions: true,
+                                    defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                                }}
+                                format="YYYY-MM-DD HH:mm:ss"
+                            />
                         )}
                     </Form.Item>
                 </Form>
