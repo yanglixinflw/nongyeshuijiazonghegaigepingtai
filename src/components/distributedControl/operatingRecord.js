@@ -3,7 +3,7 @@ import styles from "./operatingRecord.less"
 import { Input, Button, Form,Table,Icon,DatePicker} from 'antd';
 import { Link } from 'dva/router';
 import { parse } from 'qs';
-import moment from 'moment';
+
 //开发地址
 const envNet='http://192.168.30.127:88';
 //翻页调用
@@ -11,6 +11,15 @@ const dataUrl=`${envNet}/api/device/control/operateLogs`;
 //生产环境
 // const envNet='';
 //表头
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+}
 const tableTitle=[
     {index:"operateUserName",item:"操作员"},
     {index:"cmdName",item:"动作"},
@@ -66,71 +75,63 @@ export default class extends Component{
             tableDatas,
         });
     }
-    //时间控件
-    range(start, end) {
-        const result = [];
-        for (let i = start; i < end; i++) {
-          result.push(i);
-        }
-        return result;
-    }
-    disabledDate(current) {
-        return current && current < moment().endOf('day');
-    }
-    disabledRangeTime(_, type) {
-        if (type === 'start') {
-          return {
-            disabledHours: () => range(0, 60).splice(4, 20),
-            disabledMinutes: () => range(30, 60),
-            disabledSeconds: () => [55, 56],
-          };
-        }
-        return {
-          disabledHours: () => range(0, 60).splice(20, 4),
-          disabledMinutes: () => range(0, 31),
-          disabledSeconds: () => [55, 56],
-        };
-    }
+     //时间控件
+     onChange(dateString) {
+        console.log('Formatted Selected Time: ', dateString);
+      }
+      
+    //   onOk(value) {
+    //     console.log('onOk: ', value);
+    //   }
        // 搜索功能
     _searchTableData() {
         const { title } = this.state;
         const form = this.searchForm.props.form;
-        form.validateFields((err, values) => {
+        form.validateFields((err, fieldsValue) => {
             // 未定义时给空值
             if (err) {
                 return
             }
+            const rangeTimeValue = fieldsValue['range-time-picker'];
+            const values = {
+                ...fieldsValue,
+                'range-time-picker': [
+                  rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
+                  rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
+                ]
+            };
             console.log(values)
-            // if(values.operateUserName==undefined){
-            //     values.operateUserName=''
-            // }
-            // return fetch(dataUrl, {
-            //     ...postOption,
-            //     body: JSON.stringify({
-            //         "deviceId": this.state.deviceId,
-            //         "operateUserName":operateUserName,
-            //         "beginTime": beginTime,
-            //         "endTime": endTime,
-            //         "pageIndex": 0,
-            //         "pageSize": 10
-            //     })
-            // }).then(res => {
-            //     Promise.resolve(res.json())
-            //         .then(v => {
-            //             if (v.ret == 1) {
-            //                 // 设置页面显示的元素
-            //                 let itemCount = v.data.itemCount
-            //                 let data = v.data.items
-            //                 this.setState({
-            //                     itemCount,
-            //                     data
-            //                 })
-            //                 this._getTableDatas(title,data);
-            //             }
-            //         })
-            // }).catch(err => {
-            //     console.log(err)
-            // })
+
+            if(values.operateUserName==undefined){
+                values.operateUserName=''
+            }
+            return fetch(dataUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "deviceId": this.state.deviceId,
+                    "operateUserName":values.operateUserName,
+                    "beginTime": values.range-time-picker[0],
+                    "endTime": values.range-time-picker[1],
+                    "pageIndex": 0,
+                    "pageSize": 10
+                })
+            }).then(res => {
+                Promise.resolve(res.json())
+                    .then(v => {
+                        if (v.ret == 1) {
+                            // 设置页面显示的元素
+                            let itemCount = v.data.itemCount
+                            let data = v.data.items
+                            this.setState({
+                                itemCount,
+                                data
+                            })
+                            this._getTableDatas(title,data);
+                        }
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
         })
     }
     //重置
@@ -142,7 +143,7 @@ export default class extends Component{
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                deviceId,
+                "deviceId": this.state.deviceId,
                 "pageIndex": 0,
                 "pageSize": 10
             })
@@ -192,8 +193,6 @@ export default class extends Component{
                         {/* 表单信息 */}
                         <SearchForm
                             wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                            disabledDate={()=>this.disabledDate()}
-                            disabledTime={()=>this.disabledRangeTime()}
                         />
                         <div className={styles.buttonGroup}>
                             <Button
@@ -228,7 +227,7 @@ const SearchForm = Form.create()(
     class extends React.Component {
         render() {
             const { form} = this.props;
-            const { getFieldDecorator,disabledDate,disabledRangeTime } = form;
+            const { getFieldDecorator } = form;
             return (
                 <Form 
                     layout='inline'
@@ -249,16 +248,8 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('time')(
-                            <RangePicker 
-                                disabledDate={disabledDate}
-                                disabledTime={disabledRangeTime}
-                                showTime={{
-                                    hideDisabledOptions: true,
-                                    defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
-                                }}
-                                format="YYYY-MM-DD HH:mm:ss"
-                            />
+                        {getFieldDecorator('range-time-picker')(
+                            <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                         )}
                     </Form.Item>
                 </Form>

@@ -2,8 +2,11 @@ import React from 'react';
 import styles from './index.less'
 import { routerRedux } from 'dva/router';
 import { Button, Menu, Dropdown, Icon ,Modal,Badge} from 'antd'
+import {Link} from 'dva/router';
 // 开发环境
 const envNet = 'http://192.168.30.127:88'
+// 生产环境
+// const envNet = ''
 const dataUrl=`${envNet}/api/DeviceWaringRule/eventList`;
 // post通用设置
 let postOption = {
@@ -14,15 +17,6 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 }
-//假数据
-var warningDatas=[
-    {dev:"12345",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"预警"},
-    {dev:"12346",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"预警"},
-    {dev:"12347",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"正常"},
-    {dev:"12348",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"预警"},
-    {dev:"12349",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"正常"},
-    {dev:"12344",name:"设备电量低",build:"一号闸阀井",content:'慧水井电双控功能异常',time:"2018-9-10 22:30:10",waringStatus:"预警"},
-]
 // 确认退出className
 const confirmLogout=styles.confirmLogout
 const confirm = Modal.confirm;
@@ -46,46 +40,62 @@ export default class extends React.Component {
         const menu = (
             <Menu style={{width:0,height:0}}>
             </Menu>
-          );
+        );
         this.state = {
             menu,
-            //数据源
-            warningDatas,
             downData,
+            //数据源
+            warningDatas:[],
             //预警事件的个数
             count: 0,
         }
     }
     componentDidMount() {
-        this._getWarningDatas(this.state.warningDatas);
-    }
-    _getWarningDatas(data){
-        let warningDatas = [];
-        //出现预警的数据
-        data.map((v, i) => {
-            if(v.waringStatus=="预警"){
-                warningDatas.push(v);
-            };
-            v.key = i;
-        })
-        if(warningDatas.length>0){
-           var menu=(
-            <Menu>
-                {
-                    warningDatas.map(function(v,i){
-                        return <Menu.Item key={i}>
-                                    <a href={`/#/manage/warning`}>{'【设备异常】'+" "+v.content+" "+v.time}</a>
-                                </Menu.Item>
-                    })
-                
-                }
-            </Menu>
-           )
-        }
-        this.setState({
-            warningDatas,
-            count:warningDatas.length,
-            menu
+        fetch(dataUrl,{
+            ...postOption,
+            body: JSON.stringify({
+                "pageIndex": 0,
+                "pageSize": 10
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+                .then(v=>{
+                    if(v.ret==1){
+                        console.log(v.data.items)
+                        let data=v.data.items;
+                        let warningDatas=[];
+                        data.map((v, i) => {
+                            if(v.warningStatus==1){
+                                warningDatas.push(v);
+                            };
+                            v.key = i;
+                        })
+                        if(warningDatas.length>0){
+                            var menu=(
+                             <Menu>
+                                 {
+                                     warningDatas.map(function(v,i){
+                                         return <Menu.Item key={i}>
+                                                     <Link to={`/manage/warning`}>{'【设备异常】'+" "+v.eventContent+" "+v.time}</Link>
+                                                 </Menu.Item>
+                                     })
+                                 
+                                 }
+                             </Menu>
+                            )
+                        }else{
+                            var menu = (
+                                <Menu style={{width:0,height:0}}>
+                                </Menu>
+                            );
+                        }
+                        this.setState({
+                            warningDatas,
+                            count:warningDatas.length,
+                            menu
+                        })
+                    }
+                })
         })
     }
      // 退出登录
