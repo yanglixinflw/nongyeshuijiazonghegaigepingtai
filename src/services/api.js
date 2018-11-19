@@ -196,3 +196,12 @@ export function getRoleList(params){
     )
   })
 }
+//Gis地图获取设备信息
+export function getMapDevice(params){
+  return request(`${envNet}/api/device/gisDeviceList`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}

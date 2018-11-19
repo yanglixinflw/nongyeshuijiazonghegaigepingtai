@@ -1,0 +1,90 @@
+//引入线上图标
+@import 'http://at.alicdn.com/t/font_869092_twicu4yjbc8.css';
+.mapWarning{
+    margin:0;
+    height:100vh;
+    :global{
+        .amap-maptype-con {
+            display: none;
+        }
+        .amap-maptype-list {
+            display: none !important;
+            .amap-maptype-item {
+                display: none !important;
+            }
+        }
+    }
+}
+//切换地图类型 卫星|地图
+.btnMapType {
+    position: absolute;
+    top: 27px;
+    right: 35px;
+    z-index: 199;
+    :global {
+        .ant-btn {
+            width: 80px;
+            height: 43px;
+            background: #141831;
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+            border: 0;
+            &:focus {
+                background: #327DF4;
+            }
+            &:hover {
+                background: #327DF4;
+            }
+            &:active {
+                background: #327DF4;
+            }
+        }
+    }
+    .btnsatellite {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+    .btnflat {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+}
+
+.playIcon {
+    display: block;
+    color: #D1CCC6;
+    font-size: 36px !important;
+    position: absolute;
+    top: 60px;
+    left: 122px;
+    cursor: pointer;
+}
+
+.btnMapZoom {
+    position: absolute;
+    top: 690px;
+    right: 10px;
+    :global {
+        .ant-btn {
+            width: 35px;
+            height: 35px;
+            padding: 0;
+            position: absolute;
+            background: #337DF6;
+            border: 0;
+            i {
+                color: #fff;
+                font-size: 20px;
+            }
+        }
+    }
+    .btnPlus {
+        top: 32px;
+        left: -64px;
+    }
+    .btnLess {
+        top: 80px;
+        left: -64px;
+    }
+}
