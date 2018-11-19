@@ -63,6 +63,8 @@ export default class extends Component{
             deviceIds:[],
             //开关阀显示
             switchvisible:false,
+            //是否选中
+            selected:false,
             //操作指令数据
             cmd:[],
             //默认搜索框
@@ -154,14 +156,19 @@ export default class extends Component{
                         deviceIds
                     })
                 })
-                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+                // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
             },
-            // onSelect: (record, selected, selectedRows) => {
+            onSelect: (record, selected, selectedRows) => {
             //   console.log(record, selected, selectedRows);
-            // },
-            onSelectAll: (selected, selectedRows, changeRows) => {
-              console.log(selected, selectedRows, changeRows);
+                // console.log(selected)
+                this.setState({
+                    selected
+                })
+                
             },
+            // onSelectAll: (selected, selectedRows, changeRows) => {
+            //   console.log(selected, selectedRows, changeRows);
+            // },
           };
         this.setState({
             columns,
@@ -310,28 +317,30 @@ export default class extends Component{
     valveSwitch(){ 
         // console.log(this.state.deviceIds)
         // console.log(this.state.deviceTypeId)
-      //获取设备型号可执行的指令
-        if(this.state.deviceIds=[]){
-            console.log(22222)
-        }
-        fetch(instructUrl,{
-            ...postOption,
-            body: JSON.stringify({
-                "deviceTypeId":this.state.deviceTypeId
-            })
-        }).then(res=>{
-            Promise.resolve(res.json())
-                .then(v=>{
-                    if(v.ret==1){
-                        let cmd=v.data
-                        console.log(cmd)
-                        this.setState({
-                            cmd,
-                            switchvisible: true,
-                        })
-                    }
+        //获取设备型号可执行的指令
+        //  console.log(this.state.deviceIds)
+        if(this.state.selected==false||this.state.deviceIds.length==0){
+            alert("请先选择设备")
+        }else{
+            fetch(instructUrl,{
+                ...postOption,
+                body: JSON.stringify({
+                    "deviceTypeId":this.state.deviceTypeId
                 })
-        })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                    .then(v=>{
+                        if(v.ret==1){
+                            let cmd=v.data
+                            console.log(cmd)
+                            this.setState({
+                                cmd,
+                                switchvisible: true,
+                            })
+                        }
+                    })
+            })
+        }
     }
     //点击开关阀确定
     switchHandleOk(){

@@ -258,3 +258,64 @@
         }
     }
 }
+.switchModal{
+    width: 400px !important;
+    height: 216px;
+        :global{
+            .ant-modal-close{
+                .ant-modal-close-x{
+                    .anticon,.anticon-close,.ant-modal-close-icon{
+                        color:#e7e7ec;
+                    }
+                }
+            }
+            .ant-modal-header{
+                background: #171a39;
+                border-bottom: 1px solid #363a69 !important;
+                .ant-modal-title{
+                    width: 400px;
+                    padding: 0 22px;
+                    margin-left: -23px;
+                    color:#e7e7ec;
+                    border-left:4px solid #327df4;
+                }   
+            }
+            .ant-modal-body{
+                background: #171a39;
+                .ant-form,.ant-form-horizontal{
+                    width: 360px;
+                    margin:auto;
+                    .ant-row,.ant-form-item{
+                        .ant-form-item-control-wrapper{
+                            width: 200px;
+                            margin:auto;
+                        }
+                        .ant-radio-wrapper{
+                            color:#e7e7ec;
+                            .ant-radio{
+                                .ant-radio-inner{
+                                    background: #171a39;
+                                    border:1px solid #0084FF;
+                                }
+                            }
+                        }
+                    }
+                }
+            } 
+            .ant-modal-footer{
+                background: #171a39;
+                border-top: 1px solid #363a69 !important;
+                text-align: center;
+                .ant-btn{
+                    border:none;
+                    color:#327df4;
+                    background: #171a39;
+                }
+                .ant-btn-primary{
+                    border-color:#1890ff;
+                    background: #1890ff;
+                    color:#ffffff;
+                }
+            }
+        }
+}

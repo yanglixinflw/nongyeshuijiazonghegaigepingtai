@@ -2,13 +2,34 @@ import React, { Component } from 'react';
 import styles from './addWarningRules.less';
 import { Input, Button, Form, Select, Icon } from 'antd';
 import { Link } from 'dva/router';
+import {getUserList,getDeviceParameters,getRoleList} from '../../services/api'
 const Option = Select.Option;
 export default class extends Component {
+    state={
+        parameterList:[]
+    }
+    componentDidMount(){
+        // let UserList=getUserList('')
+        // Promise.resolve(UserList).then((v)=>{
+        //     console.log(v)
+        // })
+        // 获取设备参数列表
+        let parameterList=getDeviceParameters(
+            {
+                deviceTypeId:localStorage.getItem('selectDeviceId')
+            })
+        Promise.resolve(parameterList).then((v)=>{
+            console.log(v)
+            if(v.data.data.length==0){
+                alert('该设备暂不支持预警规则设置')
+            }
+        })
+    }
     // 保存当前值
     _addSaveHandler(){
         const form = this.addRulesForm.props.form;
         form.validateFields((err,values)=>{
-            console.log(values)
+            // console.log(values)
         })
     }
     render() {
@@ -72,24 +93,25 @@ const AddRulesForm = Form.create()(
                         <div className={styles.items}>
                             <div className={styles.itemName1}>条件</div>
                             <Form.Item label='类型'>
-                                {getFieldDecorator('warningType', {
-                                    initialValue: '0',
+                                {getFieldDecorator('conditionType', {
+                                    initialValue: '1',
                                 })(
                                     <Select>
-                                        <Option key='0'>功能预警</Option>
-                                        <Option key='1'>运营预警</Option>
+                                        <Option key='1'>功能预警</Option>
+                                        <Option key='2'>运营预警</Option>
                                     </Select>
                                 )}
                             </Form.Item>
                             <Form.Item label='判断规则' className={styles.judgmentRule}>
                                 <Form.Item>
                                     {getFieldDecorator('params', {
-                                        initialValue: '',
+                                        rules: [{ required: true, message: '判断规则不能为空' }]
                                     })(
                                         <Select
                                             className={styles.params}
+                                            placeholder='请选择参数'
                                         >
-                                            <Option value=''>参数1</Option>
+                                            {/* <Option value=''>参数1</Option> */}
                                         </Select>
                                     )}
 

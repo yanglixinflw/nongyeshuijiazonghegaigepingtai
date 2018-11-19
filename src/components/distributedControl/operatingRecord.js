@@ -1,13 +1,25 @@
 import React,{Component} from 'react';
 import styles from "./operatingRecord.less"
-import { Input, Button, Form, Cascader, Table, Divider,Select, Icon,DatePicker} from 'antd';
+import { Input, Button, Form,Table,Icon,DatePicker} from 'antd';
 import { Link } from 'dva/router';
 import { parse } from 'qs';
+
 //开发地址
 const envNet='http://192.168.30.127:88';
+//翻页调用
+const dataUrl=`${envNet}/api/device/control/operateLogs`;
 //生产环境
 // const envNet='';
 //表头
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+}
 const tableTitle=[
     {index:"operateUserName",item:"操作员"},
     {index:"cmdName",item:"动作"},
@@ -62,6 +74,99 @@ export default class extends Component{
             columns,
             tableDatas,
         });
+    }
+     //时间控件
+     onChange(dateString) {
+        console.log('Formatted Selected Time: ', dateString);
+      }
+      
+    //   onOk(value) {
+    //     console.log('onOk: ', value);
+    //   }
+       // 搜索功能
+    _searchTableData() {
+        const { title } = this.state;
+        const form = this.searchForm.props.form;
+        form.validateFields((err, fieldsValue) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            const rangeTimeValue = fieldsValue['range-time-picker'];
+            const values = {
+                ...fieldsValue,
+                'range-time-picker': [
+                  rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
+                  rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
+                ]
+            };
+            console.log(values)
+
+            if(values.operateUserName==undefined){
+                values.operateUserName=''
+            }
+            return fetch(dataUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "deviceId": this.state.deviceId,
+                    "operateUserName":values.operateUserName,
+                    "beginTime": values.range-time-picker[0],
+                    "endTime": values.range-time-picker[1],
+                    "pageIndex": 0,
+                    "pageSize": 10
+                })
+            }).then(res => {
+                Promise.resolve(res.json())
+                    .then(v => {
+                        if (v.ret == 1) {
+                            // 设置页面显示的元素
+                            let itemCount = v.data.itemCount
+                            let data = v.data.items
+                            this.setState({
+                                itemCount,
+                                data
+                            })
+                            this._getTableDatas(title,data);
+                        }
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
+        })
+    }
+    //重置
+    _resetForm() {
+        const { title } = this.state;
+        const form = this.searchForm.props.form;
+        // 重置表单
+        form.resetFields();
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                "deviceId": this.state.deviceId,
+                "pageIndex": 0,
+                "pageSize": 10
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v)
+                        let data = v.data.items;
+                        let itemCount = v.data.itemCount;
+                        // 给每一条数据添加key
+                        data.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            data,
+                            itemCount,
+                            searchValue:{}
+                        })
+                        this._getTableDatas(title, data);
+                    }
+                })
+        })
     }
     render(){
         const {tableDatas,columns,deviceId} = this.state;
@@ -123,9 +228,6 @@ const SearchForm = Form.create()(
         render() {
             const { form} = this.props;
             const { getFieldDecorator } = form;
-            const rangeConfig = {
-                rules: [{ type: 'array', required: true, message: 'Please select time!' }],
-            };
             return (
                 <Form 
                     layout='inline'
@@ -136,7 +238,7 @@ const SearchForm = Form.create()(
                         marginRight:"10px"
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('id', {})
+                        {getFieldDecorator('operateUserName', {})
                             (
                             <Input
                                 placeholder='操作员'
@@ -146,8 +248,8 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('range-picker', rangeConfig)(
-                            <RangePicker />
+                        {getFieldDecorator('range-time-picker')(
+                            <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                         )}
                     </Form.Item>
                 </Form>
