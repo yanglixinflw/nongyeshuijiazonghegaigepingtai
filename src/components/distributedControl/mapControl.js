@@ -113,6 +113,7 @@ export default class extends Component {
                     <MyCustomize />
                 </Map>
                 <Modal
+                    className={styles.controlModal}
                     centered={true}
                     visible={modalVisible}
                     title='球阀开关'

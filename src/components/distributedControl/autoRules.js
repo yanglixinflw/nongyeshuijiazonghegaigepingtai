@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import styles from './autoRules.less';
-import { Input, Button, Form, Select,Icon} from 'antd';
+import { Input, Button, Form, Select,Icon,Radio} from 'antd';
 import {Link} from 'dva/router';
 const Option = Select.Option;
+const RadioGroup = Radio.Group;
 export default class extends Component {
     constructor(props) {
         super(props)
         this.state={
+            //默认选中
+            value: 1,
         }
     }
     //可输入的select框执行的方法
@@ -246,9 +249,10 @@ const RuleForm = Form.create()(
                         <Form.Item className={styles.all}>
                             {getFieldDecorator('condition', {initialValue:'all'})
                                 (
-                                <Select>
-                                    <Option value="all">所有条件</Option>
-                                </Select>
+                                <RadioGroup>
+                                    <Radio value="all">全部条件</Radio>
+                                    <Radio value="part">部分条件</Radio>
+                                </RadioGroup>
                                 )
                             }
                         </Form.Item>

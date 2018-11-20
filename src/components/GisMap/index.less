@@ -77,9 +77,25 @@
     color:#BBC5D2;
     font-size: 12px;
     margin:0 12px 0 0;
+    // width:40px;
     .keyWordSt{
         color:#327DF4 !important;
     }
+}
+.deviceId{
+    color:#BBC5D2;
+    font-size: 12px;
+    margin:0 12px 0 0;
+    width:170px;
+    white-space:nowrap ;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    .keyWordSt{
+        color:#327DF4 !important;
+    }
+}
+.keyWordSt{
+    color:#327DF4 !important;
 }
 .itemAdress{
     color:#BBC5D2;
@@ -98,10 +114,9 @@
             margin-right: 35px;
             border: 0;
             background: #141831;
-            color: #fff;
+            color: #BBC5D2;
             width: 68px;
             height: 68px;
-            line-height: 20px;
             margin-left: 7px;
             font-size: 12px;
             padding: 0px 5px;
@@ -110,33 +125,45 @@
             white-space: pre-wrap;
             &:focus {
                 background: #327DF4;
+                color:#fff;
+                span{
+                    color: #fff;
+                }
             }
             &:hover {
                 background: #327DF4;
+                color:#fff;
+                span{
+                    color: #fff;
+                }
             }
             &:active {
                 background: #327DF4;
+                color:#fff;
+                span{
+                    color: #fff;
+                }
             }
             span {
                 font-size: 12px;
                 font-weight: 600;
-                color: #fff;
+                color: #BBC5D2;
             }
         }
     }
     .camera {
-        margin: 7px;
+        margin: 0 7px;
         display: block;
-        width: 40px;
-        height: 28px;
-        background: url(../../assets/camera.png) no-repeat;
+        width: 44px;
+        height: 44px;
+        background: url(../../assets/camera.png) center no-repeat;
     }
     .waterValve{
-        margin: 0px 11px;
+        margin: 0px 7px;
         display: block;
-        width: 42px;
-        height: 42px;
-        background: url(../../assets/waterValve.png) no-repeat;
+        width: 44px;
+        height: 44px;
+        background: url(../../assets/waterValve.png) center no-repeat;
     }
 }
 
@@ -593,6 +620,9 @@
             :global{
                 .ant-list{
                     width:234px;
+                }
+                .ant-list-item{
+                    height: 80px;
                 }
             }
         }
