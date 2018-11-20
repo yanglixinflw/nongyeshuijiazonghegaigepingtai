@@ -196,6 +196,24 @@ export function getRoleList(params){
     )
   })
 }
+// 获取设备名称/ID简化列表
+export function getSimpleList(params){
+  return request(`${envNet}/api/device/simpleList`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
+// 获取设备id对应的可执行的指令列表
+export function getControlList(params){
+  return request(`${envNet}/api/device/control/deviceCmdList`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
 //Gis地图获取设备信息
 export function getMapDevice(params){
   return request(`${envNet}/api/device/gisDeviceList`,{

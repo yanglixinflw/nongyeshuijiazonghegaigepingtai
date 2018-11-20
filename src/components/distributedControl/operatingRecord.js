@@ -77,7 +77,7 @@ export default class extends Component{
     }
      //时间控件
      onChange(dateString) {
-        console.log('Formatted Selected Time: ', dateString);
+        // console.log('Formatted Selected Time: ', dateString);
       }
       
     //   onOk(value) {
@@ -100,7 +100,7 @@ export default class extends Component{
                   rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
                 ]
             };
-            console.log(values)
+            // console.log(values)
 
             if(values.operateUserName==undefined){
                 values.operateUserName=''

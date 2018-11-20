@@ -8,29 +8,30 @@
     margin-bottom: 20px;
     box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    .left{
+    .left {
         display: flex;
-        .arrowLeft{
+        .arrowLeft {
             width: 98px;
             display: flex;
             justify-content: space-between;
             margin-right: 7px;
             color: #bbc5d2;
-            :hover{
-                color:#327df4
+            :hover {
+                color: #327df4
             }
         }
-        .warningRules{
+        .warningRules {
             width: 118px;
             display: flex;
             justify-content: space-around;
             color: #bbc5d2;
-            :hover{
-                color:#327df4
+            :hover {
+                color: #327df4
             }
         }
     }
 }
+
 .warningDetail {
     margin: 0 40px;
     height: 100%;
@@ -98,6 +99,7 @@
             margin: 24px 0px 30px 18px;
             height: 45px;
             line-height: 45px;
+            // align-items: center;
             .itemName {
                 width: 104px;
                 height: 44px;
@@ -109,6 +111,9 @@
                 margin-right: 72px;
             }
             :global {
+                .ant-form-item-label {
+                    line-height: 42px;
+                }
                 .ant-form-item-label label,
                 .ant-form-item {
                     color: #DADADF;
@@ -121,6 +126,9 @@
                         border: 1px solid #337DF6;
                         box-shadow: none;
                     }
+                }
+                .ant-form-item-required:before{
+                    display: none;
                 }
             }
         }
@@ -202,7 +210,7 @@
         color: #DADBE0;
         background: #2A325E;
         text-align: center;
-        font-size:16px;
+        font-size: 16px;
         margin-right: 75px;
     }
     .itemName2 {
@@ -228,6 +236,25 @@
             border: 1px solid #337DF6 !important;
             box-shadow: none;
         }
+        :global{
+            .ant-select-selection--multiple {
+                width:708px ;
+                min-height: 42px;
+                background: #141831;
+                border: 1px solid #141831;
+                line-height: 42px;
+                // display: flex;
+                // align-items: center;
+                &:active {
+                    border: 1px solid #337DF6 !important;
+                    box-shadow: none;
+                }
+                &:focus {
+                    border: 1px solid #337DF6 !important;
+                    box-shadow: none;
+                }
+            }
+        }
     }
     :global {
         .ant-form-item {
@@ -236,41 +263,33 @@
         .ant-form-item-label label:after {
             content: ''
         }
-        .ant-select-selection--multiple {
-            min-height: 42px;
-            background: #141831;
-            border: 1px solid #141831;
-            line-height: 42px;
-            &:active {
-                border: 1px solid #337DF6 !important;
-                box-shadow: none;
-            }
-            &:focus {
-                border: 1px solid #337DF6 !important;
-                box-shadow: none;
-            }
-        }
+        
         .ant-select-open .ant-select-selection {
             border: 1px solid #337DF6 !important;
             box-shadow: none;
         }
+
     }
     .judgmentRule {
         margin-left: 40px;
         :global {
-            .ant-input {
+            .ant-input-number {
                 width: 120px;
                 height: 40px;
                 background: #141831;
                 border: 1px solid #141831;
-                color: #46556D;
+                color: #bbbbc0;
+                line-height: 40px;
                 &:focus {
                     border: 1px solid #337DF6 !important;
                     box-shadow: none;
                 }
-                &::-webkit-input-placeholder {
-                    color: #46556D;
-                }
+            }
+            .ant-input-number-input::-webkit-input-placeholder {
+                color: #46556D;
+            }
+            .ant-input-number-handler-wrap {
+                display: none
             }
             .ant-select {
                 margin-right: 10px !important;
@@ -280,13 +299,14 @@
     .informer {
         margin-left: 54px;
         :global {
-            .ant-input {
+            .ant-input  {
                 width: 250px;
                 height: 40px;
                 background: #141831;
                 border: 1px solid #141831;
                 color: #46556D;
-                &::-webkit-input-placeholder {
+                line-height: 40px;
+                .ant-input-input::-webkit-input-placeholder {
                     color: #46556D;
                 }
                 &:focus {
@@ -320,6 +340,9 @@
             right: 41px;
         }
     }
+}
+.searchDropDown{
+    width: auto !important;
 }
 
 //媒体查询
@@ -381,7 +404,7 @@
         .judgmentRule {
             margin-left: 20px;
             :global {
-                .ant-input {
+                .ant-input-number {
                     width: 80px;
                 }
             }
@@ -396,6 +419,11 @@
         }
         .informContent {
             width: 650px;
+            :global{
+                .ant-select-selection--multiple{
+                    width: 650px;
+                }
+            }
         }
         .itemName2 {
             margin-right: 29px;
@@ -414,39 +442,45 @@
         }
         .judgmentRule {
             margin-left: 20px;
-            .params{
-                width:100px !important;
+            .params {
+                width: 100px !important;
             }
-            .judge{
-                width:80px !important;
+            .judge {
+                width: 80px !important;
             }
             :global {
-                .ant-input {
+                .ant-input-number {
                     width: 80px;
                 }
             }
         }
-        .informer{
-            :global{
-                .ant-select{
-                    width:100px !important;
+        .informer {
+            :global {
+                .ant-select {
+                    width: 100px !important;
                 }
                 .ant-input{
-                    width:170px;
+                    width: 170px;
                 }
             }
         }
         .informContent {
             width: 532px;
+            :global{
+                .ant-select-selection--multiple{
+                    width: 532px;
+                }
+            }
         }
     }
 }
-@media(max-width:1100px){
+
+@media(max-width:1100px) {
     .addForm {
         .itemName1 {
             margin-right: 35px;
         }
-        .itemName2{
+        .itemName2 {
             margin-right: 7px;
         }
     }

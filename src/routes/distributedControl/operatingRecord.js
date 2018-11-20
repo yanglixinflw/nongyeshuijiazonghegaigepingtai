@@ -10,7 +10,7 @@ import { parse } from 'qs';
 export default class extends React.Component{
     componentDidMount() {
         let deviceId = parse(window.location.href.split(':'))[3];
-        console.log(deviceId)
+        // console.log(deviceId)
         const { dispatch } = this.props;
         dispatch({
             type: 'operatingRecord/fetch',
@@ -23,7 +23,7 @@ export default class extends React.Component{
     }
     render(){
         let { operatingRecord, loading } = this.props;
-        console.log(operatingRecord)
+        // console.log(operatingRecord)
         let arr = Object.keys(operatingRecord);
         if (arr.length <=0) return operatingRecord = null;
         return (

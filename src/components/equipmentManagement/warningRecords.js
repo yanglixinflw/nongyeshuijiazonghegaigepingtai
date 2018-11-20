@@ -9,7 +9,9 @@ const envNet = 'http://192.168.30.127:88';
 //翻页调用
 const dataUrl = `${envNet}/api/DeviceWaringRule/eventList`;
 //设备安装地列表
-const installAddrUrl = `${envNet}/api/BaseInfo/installAddrList`
+const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`;
+//关闭预警事件
+const closeWarningUrl=`${envNet}/api/DeviceWaringRule/eventClose`;
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -270,9 +272,33 @@ export default class extends Component {
         })
     }
     //确定关闭预警
-    closeOk() {
-        this.setState({
-            closeShowvisible: false
+    closeOk(){
+        const form = this.searchForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            fetch(closeWarningUrl,{
+                ...postOption,
+                body:JSON.stringify({
+                    "logId": this.state.deviceId,
+                    "dealWithOpinion": values.reason,
+                    "isCreateRepairOrder": values.print,
+                    "repairOrderToUserId": values.people
+                })                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+            }).then(res=>{
+                Promise.resolve(res.json())
+                .then(v=>{
+                    if(v.ret==1){
+                        this.setState({
+                            closeShowvisible:false
+                        })
+                    }
+                })
+            }).catch((err) => {
+                console.log(err)
+            })
         })
     }
     //取消关闭预警
@@ -550,10 +576,10 @@ const CloseWarningForm = Form.create()(
                 >
                     <Form>
                         <Form.Item label='关闭理由'>
-                            {getFieldDecorator('reason', { initialValue: '' })
+                            {getFieldDecorator('reason', {rules: [{ required: true, message: '关闭预警理由必填' }]})
                                 (
                                 <Input
-                                    placeholder='（必填）'
+                                    placeholder='请填写关闭理由'
                                     type='text'
                                 />
                                 )
