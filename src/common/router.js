@@ -76,7 +76,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['login'], () => import('../routes/login')),
     }, 
     '/gismap/gismapPage':{
-      component: dynamicWrapper(app, [], () => import('../routes/gisMap')),
+      component: dynamicWrapper(app, ['mapGis'], () => import('../routes/gisMap')),
     },
     '/deviceData/device:id':{
       component: dynamicWrapper(app, ['deviceData'], () => import('../routes/deviceData/deviceData')),
@@ -104,6 +104,9 @@ export const getRouterData = app => {
     },
     '/manage/warning':{
       component: dynamicWrapper(app, ['warningRecords'], () => import('../routes/equipmentManagement/warningRecords')),
+    },
+    '/warning/map:id':{
+      component: dynamicWrapper(app, [], () => import('../routes/equipmentManagement/mapWarning')),
     },
     // '/dcs/remote':{
     //   component: dynamicWrapper(app, [], () => import('../routes/distributedControl/remoteControl')),

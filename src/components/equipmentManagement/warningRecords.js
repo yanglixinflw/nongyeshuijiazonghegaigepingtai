@@ -1,16 +1,21 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 import styles from './warningRecords.less';
-import { Input, Button, Form, Row,Col, Table, Modal,Select,Checkbox} from 'antd';
+import { Input, Button, Form, Row, Col, Table, Modal, Select, Checkbox } from 'antd';
+import { Link } from 'dva/router';
 //开发地址
-const envNet='http://192.168.30.127:88';
+const envNet = 'http://192.168.30.127:88';
 //生产环境
 // const envNet='';
 //翻页调用
-const dataUrl=`${envNet}/api/DeviceWaringRule/eventList`;
+const dataUrl = `${envNet}/api/DeviceWaringRule/eventList`;
 //设备安装地列表
+<<<<<<< HEAD
 const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`;
 //关闭预警事件
 const closeWarningUrl=`${envNet}/api/DeviceWaringRule/eventClose`;
+=======
+const installAddrUrl = `${envNet}/api/BaseInfo/installAddrList`
+>>>>>>> 74ca96fb43e4a23642343499dfe9171960dcd377
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -21,51 +26,52 @@ let postOption = {
     }),
 }
 //头信息
-const tableTitle=[
-    {index:"time",item:"预警时间"},
-    {index:"waringType",item:"预警类型"},
-    {index:"name",item:"预警名称"},
-    {index:"eventContent",item:"事件内容"},
-    {index:"warningStatus",item:"状态"},
-    {index:"dealWithOpinion",item:"处理结果"},
-    {index:"dealWithUser",item:"处理人"},
-    {index:"dealWithTime",item:"处理时间"},
-    {index:"deviceId",item:"设备ID"},
-    {index:"buildingName",item:"关联建筑物"},
-    {index:"installAddress",item:"设备安装地"}
+const tableTitle = [
+    { index: "time", item: "预警时间" },
+    { index: "waringType", item: "预警类型" },
+    { index: "name", item: "预警名称" },
+    { index: "eventContent", item: "事件内容" },
+    { index: "warningStatus", item: "状态" },
+    { index: "dealWithOpinion", item: "处理结果" },
+    { index: "dealWithUser", item: "处理人" },
+    { index: "dealWithTime", item: "处理时间" },
+    { index: "deviceId", item: "设备ID" },
+    { index: "buildingName", item: "关联建筑物" },
+    { index: "installAddress", item: "设备安装地" }
 ]
-tableTitle.map((v,i)=>{
-    v.number=i
+tableTitle.map((v, i) => {
+    v.number = i
 })
-const { Option }= Select
-export default class extends Component{
-    constructor(props){
+const { Option } = Select
+export default class extends Component {
+    constructor(props) {
         super(props)
-        const {warningRecords}=props;
+        const { warningRecords } = props;
         this.state = {
-            itemCount:warningRecords.data.data.itemCount,//总数据数
-            data:warningRecords.data.data.items,//表格数据源
+            itemCount: warningRecords.data.data.itemCount,//总数据数
+            data: warningRecords.data.data.items,//表格数据源
             //表的每一列
             columns: [],
             //筛选后的显示设置表
-            title:tableTitle,
+            title: tableTitle,
             //是否弹出显示设置
-            showvisible:false,
+            showvisible: false,
             //设备安装地列表
-            installAddrList:[],
+            installAddrList: [],
             //搜索框初始值
             searchValue: {},
             //关闭预警字段
-            deviceId:'',
+            deviceId: '',
             //是否显示关闭预警显示
-            closeShowvisible:false
+            closeShowvisible: false
         };
+        console.log(this.state.data)
     }
     componentDidMount() {
         this._getTableDatas(this.state.title, this.state.data);
         fetch(installAddrUrl, {
-            method:'GET',
-            mode:'cors',
+            method: 'GET',
+            mode: 'cors',
             credentials: "include",
         }).then((res) => {
             Promise.resolve(res.json())
@@ -97,7 +103,7 @@ export default class extends Component{
             title: '操作',
             key: 'action',
             align: 'center',
-            fixed:"right",
+            fixed: "right",
             className: `${styles.action}`,
             width: 200,
             render: (record) => {
@@ -110,13 +116,14 @@ export default class extends Component{
                         >
                             关闭预警
                         </Button>
-                        <Button
-                            className={styles.delete}
-                            onClick={()=>this.location()}
-                            icon='environment'
-                        >
-                            定位至事件地点
+                        <Link to={`/warning/map:${record.deviceId}`} target='_blank'>
+                            <Button
+                                className={styles.delete}
+                                icon='environment'
+                            >
+                                定位至事件地点
                         </Button>
+                        </Link>
                     </span>
                 )
             }
@@ -125,17 +132,17 @@ export default class extends Component{
         //表单数据
         data.map((v, i) => {
             tableDatas.push({
-                time:v.time,
-                waringType:v.waringType,
-                name:v.name,
-                eventContent:v.eventContent,
-                deviceId:v.deviceId,
-                buildingName:v.buildingName,
-                warningStatus:v.warningStatus,
-                dealWithOpinion:v.dealWithOpinion,
-                dealWithUser:v.dealWithUser,
-                dealWithTime:v.dealWithTime,
-                installAddress:v.installAddress,
+                time: v.time,
+                waringType: v.waringType,
+                name: v.name,
+                eventContent: v.eventContent,
+                deviceId: v.deviceId,
+                buildingName: v.buildingName,
+                warningStatus: v.warningStatus,
+                dealWithOpinion: v.dealWithOpinion,
+                dealWithUser: v.dealWithUser,
+                dealWithTime: v.dealWithTime,
+                installAddress: v.installAddress,
                 key: i,
             });
         })
@@ -144,7 +151,7 @@ export default class extends Component{
             tableDatas,
         });
     }
-    _pageChange(page){
+    _pageChange(page) {
         const { searchValue } = this.state;
         searchValue.pageIndex = page - 1;
         return fetch(dataUrl, {
@@ -152,31 +159,31 @@ export default class extends Component{
             body: JSON.stringify({
                 ...searchValue
             })
-        }).then((res)=>{
+        }).then((res) => {
             Promise.resolve(res.json())
-            .then((v)=>{
-                if(v.ret==1){
-                    // console.log(v);
-                    // 设置页面显示的元素
-                    let data = v.data.items;
-                    //添加key
-                    data.map((v, i) => {
-                        v.key = i
-                    })
-                    this.setState({
-                        itemCount:v.data.itemCount,
-                        data
-                    })
-                    this._getTableDatas(this.state.title, this.state.data);
-                }
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v);
+                        // 设置页面显示的元素
+                        let data = v.data.items;
+                        //添加key
+                        data.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            itemCount: v.data.itemCount,
+                            data
+                        })
+                        this._getTableDatas(this.state.title, this.state.data);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         })
     }
     // 搜索功能
-     _searchTableData() {
+    _searchTableData() {
         const { title } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
@@ -184,20 +191,20 @@ export default class extends Component{
             if (err) {
                 return
             }
-            if(values.waringType=="waringType"){
-                values.waringType=''
+            if (values.waringType == "waringType") {
+                values.waringType = ''
             }
-            if(values.warningStatus=="state"){
-                values.warningStatus=''
+            if (values.warningStatus == "state") {
+                values.warningStatus = ''
             }
-            if(values.deviceId==undefined){
-                values.deviceId=''
+            if (values.deviceId == undefined) {
+                values.deviceId = ''
             }
-            if(values.installAddr=='installAddress'){
-                values.installAddr=''
+            if (values.installAddr == 'installAddress') {
+                values.installAddr = ''
             }
-            if(values.building==undefined){
-                values.building=''
+            if (values.building == undefined) {
+                values.building = ''
             }
             return fetch(dataUrl, {
                 ...postOption,
@@ -221,7 +228,7 @@ export default class extends Component{
                                 itemCount,
                                 data
                             })
-                            this._getTableDatas(title,data);
+                            this._getTableDatas(title, data);
                         }
                     })
             }).catch(err => {
@@ -254,7 +261,7 @@ export default class extends Component{
                         this.setState({
                             data,
                             itemCount,
-                            searchValue:{}
+                            searchValue: {}
                         })
                         this._getTableDatas(title, data);
                     }
@@ -262,13 +269,14 @@ export default class extends Component{
         })
     }
     //点击关闭预警
-    closeWarning(deviceId){
+    closeWarning(deviceId) {
         this.setState({
-            closeShowvisible:true,
+            closeShowvisible: true,
             deviceId
         })
     }
     //确定关闭预警
+<<<<<<< HEAD
     closeOk(){
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
@@ -296,18 +304,23 @@ export default class extends Component{
             }).catch((err) => {
                 console.log(err)
             })
+=======
+    closeOk() {
+        this.setState({
+            closeShowvisible: false
+>>>>>>> 74ca96fb43e4a23642343499dfe9171960dcd377
         })
     }
     //取消关闭预警
-    closeCancel(){
+    closeCancel() {
         this.setState({
-            closeShowvisible:false
+            closeShowvisible: false
         })
     }
     //点击显示设置
-    onShow(){
+    onShow() {
         this.setState({
-            showvisible:true
+            showvisible: true
         })
     }
     // 确定显示设置
@@ -344,7 +357,7 @@ export default class extends Component{
             title.map((v, i) => {
                 titles.push(v.item)
             })
-            this._getTableDatas(title,this.state.data)
+            this._getTableDatas(title, this.state.data)
             this.setState({
                 showvisible: false,
                 titles,
@@ -359,15 +372,15 @@ export default class extends Component{
             showvisible: false
         })
     }
-    render(){
-        const { columns, tableDatas,itemCount,showvisible,installAddrList,closeShowvisible} = this.state;
+    render() {
+        const { columns, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible } = this.state;
         const paginationProps = {
             showQuickJumper: true,
-            total:itemCount,
+            total: itemCount,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
-        return(      
+        return (
             <React.Fragment>
                 <div className={styles.warningRecords}>
                     <div className={styles.header}>
@@ -377,27 +390,27 @@ export default class extends Component{
                         {/* 表单信息 */}
                         <SearchForm
                             wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                            {...{installAddrList}}
+                            {...{ installAddrList }}
                         />
                         <div className={styles.buttonGroup}>
                             <Button
                                 icon='search'
                                 className={styles.fnButton}
-                                onClick={()=>this._searchTableData()}
+                                onClick={() => this._searchTableData()}
                             >
                                 搜索
                             </Button>
                             <Button
                                 icon='reload'
                                 className={styles.fnButton}
-                                onClick={()=>this._resetForm()}
+                                onClick={() => this._resetForm()}
                             >
                                 重置
                             </Button>
                             <Button
                                 icon='eye'
                                 className={styles.fnButton}
-                                onClick={()=>this.onShow()}
+                                onClick={() => this.onShow()}
                             >
                                 显示设置
                             </Button>
@@ -407,7 +420,7 @@ export default class extends Component{
                             >
                                 数据导出
                             </Button>
-                        </div> 
+                        </div>
                     </div>
                     {/* 显示设置 */}
                     <ShowSetForm
@@ -429,10 +442,10 @@ export default class extends Component{
                         pagination={paginationProps}
                         dataSource={tableDatas}
                         scroll={
-                            { x: columns.length <4 ? false : 2000 }
+                            { x: columns.length < 4 ? false : 2000 }
                         }
                     />
-                </div> 
+                </div>
             </React.Fragment>
         )
     }
@@ -441,19 +454,19 @@ export default class extends Component{
 const SearchForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form,installAddrList } = this.props;
+            const { form, installAddrList } = this.props;
             const { getFieldDecorator } = form;
             return (
-                <Form 
+                <Form
                     layout='inline'
                     style={{
                         display: 'flex',
-                        alignItems:"center",
-                        flexWrap:"wrap",
-                        marginRight:'10px'
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                        marginRight: '10px'
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('waringType', {initialValue:'waringType'})
+                        {getFieldDecorator('waringType', { initialValue: 'waringType' })
                             (
                             <Select>
                                 <Option value='waringType'>预警类型</Option>
@@ -463,7 +476,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('warningStatus', {initialValue:'state'})
+                        {getFieldDecorator('warningStatus', { initialValue: 'state' })
                             (
                             <Select>
                                 <Option value='state'>所有状态</Option>
@@ -483,13 +496,13 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('installAddr', {initialValue:'installAddress'})
+                        {getFieldDecorator('installAddr', { initialValue: 'installAddress' })
                             (
                             <Select>
                                 <Option value='installAddress'>设备安装地</Option>
                                 {
-                                    installAddrList.map((v,i)=>{
-                                        return(<Option key={i} value={v.id}>{v.addr}</Option>)
+                                    installAddrList.map((v, i) => {
+                                        return (<Option key={i} value={v.id}>{v.addr}</Option>)
                                     })
                                 }
                             </Select>
@@ -573,7 +586,11 @@ const CloseWarningForm = Form.create()(
                 >
                     <Form>
                         <Form.Item label='关闭理由'>
+<<<<<<< HEAD
                             {getFieldDecorator('reason', {rules: [{ required: true, message: '关闭预警理由必填' }]})
+=======
+                            {getFieldDecorator('reason', { initialValue: '' })
+>>>>>>> 74ca96fb43e4a23642343499dfe9171960dcd377
                                 (
                                 <Input
                                     placeholder='请填写关闭理由'
@@ -583,11 +600,11 @@ const CloseWarningForm = Form.create()(
                             }
                         </Form.Item >
                         <Form.Item label='处理人'>
-                            {getFieldDecorator('people', {initialValue: 'lisi'})
+                            {getFieldDecorator('people', { initialValue: 'lisi' })
                                 (
                                 <Select>
-                                    <Option value='lisi'>李四</Option>  
-                                    <Option value='zhangsan'>张三</Option>  
+                                    <Option value='lisi'>李四</Option>
+                                    <Option value='zhangsan'>张三</Option>
                                     {/* {
                                         installAddrList.map((v,i)=>{
                                             return(<Option key={i} value={v.id}>{v.addr}</Option>)

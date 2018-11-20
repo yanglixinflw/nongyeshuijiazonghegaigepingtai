@@ -12,68 +12,23 @@ import { timeOut } from '../../utils/timeOut';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
+//生产环境
+// const envNet = '';
 //搜索
 const searchUrl = `${envNet}/api/device/gisDeviceList`;
-const cameraPosition = [
-    { position: { longitude: 120.27, latitude: 30.27 }, isWarning: true },
-    { position: { longitude: 130.26, latitude: 35.27 } },
-    { position: { longitude: 123.27, latitude: 34.26 } },
-    { position: { longitude: 128.26, latitude: 41.28 } },
-    { position: { longitude: 124.27, latitude: 39.28 } },
-    { position: { longitude: 122.28, latitude: 35.27 } },
-    { position: { longitude: 124.27, latitude: 37.29 } },
-    { position: { longitude: 130.29, latitude: 36.27 } },
-    { position: { longitude: 132.26, latitude: 33.29 } },
-    { position: { longitude: 127.27, latitude: 32.17 } },
-]
-const waterValvePosition = [
-    { position: { longitude: 126.27, latitude: 35.27 }, isWarning: true },
-    { position: { longitude: 125.26, latitude: 34.27 } },
-    { position: { longitude: 123.27, latitude: 33.26 } },
-    { position: { longitude: 124.26, latitude: 32.28 } },
-    { position: { longitude: 128.27, latitude: 35.28 } },
-    { position: { longitude: 130.28, latitude: 36.27 } },
-    { position: { longitude: 129.27, latitude: 32.29 } },
-    { position: { longitude: 132.29, latitude: 33.27 } },
-    { position: { longitude: 121.26, latitude: 38.29 } },
-    { position: { longitude: 132.27, latitude: 37.17 } },
-]
-const dataList = [
-    {
-        name: '水表 ',
-        id: '0010200008',
-        address: '三村二组耕地',
-        icon: 'wifi'
-    },
-    {
-        name: '宁圩村三组四号水表 ',
-        id: '0010200008',
-        address: '萧山区-宁围街道=三村二组耕地'
-    },
-    {
-        name: '宁圩村三组四号水表 ',
-        id: '0010200008',
-        address: '萧山区-宁围街道=三村二组耕地'
-    },
-    {
-        name: '宁圩村三组四号水表 ',
-        id: '0010200008',
-        address: '萧山区-宁围街道=三村二组耕地'
-    },
-    {
-        name: '宁圩村三组四号水表 ',
-        id: '0010200008',
-        address: '萧山区-宁围街道=三村二组耕地'
-    },
-    {
-        name: '宁圩村三组四号水表 ',
-        id: '0010200008',
-        address: '萧山区-宁围街道=三村二组耕地'
-    }
-]
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+};
 export default class extends Component {
     constructor(props) {
         super(props)
+        // console.log(props)
         const plugins = [
             // 比例尺
             'Scale',
@@ -93,7 +48,7 @@ export default class extends Component {
         this.state = {
             pluginProps,
             //标记可见性
-            markerVisible: false,
+            waterValveVisible: false,
             //信息窗位置偏移量
             infoOffset: [0, -21],
             //信息窗可见性
@@ -114,8 +69,8 @@ export default class extends Component {
             //控件插件
             plugins,
             //多个Marker经纬度
-            cameraMarkers: cameraPosition,
-            waterValveMarkers: waterValvePosition,
+            cameraMarkers: "",
+            waterValveMarkers: "",
             //所有摄像头markers实例
             allCameraMarkers: '',
             //所有水阀markers实例
@@ -123,12 +78,11 @@ export default class extends Component {
             //marker是否被点击
             isClicked: false,
             //搜索下拉列表数据
-            // dataList:null,
-            dataList,
+            dataList: [],
             //搜索关键字
-            keyWord: '三组四号',
+            keyword: '',
             //当前设备类型ID
-            deviceTypeId: [1]
+            deviceTypeId: 1
 
         }
         //console.log(this.state.markers)
@@ -241,18 +195,68 @@ export default class extends Component {
         }
     }
     componentDidMount() {
-        if (dataList) {
-            this._getDataList(this.state.dataList, this.state.keyWord)
+        let { dataList,keyword } = this.state
+        let cameraPosition = [];
+        let waterMeterPosition = [];
+        let eleMeterPosition = [];
+        let waterValvePosition = [];
+        let { mapGis } = this.props;
+        let camera = mapGis.camera.data.data.items;
+        let waterMeter = mapGis.waterMeter.data.data.items;
+        let eleMeter = mapGis.eleMeter.data.data.items;
+        let waterValve = mapGis.waterValve.data.data.items;
+        camera.map((v, i) => {
+            let position = {};
+            position.longitude = v.longitude;
+            position.latitude = v.latitude;
+            cameraPosition.push({
+                position,
+                deviceTypeId: v.deviceTypeId
+            })
+        })
+        waterMeter.map((v, i) => {
+            let position = {};
+            position.longitude = v.longitude;
+            position.latitude = v.latitude;
+            waterMeterPosition.push({
+                position,
+                deviceTypeId: v.deviceTypeId
+            })
+        })
+        eleMeter.map((v, i) => {
+            let position = {};
+            position.longitude = v.longitude;
+            position.latitude = v.latitude;
+            eleMeterPosition.push({
+                position,
+                deviceTypeId: v.deviceTypeId
+            })
+        })
+        waterValve.map((v, i) => {
+            let position = {};
+            position.longitude = v.longitude;
+            position.latitude = v.latitude;
+            waterValvePosition.push({
+                position,
+                deviceTypeId: v.deviceTypeId
+            })
+        })
+        this.setState({
+            cameraMarkers: cameraPosition,
+            waterValveMarkers: waterValvePosition,
+        })
+        if (dataList.length !== 0) {
+            this._getDataList(dataList,keyword)
         }
 
     }
-    //搜索结果处理
-    _getDataList(dataList, keyWord) {
+    //搜索结果高亮处理
+    _getDataList(dataList, keyword) {
         if (dataList) {
-            let re = new RegExp(keyWord, 'g')
+            let re = new RegExp(keyword, 'g')
             dataList.filter((v, i) => {
-                v.name = v.name.replace(re, `<span class=${styles.keyWordSt}>${keyWord}</span>`)
-                v.id = v.id.replace(re, `<span class=${styles.keyWordSt}>${keyWord}</span>`)
+                v.name = v.name.replace(re, `<span class=${styles.keyWordSt}>${keyword}</span>`)
+                v.deviceId = v.deviceId.replace(re, `<span class=${styles.keyWordSt}>${keyword}</span>`)
             })
         }
 
@@ -260,6 +264,7 @@ export default class extends Component {
     //摄像头markers的render方法
     renderCamerMarker(extData) {
         //判断marker的position是否和map的中心点一致，一致的话即为被选中的marker
+        // console.log(extData)
         if (
             extData.position.latitude == this.state.center.latitude
             &&
@@ -286,16 +291,28 @@ export default class extends Component {
     //图标记显示/隐藏
     //摄像头
     _cameraHandler() {
-        const { allCameraMarkers, deviceTypeId } = this.state;
+        const { allCameraMarkers,allWaterValveMarkers } = this.state;
+        // console.log(allCameraMarkers)
         allCameraMarkers.map((v, i) => {
             if (v.Pg.visible == true) {
+                let deviceTypeId = '';
                 v.hide();
+                this.setState({
+                    deviceTypeId
+                })
             } else {
+                let deviceTypeId = 1;
                 v.show();
+                this.setState({
+                    deviceTypeId,
+                })
             }
         })
-           console.log(allCameraMarkers)
-        console.log(this.state.deviceTypeId)
+        allWaterValveMarkers.map((v,i)=>{
+            v.hide();
+        })
+        // console.log(this.state.deviceTypeId)
+
     }
     //水表
     _WatermeterHandler(e) {
@@ -307,32 +324,75 @@ export default class extends Component {
     }
     //水阀
     _WatervalveHandler() {
-        const { allWaterValveMarkers, deviceTypeId } = this.state;
+        const { allWaterValveMarkers,allCameraMarkers} = this.state;
         allWaterValveMarkers.map((v, i) => {
             if (v.Pg.visible == true) {
+                let deviceTypeId = '';
                 v.hide();
+                this.setState({
+                    deviceTypeId
+                })
             } else {
+                let deviceTypeId = 4;
                 v.show();
+                this.setState({
+                    deviceTypeId
+                })
             }
         })
-        console.log(this.state.deviceTypeId)
+        allCameraMarkers.map((v,i)=>{
+            v.hide()
+        })
+
+        
+        // console.log(this.state.deviceTypeId)
     }
     //搜索
     _searchHandler(e) {
         // console.log(e.target.value)
+        const { deviceTypeId } = this.state;
         let keyword = e.target.value;
-        return fetch(searchUrl,{
-
-        })
-        this.setState({
-            keyWord: keyword
-        })
-        //请求接口从后台拿到数据（dataList）后，_getDataList()
-        //选择marker后设置map的center为该marker的position
+        //console.log(keyword)
+        if (keyword !== '') {
+            return fetch(searchUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    keyword,
+                    deviceTypeId,
+                    pageSize: '10'
+                })
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        //判断是否超时
+                        timeOut(v.ret)
+                        if (v.ret == 1) {
+                            let dataList = v.data.items;
+                            this.setState({
+                                dataList
+                            })
+                            this._getDataList(dataList, keyword)
+                        } else {
+                            this.setState({
+                                dataList: []
+                            })
+                        }
+                    })
+            })
+        }else {
+            this.setState({
+                dataList:[]
+            })
+        }
     }
+    //选择设备后定位
     _chosenHandler(item) {
-        console.log(item)
-        //要对拿到的item.id做还原处理？然后调接口查询此设备详细信息 重新定位地图的center
+        // console.log(item)
+        let center = { longitude: item.longitude, latitude: item.latitude };
+        this.setState({
+            center
+        })
+
     }
     render() {
         const {
@@ -340,13 +400,11 @@ export default class extends Component {
             dataList,
             plugins, center,
             //useCluster,
-            markerVisible,
+            waterValveVisible,
             cameraMarkers, waterValveMarkers,
             infoVisibleCamera, infoVisibleWaterValve,
             infoOffset, isCustom, size, infoPositionCamera, infoPositionWaterValve,
         } = this.state;
-
-        // console.log(dataList)
         return (
             <Map
                 amapkey={MY_AMAP_KEY}
@@ -365,10 +423,10 @@ export default class extends Component {
                     <Input
                         placeholder='请查询设备编号或设备名称'
                         onPressEnter={(e) => this._searchHandler(e)}
-                        onChange={(e) => this._searchHandler(e)}
+                    // onChange={(e) => this._searchHandler(e)}
                     />
                     {
-                        dataList ?
+                        dataList.length != 0 ?
                             <div className={styles.dataList}>
                                 <List
                                     itemLayout="vertical"
@@ -381,14 +439,15 @@ export default class extends Component {
                                                 <p className={styles.itemName}
                                                     dangerouslySetInnerHTML={{ __html: item.name }}>
                                                 </p>
-                                                <p className={styles.itemName}
-                                                    dangerouslySetInnerHTML={{ __html: item.id }}
+                                                <p className={styles.deviceId}
+                                                    dangerouslySetInnerHTML={{ __html: item.deviceId }}
                                                 ></p>
                                                 <Icon type={item.icon} />
                                                 <p className={styles.itemAdress}
-                                                    dangerouslySetInnerHTML={{ __html: item.address }}
+                                                    dangerouslySetInnerHTML={{ __html: item.installAddr }}
                                                 ></p>
-                                            </List.Item>)
+                                            </List.Item>
+                                        )
                                     }
                                     }
                                 />
@@ -398,7 +457,6 @@ export default class extends Component {
                 </div>
                 <div className={styles.btnGroup}>
                     <Button
-                        autoFocus
                         onClick={() => this._cameraHandler()}
                     >
                         <i className={styles.camera}></i>
@@ -429,22 +487,26 @@ export default class extends Component {
                     events={this.cameraEvents}
                 />
                 {/* 水阀信息窗 高德地图规定同时最多只能显示一个信息窗*/}
-                <InfoWindow
-                    position={infoPositionWaterValve}
-                    visible={infoVisibleWaterValve}
-                    offset={infoOffset}
-                    isCustom={isCustom}
-                    size={size}
-                    events={this.windowEvents}
-                >
-                    <IwContentWaterV isWarningMsg={waterValveMarkers.filter(item => item.position == infoPositionWaterValve)} />
-                </InfoWindow>
+                {waterValveMarkers ?
+                    <InfoWindow
+                        position={infoPositionWaterValve}
+                        visible={infoVisibleWaterValve}
+                        offset={infoOffset}
+                        isCustom={isCustom}
+                        size={size}
+                        events={this.windowEvents}
+                    >
+                        <IwContentWaterV isWarningMsg={waterValveMarkers.filter(item => item.position == infoPositionWaterValve)} />
+                    </InfoWindow>
+                    : null
+                }
+
                 {/* 水阀Marker */}
                 <Markers
                     markers={waterValveMarkers}
                     render={(extData) => this.renderWaterValveMarker(extData)}
                     events={this.WaterValveEvents}
-                    visible={markerVisible}
+                    visible={waterValveVisible}
                 />
                 {/* 自定义地图控件 */}
                 <MyCustomize />
