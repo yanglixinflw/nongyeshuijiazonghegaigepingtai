@@ -9,13 +9,9 @@ const envNet = 'http://192.168.30.127:88';
 //翻页调用
 const dataUrl = `${envNet}/api/DeviceWaringRule/eventList`;
 //设备安装地列表
-<<<<<<< HEAD
 const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`;
 //关闭预警事件
 const closeWarningUrl=`${envNet}/api/DeviceWaringRule/eventClose`;
-=======
-const installAddrUrl = `${envNet}/api/BaseInfo/installAddrList`
->>>>>>> 74ca96fb43e4a23642343499dfe9171960dcd377
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -276,7 +272,6 @@ export default class extends Component {
         })
     }
     //确定关闭预警
-<<<<<<< HEAD
     closeOk(){
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
@@ -304,11 +299,6 @@ export default class extends Component {
             }).catch((err) => {
                 console.log(err)
             })
-=======
-    closeOk() {
-        this.setState({
-            closeShowvisible: false
->>>>>>> 74ca96fb43e4a23642343499dfe9171960dcd377
         })
     }
     //取消关闭预警
