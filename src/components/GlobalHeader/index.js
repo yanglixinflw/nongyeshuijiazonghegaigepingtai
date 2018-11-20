@@ -61,7 +61,7 @@ export default class extends React.Component {
             Promise.resolve(res.json())
                 .then(v=>{
                     if(v.ret==1){
-                        console.log(v.data.items)
+                        // console.log(v.data.items)
                         let data=v.data.items;
                         let warningDatas=[];
                         data.map((v, i) => {
