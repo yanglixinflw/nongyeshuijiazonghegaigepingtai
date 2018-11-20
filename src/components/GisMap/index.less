@@ -23,15 +23,16 @@
         }
     }
 }
+
 //搜索下拉列表
-.dataList{
+.dataList {
     max-height: 290px;
     width: 288px;
     overflow-y: auto;
     top: -1px;
     left: 25px;
     position: relative;
-    background:#1F2E49;
+    background: #1F2E49;
     &::-webkit-scrollbar {
         width: 7px;
     }
@@ -45,64 +46,68 @@
     &::-webkit-scrollbar-track {
         background: #2E3459;
     }
-    :global{
-        .ant-list{
-            width:281px;
-            background:#1F2E49;
-            .ant-list-item{
-                border-bottom:1px solid #2D4268;
+    :global {
+        .ant-list {
+            width: 281px;
+            background: #1F2E49;
+            .ant-list-item {
+                border-bottom: 1px solid #2D4268;
                 height: 58px;
                 padding: 14px;
                 cursor: pointer;
-                &:hover p{
-                    color:#fff;
+                &:hover p {
+                    color: #fff;
                 }
             }
         }
-        .ant-list-vertical .ant-list-item-content{
+        .ant-list-vertical .ant-list-item-content {
             display: flex !important;
-            margin:0 !important;
+            margin: 0 !important;
             flex-wrap: wrap;
         }
-        .anticon{
+        .anticon {
             position: absolute;
-            top:14px;
-            right:14px;
+            top: 14px;
+            right: 14px;
             font-size: 34px;
-            color:#FF5555;
+            color: #FF5555;
         }
     }
 }
-.itemName{
-    color:#BBC5D2;
+
+.itemName {
+    color: #BBC5D2;
     font-size: 12px;
-    margin:0 12px 0 0;
-    // width:40px;
-    .keyWordSt{
-        color:#327DF4 !important;
+    margin: 0 12px 0 0; // width:40px;
+    .keyWordSt {
+        color: #327DF4 !important;
     }
 }
-.deviceId{
-    color:#BBC5D2;
+
+.deviceId {
+    color: #BBC5D2;
     font-size: 12px;
-    margin:0 12px 0 0;
-    width:170px;
-    white-space:nowrap ;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    .keyWordSt{
-        color:#327DF4 !important;
+    margin: 0 12px 0 0;
+    width: 170px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    .keyWordSt {
+        color: #327DF4 !important;
     }
 }
-.keyWordSt{
-    color:#327DF4 !important;
+
+.keyWordSt {
+    color: #327DF4 !important;
 }
-.itemAdress{
-    color:#BBC5D2;
+
+.itemAdress {
+    color: #BBC5D2;
     font-size: 12px;
-    margin:0;
+    margin: 0;
     width: 253px;
 }
+
 //设备类型
 .btnGroup {
     z-index: 199;
@@ -125,22 +130,22 @@
             white-space: pre-wrap;
             &:focus {
                 background: #327DF4;
-                color:#fff;
-                span{
+                color: #fff;
+                span {
                     color: #fff;
                 }
             }
             &:hover {
                 background: #327DF4;
-                color:#fff;
-                span{
+                color: #fff;
+                span {
                     color: #fff;
                 }
             }
             &:active {
                 background: #327DF4;
-                color:#fff;
-                span{
+                color: #fff;
+                span {
                     color: #fff;
                 }
             }
@@ -158,7 +163,7 @@
         height: 44px;
         background: url(../../assets/camera.png) center no-repeat;
     }
-    .waterValve{
+    .waterValve {
         margin: 0px 7px;
         display: block;
         width: 44px;
@@ -168,8 +173,8 @@
 }
 
 :global {
-    .amap-info-close{
-        right:0;
+    .amap-info-close {
+        right: 0;
     }
     .amap-info-outer,
     .amap-menu-outer {
@@ -191,7 +196,7 @@
     .amap-maptype-check {
         background: url(../../assets/ysj.png) -30px 4px no-repeat;
     }
-    .amap-maptype-wrap{
+    .amap-maptype-wrap {
         width: 0;
         height: 0;
     }
@@ -206,7 +211,7 @@
     }
 }
 
-.markerCamera{
+.markerCamera {
     //预警显示摄像头
     .warning {
         display: block;
@@ -249,8 +254,7 @@
             animation-iteration-count: infinite;
             animation-timing-function: linear;
         }
-    }
-    //被选中的摄像头
+    } //被选中的摄像头
     .chosen {
         display: block;
         width: 44px;
@@ -292,8 +296,7 @@
             animation-iteration-count: infinite;
             animation-timing-function: linear;
         }
-    }
-    //普通显示摄像头
+    } //普通显示摄像头
     .normal {
         display: block;
         width: 44px;
@@ -301,7 +304,8 @@
         background: url(../../assets/normalCamera.png) no-repeat;
     }
 }
-.markerWaterV{
+
+.markerWaterV {
     //预警显示水阀
     .warning {
         display: block;
@@ -344,8 +348,7 @@
             animation-iteration-count: infinite;
             animation-timing-function: linear;
         }
-    }
-    //被选中的水阀
+    } //被选中的水阀
     .chosen {
         display: block;
         width: 44px;
@@ -387,8 +390,7 @@
             animation-iteration-count: infinite;
             animation-timing-function: linear;
         }
-    }
-    //普通显示水阀
+    } //普通显示水阀
     .normal {
         display: block;
         width: 44px;
@@ -481,86 +483,113 @@
     left: 122px;
     cursor: pointer;
 }
-.infoTitle{
+
+.infoTitle {
     height: 40px;
     border-bottom: 1px solid #363A69;
     padding: 8px 0px;
-    .deviceName{
-        border-left:4px solid #327DF4;
-        padding:0px 13px;
-        color:#fff;
+    .deviceName {
+        border-left: 4px solid #327DF4;
+        padding: 0px 13px;
+        color: #fff;
         font-size: 17px;
-        margin: 0; 
+        margin: 0;
     }
 }
-.infoContent{
-    height:129px;
+
+.infoContent {
+    height: 129px;
     padding: 15px;
-    .labelName{
-        color:#fff;
+    .labelName {
+        color: #fff;
         font-size: 15px;
         margin-bottom: 20px;
-        span{
-            margin-left:20px;
-            color:#F4AF1D;
+        span {
+            margin-left: 20px;
+            color: #F4AF1D;
         }
-        :global{
-            .ant-switch-checked{
+        :global {
+            .ant-switch-checked {
                 width: 48px;
-                margin-left:20px;
+                margin-left: 20px;
                 background-color: #272D52;
-                border:1px solid #327DF4;
+                border: 1px solid #327DF4;
             }
-            .ant-switch-checked:after{
-                background-color:#327DF4 !important;
+            .ant-switch-checked:after {
+                background-color: #327DF4 !important;
             }
-            .ant-switch-loading-icon, .ant-switch:after{
-                background-color:rgb(57,64,107)
+            .ant-switch-loading-icon,
+            .ant-switch:after {
+                background-color: rgb(57, 64, 107)
             }
-            .ant-switch{
+            .ant-switch {
                 width: 48px;
-                margin-left:20px;
+                margin-left: 20px;
                 background-color: #272D52;
             }
         }
     }
-    .checkMore{
-        margin:0 auto;
+    .checkMore {
+        margin: 0 auto;
         text-align: center;
-        a{
-            color:#BBC5D2;
+        a {
+            color: #BBC5D2;
             font-size: 12px;
-            font-weight: 700;
-            //transform: scale(0.99);
-            &:hover{
-                color:#327DF4;
+            font-weight: 700; //transform: scale(0.99);
+            &:hover {
+                color: #327DF4;
             }
         }
-        span{
-            margin-left:5px;
+        span {
+            margin-left: 5px;
         }
     }
-    .warinngMsg{
-        margin-top:20px;
+    .warinngMsg {
+        margin-top: 20px;
         margin-bottom: 45px;
         font-size: 16px;
         color: #FF5555;
         text-align: center;
     }
 }
-//遮罩层
-.mask{
-    position: absolute;
-    left:8px;
-    bottom:33px;
-    width:270px;
-    height: 30px;
-    background: rgba(0,0,0,0.4);
-    color:#fff;
-    text-align: center;
-    font-size: 16px;
-    padding: 5px 0px;
+.cameraWarningWindow{
+    .warinngMsg {
+        margin-top: 20px;
+        margin-bottom: 45px;
+        font-size: 16px;
+        color: #FF5555;
+        text-align: center;
+    }
+    //遮罩层
+    .mask {
+        position: absolute;
+        left: 8px;
+        bottom: 33px;
+        width: 270px;
+        height: 30px;
+        background: rgba(0, 0, 0, 0.4);
+        color: #fff;
+        text-align: center;
+        font-size: 16px;
+        padding: 5px 0px;
+    }
 }
+.cameraWindow {
+    //遮罩层
+    .mask {
+        position: absolute;
+        left: 8px;
+        bottom: 33px;
+        width: 270px;
+        height: 30px;
+        background: rgba(0, 0, 0, 0.4);
+        color: #fff;
+        text-align: center;
+        font-size: 16px;
+        padding: 5px 0px;
+    }
+}
+
 //地图放大缩小
 .btnMapZoom {
     position: absolute;
@@ -580,7 +609,7 @@
             }
         }
     }
-    .btnReset{
+    .btnReset {
         top: -16px;
         left: -64px;
     }
@@ -593,47 +622,50 @@
         left: -64px;
     }
 }
+
 //媒体查询
-@media(max-width:1299px){
-    .btnGroup{
+@media(max-width:1299px) {
+    .btnGroup {
         right: 195px;
     }
 }
-@media(max-width:1199px){
-    .btnGroup{
-       :global{
-           .ant-btn{
-               margin-right:15px;
-           }
-       }
-    }
-}
-@media(max-width:1099px){
-    .search{
-        :global{
-            .ant-input{
-                width:244px;
+
+@media(max-width:1199px) {
+    .btnGroup {
+        :global {
+            .ant-btn {
+                margin-right: 15px;
             }
         }
-        .dataList{
-            width:244px;
-            :global{
-                .ant-list{
-                    width:234px;
+    }
+}
+
+@media(max-width:1099px) {
+    .search {
+        :global {
+            .ant-input {
+                width: 244px;
+            }
+        }
+        .dataList {
+            width: 244px;
+            :global {
+                .ant-list {
+                    width: 234px;
                 }
-                .ant-list-item{
+                .ant-list-item {
                     height: 80px;
                 }
             }
         }
     }
-    .btnGroup{
-       :global{
-           .ant-btn{
-               width:58px;
-               height: 58px;
-               margin-right:10px;
-           }
-       }
+    .btnGroup {
+        :global {
+            .ant-btn {
+                width: 58px;
+                height: 58px;
+                margin-right: 10px;
+            }
+        }
     }
 }
