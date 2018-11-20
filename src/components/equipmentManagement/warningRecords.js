@@ -586,11 +586,7 @@ const CloseWarningForm = Form.create()(
                 >
                     <Form>
                         <Form.Item label='关闭理由'>
-<<<<<<< HEAD
                             {getFieldDecorator('reason', {rules: [{ required: true, message: '关闭预警理由必填' }]})
-=======
-                            {getFieldDecorator('reason', { initialValue: '' })
->>>>>>> 74ca96fb43e4a23642343499dfe9171960dcd377
                                 (
                                 <Input
                                     placeholder='请填写关闭理由'
