@@ -37,8 +37,8 @@ export default class extends Component{
             // 设备类型列表
             deviceTypeList:warningRules.deviceTypeList.data.data,
             // 添加弹窗
-            // addVisible:false,
-            addVisible:true,
+            addVisible:false,
+            // addVisible:true,
             // 选择的设备ID
             selectDeviceId:''
         };

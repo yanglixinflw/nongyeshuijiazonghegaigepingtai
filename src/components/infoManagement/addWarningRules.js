@@ -1,9 +1,24 @@
 import React, { Component } from 'react';
 import styles from './addWarningRules.less';
-import { Input, Button, Form, Select, Icon, InputNumber } from 'antd';
-import { Link } from 'dva/router';
+import { Input, Button, Form, Select, Icon, InputNumber ,message} from 'antd';
+import { Link,routerRedux } from 'dva/router';
 import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList } from '../../services/api'
 const Option = Select.Option;
+import store from '../../index'
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+}
+// 开发环境
+const envNet = 'http://192.168.30.127:88'
+// 生产环境
+// const envNet=''
+const addWarningRulesNet = `${envNet}/api/DeviceWaringRule/add`
 export default class extends Component {
     state = {
         // 参数列表
@@ -47,7 +62,73 @@ export default class extends Component {
     _addSaveHandler() {
         const form = this.addRulesForm.props.form;
         form.validateFields((err, values) => {
-            console.log(values)
+            if(typeof(store)==='undefined'){
+                return
+            }else{
+                const { dispatch } = store
+                // console.log(dispatch)
+                if (!err) {
+                    // console.log(values)
+                    // 设备ID
+                    values.deviceTypeId = localStorage.getItem('selectDeviceId')
+    
+                    // 短信是否通知
+                    if (values.SMSfrequency == 0) {
+                        // 短信通知
+                        values.smsNotify = {
+                            frequency: values.SMSfrequency,
+                            receiverIds: [],
+                            othersMobile: ''
+                        }
+                    } else {
+                        values.smsNotify = {
+                            frequency: values.SMSfrequency,
+                            receiverIds: values.SMSreceiverIds,
+                            othersMobile: values.SMSInformer
+                        }
+                    }
+                    // 手机是否通知
+                    if (values.TELfrequency == 0) {
+                        values.phoneNotify = {
+                            frequency: values.TELfrequency,
+                            receiverIds: [],
+                            othersMobile: ''
+                        }
+                    } else {
+                        values.phoneNotify = {
+                            frequency: values.TELfrequency,
+                            receiverIds: values.TELreceiverIds,
+                            othersMobile: values.TELInformer
+                        }
+                    }
+                    // 通知范围
+                    values.sysMsgNotify={
+                        frequency: "1",
+                        receiverIds: values.informRange,
+                        othersMobile: ""
+                    }
+                    // console.log(...values)
+                    fetch(addWarningRulesNet, {
+                        ...postOption,
+                        body: JSON.stringify({
+                            ...values
+                        })
+                    }).then((res)=>{
+                        Promise.resolve(res.json())
+                        .then((v)=>{
+                            if(v.ret==1){
+                                
+                                message.success('添加成功', 2)
+                                // console.log(1)
+                                dispatch(routerRedux.push(`/messageManagement/warningRules`))
+    
+                            }
+                        })
+                    })
+                }
+    
+            }
+            
         })
     }
     render() {
@@ -103,7 +184,7 @@ const AddRulesForm = Form.create()(
             // 设备数据列表
             deviceData: [],
             // 设备操作指令列表
-            controlList:[]
+            controlList: []
         }
         // 搜索获取通知人列表
         handleSearch(value, type) {
@@ -182,29 +263,29 @@ const AddRulesForm = Form.create()(
                 "pageIndex": 0,
                 "pageSize": 100
             }))
-            .then((v) => {
-                if(v.data.ret==1){
-                    this.setState({
-                        deviceData:v.data.data.items
-                    })
-                }
-                // console.log(v.data)
-            })
+                .then((v) => {
+                    if (v.data.ret == 1) {
+                        this.setState({
+                            deviceData: v.data.data.items
+                        })
+                    }
+                    // console.log(v.data)
+                })
         }
         // 选中设备后
         deviceChange(value) {
             Promise.resolve(getControlList({
-                deviceId:value
-            })).then((v)=>{
-                if(v.data.ret==1){
+                deviceId: value
+            })).then((v) => {
+                if (v.data.ret == 1) {
                     this.setState({
-                        controlList:v.data.data
+                        controlList: v.data.data
                     })
                     // console.log(v.data.data.items)
                     // console.log(v.data.data)
                 }
             })
-            
+
         }
         render() {
             const { form, onSave, parameterList, roleList } = this.props;
@@ -274,7 +355,7 @@ const AddRulesForm = Form.create()(
                             </Form.Item>
                             <Form.Item label='判断规则' className={styles.judgmentRule}>
                                 <Form.Item>
-                                    {getFieldDecorator('parameterKey', {
+                                    {getFieldDecorator('parameterId', {
                                         rules: [{ required: true, message: '判断规则不能为空' }]
                                     })(
                                         <Select
@@ -288,7 +369,7 @@ const AddRulesForm = Form.create()(
                                                         // console.log(v)
                                                         return (
                                                             <Option
-                                                                key={v.key}
+                                                                key={v.parameterId}
                                                             >
                                                                 {v.name}
                                                                 {/* 判断单位 */}
@@ -505,18 +586,18 @@ const AddRulesForm = Form.create()(
                                             // dropdownClassName={styles.searchDropDown}
                                             placeholder='设备名称/ID'
                                         >
-                                        {
-                                            deviceData.length==0?null:
-                                            deviceData.map((v, i) => {
-                                                // console.log(v)
-                                                return (
-                                                    <Option
-                                                        key={v.deviceId}
-                                                    >
-                                                        {v.name}({v.deviceTypeName})
+                                            {
+                                                deviceData.length == 0 ? null :
+                                                    deviceData.map((v, i) => {
+                                                        // console.log(v)
+                                                        return (
+                                                            <Option
+                                                                key={v.deviceId}
+                                                            >
+                                                                {v.name}({v.deviceTypeName})
                                                     </Option>)
-                                            })
-                                        }
+                                                    })
+                                            }
                                         </Select>
 
                                     )}
@@ -529,17 +610,17 @@ const AddRulesForm = Form.create()(
                                             placeholder='选择指令'
                                         >
                                             {
-                                                controlList.length==0?null:
-                                                controlList.map((v,i)=>{
-                                                    console.log(v)
-                                                    return (
-                                                        <Option
-                                                            key={v.cmd}
-                                                        >
-                                                            {v.displayName}
-                                                        </Option>
+                                                controlList.length == 0 ? null :
+                                                    controlList.map((v, i) => {
+                                                        // console.log(v)
+                                                        return (
+                                                            <Option
+                                                                key={v.cmd}
+                                                            >
+                                                                {v.displayName}
+                                                            </Option>
                                                         )
-                                                })
+                                                    })
                                             }
                                         </Select>
                                     )}
