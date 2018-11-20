@@ -46,7 +46,7 @@ class IndexPage extends React.Component {
     let { mapGis, loading } = this.props;
     let arr = Object.keys(mapGis);
     if (arr.length <= 3) return mapGis = null
-    console.log(mapGis)
+    // console.log(mapGis)
     return (
       <div className={styles.map}>
         {/* <Spin size='large' spinning={loading}> */}

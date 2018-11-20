@@ -31,7 +31,7 @@ export default class extends Component{
     }
     renderMarker(){
         return (
-            <div>123</div>
+            <div className={styles.warningCall}></div>
         )
     }
     render(){
