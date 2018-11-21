@@ -11,7 +11,8 @@ function RouterConfig({ history, app }) {
   const loginLayout = routerData['/login'].component
   // 定义首屏
   const BasicLayout = routerData['/'].component;
-  const MapLayout =routerData['/valveControl/map'].component
+  const MapLayout =routerData['/valveControl/map'].component;
+  const WarningLayout = routerData['/warning/map:id'].component;
   // console.log(MapLayout)
   return (
     <LocaleProvider locale={zhCN}>
@@ -19,6 +20,7 @@ function RouterConfig({ history, app }) {
       <Switch>
         <Route path="/login" exact component={loginLayout} />
         <Route path='/valveControl/map' exact  component={MapLayout}/>
+        <Route path='/warning/map:id' exact  component={WarningLayout}/>
         {/* 动态注册route */}
         <Route
           path="/"
