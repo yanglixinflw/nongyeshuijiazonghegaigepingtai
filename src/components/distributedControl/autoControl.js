@@ -58,7 +58,9 @@ export default class extends Component{
             //规则名称
             name:"",
             //是否显示删除弹窗
-            delVisible:false
+            delVisible:false,
+            //搜索默认值
+            searchValue:{}
         }
     }
     componentDidMount() {
@@ -117,7 +119,7 @@ export default class extends Component{
             render: (record) => {
                 return (
                     <div className={styles.option}>
-                        <Link to={`/automation/autoRules`}>
+                        <Link to={`/automation/autoRules:${record.ruleId}`}>
                             <Button
                                 className={styles.set}
                                 // onClick={() => this._set()}
@@ -222,6 +224,38 @@ export default class extends Component{
                         this._getTableDatas(title, data);
                     }
                 })
+        })
+    }
+    //翻页
+    _pageChange(page){
+        const { title,searchValue } = this.state;
+        searchValue.pageIndex = page - 1;
+        searchValue.pageSize=10
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                ...searchValue
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                if(v.ret==1){
+                    // 设置页面显示的元素
+                    let data = v.data.items;
+                    //添加key
+                    data.map((v, i) => {
+                        v.key = i
+                    })
+                    this.setState({
+                        itemCount:v.data.itemCount,
+                        data
+                    })
+                    this._getTableDatas(title,data);
+                }
+            })
+            .catch(err=>{
+                console.log(err)
+            })
         })
     }
     //点击启用与停用
@@ -430,9 +464,12 @@ export default class extends Component{
         })
     }
     render(){
-        const { columns, tableDatas,changeStatus,changeStatusVisible,addvisible,editvisible,name,ruleId,delVisible } = this.state;
+        const { columns,itemCount, tableDatas,changeStatus,changeStatusVisible,addvisible,editvisible,name,ruleId,delVisible } = this.state;
         const paginationProps = {
             showQuickJumper: true,
+            total: itemCount,
+            // 传递页码
+            onChange: (page) => this._pageChange(page)
         };
         return(
             <React.Fragment>

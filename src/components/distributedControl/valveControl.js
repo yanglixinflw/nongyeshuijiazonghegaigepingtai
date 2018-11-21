@@ -56,7 +56,7 @@ export default class extends Component{
             //设备类型列表
             deviceTypeList:[],
             //设备类型Id
-            deviceTypeId:'',
+            deviceTypeId:1,
             //开关阀携带信息
             deviceIdList:[],
             //设备ID
@@ -283,8 +283,10 @@ export default class extends Component{
     }
     //换页
     _pageChange(page){
-        const { searchValue } = this.state;
+        const { title,searchValue } = this.state;
         searchValue.pageIndex = page - 1;
+        searchValue.deviceTypeId=this.state.deviceTypeId;
+        searchValue.pageSize=10
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -294,7 +296,6 @@ export default class extends Component{
             Promise.resolve(res.json())
             .then(v=>{
                 if(v.ret==1){
-                    // console.log(v);
                     // 设置页面显示的元素
                     let data = v.data.items;
                     //添加key
@@ -305,7 +306,7 @@ export default class extends Component{
                         itemCount:v.data.itemCount,
                         data
                     })
-                    this._getTableDatas(this.state.title, this.state.data);
+                    this._getTableDatas(title,data);
                 }
             })
             .catch(err=>{
@@ -375,9 +376,12 @@ export default class extends Component{
         });
     }
     render(){
-        const { columns, tableDatas, installAddrList,rowSelection,deviceTypeList,switchvisible,cmd} = this.state;
+        const { columns,itemCount, tableDatas, installAddrList,rowSelection,deviceTypeList,switchvisible,cmd} = this.state;
         const paginationProps = {
             showQuickJumper: true,
+            total: itemCount,
+            // 传递页码
+            onChange: (page) => this._pageChange(page)
         };
         return(
             <React.Fragment>
