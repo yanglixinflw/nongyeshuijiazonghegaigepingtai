@@ -12,6 +12,8 @@ const dataUrl = `${envNet}/api/DeviceWaringRule/eventList`;
 const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`;
 //关闭预警事件
 const closeWarningUrl=`${envNet}/api/DeviceWaringRule/eventClose`;
+//关联建筑接口
+const buildingUrl=`${envNet}/api/Building/list`
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -59,12 +61,17 @@ export default class extends Component {
             //关闭预警字段
             deviceId: '',
             //是否显示关闭预警显示
-            closeShowvisible: false
+            closeShowvisible: false,
+            //下拉搜索框的值
+            value:"",
+            //下拉搜索框数据源
+            buildingList:[]
         };
-        console.log(this.state.data)
+        // console.log(this.state.data)
     }
     componentDidMount() {
         this._getTableDatas(this.state.title, this.state.data);
+        //设备安装地
         fetch(installAddrUrl, {
             method: 'GET',
             mode: 'cors',
@@ -147,6 +154,7 @@ export default class extends Component {
             tableDatas,
         });
     }
+    //换页
     _pageChange(page) {
         const { searchValue } = this.state;
         searchValue.pageIndex = page - 1;
@@ -362,8 +370,34 @@ export default class extends Component {
             showvisible: false
         })
     }
+    //下拉搜索框的搜索
+    handleSearch (value){
+          //关联建筑物
+          console.log(value)
+          fetch(buildingUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                "name": value,
+                "countDevice": false
+            })
+        }).then(res => {
+            Promise.resolve(res.json())
+                .then(v => {
+                    if (v.ret == 1) {
+                        // 设置页面显示的元素
+                        console.log(v.data)
+                        let buildingList = v.data
+                        this.setState({
+                            buildingList
+                        })
+                    }
+                })
+        }).catch(err => {
+            console.log(err)
+        })
+    }
     render() {
-        const { columns, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible } = this.state;
+        const { columns, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible,buildingList } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -380,7 +414,8 @@ export default class extends Component {
                         {/* 表单信息 */}
                         <SearchForm
                             wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                            {...{ installAddrList }}
+                            {...{ installAddrList,buildingList }}
+                            handleSearch={()=>this.handleSearch()}
                         />
                         <div className={styles.buttonGroup}>
                             <Button
@@ -443,8 +478,12 @@ export default class extends Component {
 //搜索表单
 const SearchForm = Form.create()(
     class extends React.Component {
+        
+        handleChange = (value) => {
+            this.setState({ value });
+        }
         render() {
-            const { form, installAddrList } = this.props;
+            const { form, installAddrList,buildingList,handleSearch } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Form
@@ -502,10 +541,25 @@ const SearchForm = Form.create()(
                     <Form.Item>
                         {getFieldDecorator('building', {})
                             (
-                            <Input
+                            <Select
+                                showSearch
                                 placeholder='关联建筑物'
-                                type='text'
-                            />
+                                style={this.props.style}
+                                defaultActiveFirstOption={false}
+                                showArrow={false}
+                                filterOption={false}
+                                onSearch={handleSearch}
+                                onChange={this.handleChange}
+                                notFoundContent={null}
+                            >
+                                {
+                                    buildingList.map((v,i)=>{
+                                        return(
+                                            <Option key={i} value={v.buildingId}>{v.name}</Option>
+                                        )
+                                    })
+                                }
+                            </Select>
                             )
                         }
                     </Form.Item>

@@ -5,18 +5,18 @@ import { Switch } from 'antd';
 export default class extends Component {
     constructor(props) {
         super(props)
-        // console.log(props)
+        console.log(props)
     }
     render() {
-        const {isWarningMsg} = this.props
-        if(isWarningMsg.length==0){
+        const {info} = this.props
+        if(info.length==0){
             return null
         }else{
-            const {isWarning} = isWarningMsg[0]
+            const {isWarning} = info[0]
             return (
                 <div>
                     <div className={styles.infoTitle}>
-                        <p className={styles.deviceName}>设备名称</p>
+                        <p className={styles.deviceName}>{info[0].name}</p>
                     </div>
                     {isWarning ?
                         <div className={styles.infoContent}>

@@ -19,6 +19,7 @@ const valvePosition = [
 export default class extends Component {
     constructor(props) {
         super(props)
+        console.log(props)
         const plugins = [
             // 比例尺
             'Scale',

@@ -8,8 +8,6 @@ export default class extends Component {
             return null
         }
         const {deviceTypeId} = markers;
-        // console.log(deviceTypeId)
-        // const {type} = props;
         this.state = {
             markers,
             deviceTypeId
@@ -19,7 +17,7 @@ export default class extends Component {
     render(){
         const {markers,deviceTypeId} = this.state;
         const {chosenMarker} = this.props;
-        // console.log(chosenMarker)
+        // console.log(info)
         if(deviceTypeId==1){
             return (
                 <div className={styles.markerCamera}>
