@@ -20,6 +20,8 @@ export default class extends Component {
     constructor(props) {
         super(props)
         console.log(props)
+        const ballData = props.valveControl.data.data.items;
+        const wellData = props.valveControl.wellEle.data.items;
         const plugins = [
             // 比例尺
             'Scale',
