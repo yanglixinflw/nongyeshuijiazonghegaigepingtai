@@ -145,6 +145,15 @@ export function getOperatingRecord(params){
     )
   })
 }
+//获取自动化控制列表
+export function getAutoControl(params){
+  return request(`${envNet}/api/Automatic/list`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
 // 获取视频监控下拉列表
 export function getMonitorSelectList(){
   return request(`${envNet}/api/CamerasMonitor/buildings`,{

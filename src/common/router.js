@@ -121,7 +121,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['operatingRecord'], () => import('../routes/distributedControl/operatingRecord')),
     },
     '/dcs/automation':{
-      component: dynamicWrapper(app, [], () => import('../routes/distributedControl/autoControl')),
+      component: dynamicWrapper(app, ["autoControl"], () => import('../routes/distributedControl/autoControl')),
     },
     '/automation/autoRules':{
       component: dynamicWrapper(app, [], () => import('../routes/distributedControl/autoRules')),
