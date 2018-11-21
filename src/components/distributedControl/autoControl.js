@@ -1,44 +1,72 @@
 import React,{Component} from 'react';
 import styles from "./autoControl.less"
-import { Input, Button, Form, Cascader, Table, Divider} from 'antd';
+import { Input, Button, Form, Table,Modal } from 'antd';
 import { Link } from 'dva/router';
+//开发地址
+const envNet='http://192.168.30.127:88';
+//生产环境
+// const envNet='';
+//翻页调用
+const dataUrl=`${envNet}/api/Automatic/list`;
+//转换状态调用
+const changeUrl=`${envNet}/api/Automatic/changeStatus`;
+//快捷添加自动化规则
+const addUrl=`${envNet}/api/Automatic/add`;
+//修改自动化规则名称
+const editUrl=`${envNet}/api/Automatic/update`;
+//删除自动化规则名称
+const delUrl=`${envNet}/api/Automatic/delete`;
 const tableTitle=[
+    {index:"ruleId",item:"自动化编号"},
     {index:"name",item:"自动化名称"},
-    {index:"rule",item:"规则"},
-    {index:"state",item:"状态"},
+    {index:"description",item:"规则"},
+    {index:"isEnabled",item:"状态"},
     {index:"updateTime",item:"更新时间"},
 ]
-const data=[
-    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"启用",updateTime:"2018-07-02 08:09:21"},
-    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"停用",updateTime:"2018-07-02 08:09:21"},
-    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"启用",updateTime:"2018-07-02 08:09:21"},
-    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"停用",updateTime:"2018-07-02 08:09:21"},
-    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"启用",updateTime:"2018-07-02 08:09:21"},
-    {name:"宁围街道蓄水池自动化蓄水",rule:"当...",state:"停用",updateTime:"2018-07-02 08:09:21"}
-]
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+}
 export default class extends Component{
     constructor(props) {
         super(props)
-        const autoControl=data;
-        var tableData=[],tableIndex=[];//数据表的item 和 index
-        tableTitle.map(v=>{
-            tableData.push(v.item);
-            tableIndex.push(v.index)
-        })
+        const {autoControl}=props;
         this.state={
-            autoControl,
-            items:autoControl,
-            tableTitle,
-            tableDatas:[],
+            //表数据源
+            itemCount:autoControl.data.itemCount,//总数据数
+            data:autoControl.data.items,//表格数据源
             columns: [],
-            title:tableTitle
+            //表头
+            title:tableTitle,
+            //启用/停用
+            changeStatus:"停用",
+            //停用/启用弹窗是否显示
+            changeStatusVisible:false,
+            //规则id
+            ruleId:"",
+            //规则的状态
+            isEnabled:"",
+            //是否显示添加弹窗
+            addvisible:false,
+            //是否显示修改弹窗
+            editvisible:false,
+            //规则名称
+            name:"",
+            //是否显示删除弹窗
+            delVisible:false
         }
     }
     componentDidMount() {
-        this._getTableDatas(this.state.title, this.state.items);
+        this._getTableDatas(this.state.title, this.state.data);
     }
-    _getTableDatas(title, items) {
+    _getTableDatas(title, data) {
         let columns = [];
+        let changeStatus="停用"
         title.map(v => {//把title里面的数据push到column里面
             columns.push({
                 title: v.item,
@@ -50,18 +78,33 @@ export default class extends Component{
         })
         //把数据都push到tableDatas里
         let tableDatas = [];
-        items.map((v, i) => {
-            tableDatas.push({
-                name:v.name,
-                rule:v.rule,
-                state:v.state,
-                updateTime:v.updateTime,
-                key: i,
-            });
+        data.map((v, i) => {
+            if(v.isEnabled==true){
+                tableDatas.push({
+                    name:v.name,
+                    description:v.description,
+                    isEnabled:"启用",
+                    updateTime:v.updateTime,
+                    ruleId:v.ruleId,
+                    key: i,
+                });
+                changeStatus="停用"
+            }else{
+                tableDatas.push({
+                    name:v.name,
+                    description:v.description,
+                    isEnabled:"停用",
+                    updateTime:v.updateTime,
+                    ruleId:v.ruleId,
+                    key: i,
+                });
+                changeStatus="启用"
+            }
         })
         this.setState({
             columns,
             tableDatas,
+            changeStatus
         });
         //操作列
         columns.push({
@@ -85,19 +128,22 @@ export default class extends Component{
                         </Link>
                         <Button
                             className={styles.stop}
-                            icon='stop'
+                            icon='poweroff'
+                            onClick={()=>this.changeStatus(record.ruleId,record.isEnabled)}
                         >
-                            停用
+                         停/启用   
                         </Button>
                         <Button
                             className={styles.edit}
                             icon='edit'
+                            onClick={()=>this.edit(record.ruleId,record.name)}
                         >
                             修改
                         </Button>
                         <Button
-                        className={styles.delete}
+                            className={styles.delete}
                             icon='delete'
+                            onClick={()=>this.delete(record.ruleId)}
                         >
                             删除
                         </Button>
@@ -116,31 +162,15 @@ export default class extends Component{
         if (err) {
             return
         }
-        // if(values.realName==undefined){
-        //     values.realName=''
-        // }
-        // if(values.mobilePhone==undefined){
-        //     values.mobilePhone=''
-        // }
-        // if(values.idCard==undefined){
-        //     values.idCard=''
-        // }
-        // if(values.areaId=='area'){
-        //     values.areaId=''
-        // }
-        // if(values.isActivated=='isActivated'){
-        //     values.isActivated=''
-        // }
+        if(values.name==undefined){
+            values.name=''
+        }
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                // "name": values.realName,
-                // "mobile": values.mobilePhone,
-                // "idCard": values.idCard,
-                // "areaId": values.areaId,
-                // "isActivated": values.isActivated,
-                // "pageIndex": 0,
-                // "pageSize": 10
+                "name": values.name,
+                "pageIndex": 0,
+                "pageSize": 10
             })
         }).then(res => {
             Promise.resolve(res.json())
@@ -194,8 +224,213 @@ export default class extends Component{
                 })
         })
     }
+    //点击启用与停用
+    changeStatus(ruleId,isEnabled){
+        if(isEnabled=="启用"){
+            isEnabled=true
+        }else{
+            isEnabled=false
+        }
+        this.setState({
+            changeStatusVisible:true,
+            ruleId,
+            isEnabled
+        })
+    }
+   //点击 停/启用 确定
+    changeStatusOk(){
+        const {title}=this.state
+        return fetch(changeUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                "id":this.state.ruleId,
+                "isEnable":!this.state.isEnabled
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                if(v.ret==1){
+                    return fetch(dataUrl,{
+                        ...postOption,
+                        body:JSON.stringify({
+                            "pageIndex": 0,
+                            "pageSize": 10
+                        })
+                    }).then(res=>{
+                        Promise.resolve(res.json())
+                        .then(v=>{
+                            let data=v.items;
+                            this._getTableDatas(title, data);
+                            this.setState({
+                                changeStatusVisible:false,
+                                data
+                            })
+                        })
+                    })
+                }
+            })
+        })
+    }
+    //点击 停/启用 取消
+    changeStatusCancel(){
+        this.setState({
+            changeStatusVisible:false,
+        })
+    }
+    //点击添加
+    add(){
+        this.setState({
+            addvisible:true
+        })
+    }
+    //点击添加确定
+    addhandleOk(){
+        const {title}=this.state
+        const form = this.addForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            fetch(addUrl,{
+                ...postOption,
+                body:JSON.stringify({
+                    "name":values.name
+                })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                .then(v=>{
+                    if(v.ret==1){
+                        fetch(dataUrl,{
+                            ...postOption,
+                            body:JSON.stringify({
+                                "pageIndex": 0,
+                                "pageSize": 10
+                            })
+                        }).then(res=>{
+                            Promise.resolve(res.json())
+                            .then(v=>{
+                                let data=v.items;
+                                this._getTableDatas(title, data);
+                                this.setState({
+                                    addvisible:false,
+                                    data
+                                })
+                            })
+                        })
+                    }
+                })
+            })
+        })
+    }
+    //点击添加取消
+    addhandleCancel(){
+        this.setState({
+            addvisible:false
+        })
+    }
+    //点击修改按钮
+    edit(ruleId,name){
+        this.setState({
+            ruleId,
+            name,
+            editvisible:true
+        })
+    }
+    //点击修改确定
+    edithandleOk(){
+        const{title}=this.state
+        const form = this.editForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            fetch(editUrl,{
+                ...postOption,
+                body:JSON.stringify({
+                    "id":values.id,
+                    "name":values.name
+                })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                .then(v=>{
+                    if(v.ret==1){
+                        fetch(dataUrl,{
+                            ...postOption,
+                            body:JSON.stringify({
+                                "pageIndex": 0,
+                                "pageSize": 10
+                            })
+                        }).then(res=>{
+                            Promise.resolve(res.json())
+                            .then(v=>{
+                                let data=v.items;
+                                this._getTableDatas(title, data);
+                                this.setState({
+                                    editvisible:false,
+                                    data
+                                })
+                            })
+                        })
+                    }
+                })
+            })
+        })
+    }
+    //点击修改取消
+    edithandleCancel(){
+        this.setState({
+            editvisible:false
+        })
+    }
+    //点击删除
+    delete(ruleId){
+        this.setState({
+            delVisible:true,
+            ruleId
+        })
+    }
+    delOk(){
+        const{title}=this.state
+        fetch(delUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                ruleIds:this.state.ruleId
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                if(v.ret==1){
+                    fetch(dataUrl,{
+                        ...postOption,
+                        body:JSON.stringify({
+                            "pageIndex": 0,
+                            "pageSize": 10
+                        })
+                    }).then(res=>{
+                        Promise.resolve(res.json())
+                        .then(v=>{
+                            let data=v.items;
+                            this._getTableDatas(title, data);
+                            this.setState({
+                                delVisible:false,
+                                data
+                            })
+                        })
+                    })
+                }
+            })
+        })
+    }
+    //点击取消删除
+    delCancel(){
+        this.setState({
+            delVisible:false
+        })
+    }
     render(){
-        const { columns, tableDatas } = this.state;
+        const { columns, tableDatas,changeStatus,changeStatusVisible,addvisible,editvisible,name,ruleId,delVisible } = this.state;
         const paginationProps = {
             showQuickJumper: true,
         };
@@ -228,6 +463,7 @@ export default class extends Component{
                             <Button
                                 icon='plus'
                                 className={styles.fnButton}
+                                onClick={()=>this.add()}
                             >
                                 添加
                             </Button>
@@ -240,6 +476,47 @@ export default class extends Component{
                         dataSource={tableDatas}
                         // scroll={{ x: 1300 }}
                     />
+                    {/* 停用/启用弹窗 */}
+                    <Modal 
+                        title={changeStatus}
+                        visible={changeStatusVisible}
+                        className={styles.changeStatusModal}
+                        onOk={()=>this.changeStatusOk()}
+                        onCancel={()=>this.changeStatusCancel()}
+                        okText="确认"
+                        cancelText="取消"
+                        centered//居中显示
+                    >
+                        <p>确认{changeStatus}规则</p>
+                    </Modal>
+                    {/* 添加弹窗 */}
+                    <AddForm
+                        wrappedComponentRef={(addForm) => this.addForm = addForm}
+                        visible={addvisible}
+                        onCancel={() => this.addhandleCancel()}
+                        onOk={() => this.addhandleOk()}
+                    />
+                    {/* 修改弹窗 */}
+                    <EditForm
+                        wrappedComponentRef={(editForm) => this.editForm = editForm}
+                        visible={editvisible}
+                        onCancel={() => this.edithandleCancel()}
+                        onOk={() => this.edithandleOk()}
+                        {...{name,ruleId}}
+                    />
+                    {/* 删除弹窗 */}
+                    <Modal 
+                        title="删除自动化规则"
+                        visible={delVisible}
+                        className={styles.delModal}
+                        onOk={()=>this.delOk()}
+                        onCancel={()=>this.delCancel()}
+                        okText="确认"
+                        cancelText="取消"
+                        centered//居中显示
+                    >
+                        <p>删除后信息将无法恢复，是否确认删除。</p>
+                    </Modal>
                 </div>
             </React.Fragment>
         )
@@ -249,7 +526,7 @@ export default class extends Component{
 const SearchForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, searchHandler, resetHandler } = this.props;
+            const { form } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Form 
@@ -273,6 +550,81 @@ const SearchForm = Form.create()(
                 </Form>
             )
 
+        }
+    }
+)
+//添加弹窗表单
+const AddForm = Form.create()(
+    class extends React.Component {
+        render() {
+            const { visible, onCancel, onOk, form } = this.props;
+            const { getFieldDecorator } = form;
+            return (
+                <Modal
+                    className={styles.addModal}
+                    visible={visible}
+                    title="添加自动化规则"
+                    onCancel={onCancel}
+                    onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
+                    centered
+                >
+                    <Form>
+                        <Form.Item label="自动化名称">
+                            {getFieldDecorator('name', {initialValue: ''})
+                            (
+                                <Input
+                                    placeholder='请输入自动化规则名称'
+                                    type='text'
+                                />
+                            )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )
+        }
+    }
+)
+//修改弹窗表单
+const EditForm = Form.create()(
+    class extends React.Component {
+        render() {
+            const { visible, onCancel, onOk, form, name, ruleId } = this.props;
+            const { getFieldDecorator } = form;
+            return (
+                <Modal
+                    className={styles.editModal}
+                    visible={visible}
+                    title="修改自动化规则"
+                    onCancel={onCancel}
+                    onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
+                    centered
+                >
+                    <Form>
+                        <Form.Item label="自动化编号">
+                            {getFieldDecorator('id', {initialValue: `${ruleId}`})
+                            (
+                                <Input
+                                    disabled
+                                    type='text'
+                                />
+                            )}
+                        </Form.Item>
+                        <Form.Item label="自动化名称">
+                            {getFieldDecorator('name', {initialValue: ''})
+                            (
+                                <Input
+                                    placeholder={name}
+                                    type='text'
+                                />
+                            )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )
         }
     }
 )

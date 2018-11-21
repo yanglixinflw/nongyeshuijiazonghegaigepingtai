@@ -19,6 +19,9 @@ export default {
         deviceTypeList(state, { payload }){
           state.deviceTypeList=payload
           return { ...state }
+        },
+        clear(){
+          return {}
         }
       }
 }
