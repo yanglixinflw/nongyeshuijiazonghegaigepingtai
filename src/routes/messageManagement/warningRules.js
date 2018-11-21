@@ -10,6 +10,9 @@ export default class extends Component{
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch({
+            type: 'warningRules/clear',
+        })
+        dispatch({
             type: 'warningRules/fetch',
             payload:{
                 "pageIndex": 0,

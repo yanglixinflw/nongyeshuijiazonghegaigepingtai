@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import styles from "./warningRules.less"
-import {  Button,Select ,Table, Modal} from 'antd';
+import {  Button,Select ,Table, Modal,message} from 'antd';
 import { routerRedux } from 'dva/router';
 //开发环境
 const envNet='http://192.168.30.127:88';
@@ -8,6 +8,8 @@ const envNet='http://192.168.30.127:88';
 // const envNet='';
 //翻页调用
 const dataUrl=`${envNet}/api/DeviceWaringRule/ruleList`;
+// 删除调用
+const deleteUrl=`${envNet}/api/DeviceWaringRule/delete`
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -40,11 +42,50 @@ export default class extends Component{
             addVisible:false,
             // addVisible:true,
             // 选择的设备ID
-            selectDeviceId:''
+            selectDeviceId:'',
+            // 删除弹窗
+            // deleteModalVisible:false,
+            deleteModalVisible:false,
+            // 删除Id
+            deleteId:''
         };
     }
     componentDidMount() {
         this._getTableDatas(this.state.title, this.state.data);
+    }
+    // 删除规则
+    delete(deleteId){
+        // console.log(ruleId)
+        this.setState({
+            deleteModalVisible:true,
+            deleteId
+        })
+    }
+    _deleteOk(){
+        const { deleteId } = this.state
+        return fetch(deleteUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                ruleIds:deleteId
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        message.success('删除成功', 2)
+                        this.setState({
+                            deleteModalVisible: false,
+                        })
+                        this._getTableDatas(this.state.title, this.state.data);
+                    }
+                })
+        })
+    }
+    _deleteCancel(){
+        // console.log('Cancel')
+        this.setState({
+            deleteModalVisible: false,
+        })
     }
     _getTableDatas(title, data) {
         let columns = [];
@@ -79,7 +120,7 @@ export default class extends Component{
                         
                         <Button
                             className={styles.delete}
-                            onClick={()=>this.delete()}
+                            onClick={()=>this.delete(record.ruleId)}
                             icon='delete'
                         >
                             删除
@@ -97,6 +138,7 @@ export default class extends Component{
         let tableDatas = [];
         //表单数据
         data.map((v, i) => {
+            // console.log(v)
             tableDatas.push({
                 deviceTypeName:v.deviceTypeName,
                 name:v.name,
@@ -141,6 +183,7 @@ export default class extends Component{
             selectDeviceId:''
         })
     }
+    // 翻页功能
     _pageChange(page){
         // 翻页传递参数
         let postObject={
@@ -182,7 +225,8 @@ export default class extends Component{
             tableDatas,
             itemCount, 
             addVisible,
-            deviceTypeList
+            deviceTypeList,
+            deleteModalVisible
         } = this.state;
         const paginationProps = {
             showQuickJumper: true,
@@ -213,6 +257,19 @@ export default class extends Component{
                     dataSource={tableDatas}
                     // scroll={{ x: 1300 }}
                 />
+                {/* 删除弹窗 */}
+                <Modal
+                    visible={deleteModalVisible}
+                    title="删除"
+                    cancelText='取消'
+                    okText='确定'
+                    onOk={() => this._deleteOk()}
+                    onCancel={() => this._deleteCancel()}
+                    className={styles.deleteModal}
+                    centered={true}
+                >
+                    <span>删除后信息将无法恢复，是否确认删除</span>
+                </Modal>
                 <Modal
                     className={styles.addModal}
                     visible={addVisible}
