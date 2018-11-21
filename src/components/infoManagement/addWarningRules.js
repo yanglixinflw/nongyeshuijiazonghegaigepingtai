@@ -119,9 +119,11 @@ export default class extends Component {
                             if(v.ret==1){
                                 
                                 message.success('添加成功', 2)
+                                // 重置表单
+                                form.resetFields();
                                 // console.log(1)
                                 dispatch(routerRedux.push(`/messageManagement/warningRules`))
-    
+                                
                             }
                         })
                     })
@@ -272,7 +274,7 @@ const AddRulesForm = Form.create()(
                     // console.log(v.data)
                 })
         }
-        // 选中设备后
+        // 选中设备获取指令
         deviceChange(value) {
             Promise.resolve(getControlList({
                 deviceId: value

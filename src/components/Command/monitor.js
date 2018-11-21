@@ -243,8 +243,17 @@ export default class extends Component {
                     return
                 }
             }
+            // 判断当前屏幕数量是否已满
+            
 
         })
+        if(playOrder.length==0){
+            alert('画面数量已满')
+            // console.log('画面数量已满')
+            // 设置最后一个画面的视频源
+            // monitorArr[monitorArr.length-1].video = playVideo
+            // monitorArr[monitorArr.length-1].video.order = monitorArr[playOrder[0]].order
+        }
         // 进一步monitorArr处理
         monitorArr.map((v, i) => {
             // console.log(v)

@@ -122,6 +122,11 @@ export default class extends Component {
         // 初始化处理表单数据
         this._getTableData(this.state.data, this.state.filterColumns)
     }
+    //保存当前设备的类型ID
+    _saveDeviceTypeId(deviceTypeId){
+        // console.log(deviceTypeId)
+        localStorage.setItem('selectDeviceTypeId',deviceTypeId)
+    }
     // 获取表单数据
     _getTableData(data, sourceColumns) {
         let columns = []
@@ -158,6 +163,7 @@ export default class extends Component {
                         <Button
                             className={styles.warn}
                             icon='exception'
+                            onClick={()=>this._saveDeviceTypeId(record.deviceTypeId)}
                         >
                             预警机制
                         </Button>
@@ -197,6 +203,7 @@ export default class extends Component {
                 relatedBuilding: v.relatedBuilding,
                 warningRules: v.warningRules,
                 lastRequestTime: v.lastRequestTime,
+                deviceTypeId:v.deviceTypeId,
                 key: i
             })
         })
