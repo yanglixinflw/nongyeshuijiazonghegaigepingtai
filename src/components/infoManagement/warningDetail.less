@@ -16,6 +16,29 @@
     }
     .content {
         margin: 35px 280px;
+        .customizeForm{
+            height:800px;
+            overflow-y: auto;
+            margin-top:30px;
+            &::-webkit-scrollbar{
+                width:10px;
+            }
+            &::-webkit-scrollbar-button {
+                display: none;
+            }
+            &::-webkit-scrollbar-thumb {
+                background: #3164BF;
+                border-radius: 2px;
+            }
+            &::-webkit-scrollbar-track {
+                background: #2E3459;
+            }
+            :global{
+                .ant-form:first-child{
+                    margin-top:0;
+                }
+            }
+        }
         :global {
             .ant-select {
                 width: 300px;
@@ -363,19 +386,23 @@
     .judgmentRule {
         margin-left: 40px;
         :global {
-            .ant-input {
+            .ant-input-number {
                 width: 120px;
                 height: 40px;
                 background: #141831;
                 border: 1px solid #141831;
-                color: #46556D;
+                color: #bbbbc0;
+                line-height: 40px;
                 &:focus {
                     border: 1px solid #337DF6 !important;
                     box-shadow: none;
                 }
-                &::-webkit-input-placeholder {
-                    color: #46556D;
-                }
+            }
+            .ant-input-number-input::-webkit-input-placeholder {
+                color: #46556D;
+            }
+            .ant-input-number-handler-wrap {
+                display: none
             }
             .ant-select {
                 margin-right: 10px !important;
@@ -488,7 +515,7 @@
         .judgmentRule {
             margin-left: 20px;
             :global {
-                .ant-input {
+                .ant-input-number {
                     width: 80px;
                 }
             }
@@ -528,7 +555,7 @@
                 width:80px !important;
             }
             :global {
-                .ant-input {
+                .ant-input-number {
                     width: 80px;
                 }
             }
@@ -545,6 +572,11 @@
         }
         .informContent {
             width: 532px;
+            :global{
+                .ant-select-selection--multiple{
+                    width: 532px;
+                }
+            }
         }
     }
 }
