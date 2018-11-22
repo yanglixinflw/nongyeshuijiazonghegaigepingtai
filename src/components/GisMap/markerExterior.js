@@ -42,6 +42,54 @@ export default class extends Component {
                 </div>
                
             )
+        }else if(deviceTypeId==2){
+            return (
+                <div className={styles.markerWaterM}>
+                    {
+                        chosenMarker?
+                            <i className={styles.chosen}>
+                                <div className={styles.chosenAnimation1}></div>
+                                <div className={styles.chosenAnimation2}></div>
+                                <div className={styles.chosenAnimation3}></div>
+                            </i> 
+                        :
+                        markers.isWarning?
+                            <i className={styles.warning}>
+                                <div className={styles.warningAnimation1}></div>
+                                <div className={styles.warningAnimation2}></div>
+                                <div className={styles.warningAnimation3}></div>
+                            </i> 
+                        : 
+                            <i className={styles.normal}></i>
+                        
+                    }
+                </div>
+               
+            )
+        }else if(deviceTypeId==3){
+            return (
+                <div className={styles.markerEleMeter}>
+                    {
+                        chosenMarker?
+                            <i className={styles.chosen}>
+                                <div className={styles.chosenAnimation1}></div>
+                                <div className={styles.chosenAnimation2}></div>
+                                <div className={styles.chosenAnimation3}></div>
+                            </i> 
+                        :
+                        markers.isWarning?
+                            <i className={styles.warning}>
+                                <div className={styles.warningAnimation1}></div>
+                                <div className={styles.warningAnimation2}></div>
+                                <div className={styles.warningAnimation3}></div>
+                            </i> 
+                        : 
+                            <i className={styles.normal}></i>
+                        
+                    }
+                </div>
+               
+            )
         }else if(deviceTypeId==4){
             return (
                 <div className={styles.markerWaterV}>

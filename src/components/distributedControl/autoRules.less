@@ -58,20 +58,41 @@
            .Rules{
             width: 100%;
             height: auto;
-            padding: 20px 20px;
+            padding: 0 20px;
+            overflow: hidden;
             color: #ababb4;
             border-bottom: 1px solid #2a325e;
             position: relative;
                 .rulesName{
-                    width: 180px;
-                    background:#1c2241;
-                    border:none;
-                    outline: none;
+                    :global{
+                        width: 180px;
+                        height: 42px;
+                        margin-top:20px;
+                        background:#1c2241;
+                        .ant-form-item-control-wrapper{
+                            .ant-form-item-control{
+                                span{
+                                    input{
+                                        width: 180px;
+                                        height: 42px;
+                                        font-size: 18px;
+                                        background: #1c2241;
+                                        border:none;
+                                        outline: none;
+                                        color:#ababb4;
+                                        &:focus{
+                                            border:none;
+                                            outline: none;
+                                        }
+                                    }
+                                    
+                                }
+                            }
+                        }
+                    }
+                  
                 }
-                input::-webkit-input-placeholder{
-                    font-size: 18px;
-                    color:#ababb4
-                }
+                
                 .border{
                     width: 180px;
                     height:2px;
@@ -169,6 +190,7 @@
                                     background: #141831;
                                     border: none;
                                     outline: none;
+                                    color:#46556d;
                                 }
                             }
                         }
@@ -197,6 +219,7 @@
                                     background: #141831;
                                     border: none;
                                     outline: none;
+                                    color:#46556d;
                                 }
                             }
                         }

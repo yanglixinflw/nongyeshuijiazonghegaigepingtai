@@ -52,7 +52,7 @@ export default class extends Component {
             eleMeterVisible: false,
             waterValveVisible: false,
             //信息窗位置偏移量
-            infoOffset: [0, -21],
+            infoOffset: [-3, -20],
             //信息窗可见性
             infoVisibleCamera: false,
             infoVisibleWaterValve: false,
@@ -348,20 +348,12 @@ export default class extends Component {
         }
 
     }
-    //摄像头markers的render方法
-    renderCameraMarker(extData) {
+    //标记正常时渲染方法
+    renderMarker(extData) {
         return <MarkerExterior markers={extData} chosenMarker={false} />
     }
-    //选择某摄像头marker时的渲染方法
-    renderCameraChosen(extData) {
-        return <MarkerExterior markers={extData} chosenMarker={true} />
-    }
-    //水阀markers的render方法
-    renderWaterValveMarker(extData) {
-        return <MarkerExterior markers={extData} chosenMarker={false} />
-    }
-    //选择某水阀marker时的渲染方法
-    renderWaterValveChosen(extData) {
+    //标记被选中时渲染方法
+    renderMarkerChosen(extData) {
         return <MarkerExterior markers={extData} chosenMarker={true} />
     }
     //图标记显示/隐藏
@@ -523,10 +515,10 @@ export default class extends Component {
                         timeOut(v.ret)
                         if (v.ret == 1) {
                             let dataList = v.data.items;
+                            this._getDataList(dataList, keyword)
                             this.setState({
                                 dataList
                             })
-                            this._getDataList(dataList, keyword)
                         } else {
                             this.setState({
                                 dataList: []
@@ -551,36 +543,36 @@ export default class extends Component {
         allCameraMarkers.map((v, i) => {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
-                v.render(this.renderCameraChosen)
+                v.render(this.renderMarkerChosen)
             } else {
-                v.render(this.renderCameraMarker)
+                v.render(this.renderMarker)
             }
         })
         //水表
         allWaterMeterMarkers.map((v, i) => {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
-                v.render()
+                v.render(this.renderMarkerChosen)
             } else {
-                v.render()
+                v.render(this.renderMarker)
             }
         })
         //电表
         allEleMeterMarkers.map((v, i) => {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
-                v.render()
+                v.render(this.renderMarkerChosen)
             } else {
-                v.render()
+                v.render(this.renderMarker)
             }
         })
         //水阀
         allWaterValveMarkers.map((v, i) => {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
-                v.render(this.renderWaterValveChosen)
+                v.render(this.renderMarkerChosen)
             } else {
-                v.render(this.renderWaterValveMarker)
+                v.render(this.renderMarker)
             }
         })
     }
@@ -617,7 +609,7 @@ export default class extends Component {
                     // onChange={(e) => this._searchHandler(e)}
                     />
                     {
-                        dataList.length != 0 ?
+                        dataList.length !== 0 ?
                             <div className={styles.dataList}>
                                 <List
                                     itemLayout="vertical"
@@ -633,7 +625,9 @@ export default class extends Component {
                                                 <p className={styles.deviceId}
                                                     dangerouslySetInnerHTML={{ __html: item.deviceId }}
                                                 ></p>
-                                                <Icon type={item.icon} />
+                                                {item.isWarning ?
+                                                    <i className={styles.warningWarn}></i>
+                                                    : null}
                                                 <p className={styles.itemAdress}
                                                     dangerouslySetInnerHTML={{ __html: item.installAddr }}
                                                 ></p>
@@ -653,8 +647,18 @@ export default class extends Component {
                         <i className={styles.camera}></i>
                         <span>摄像头</span>
                     </Button>
-                    <Button onClick={() => this._WatermeterHandler()}>水表</Button>
-                    <Button onClick={() => this._ElectricmeterHandler()}>电表</Button>
+                    <Button
+                        onClick={() => this._WatermeterHandler()}
+                    >
+                        <i className={styles.waterMeter}></i>
+                        <span>水表</span>
+                    </Button>
+                    <Button
+                        onClick={() => this._ElectricmeterHandler()}
+                    >
+                        <i className={styles.eleMeter}></i>
+                        <span>电表</span>
+                    </Button>
                     <Button onClick={() => this._WatervalveHandler()}>
                         <i className={styles.waterValve}></i>
                         <span>水阀</span>
@@ -670,7 +674,7 @@ export default class extends Component {
                         size={size}
                         events={this.windowEvents}
                     >
-                        <IwContentCamera 
+                        <IwContentCamera
                             info={cameraMarkers.filter(item => item.position == infoPositionCamera)}
                         />
                     </InfoWindow>
@@ -679,7 +683,7 @@ export default class extends Component {
                 {/* 摄像头marker */}
                 <Markers
                     markers={cameraMarkers}
-                    render={(extData) => this.renderCameraMarker(extData)}
+                    render={(extData) => this.renderMarker(extData)}
                     events={this.cameraEvents}
                 />
                 {/* 水阀信息窗 高德地图规定同时最多只能显示一个信息窗*/}
@@ -702,7 +706,7 @@ export default class extends Component {
                 {/* 水阀Marker */}
                 <Markers
                     markers={waterValveMarkers}
-                    render={(extData) => this.renderWaterValveMarker(extData)}
+                    render={(extData) => this.renderMarker(extData)}
                     events={this.WaterValveEvents}
                     visible={waterValveVisible}
                 />
@@ -716,7 +720,7 @@ export default class extends Component {
                         size={size}
                         events={this.windowEvents}
                     >
-                        <IwContentWaterV isWarningMsg={waterMeterMarkers.filter(item => item.position == infoPositionWaterValve)} />
+                        <IwContentWaterV info={waterMeterMarkers.filter(item => item.position == infoPositionWaterValve)} />
                     </InfoWindow>
                     : null
                 }
@@ -724,6 +728,7 @@ export default class extends Component {
                 <Markers
                     markers={waterMeterMarkers}
                     events={this.WaterMeterEvents}
+                    render={(extData) => this.renderMarker(extData)}
                     visible={waterMeterVisible}
                 />
                 {/* 电表信息窗 高德地图规定同时最多只能显示一个信息窗*/}
@@ -736,7 +741,7 @@ export default class extends Component {
                         size={size}
                         events={this.windowEvents}
                     >
-                        <IwContentWaterV isWarningMsg={eleMeterMarkers.filter(item => item.position == infoPositionWaterValve)} />
+                        <IwContentWaterV info={eleMeterMarkers.filter(item => item.position == infoPositionWaterValve)} />
                     </InfoWindow>
                     : null
                 }
@@ -744,6 +749,7 @@ export default class extends Component {
                 <Markers
                     markers={eleMeterMarkers}
                     visible={eleMeterVisible}
+                    render={(extData) => this.renderMarker(extData)}
                     events={this.eleMeterEvents}
                 />
                 {/* 自定义地图控件 */}
