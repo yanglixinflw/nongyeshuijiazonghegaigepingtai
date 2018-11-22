@@ -1,6 +1,4 @@
 import { getUserManagement } from '../services/api';
-import { getRoleList } from '../services/api';
-import { getDeptList } from '../services/api';
 export default {
   namespace: 'userManagement',//命名空间
   state: {},

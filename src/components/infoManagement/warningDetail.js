@@ -1266,7 +1266,7 @@ const ModifyRulesForm = Form.create()(
         }
         render() {
             const { form, onSave, onCancel, parameterList, roleList, modifyData } = this.props;
-            console.log(modifyData)
+            // console.log(modifyData)
             const { SMSreceiver,
                 TELreceiver,
                 SMSreceiverData,
@@ -1746,7 +1746,7 @@ const TemRulesForm = Form.create()(
         }
         render() {
             const { form, onSave, onCancel, parameterList, roleList, TemRulesData } = this.props;
-            console.log(TemRulesData)
+            // console.log(TemRulesData)
             const { SMSreceiver,
                 TELreceiver,
                 SMSreceiverData,

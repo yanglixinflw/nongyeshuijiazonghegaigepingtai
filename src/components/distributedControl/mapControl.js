@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Map, Markers } from 'react-amap';
 import styles from './mapControl.less';
+import MarkerExterior from '../GisMap/markerExterior';
 import MyCustomize from './myCustomize';
 import { timeOut } from '../../utils/timeOut';
 import { Modal, Radio, message } from 'antd';
@@ -22,24 +23,12 @@ let postOption = {
 const getCmdListUrl = `${envNet}/api/device/control/cmdList`;
 //发送指令
 const sendCmdUrl = `${envNet}/api/device/control/sendCmd`;
-const valvePosition = [
-    { position: { longitude: 120.27, latitude: 30.27 }, isWarningMsg: true },
-    { position: { longitude: 120.26, latitude: 30.27 } },
-    { position: { longitude: 120.27, latitude: 30.26 } },
-    { position: { longitude: 120.26, latitude: 30.28 } },
-    { position: { longitude: 120.27, latitude: 30.28 } },
-    { position: { longitude: 120.28, latitude: 30.27 } },
-    { position: { longitude: 120.27, latitude: 30.29 } },
-    { position: { longitude: 120.29, latitude: 30.27 } },
-    { position: { longitude: 120.26, latitude: 30.29 } },
-    { position: { longitude: 120.27, latitude: 30.17 } },
-]
+//获取设备的详细信息
+const deviceInfoUrl = `${envNet}/api/device/details`
 export default class extends Component {
     constructor(props) {
         super(props)
         console.log(props)
-        const ballData = props.valveControl.data.data.items;
-        const wellData = props.valveControl.wellEle.data.items;
         const plugins = [
             // 比例尺
             'Scale',
@@ -62,8 +51,8 @@ export default class extends Component {
             center: { longitude: 120.26, latitude: 30.29 },
             //控件插件
             plugins,
-            //阀门position
-            valvePosition,
+            //球阀position
+            ballPosition:[],
             //marker是否被点击
             clicked: false,
             //球阀开关弹窗可见性
@@ -77,24 +66,41 @@ export default class extends Component {
         }
     }
     componentDidMount() {
+        let ballPosition = [];
+        //将拿到的数据做处理
+        const ballData = this.props.mapGis.waterValve.data.data.items;
+        ballData.map((v, i) => {
+            let position = {};
+            position.longitude = v.longitude;
+            position.latitude = v.latitude;
+            // console.log(v)
+            ballPosition.push({
+                position,
+                deviceTypeId: v.deviceTypeId,
+                deviceId: v.deviceId
+            })
+        })
+        this.setState({
+            ballPosition,
+        })
         //阀门标记触发事件
         this.valveEvents = {
             click: (MapsOption, marker) => {
                 //点击某个marker时请求接口获得该球阀的开关信息设置value
                 // console.log(marker)
-                console.log(marker.getExtData())
-                // let deviceTypeId = marker.getExtData().deviceTypeId
-                // let deviceId = marker.getExtData().deviceId
-                // this._getCmdList(deviceTypeId)
-                // this.setState({
-                //     deviceId
-                // })
+                // console.log(marker.getExtData())
+                let deviceTypeId = marker.getExtData().deviceTypeId
+                let deviceId = marker.getExtData().deviceId
+                this._getCmdList(deviceTypeId,deviceId)
+                this.setState({
+                    deviceId
+                })
             }
         }
     }
-    //点击标记时获取指令
-    _getCmdList(deviceTypeId) {
-        return fetch(getCmdListUrl, {
+    //点击标记时获取指令 /获取当前设备状态
+    _getCmdList(deviceTypeId,deviceId) {
+        fetch(getCmdListUrl, {
             ...postOption,
             body: JSON.stringify({
                 deviceTypeId
@@ -113,10 +119,26 @@ export default class extends Component {
                     }
                 })
         })
+        fetch(deviceInfoUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                deviceId
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+            .then((v)=>{
+                //超时判断
+                timeOut(v.ret)
+                if(v.ret == 1){
+                    console.log(v)
+                }
+            })
+        })
     }
     //阀门标记渲染方法
     renderMarkerLayout(extData) {
-
+        // console.log(extData)
+        return <MarkerExterior markers={extData} chosenMarker={false} />
     }
     _onChange(e) {
         this.setState({
@@ -160,11 +182,11 @@ export default class extends Component {
     render() {
         const {
             plugins, center,
-            valvePosition,
+            ballPosition,
             modalVisible,
             //该球阀开或关
-            value,
-            // cmdList
+            // value,
+            cmdList
         } = this.state;
         return (
             <div className={styles.mapControl}>
@@ -179,8 +201,8 @@ export default class extends Component {
                 >
                     {/* marker */}
                     <Markers
-                        markers={valvePosition}
-                        //render={(extData) => this.renderMarkerLayout(extData)}
+                        markers={ballPosition}
+                        render={(extData) => this.renderMarkerLayout(extData)}
                         events={this.valveEvents}
                     />
                     {/* 自定义地图控件 */}
@@ -195,19 +217,19 @@ export default class extends Component {
                     onOk={() => this._onOk()}
                 >
                     <Radio.Group
-                        value={value}
+                        // value={value}
                         onChange={(e) => this._onChange(e)}
                     >
-                        {/* {cmdList?
+                        {cmdList?
                             cmdList.map((v,i)=>{
                                 return (
-                                    <Rodio value={v.cmd}>{v.displayName}</Rodio>   
+                                    <Radio key={i} value={v.cmd}>{v.displayName}</Radio>   
                                 )
                             })
                              
-                        :null} */}
-                        <Radio value={1}>开</Radio>
-                        <Radio value={2}>关</Radio>
+                        :null}
+                        {/* <Radio value={1}>开</Radio>
+                        <Radio value={2}>关</Radio> */}
                     </Radio.Group>
                 </Modal>
             </div>

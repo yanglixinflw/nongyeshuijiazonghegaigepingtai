@@ -1,0 +1,178 @@
+.addForm {
+    .formTitle {
+        border-bottom: 1px solid #2E3768;
+        height: 58px;
+        padding: 18px;
+        .formName {
+            height: 23px;
+            line-height: 23px;
+            border-left: 2px solid #337DF6;
+            color: #BFC0C7;
+            padding-left: 10px;
+            font-size: 16px;
+            position: relative;
+            :global {
+                .ant-form-item {
+                    height: 25px;
+                    position: absolute;
+                    top: -6px;
+                }
+                .ant-input {
+                    color: #BFC0C7;
+                    height: 25px;
+                    border: 0;
+                    border-radius: 0%;
+                    border-bottom: 1px solid #2E3768;
+                    background: #202649;
+                    font-size: 16px;
+                    padding-left: 0;
+                    margin-left: 8px;
+                }
+                .has-error .ant-form-explain, .has-error .ant-form-split{
+                    margin-top:-11px;
+                }
+            }
+        }
+    }
+    .items {
+        display: flex;
+        margin: 24px 0px 30px 18px;
+        height: 45px;
+        line-height: 45px;
+    }
+    .itemName1 {
+        width: 104px;
+        height: 45px;
+        line-height: 45px;
+        color: #DADBE0;
+        background: #2A325E;
+        text-align: center;
+        font-size: 16px;
+        margin-right: 75px;
+    }
+    .itemName2 {
+        width: 104px;
+        height: 45px;
+        line-height: 45px;
+        color: #DADBE0;
+        background: #2A325E;
+        text-align: center;
+        font-size: 16px;
+        margin-right: 47px;
+    }
+    .informContent {
+        background: #141831;
+        height: 42px;
+        width: 708px;
+        border: 1px solid #141831;
+        color: #BBBBC0;
+        &::-webkit-input-placeholder {
+            color: #46556D;
+        }
+        &:focus {
+            border: 1px solid #337DF6 !important;
+            box-shadow: none;
+        }
+    }
+    :global {
+        .ant-form-item-required:before{
+            display: none;
+        }
+        .ant-form-item {
+            margin-right: 0px;
+        }
+        .ant-form-item-label label:after {
+            content: ''
+        }
+        .ant-select-selection--multiple {
+            min-height: 42px;
+            background: #141831;
+            border: 1px solid #141831;
+            line-height: 42px;
+            &:active {
+                border: 1px solid #337DF6 !important;
+                box-shadow: none;
+            }
+            &:focus {
+                border: 1px solid #337DF6 !important;
+                box-shadow: none;
+            }
+        }
+        .ant-select-open .ant-select-selection {
+            border: 1px solid #337DF6 !important;
+            box-shadow: none;
+        }
+    }
+    .judgmentRule {
+        margin-left: 40px;
+        :global {
+            .ant-input-number {
+                width: 120px;
+                height: 40px;
+                background: #141831;
+                border: 1px solid #141831;
+                color: #bbbbc0;
+                line-height: 40px;
+                &:focus {
+                    border: 1px solid #337DF6 !important;
+                    box-shadow: none;
+                }
+            }
+            .ant-input-number-input::-webkit-input-placeholder {
+                color: #46556D;
+            }
+            .ant-input-number-handler-wrap {
+                display: none
+            }
+            .ant-select {
+                margin-right: 10px !important;
+            }
+        }
+    }
+    .informer {
+        margin-left: 54px;
+        :global {
+            .ant-input {
+                width: 250px;
+                height: 40px;
+                background: #141831;
+                border: 1px solid #141831;
+                color: #46556D;
+                &::-webkit-input-placeholder {
+                    color: #46556D;
+                }
+                &:focus {
+                    border: 1px solid #337DF6 !important;
+                    box-shadow: none;
+                }
+            }
+            .ant-select {
+                margin-right: 10px !important;
+            }
+        }
+    }
+    .formFooter {
+        margin-top: 50px;
+        border-top: 1px solid #2E3768;
+        height: 75px;
+        line-height: 75px;
+        position: relative;
+        :global {
+            .ant-btn {
+                width: 90px !important;
+                height: 40px !important;
+                position: absolute;
+                top: 20px;
+            }
+        }
+        .btnsave {
+            right: 155px;
+        }
+        .btndelete {
+            right: 41px;
+        }
+    }
+}
+.searchDropDown{
+    width: auto !important;
+}
