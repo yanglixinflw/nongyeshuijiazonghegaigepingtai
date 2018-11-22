@@ -16,7 +16,7 @@ class IndexPage extends React.Component {
     dispatch({
       type: 'mapGis/fetchCamera',
       payload: {
-        deviceTypeId: 1,
+        deviceTypeId: 5,
         pageSize: 100
       }
     })
@@ -37,7 +37,7 @@ class IndexPage extends React.Component {
     dispatch({
       type: 'mapGis/fetchWaterValve',
       payload: {
-        deviceTypeId: 4,
+        deviceTypeId: 1,
         pageSize: 100
       }
     })
@@ -46,7 +46,7 @@ class IndexPage extends React.Component {
     let { mapGis, loading } = this.props;
     let arr = Object.keys(mapGis);
     if (arr.length <= 3) return mapGis = null
-    // console.log(mapGis)
+    console.log(mapGis)
     return (
       <div className={styles.map}>
         {/* <Spin size='large' spinning={loading}> */}

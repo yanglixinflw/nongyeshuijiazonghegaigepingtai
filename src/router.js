@@ -13,12 +13,13 @@ function RouterConfig({ history, app }) {
   const BasicLayout = routerData['/'].component;
   const MapLayout =routerData['/valveControl/map'].component;
   const WarningLayout = routerData['/warning/map:id'].component;
-  // console.log(MapLayout)
+  // console.log(history)
   return (
     <LocaleProvider locale={zhCN}>
     <ConnectedRouter history={history}>
       <Switch>
         <Route path="/login" exact component={loginLayout} />
+        {/* 新窗口打开地图 */}
         <Route path='/valveControl/map' exact  component={MapLayout}/>
         <Route path='/warning/map:id' exact  component={WarningLayout}/>
         {/* 动态注册route */}

@@ -165,6 +165,7 @@
 }
 .selectModal{
     width: 400px !important;
+    height: 360px !important;
     color: #fff;
     :global {
         .ant-modal-content {
@@ -181,8 +182,23 @@
         }
         .ant-modal-body {
             text-align: center;
-            padding: 30px 0;
+            padding: 30px 0 0 0;
             background: #171A39;
+            height: 280px !important;
+            overflow-y: auto;
+            &::-webkit-scrollbar{
+                width:5px;
+            }
+            &::-webkit-scrollbar-button {
+                display: none;
+            }
+            &::-webkit-scrollbar-thumb {
+                background: #3164BF;
+                border-radius: 2px;
+            }
+            &::-webkit-scrollbar-track {
+                background: #2E3459;
+            }
             .ant-btn{
                 background: #272D52;
                 color:#E7E7EC;
@@ -369,6 +385,7 @@
             background: #141831;
             border: 1px solid #141831;
             line-height: 42px;
+            width:708px;
             &:active {
                 border: 1px solid #337DF6 !important;
                 box-shadow: none;
@@ -527,6 +544,13 @@
                     width: 210px;
                 }
             }
+        }
+        :global{
+            .ant-select-selection--multiple{
+                width:650px;
+            }
+            
+
         }
         .informContent {
             width: 650px;

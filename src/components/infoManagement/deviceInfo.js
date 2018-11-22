@@ -39,7 +39,7 @@ const addDataUrl = `${envNet}/api/device/add`
 const deleteUrl = `${envNet}/api/device/delete`
 // 获取修改信息
 const detailsUrl = `${envNet}/api/device/details`
-const updataUrl=`${envNet}/api/device/update`
+const updataUrl = `${envNet}/api/device/update`
 // 源columns拥有编号
 const sourceColumns = [
     { title: "设备ID", dataIndex: "deviceId" },
@@ -114,7 +114,7 @@ export default class extends Component {
             qrcodeModalVisible: false,
             // qrcodeModalVisible:true,
             // 修改弹窗
-            modifyModalVisible:false,
+            modifyModalVisible: false,
             // modifyModalVisible: true,
         }
     }
@@ -123,9 +123,9 @@ export default class extends Component {
         this._getTableData(this.state.data, this.state.filterColumns)
     }
     //保存当前设备的类型ID
-    _saveDeviceTypeId(deviceTypeId){
+    _saveDeviceTypeId(deviceTypeId) {
         // console.log(deviceTypeId)
-        localStorage.setItem('selectDeviceTypeId',deviceTypeId)
+        localStorage.setItem('selectDeviceTypeId', deviceTypeId)
     }
     // 获取表单数据
     _getTableData(data, sourceColumns) {
@@ -155,17 +155,17 @@ export default class extends Component {
                         <Button
                             className={styles.scan}
                             icon='scan'
-                            onClick={() => this.qrcodeHandler(record.deviceId)}
+                            onClick={() => this.qrcodeHandler(true,record.deviceId)}
                         >
                             生成二维码
                         </Button>
                         <Link to={`/deviceInformation/warningDetail:${record.deviceId}`}>
-                        <Button
-                            className={styles.warn}
-                            icon='exception'
-                            onClick={()=>this._saveDeviceTypeId(record.deviceTypeId)}
-                        >
-                            预警机制
+                            <Button
+                                className={styles.warn}
+                                icon='exception'
+                                onClick={() => this._saveDeviceTypeId(record.deviceTypeId)}
+                            >
+                                预警机制
                         </Button>
                         </Link>
                         <Button
@@ -178,7 +178,7 @@ export default class extends Component {
                         <Button
                             className={styles.delete}
                             icon='delete'
-                            onClick={() => this._deleteHandler(record.deviceId)}
+                            onClick={() => this._deleteHandler(true,record.deviceId)}
                         >
                             删除
                         </Button>
@@ -203,7 +203,7 @@ export default class extends Component {
                 relatedBuilding: v.relatedBuilding,
                 warningRules: v.warningRules,
                 lastRequestTime: v.lastRequestTime,
-                deviceTypeId:v.deviceTypeId,
+                deviceTypeId: v.deviceTypeId,
                 key: i
             })
         })
@@ -221,11 +221,19 @@ export default class extends Component {
         })
     }
     // 点击删除
-    _deleteHandler(deviceId) {
-        this.setState({
-            deleteModalVisible: true,
-            modifyDeviceId: deviceId
-        })
+    _deleteHandler(show,deviceId) {
+        // 点击删除
+        if(show){
+            this.setState({
+                deleteModalVisible: show,
+                modifyDeviceId: deviceId
+            })
+        }else{
+            this.setState({
+                deleteModalVisible: show,
+            })
+        }
+        
     }
     // 确认删除
     _deleteOk() {
@@ -250,12 +258,7 @@ export default class extends Component {
                 })
         })
     }
-    // 删除取消
-    _deleteCancel() {
-        this.setState({
-            deleteModalVisible: false,
-        })
-    }
+
     // 翻页
     _pageChange(page) {
         let { searchValue, filterColumns } = this.state
@@ -479,17 +482,19 @@ export default class extends Component {
         })
     }
     // 二维码弹窗
-    qrcodeHandler(deviceId) {
+    qrcodeHandler(show,deviceId) {
         // console.log(deviceId)
-        this.setState({
-            qrcodeModalVisible: true,
-            modifyDeviceId: deviceId
-        })
-    }
-    qrcodeClose() {
-        this.setState({
-            qrcodeModalVisible: false
-        })
+        if(show){
+            this.setState({
+                qrcodeModalVisible: true,
+                modifyDeviceId: deviceId
+            })
+        }else{
+            this.setState({
+                qrcodeModalVisible: false
+            })
+        }
+        
     }
     // 修改按钮
     _modifyHandler(deviceId) {
@@ -516,10 +521,10 @@ export default class extends Component {
     // 确认修改
     _modifyOk() {
         const form = this.modifyForm.props.form;
-        form.validateFields((err,values)=>{
-            if(err){
+        form.validateFields((err, values) => {
+            if (err) {
                 return
-            }else{
+            } else {
                 let enableTime = values.enableTime.format('YYYY-MM-DD')
                 values.enableTime = enableTime
                 fetch(updataUrl, {
@@ -542,7 +547,7 @@ export default class extends Component {
                     console.log(err)
                 })
             }
-            
+
         })
     }
     // 取消修改
@@ -553,7 +558,7 @@ export default class extends Component {
         })
     }
     render() {
-        const { 
+        const {
             columns,
             showSetVisible,
             tableData,
@@ -601,7 +606,7 @@ export default class extends Component {
                     cancelText='取消'
                     okText='确定'
                     onOk={() => this._deleteOk()}
-                    onCancel={() => this._deleteCancel()}
+                    onCancel={() => this._deleteHandler(false,)}
                     className={styles.deleteModal}
                     centered={true}
                 >
@@ -611,7 +616,7 @@ export default class extends Component {
                 <Modal
                     className={styles.qrcodeModal}
                     visible={qrcodeModalVisible}
-                    onCancel={() => this.qrcodeClose()}
+                    onCancel={() => this.qrcodeHandler(false)}
                     centered={true}
                     destroyOnClose={true}
                     closable={false}
@@ -683,7 +688,7 @@ export default class extends Component {
                     pagination={paginationProps}
                     scroll={
                         // { x: columns.length > 10 ?2000: false }
-                        { x: columns.length<4 ? false : 2000 }
+                        { x: columns.length < 4 ? false : 2000 }
                         // { x: 2000 }
                     }
                 />
@@ -1005,7 +1010,7 @@ const AddForm = Form.create()(
                         <Item label="启用日期">
                             {getFieldDecorator('enableTime',
                                 {
-                                    rules:[{ required: true}],
+                                    rules: [{ required: true }],
                                     initialValue: moment(defaultEnd)
                                 }
                             )
@@ -1224,7 +1229,7 @@ const ModifyForm = Form.create()(
                             {getFieldDecorator('deviceId',
                                 {
                                     rules: [{ required: true }],
-                                    initialValue:modifyData.deviceId
+                                    initialValue: modifyData.deviceId
                                 }
                             )
                                 (
@@ -1241,7 +1246,7 @@ const ModifyForm = Form.create()(
                             {getFieldDecorator('deviceTypeId',
                                 {
                                     rules: [{ required: true, message: '设备型号不能为空' }],
-                                    initialValue:modifyData.deviceTypeId
+                                    initialValue: modifyData.deviceTypeId
                                 }
                             )
                                 (
@@ -1269,7 +1274,7 @@ const ModifyForm = Form.create()(
                                 {
                                     rules: [{ required: true, message: '设备名称不能为空' },
                                     { max: 30, message: '不超过30个字符' }],
-                                    initialValue:modifyData.name
+                                    initialValue: modifyData.name
                                 }
                             )
                                 (
@@ -1284,7 +1289,7 @@ const ModifyForm = Form.create()(
                             {getFieldDecorator('installAddrId',
                                 {
                                     rules: [{ required: true, message: '设备安装地不能为空' }],
-                                    initialValue:modifyData.installAddrId
+                                    initialValue: modifyData.installAddrId
                                 }
                             )
                                 (
@@ -1311,11 +1316,11 @@ const ModifyForm = Form.create()(
                         <Item label="启用日期">
                             {getFieldDecorator('enableTime',
                                 {
-                                    rules:[{ required: true}],
-                                    initialValue: 
-                                    modifyData.enableTime=='null'?
-                                    ""
-                                    :moment(modifyData.enableTime)
+                                    rules: [{ required: true }],
+                                    initialValue:
+                                        modifyData.enableTime == 'null' ?
+                                            ""
+                                            : moment(modifyData.enableTime)
                                 }
                             )
                                 (
@@ -1329,7 +1334,7 @@ const ModifyForm = Form.create()(
                         <Item label="关联建筑物">
                             {getFieldDecorator('relatedBuildingId', {
                                 rules: [{ required: true, message: '设备安装地不能为空' }],
-                                initialValue:modifyData.relatedBuildingId
+                                initialValue: modifyData.relatedBuildingId
                             })
                                 (
                                 <Select
@@ -1355,7 +1360,7 @@ const ModifyForm = Form.create()(
                             {getFieldDecorator('longitude',
                                 {
                                     rules: [{ required: true, message: '地理经度不能为空' }],
-                                    initialValue:modifyData.longitude
+                                    initialValue: modifyData.longitude
                                 }
                             )
                                 (
@@ -1370,7 +1375,7 @@ const ModifyForm = Form.create()(
                             {getFieldDecorator('latitude',
                                 {
                                     rules: [{ required: true, message: '地理纬度不能为空' }],
-                                    initialValue:modifyData.latitude
+                                    initialValue: modifyData.latitude
                                 }
                             )
                                 (
@@ -1384,7 +1389,7 @@ const ModifyForm = Form.create()(
                         <Item label="运维公司">
                             {getFieldDecorator('managedCompanyId', {
                                 rules: [{ required: true, message: '运维公司不能为空' }],
-                                initialValue:modifyData.managedCompanyId
+                                initialValue: modifyData.managedCompanyId
                             })
                                 (
                                 <Select
@@ -1412,7 +1417,7 @@ const ModifyForm = Form.create()(
                         <Item label='管护人员'>
                             {getFieldDecorator('managerUserId', {
                                 rules: [{ required: true, message: '管护人员不能为空' }],
-                                initialValue:modifyData.managerUserId
+                                initialValue: modifyData.managerUserId
                             })
                                 (
                                 <Select
@@ -1439,7 +1444,7 @@ const ModifyForm = Form.create()(
                             {getFieldDecorator('gatewayAddr',
                                 {
                                     rules: [{ required: true, message: '网关ID不能为空' }],
-                                    initialValue:modifyData.gatewayAddr
+                                    initialValue: modifyData.gatewayAddr
                                 }
                             )
                                 (
@@ -1454,7 +1459,7 @@ const ModifyForm = Form.create()(
                             {getFieldDecorator('deviceSerial',
                                 {
                                     rules: [{ required: true, message: '出厂编号不能为空' }],
-                                    initialValue:modifyData.deviceSerial
+                                    initialValue: modifyData.deviceSerial
                                 }
                             )
                                 (

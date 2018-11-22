@@ -241,3 +241,12 @@ export function getMapDevice(params){
     )
   })
 }
+//获取规则详情
+export function getRulesDetail(params){
+  return request(`${envNet}/api/DeviceWaringRule/ruleDetails`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
