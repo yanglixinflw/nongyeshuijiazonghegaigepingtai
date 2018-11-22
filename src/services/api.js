@@ -154,6 +154,15 @@ export function getAutoControl(params){
     )
   })
 }
+//获取自动化规则列表
+export function getAutoRules(params){
+  return request(`${envNet}/api/Automatic/getRuleSettings`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
 // 获取视频监控下拉列表
 export function getMonitorSelectList(){
   return request(`${envNet}/api/CamerasMonitor/buildings`,{

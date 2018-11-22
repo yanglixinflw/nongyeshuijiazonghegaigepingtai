@@ -513,8 +513,9 @@ export default class extends Component{
     }
     //换页
     _pageChange(page){
-        const { searchValue } = this.state;
+        const { title,searchValue } = this.state;
         searchValue.pageIndex = page - 1;
+        searchValue.pageSize=10
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -535,7 +536,7 @@ export default class extends Component{
                         itemCount:v.data.itemCount,
                         data
                     })
-                    this._getTableDatas(this.state.title, this.state.data);
+                    this._getTableDatas(title, data);
                 }
             })
             .catch(err=>{

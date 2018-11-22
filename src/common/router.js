@@ -126,8 +126,8 @@ export const getRouterData = app => {
     '/dcs/automation':{
       component: dynamicWrapper(app, ["autoControl"], () => import('../routes/distributedControl/autoControl')),
     },
-    '/automation/autoRules':{
-      component: dynamicWrapper(app, [], () => import('../routes/distributedControl/autoRules')),
+    '/automation/autoRules:id':{
+      component: dynamicWrapper(app, ["autoRules"], () => import('../routes/distributedControl/autoRules')),
     },
     '/command/videoMonitoring':{
       component: dynamicWrapper(app, ['monitor'], () => import('../routes/command/monitor')),

@@ -62,10 +62,6 @@ export default class extends Component {
             deviceId: '',
             //是否显示关闭预警显示
             closeShowvisible: false,
-            //下拉搜索框的值
-            value:"",
-            //下拉搜索框数据源
-            buildingList:[]
         };
         // console.log(this.state.data)
     }
@@ -156,8 +152,9 @@ export default class extends Component {
     }
     //换页
     _pageChange(page) {
-        const { searchValue } = this.state;
+        const { title,searchValue } = this.state;
         searchValue.pageIndex = page - 1;
+        searchValue.pageSize = 10;
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -178,7 +175,7 @@ export default class extends Component {
                             itemCount: v.data.itemCount,
                             data
                         })
-                        this._getTableDatas(this.state.title, this.state.data);
+                        this._getTableDatas(title, data);
                     }
                 })
                 .catch((err) => {
@@ -370,34 +367,8 @@ export default class extends Component {
             showvisible: false
         })
     }
-    //下拉搜索框的搜索
-    handleSearch (value){
-          //关联建筑物
-          console.log(value)
-          fetch(buildingUrl, {
-            ...postOption,
-            body: JSON.stringify({
-                "name": value,
-                "countDevice": false
-            })
-        }).then(res => {
-            Promise.resolve(res.json())
-                .then(v => {
-                    if (v.ret == 1) {
-                        // 设置页面显示的元素
-                        console.log(v.data)
-                        let buildingList = v.data
-                        this.setState({
-                            buildingList
-                        })
-                    }
-                })
-        }).catch(err => {
-            console.log(err)
-        })
-    }
     render() {
-        const { columns, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible,buildingList } = this.state;
+        const { columns, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -414,8 +385,7 @@ export default class extends Component {
                         {/* 表单信息 */}
                         <SearchForm
                             wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                            {...{ installAddrList,buildingList }}
-                            handleSearch={()=>this.handleSearch()}
+                            {...{ installAddrList }}
                         />
                         <div className={styles.buttonGroup}>
                             <Button
@@ -478,13 +448,45 @@ export default class extends Component {
 //搜索表单
 const SearchForm = Form.create()(
     class extends React.Component {
-        
-        handleChange = (value) => {
-            this.setState({ value });
+        state={
+            //关联建筑物列表
+            buildingList:[],
+            //下拉搜索框初始值
+            value:undefined
+        }
+        //下拉搜索框搜索功能
+        handleSearch = (value) => {
+            if(value==''){
+                value=undefined
+            }
+            // console.log(value)
+            fetch(buildingUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "name": value,
+                    "countDevice": true
+                })
+            }).then(res => {
+                Promise.resolve(res.json())
+                    .then(v => {
+                        if (v.ret == 1) {
+                            // 设置页面显示的元素
+                            // console.log(v.data)
+                            let buildingList = v.data
+                            this.setState({
+                                buildingList,
+                                value
+                            })
+                        }
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
         }
         render() {
-            const { form, installAddrList,buildingList,handleSearch } = this.props;
+            const { form, installAddrList } = this.props;
             const { getFieldDecorator } = form;
+            const {buildingList}=this.state
             return (
                 <Form
                     layout='inline'
@@ -544,12 +546,10 @@ const SearchForm = Form.create()(
                             <Select
                                 showSearch
                                 placeholder='关联建筑物'
-                                style={this.props.style}
                                 defaultActiveFirstOption={false}
                                 showArrow={false}
                                 filterOption={false}
-                                onSearch={handleSearch}
-                                onChange={this.handleChange}
+                                onSearch={this.handleSearch}
                                 notFoundContent={null}
                             >
                                 {
