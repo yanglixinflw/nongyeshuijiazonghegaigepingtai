@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Select, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
@@ -191,7 +191,7 @@ export default class extends Component {
             body: JSON.stringify({
                 "deviceId": "",
                 "name": "",
-                "deviceTypeId":deviceTypeId,
+                "deviceTypeId": deviceTypeId,
                 "installAddrId": "",
                 "warningRules": "",
                 "relatedBuildingId": "",
@@ -224,9 +224,9 @@ export default class extends Component {
 
     }
     //点击显示设置
-    _showSetHandler() {
+    _showSetHandler(type) {
         this.setState({
-            showSetVisible: true
+            showSetVisible: type
         })
     }
     //显示设置点击确定
@@ -268,12 +268,7 @@ export default class extends Component {
             })
         })
     }
-    //显示设置点击取消
-    _showSetCancelHandler() {
-        this.setState({
-            showSetVisible: false
-        })
-    }
+
     //导出数据
     _exportDataHandler() {
         console.log("导出数据")
@@ -331,7 +326,7 @@ export default class extends Component {
                     wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
                     visible={showSetVisible}
                     commonColumns={commonColumns}
-                    onCancel={() => this._showSetCancelHandler()}
+                    onCancel={() => this._showSetHandler(false)}
                     onOk={() => this._showSetOkHandler()}
                 />
                 <div className={styles.header}>
@@ -346,7 +341,7 @@ export default class extends Component {
                     />
                     <Button
                         icon='eye'
-                        onClick={() => this._showSetHandler()}
+                        onClick={() => this._showSetHandler(true)}
                     >
                         显示设置
                     </Button>
