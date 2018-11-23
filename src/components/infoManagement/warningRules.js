@@ -1,15 +1,16 @@
 import { Component } from 'react';
 import styles from "./warningRules.less"
-import {  Button,Select ,Table, Modal,message} from 'antd';
+import { Button, Select, Table, Modal, message } from 'antd';
 import { routerRedux } from 'dva/router';
+import { Link } from 'dva/router';
 //开发环境
-const envNet='http://192.168.30.127:88';
+const envNet = 'http://192.168.30.127:88';
 //生产环境
 // const envNet='';
 //翻页调用
-const dataUrl=`${envNet}/api/DeviceWaringRule/ruleList`;
+const dataUrl = `${envNet}/api/DeviceWaringRule/ruleList`;
 // 删除调用
-const deleteUrl=`${envNet}/api/DeviceWaringRule/delete`
+const deleteUrl = `${envNet}/api/DeviceWaringRule/delete`
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -21,52 +22,57 @@ let postOption = {
 }
 const Option = Select.Option;
 //头信息
-const title=[
-    {index:"deviceTypeName",item:"设备型号"},
-    {index:"name",item:"规则名称"},
+const title = [
+    { index: "deviceTypeName", item: "设备型号" },
+    { index: "name", item: "规则名称" },
 ]
-export default class extends Component{
-    constructor(props){
+export default class extends Component {
+    constructor(props) {
         super(props)
-        const {warningRules}=props;
+        const { warningRules } = props;
         this.state = {
             //表头
             title,
-            itemCount:warningRules.data.data.itemCount,//总数据数
-            data:warningRules.data.data.items,//表格数据源
+            itemCount: warningRules.data.data.itemCount,//总数据数
+            data: warningRules.data.data.items,//表格数据源
             //表的每一列
             columns: [],
             // 设备类型列表
-            deviceTypeList:warningRules.deviceTypeList.data.data,
+            deviceTypeList: warningRules.deviceTypeList.data.data,
             // 添加弹窗
-            addVisible:false,
+            addVisible: false,
             // addVisible:true,
             // 选择的设备ID
-            selectDeviceId:'',
+            selectDeviceId: '',
             // 删除弹窗
             // deleteModalVisible:false,
-            deleteModalVisible:false,
+            deleteModalVisible: false,
             // 删除Id
-            deleteId:''
+            deleteId: ''
         };
     }
     componentDidMount() {
         this._getTableDatas(this.state.title, this.state.data);
     }
+    //保存当前设备的类型ID
+    _saveDeviceTypeId(deviceTypeId){
+        // console.log(deviceTypeId)
+        localStorage.setItem('selectDeviceTypeId',deviceTypeId)
+    }
     // 删除规则
-    delete(deleteId){
+    delete(deleteId) {
         // console.log(ruleId)
         this.setState({
-            deleteModalVisible:true,
+            deleteModalVisible: true,
             deleteId
         })
     }
-    _deleteOk(){
+    _deleteOk() {
         const { deleteId } = this.state
         return fetch(deleteUrl, {
             ...postOption,
             body: JSON.stringify({
-                ruleIds:deleteId
+                ruleIds: deleteId
             })
         }).then((res) => {
             Promise.resolve(res.json())
@@ -81,7 +87,7 @@ export default class extends Component{
                 })
         })
     }
-    _deleteCancel(){
+    _deleteCancel() {
         // console.log('Cancel')
         this.setState({
             deleteModalVisible: false,
@@ -110,17 +116,18 @@ export default class extends Component{
                 // console.log(record)
                 return (
                     <span className={styles.option}>
-                        
+                        <Link to={`/warningRules/rulesDetail:${record.ruleId}`}>
                             <Button
                                 className={styles.edit}
                                 icon='file-text'
+                                onClick={()=>this._saveDeviceTypeId(record.deviceTypeId)}
                             >
                                 规则详情
                             </Button>
-                        
+                        </Link>
                         <Button
                             className={styles.delete}
-                            onClick={()=>this.delete(record.ruleId)}
+                            onClick={() => this.delete(record.ruleId)}
                             icon='delete'
                         >
                             删除
@@ -140,9 +147,10 @@ export default class extends Component{
         data.map((v, i) => {
             // console.log(v)
             tableDatas.push({
-                deviceTypeName:v.deviceTypeName,
-                name:v.name,
-                ruleId:v.ruleId,
+                deviceTypeName: v.deviceTypeName,
+                name: v.name,
+                ruleId: v.ruleId,
+                deviceTypeId:v.deviceTypeId,
                 key: i,
             });
         })
@@ -152,89 +160,89 @@ export default class extends Component{
         });
     }
     //选择不同的设备类型 
-    selectDeviceType(selectDeviceId){
+    selectDeviceType(selectDeviceId) {
         // console.log(selectDeviceId)
         this.setState({
             selectDeviceId
         })
     }
     // 点击添加规则
-    addRules(){
+    addRules() {
         this.setState({
-            addVisible:true
+            addVisible: true
         })
     }
     // 下一步
-    _addNext(){
-        const {dispatch}=this.props
-        const {selectDeviceId}=this.state
-        if(selectDeviceId==''){
+    _addNext() {
+        const { dispatch } = this.props
+        const { selectDeviceId } = this.state
+        if (selectDeviceId == '') {
             alert('请先选择要设置的设备类型')
-        }else{
-            localStorage.setItem('selectDeviceId',selectDeviceId)
+        } else {
+            localStorage.setItem('selectDeviceId', selectDeviceId)
             dispatch(routerRedux.push('/warningRules/addWarningRules'))
         }
         // console.log(selectDeviceId)
     }
     // 添加取消
-    _addCancel(){
+    _addCancel() {
         this.setState({
-            addVisible:false,
-            selectDeviceId:''
+            addVisible: false,
+            selectDeviceId: ''
         })
     }
     // 翻页功能
-    _pageChange(page){
+    _pageChange(page) {
         // 翻页传递参数
-        let postObject={
+        let postObject = {
             "pageIndex": 0,
-            "pageSize":10
-            }
-            postObject.pageIndex = page - 1;
+            "pageSize": 10
+        }
+        postObject.pageIndex = page - 1;
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
                 ...postObject
             })
-        }).then((res)=>{
+        }).then((res) => {
             Promise.resolve(res.json())
-            .then((v)=>{
-                if(v.ret==1){
-                    // console.log(v);
-                    // 设置页面显示的元素
-                    let data = v.data.items;
-                    //添加key
-                    data.map((v, i) => {
-                        v.key = i
-                    })
-                    this.setState({
-                        itemCount:v.data.itemCount,
-                        data
-                    })
-                    this._getTableDatas(this.state.title, this.state.data);
-                }
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v);
+                        // 设置页面显示的元素
+                        let data = v.data.items;
+                        //添加key
+                        data.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            itemCount: v.data.itemCount,
+                            data
+                        })
+                        this._getTableDatas(this.state.title, this.state.data);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         })
     }
-    render(){
-        const { 
-            columns, 
+    render() {
+        const {
+            columns,
             tableDatas,
-            itemCount, 
+            itemCount,
             addVisible,
             deviceTypeList,
             deleteModalVisible
         } = this.state;
         const paginationProps = {
             showQuickJumper: true,
-            total:itemCount,
+            total: itemCount,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
-        return(      
+        return (
             <React.Fragment>
                 <div className={styles.header}>
                     <span>|</span>预警规则
@@ -244,7 +252,7 @@ export default class extends Component{
                         <Button
                             icon='plus'
                             className={styles.fnButton}
-                            onClick={()=>this.addRules()}
+                            onClick={() => this.addRules()}
                         >
                             添加预警规则
                         </Button>
@@ -255,7 +263,7 @@ export default class extends Component{
                     className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableDatas}
-                    // scroll={{ x: 1300 }}
+                // scroll={{ x: 1300 }}
                 />
                 {/* 删除弹窗 */}
                 <Modal
@@ -276,30 +284,30 @@ export default class extends Component{
                     title="选择设备类型"
                     cancelText='取消'
                     okText='下一步'
-                    onOk={()=>this._addNext()}
-                    onCancel={()=>this._addCancel()}
+                    onOk={() => this._addNext()}
+                    onCancel={() => this._addCancel()}
                     centered
                 >
                     <div>
-                    <span className={styles.title}>设备类型</span>
-                    <Select
-                        onChange={(value)=>this.selectDeviceType(value)}
-                        placeholder='请选择设备类型'
-                    >
-                        {
-                            deviceTypeList.map((v,i)=>{
-                                // console.log(v)
-                                return(
-                                    <Option
-                                    value={v.deviceTypeId}
-                                    key={v.deviceTypeId}
-                                    >
-                                    {v.name}
-                                    </Option>
-                                )
-                            })
-                        }
-                    </Select>
+                        <span className={styles.title}>设备类型</span>
+                        <Select
+                            onChange={(value) => this.selectDeviceType(value)}
+                            placeholder='请选择设备类型'
+                        >
+                            {
+                                deviceTypeList.map((v, i) => {
+                                    // console.log(v)
+                                    return (
+                                        <Option
+                                            value={v.deviceTypeId}
+                                            key={v.deviceTypeId}
+                                        >
+                                            {v.name}
+                                        </Option>
+                                    )
+                                })
+                            }
+                        </Select>
                     </div>
                 </Modal>
             </React.Fragment>
@@ -307,4 +315,3 @@ export default class extends Component{
     }
 }
 
-    

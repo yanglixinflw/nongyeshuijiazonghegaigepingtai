@@ -92,7 +92,7 @@ export default class extends Component {
             //搜索关键字
             keyword: '',
             //当前设备类型ID
-            deviceTypeId: 1
+            deviceTypeId: 5
 
         }
         //console.log(this.state.markers)
@@ -191,7 +191,7 @@ export default class extends Component {
             },
             click: (MapsOption, marker) => {
                 this.setState({
-                    infoPositionCamera: marker.F.extData.position,
+                    infoPositionCamera: marker.getExtData().position,
                     infoVisibleCamera: true,
                     isClicked: true
                 })
@@ -200,7 +200,7 @@ export default class extends Component {
             mouseover: (MapsOption, marker) => {
                 // console.log(marker)
                 this.setState({
-                    infoPositionCamera: marker.F.extData.position,
+                    infoPositionCamera: marker.getExtData().position,
                     infoVisibleCamera: true
                 })
             },
@@ -242,7 +242,7 @@ export default class extends Component {
             },
             click: (MapsOption, marker) => {
                 this.setState({
-                    infoPositionWaterValve: marker.F.extData.position,
+                    infoPositionWaterValve: marker.getExtData().position,
                     infoVisibleWaterValve: true,
                     isClicked: true
                 })
@@ -250,7 +250,7 @@ export default class extends Component {
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
                 this.setState({
-                    infoPositionWaterValve: marker.F.extData.position,
+                    infoPositionWaterValve: marker.getExtData().position,
                     infoVisibleWaterValve: true
                 })
             },
@@ -277,7 +277,7 @@ export default class extends Component {
             },
             click: (MapsOption, marker) => {
                 this.setState({
-                    infoPositionWaterValve: marker.F.extData.position,
+                    infoPositionWaterValve: marker.getExtData().position,
                     infoVisibleWaterValve: true,
                     isClicked: true
                 })
@@ -285,7 +285,7 @@ export default class extends Component {
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
                 this.setState({
-                    infoPositionWaterValve: marker.F.extData.position,
+                    infoPositionWaterValve: marker.getExtData().position,
                     infoVisibleWaterValve: true
                 })
             },
@@ -312,7 +312,7 @@ export default class extends Component {
             },
             click: (MapsOption, marker) => {
                 this.setState({
-                    infoPositionWaterValve: marker.F.extData.position,
+                    infoPositionWaterValve: marker.getExtData().position,
                     infoVisibleWaterValve: true,
                     isClicked: true
                 })
@@ -320,7 +320,7 @@ export default class extends Component {
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
                 this.setState({
-                    infoPositionWaterValve: marker.F.extData.position,
+                    infoPositionWaterValve: marker.getExtData().position,
                     infoVisibleWaterValve: true
                 })
             },
@@ -370,7 +370,7 @@ export default class extends Component {
                     cameraVisible: false
                 })
             } else {
-                let deviceTypeId = 1;
+                let deviceTypeId = 5;
                 v.show();
                 this.setState({
                     deviceTypeId,
@@ -470,7 +470,7 @@ export default class extends Component {
                     waterValveVisible: false
                 })
             } else {
-                let deviceTypeId = 4;
+                let deviceTypeId = 1;
                 v.show();
                 this.setState({
                     deviceTypeId,
@@ -698,7 +698,6 @@ export default class extends Component {
                     >
                         <IwContentWaterV
                             info={waterValveMarkers.filter(item => item.position == infoPositionWaterValve)}
-
                         />
                     </InfoWindow>
                     : null

@@ -18,7 +18,7 @@ export default class extends Component {
         const {markers,deviceTypeId} = this.state;
         const {chosenMarker} = this.props;
         // console.log(info)
-        if(deviceTypeId==1){
+        if(deviceTypeId==5){
             return (
                 <div className={styles.markerCamera}>
                     {
@@ -90,7 +90,7 @@ export default class extends Component {
                 </div>
                
             )
-        }else if(deviceTypeId==4){
+        }else if(deviceTypeId==1){
             return (
                 <div className={styles.markerWaterV}>
                     {
