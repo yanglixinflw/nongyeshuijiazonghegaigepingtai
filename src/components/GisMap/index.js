@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import styles from './index.less';
-import { Input, Button, List, Icon } from 'antd';
+import { Input, Button, List,} from 'antd';
 import { Map, Markers, InfoWindow } from 'react-amap';
 import Geolocation from 'react-amap-plugin-geolocation'
-import IwContentCamera from './infoWindowCamera';
-import IwContentWaterV from './infoWindowWaterV';
+import IwContent from './infoWindow';
 import MarkerExterior from './markerExterior';
 import MyCustomize from './myCustomize';
 import { timeOut } from '../../utils/timeOut';
@@ -15,6 +14,8 @@ const envNet = 'http://192.168.30.127:88';
 // const envNet = '';
 //搜索
 const searchUrl = `${envNet}/api/device/gisDeviceList`;
+//获取实时数据
+const realTimeDataUrl = `${envNet}/api/DeviceData/realtimeData`
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -92,7 +93,9 @@ export default class extends Component {
             //搜索关键字
             keyword: '',
             //当前设备类型ID
-            deviceTypeId: 5
+            deviceTypeId: 5,
+            //信息窗展示数据
+            infoData:null
 
         }
         //console.log(this.state.markers)
@@ -249,6 +252,8 @@ export default class extends Component {
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
+                let deviceId =  marker.getExtData().deviceId
+                this._getRealTimeData(deviceId)
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
                     infoVisibleWaterValve: true
@@ -319,6 +324,7 @@ export default class extends Component {
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
+                
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
                     infoVisibleWaterValve: true
@@ -336,6 +342,34 @@ export default class extends Component {
                 }
             }
         }
+    }
+    //获取实时数据
+    _getRealTimeData(deviceId){
+        // console.log(deviceId)
+        return fetch(realTimeDataUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                deviceId,
+                // showDisplayName:true
+            })
+        }).then((res)=>{
+            Promise.resolve(res.json())
+            .then((v)=>{
+                //超时判断
+                timeOut(v.ret)
+                if(v.ret == 1){
+                    console.log(v)
+                    let infoData = v.data;
+                    // infoData.map((v,i)=>{
+                    //     console.log(i,v)
+                    // })
+                    
+                    this.setState({
+                        infoData,
+                    })
+                }
+            })
+        })
     }
     //搜索结果高亮处理
     _getDataList(dataList, keyword) {
@@ -586,6 +620,7 @@ export default class extends Component {
             cameraMarkers, waterMeterMarkers, eleMeterMarkers, waterValveMarkers,
             infoVisibleCamera, infoVisibleWaterValve,
             infoOffset, isCustom, size, infoPositionCamera, infoPositionWaterValve,
+            infoData,
         } = this.state;
         // console.log(center)
         return (
@@ -674,7 +709,7 @@ export default class extends Component {
                         size={size}
                         events={this.windowEvents}
                     >
-                        <IwContentCamera
+                        <IwContent
                             info={cameraMarkers.filter(item => item.position == infoPositionCamera)}
                         />
                     </InfoWindow>
@@ -687,7 +722,9 @@ export default class extends Component {
                     events={this.cameraEvents}
                 />
                 {/* 水阀信息窗 高德地图规定同时最多只能显示一个信息窗*/}
-                {waterValveVisible && waterValveMarkers ?
+                {waterValveVisible && waterValveMarkers && infoData ?
+                
+                
                     <InfoWindow
                         position={infoPositionWaterValve}
                         visible={infoVisibleWaterValve}
@@ -696,8 +733,9 @@ export default class extends Component {
                         size={size}
                         events={this.windowEvents}
                     >
-                        <IwContentWaterV
+                        <IwContent
                             info={waterValveMarkers.filter(item => item.position == infoPositionWaterValve)}
+                            {...{infoData}}
                         />
                     </InfoWindow>
                     : null
@@ -719,7 +757,7 @@ export default class extends Component {
                         size={size}
                         events={this.windowEvents}
                     >
-                        <IwContentWaterV info={waterMeterMarkers.filter(item => item.position == infoPositionWaterValve)} />
+                        <IwContent info={waterMeterMarkers.filter(item => item.position == infoPositionWaterValve)} />
                     </InfoWindow>
                     : null
                 }
@@ -740,7 +778,7 @@ export default class extends Component {
                         size={size}
                         events={this.windowEvents}
                     >
-                        <IwContentWaterV info={eleMeterMarkers.filter(item => item.position == infoPositionWaterValve)} />
+                        <IwContent info={eleMeterMarkers.filter(item => item.position == infoPositionWaterValve)} />
                     </InfoWindow>
                     : null
                 }
