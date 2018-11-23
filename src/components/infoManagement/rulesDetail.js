@@ -1,7 +1,25 @@
 import React, { Component } from 'react';
-import { Form,Select,Input,InputNumber,Button } from 'antd';
+import { Form, Select, Input, InputNumber, Button, message } from 'antd';
 import styles from './rulesDetail.less';
-import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList, queryWarningDetail } from '../../services/api'
+import { Link,routerRedux } from 'dva/router';
+import store from '../../index'
+import { timeOut } from '../../utils/timeOut';
+import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList, getRulesDetail } from '../../services/api'
+// 开发环境
+const envNet = 'http://192.168.30.127:88';
+// 生产环境
+// const envNet = '';
+//修改预警规则Url
+const updateUrl = `${envNet}/api/DeviceWaringRule/update`;
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+};
 export default class extends Component {
     constructor(props) {
         super(props)
@@ -10,8 +28,9 @@ export default class extends Component {
         this.state = {
             //规则详细信息
             data,
-            parameterList:[],
-            roleList:[]
+            ruleId: props.ruleId,
+            parameterList: [],
+            roleList: []
 
         }
     }
@@ -45,14 +64,100 @@ export default class extends Component {
 
         })
     }
+    // //保存完后重新加载
+    // _Reload(ruleId){
+    //     Promise.resolve(getRulesDetail(ruleId)).then((v)=>{
+    //         if(v.data.ret == 1){
+    //             this.setState({
+    //                 data:v.data.data
+    //             })
+    //         }
+    //     })
+    // }
+    //保存
+    _saveHandler() {
+        const form = this.rulesdetailForm.props.form;
+        const { ruleId } = this.state;
+        form.validateFields((err, values) => {
+            if (typeof (store) === 'undefined') {
+                return
+            } else {
+                const { dispatch } = store
+                if (!err) {
+                    // console.log(values)
+                    //预警规则ID
+                    values.ruleId = ruleId
+                    // 设备类型ID
+                    values.deviceTypeId = localStorage.getItem('selectDeviceTypeId')
+                    // 短信是否通知
+                    if (values.SMSfrequency == 0) {
+                        // 短信通知
+                        values.smsNotify = {
+                            frequency: values.SMSfrequency,
+                            receiverIds: [],
+                            othersMobile: ''
+                        }
+                    } else {
+                        values.smsNotify = {
+                            frequency: values.SMSfrequency,
+                            receiverIds: values.SMSreceiverIds,
+                            othersMobile: values.SMSInformer
+                        }
+                    }
+                    // 手机是否通知
+                    if (values.TELfrequency == 0) {
+                        values.phoneNotify = {
+                            frequency: values.TELfrequency,
+                            receiverIds: [],
+                            othersMobile: ''
+                        }
+                    } else {
+                        values.phoneNotify = {
+                            frequency: values.TELfrequency,
+                            receiverIds: values.TELreceiverIds,
+                            othersMobile: values.TELInformer
+                        }
+                    }
+                    // 通知范围
+                    values.sysMsgNotify = {
+                        frequency: "1",
+                        receiverIds: values.informRange,
+                        othersMobile: ""
+                    }
+                    // console.log(values)
+                    fetch(updateUrl, {
+                        ...postOption,
+                        body: JSON.stringify({
+                            ...values
+                        })
+                    }).then((res) => {
+                        Promise.resolve(res.json())
+                            .then((v) => {
+                                //超时判断
+                                timeOut(v.ret)
+                                if (v.ret == 1) {
+                                    // this._Reload(ruleId)
+                                    message.success('修改成功', 2)
+                                    // 重置表单
+                                    form.resetFields();
+                                    dispatch(routerRedux.push(`/messageManagement/warningRules`))
+                                }
+                            })
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                }
+            }
+
+        })
+    }
     render() {
-        const { data,parameterList,roleList } = this.state;
+        const { data, parameterList, roleList } = this.state;
         return (
             <div className={styles.rulesDetail}>
                 <RulesDetailForm
-                    wrappedComponentRef={(modifyRulesForm) => this.modifyRulesForm = modifyRulesForm}
-                    onCancel={() => this._modifyCancelHandler()}
-                    onSave={() => this._modifySaveHandler()}
+                    wrappedComponentRef={(rulesdetailForm) => this.rulesdetailForm = rulesdetailForm}
+                    onSave={() => this._saveHandler()}
                     parameterList={parameterList}
                     roleList={roleList}
                     {...{ data }}
@@ -180,8 +285,8 @@ const RulesDetailForm = Form.create()(
             })
         }
         render() {
-            const { form, onSave, onCancel, parameterList, roleList, data } = this.props;
-            console.log(data)
+            const { form, onSave, parameterList, roleList, data } = this.props;
+            // console.log(data)
             const { SMSreceiver,
                 TELreceiver,
                 SMSreceiverData,
@@ -531,11 +636,12 @@ const RulesDetailForm = Form.create()(
                             className={styles.btnsave}
                             onClick={() => onSave()}
                         >保存</Button>
-                        <Button
-                            icon='delete'
-                            className={styles.btndelete}
-                            onClick={() => onCancel()}
-                        >取消</Button>
+                        <Link to='/messageManagement/warningRules'>
+                            <Button
+                                icon='delete'
+                                className={styles.btndelete}
+                            >取消</Button>
+                        </Link>
                     </div>
                 </Form>
             )

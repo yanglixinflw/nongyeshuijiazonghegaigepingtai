@@ -59,7 +59,7 @@ export default class extends Component {
             //预警规则模板列表
             TemRulesList: [],
         }
-        // console.log(this.state.data)
+        console.log(this.state.data)
     }
     componentDidMount() {
         // 获取设备参数列表
@@ -637,25 +637,25 @@ const RulesForm = Form.create()(
                         <div className={styles.items}>
                             <div className={styles.itemName}>条件</div>
                             <Form.Item label='类型'>
-                                <div>功能预警</div>
+                                <div>{v.conditionDescription}</div>
                             </Form.Item>
                             <Form.Item label='判断规则' className={styles.judgmentRule}>
-                                <div>当电量≤10%时</div>
+                                <div>当{v.parameterName}{v.operator}{v.compareValue}</div>
                             </Form.Item>
                         </div>
                         <div className={styles.items}>
                             <div className={styles.itemName}>短信</div>
                             <Form.Item label='频率'>
-                                <div>仅通知一次</div>
+                                <div>{v.smsFrequency}</div>
                             </Form.Item>
                             <Form.Item label='通知人' className={styles.informer}>
-                                <div >慧水公司-老李</div>
+                                <div >{v.smsReceiverNames}</div>
                             </Form.Item>
                         </div>
                         <div className={styles.items}>
                             <div className={styles.itemName}>通知内容</div>
                             <Form.Item label='通知内容'>
-                                <div>{v.deviceTypeName}{v.name}</div>
+                                <div>{v.notifyMsgContent}</div>
                             </Form.Item>
                         </div>
                     </div>

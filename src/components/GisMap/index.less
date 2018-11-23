@@ -710,7 +710,21 @@
 
 .infoContent {
     height: 129px;
+    overflow-y: auto;
     padding: 15px;
+    &::-webkit-scrollbar{
+        width:5px;
+    }
+    &::-webkit-scrollbar-button {
+        display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #3164BF;
+        border-radius: 2px;
+    }
+    &::-webkit-scrollbar-track {
+        background: #2E3459;
+    }
     .labelName {
         color: #fff;
         font-size: 15px;
