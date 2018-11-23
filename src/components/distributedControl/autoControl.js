@@ -425,6 +425,7 @@ export default class extends Component{
             ruleId
         })
     }
+    //点击确认删除
     delOk(){
         const{title}=this.state
         fetch(delUrl,{

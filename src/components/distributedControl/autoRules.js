@@ -166,15 +166,11 @@ export default class extends Component {
     //重置
     _resetForm() {
         this.ruleForm.props.form.resetFields()
-        const{ruleId}=this.state
         this.ruleForm.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
                 if(values.name!=''){
                     values.name=''
-                }
-                if(values.condition!=""){
-                    values.condition=""
                 }
                 if(values.deviceId!=''){
                     values.deviceId=''
@@ -212,6 +208,12 @@ export default class extends Component {
                 if(values.variate1!=''){
                     values.variate1=''
                 }
+                if(values.condition!=''){
+                    values.condition=''
+                }
+                let anyConditionFireAction=values.condition;
+                //得到规则名称
+                let name=values.name
                 let conditions=[],deviceId1=[],parameterId=[],operator=[],value=[];
                 let actions=[], deviceId2=[],execCmd=[]
                 //得到条件的deviceId
@@ -235,7 +237,7 @@ export default class extends Component {
                 //得到执行的deviceId
                 deviceId2.push(values.deviceId1)
                 //得到开关条件
-                    execCmd.push(values.switch)
+                execCmd.push(values.switch)
                 //得到执行的数据
                 deviceId2.map((v,i)=>{
                     let objs={
@@ -244,43 +246,13 @@ export default class extends Component {
                     }
                     actions.push(objs)
                 })
-            }
-            fetch(saveUrl,{
-                ...postOption,
-                body:JSON.stringify({
-                    ruleId,
+                this.setState({
+                    actions,
                     anyConditionFireAction,
                     name,
-                    conditions,
-                    actions
+                    conditions
                 })
-            }).then(res=>{
-                Promise.resolve(res.json())
-                .then(v=>{
-                    if(v.ret==1){
-                        fetch(ruleUrl,{
-                            ...postOption,
-                            body:JSON.stringify({
-                                ruleId
-                            })
-                        }).then(res=>{
-                            Promise.resolve(res.json())
-                            .then(v=>{
-                                if(v.ret==1){
-                                    console.log(v.data)
-                                    message.success('重置成功', 2);
-                                    this.setState({
-                                        anyConditionFireAction:v.data.anyConditionFireAction,
-                                        name:v.data.name,
-                                        conditions:v.data.condition,
-                                        actions:v.data.actions
-                                    })
-                                }
-                            })    
-                        })
-                    }
-                })
-            })
+            }
         })
     }
     render() {
@@ -330,7 +302,7 @@ export default class extends Component {
     }
 }
 
-//搜索表单
+//规则表单
 const RuleForm = Form.create()(
     class extends React.Component {
         state={
@@ -796,7 +768,7 @@ const RuleForm = Form.create()(
                                                     (<Input placeholder="值" type='text'/>)
                                                 }
                                             </Form.Item>
-                                            <Icon type="minus"  onClick={this.removes(v)}/>
+                                            <Icon type="minus"  onClick={this.remove(v)}/>
                                         </div>
                                     )
                                 }
@@ -936,7 +908,7 @@ const RuleForm = Form.create()(
                                             </Form.Item>
                                             <Icon 
                                                 type="minus"
-                                                onClick={this.remove(v)}
+                                                onClick={this.removes(v)}
                                             />
                                         </div>
                                     )
