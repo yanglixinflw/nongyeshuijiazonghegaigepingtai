@@ -429,21 +429,7 @@ export default class extends Component{
             if (err) {
                 return
             }
-            if(values.realName==undefined){
-                values.realName=''
-            }
-            if(values.mobilePhone==undefined){
-                values.mobilePhone=''
-            }
-            if(values.idCard==undefined){
-                values.idCard=''
-            }
-            if(values.areaId=='area'){
-                values.areaId=''
-            }
-            if(values.isActivated=='isActivated'){
-                values.isActivated=''
-            }
+            // console.log(values)
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -693,10 +679,12 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('areaId', {initialValue:'area'})
+                        {getFieldDecorator('areaId', {})
                             (
-                            <Select>
-                                <Option value="area">归属地区</Option>
+                            <Select
+                                placeholder='归属地区'
+                            >
+                                <Option value="">全部</Option>
                                 {areaList.map((v, i) => {
                                     return (
                                         <Option key={i} value={v.areaId}>{v.areaName}</Option>
@@ -708,10 +696,12 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('isActivated', {initialValue:'isActivated'})
+                        {getFieldDecorator('isActivated', {})
                             (
-                            <Select>
-                                <Option value="isActivated">是否激活</Option>
+                            <Select
+                                placeholder='是否激活'
+                            >
+                                <Option value="">全部</Option>
                                 <Option value="true" key='1'>激活</Option>
                                 <Option value="false" key='2'>未激活</Option>
                             </Select>

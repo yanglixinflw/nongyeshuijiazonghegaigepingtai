@@ -192,21 +192,6 @@ export default class extends Component {
             if (err) {
                 return
             }
-            if (values.waringType == "waringType") {
-                values.waringType = ''
-            }
-            if (values.warningStatus == "state") {
-                values.warningStatus = ''
-            }
-            if (values.deviceId == undefined) {
-                values.deviceId = ''
-            }
-            if (values.installAddr == 'installAddress') {
-                values.installAddr = ''
-            }
-            if (values.building == undefined) {
-                values.building = ''
-            }
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -451,14 +436,9 @@ const SearchForm = Form.create()(
         state={
             //关联建筑物列表
             buildingList:[],
-            //下拉搜索框初始值
-            value:undefined
         }
         //下拉搜索框搜索功能
         handleSearch = (value) => {
-            if(value==''){
-                value=undefined
-            }
             // console.log(value)
             fetch(buildingUrl, {
                 ...postOption,
@@ -497,21 +477,23 @@ const SearchForm = Form.create()(
                         marginRight: '10px'
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('waringType', { initialValue: 'waringType' })
+                        {getFieldDecorator('waringType', {})
                             (
-                            <Select>
-                                <Option value='waringType'>预警类型</Option>
-                                <Option value=''></Option>
+                            <Select
+                                placeholder="预警类型"
+                            >
+                                <Option value=''>全部</Option>
                             </Select>
                             )
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('warningStatus', { initialValue: 'state' })
+                        {getFieldDecorator('warningStatus',{})
                             (
-                            <Select>
-                                <Option value='state'>所有状态</Option>
-                                <Option value=''></Option>
+                            <Select
+                                placeholder="状态"
+                            >
+                                <Option value=''>全部</Option>
                             </Select>
                             )
                         }
@@ -527,10 +509,12 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('installAddr', { initialValue: 'installAddress' })
+                        {getFieldDecorator('installAddr', {})
                             (
-                            <Select>
-                                <Option value='installAddress'>设备安装地</Option>
+                            <Select
+                                placeholder="设备安装地"
+                            >
+                                <Option value=''>全部</Option>
                                 {
                                     installAddrList.map((v, i) => {
                                         return (<Option key={i} value={v.id}>{v.addr}</Option>)
