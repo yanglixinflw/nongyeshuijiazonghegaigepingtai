@@ -35,7 +35,7 @@ export default class extends Component {
         let {deviceId} = this.state;
         let arr = Object.keys(warningDetail);
         if (arr.length == 0) return warningDetail = null;
-        console.log(this.props)
+        // console.log(this.props)
         return (
             <Fragment>
                 <Spin size='large' spinning={loading}>

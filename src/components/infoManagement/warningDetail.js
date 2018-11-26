@@ -3,6 +3,7 @@ import styles from './warningDetail.less';
 import { Select, Button, Form, Modal, Input, message, InputNumber } from 'antd';
 import { timeOut } from '../../utils/timeOut';
 import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList, queryWarningDetail } from '../../services/api'
+import _ from 'lodash';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
 // 生产环境
@@ -59,7 +60,7 @@ export default class extends Component {
             //预警规则模板列表
             TemRulesList: [],
         }
-        console.log(this.state.data)
+        // console.log(this.state.data)
     }
     componentDidMount() {
         // 获取设备参数列表
@@ -935,7 +936,7 @@ const AddRulesForm = Form.create()(
                                         onChange={(value) => this.FrequencyChange(value, 'sms')}
                                     >
                                         <Option key='0'>不通知</Option>
-                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='-1'>仅通知一次</Option>
                                         <Option key='60'>1小时通知一次</Option>
                                         <Option key='720'>12小时通知一次</Option>
                                         <Option key='1440'>一天通知一次</Option>
@@ -956,7 +957,8 @@ const AddRulesForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             notFoundContent={null}
-                                            onSearch={(value) => this.handleSearch(value, 'sms')}
+                                            // onSearch={(value) => this.handleSearch(value, 'sms')}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'),300)}
                                             onChange={(value) => this.receiverChange(value, 'sms')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -988,7 +990,7 @@ const AddRulesForm = Form.create()(
                                 })(
                                     <Select>
                                         <Option key='0'>不通知</Option>
-                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='-1'>仅通知一次</Option>
                                         <Option key='60'>1小时通知一次</Option>
                                         <Option key='720'>12小时通知一次</Option>
                                         <Option key='1440'>一天通知一次</Option>
@@ -1008,7 +1010,8 @@ const AddRulesForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             notFoundContent={null}
-                                            onSearch={(value) => this.handleSearch(value, 'TEL')}
+                                            // onSearch={(value) => this.handleSearch(value, 'TEL')}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'),300)}
                                             onChange={(value) => this.receiverChange(value, 'TEL')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -1087,7 +1090,8 @@ const AddRulesForm = Form.create()(
                                             defaultActiveFirstOption={false}
                                             showArrow={false}
                                             filterOption={false}
-                                            onSearch={(value) => this.deviceSearch(value)}
+                                            // onSearch={(value) => this.deviceSearch(value)}
+                                            onSearch={_.debounce((value) => this.deviceSearch(value),300)}
                                             onChange={(value) => this.deviceChange(value)}
                                         >
                                             {
@@ -1410,7 +1414,7 @@ const ModifyRulesForm = Form.create()(
                                         onChange={(value) => this.FrequencyChange(value, 'sms')}
                                     >
                                         <Option key='0'>不通知</Option>
-                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='-1'>仅通知一次</Option>
                                         <Option key='60'>1小时通知一次</Option>
                                         <Option key='720'>12小时通知一次</Option>
                                         <Option key='1440'>一天通知一次</Option>
@@ -1432,7 +1436,8 @@ const ModifyRulesForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             notFoundContent={null}
-                                            onSearch={(value) => this.handleSearch(value, 'sms')}
+                                            // onSearch={(value) => this.handleSearch(value, 'sms')}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'),300)}
                                             onChange={(value) => this.receiverChange(value, 'sms')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -1464,7 +1469,7 @@ const ModifyRulesForm = Form.create()(
                                 })(
                                     <Select>
                                         <Option key='0'>不通知</Option>
-                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='-1'>仅通知一次</Option>
                                         <Option key='60'>1小时通知一次</Option>
                                         <Option key='720'>12小时通知一次</Option>
                                         <Option key='1440'>一天通知一次</Option>
@@ -1485,7 +1490,8 @@ const ModifyRulesForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             notFoundContent={null}
-                                            onSearch={(value) => this.handleSearch(value, 'TEL')}
+                                            // onSearch={(value) => this.handleSearch(value, 'TEL')}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'),300)}
                                             onChange={(value) => this.receiverChange(value, 'TEL')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -1566,7 +1572,8 @@ const ModifyRulesForm = Form.create()(
                                             defaultActiveFirstOption={false}
                                             showArrow={false}
                                             filterOption={false}
-                                            onSearch={(value) => this.deviceSearch(value)}
+                                            // onSearch={(value) => this.deviceSearch(value)}
+                                            onSearch={_.debounce((value) => this.deviceSearch(value),300)}
                                             onChange={(value) => this.deviceChange(value)}
                                         >
                                             {
@@ -1890,7 +1897,7 @@ const TemRulesForm = Form.create()(
                                         onChange={(value) => this.FrequencyChange(value, 'sms')}
                                     >
                                         <Option key='0'>不通知</Option>
-                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='-1'>仅通知一次</Option>
                                         <Option key='60'>1小时通知一次</Option>
                                         <Option key='720'>12小时通知一次</Option>
                                         <Option key='1440'>一天通知一次</Option>
@@ -1912,7 +1919,8 @@ const TemRulesForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             notFoundContent={null}
-                                            onSearch={(value) => this.handleSearch(value, 'sms')}
+                                            // onSearch={(value) => this.handleSearch(value, 'sms')}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'),300)}
                                             onChange={(value) => this.receiverChange(value, 'sms')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -1944,7 +1952,7 @@ const TemRulesForm = Form.create()(
                                 })(
                                     <Select>
                                         <Option key='0'>不通知</Option>
-                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='-1'>仅通知一次</Option>
                                         <Option key='60'>1小时通知一次</Option>
                                         <Option key='720'>12小时通知一次</Option>
                                         <Option key='1440'>一天通知一次</Option>
@@ -1965,7 +1973,8 @@ const TemRulesForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             notFoundContent={null}
-                                            onSearch={(value) => this.handleSearch(value, 'TEL')}
+                                            // onSearch={(value) => this.handleSearch(value, 'TEL')}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'),300)}
                                             onChange={(value) => this.receiverChange(value, 'TEL')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -2046,7 +2055,8 @@ const TemRulesForm = Form.create()(
                                             defaultActiveFirstOption={false}
                                             showArrow={false}
                                             filterOption={false}
-                                            onSearch={(value) => this.deviceSearch(value)}
+                                            // onSearch={(value) => this.deviceSearch(value)}
+                                            onSearch={_.debounce((value) => this.deviceSearch(value),300)}
                                             onChange={(value) => this.deviceChange(value)}
                                         >
                                             {
