@@ -4,7 +4,7 @@ import styles from './rulesDetail.less';
 import { Link,routerRedux } from 'dva/router';
 import store from '../../index'
 import { timeOut } from '../../utils/timeOut';
-import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList, getRulesDetail } from '../../services/api'
+import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList } from '../../services/api'
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
 // 生产环境

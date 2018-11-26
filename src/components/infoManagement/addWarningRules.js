@@ -4,6 +4,7 @@ import { Input, Button, Form, Select, Icon, InputNumber ,message} from 'antd';
 import { Link,routerRedux } from 'dva/router';
 import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList } from '../../services/api'
 const Option = Select.Option;
+import _ from 'lodash'
 import store from '../../index'
 // post通用设置
 let postOption = {
@@ -449,7 +450,8 @@ const AddRulesForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             notFoundContent={null}
-                                            onSearch={(value) => this.handleSearch(value, 'sms')}
+                                            // onSearch={(value) => this.handleSearch(value, 'sms')}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'),300)}
                                             onChange={(value) => this.receiverChange(value, 'sms')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
