@@ -429,7 +429,7 @@ const AddRulesForm = Form.create()(
                                         onChange={(value) => this.FrequencyChange(value, 'sms')}
                                     >
                                         <Option key='0'>不通知</Option>
-                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='-1'>仅通知一次</Option>
                                         <Option key='60'>1小时通知一次</Option>
                                         <Option key='720'>12小时通知一次</Option>
                                         <Option key='1440'>一天通知一次</Option>
@@ -483,7 +483,7 @@ const AddRulesForm = Form.create()(
                                 })(
                                     <Select>
                                         <Option key='0'>不通知</Option>
-                                        <Option key='1'>仅通知一次</Option>
+                                        <Option key='-1'>仅通知一次</Option>
                                         <Option key='60'>1小时通知一次</Option>
                                         <Option key='720'>12小时通知一次</Option>
                                         <Option key='1440'>一天通知一次</Option>
@@ -504,7 +504,7 @@ const AddRulesForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             notFoundContent={null}
-                                            onSearch={(value) => this.handleSearch(value, 'TEL')}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'),300)}
                                             onChange={(value) => this.receiverChange(value, 'TEL')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -585,7 +585,7 @@ const AddRulesForm = Form.create()(
                                             defaultActiveFirstOption={false}
                                             showArrow={false}
                                             filterOption={false}
-                                            onSearch={(value) => this.deviceSearch(value)}
+                                            onSearch={_.debounce((value) => this.deviceSearch(value),300)}
                                             onChange={(value) => this.deviceChange(value)}
                                             // dropdownClassName={styles.searchDropDown}
                                             placeholder='设备名称/ID'
