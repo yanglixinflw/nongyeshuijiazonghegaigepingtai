@@ -17,6 +17,8 @@ const deviceTypeUrl=`${envNet}/api/device/control/deviceTypeList`
 const instructUrl=`${envNet}/api/device/control/cmdList`
 //向设备发送指令
 const sendCmdUrl=`${envNet}/api/device/control/sendCmd`
+//关联建筑接口
+const buildingUrl=`${envNet}/api/Building/list`
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -170,12 +172,7 @@ export default class extends Component{
             //   console.log(selected, selectedRows, changeRows);
             // },
           };
-        this.setState({
-            columns,
-            tableDatas,
-            rowSelection
-        });
-        //操作列
+          //操作列
         columns.push({
             title: '操作',
             key: 'action',
@@ -198,6 +195,11 @@ export default class extends Component{
                 )
             }
         })
+        this.setState({
+            columns,
+            tableDatas,
+            rowSelection
+        });
     }
      // 搜索功能
      _searchTableData() {
@@ -207,16 +209,6 @@ export default class extends Component{
             // 未定义时给空值
             if (err) {
                 return
-            }
-            //搜索字段
-            if(values.deviceId==undefined){
-                values.deviceId=''
-            }
-            if(values.name==undefined){
-                values.name=''
-            }
-            if(values.relatedBuilding==undefined){
-                values.relatedBuilding=''
             }
             return fetch(dataUrl, {
                 ...postOption,
@@ -451,9 +443,40 @@ export default class extends Component{
 //搜索表单
 const SearchForm = Form.create()(
     class extends React.Component {
+        state={
+            //关联建筑物列表
+            buildingList:[],
+        }
+        //下拉搜索框搜索功能
+        handleSearch = (value) => {
+            // console.log(value)
+            fetch(buildingUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "name": value,
+                    "countDevice": true
+                })
+            }).then(res => {
+                Promise.resolve(res.json())
+                    .then(v => {
+                        if (v.ret == 1) {
+                            // 设置页面显示的元素
+                            // console.log(v.data)
+                            let buildingList = v.data
+                            this.setState({
+                                buildingList,
+                                value
+                            })
+                        }
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
+        }
         render() {
             const { form,installAddrList,deviceTypeList} = this.props;
             const { getFieldDecorator } = form;
+            const {buildingList}=this.state
             return (
                 <Form 
                     layout='inline'
@@ -464,9 +487,11 @@ const SearchForm = Form.create()(
                         marginRight:"10px"
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('deviceTypeId', {initialValue:'智能球阀'})
+                        {getFieldDecorator('deviceTypeId', {})
                             (
-                            <Select>
+                            <Select
+                                placeholder="智能球阀"
+                            >
                                 {
                                     deviceTypeList.map((v,i)=>{
                                         return(<Option key={i} value={v.deviceTypeId}>{v.name}</Option>)
@@ -497,10 +522,11 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('installAddrId', {initialValue:''})
+                        {getFieldDecorator('installAddrId', {})
                             (
-                            <Select>
-                                <Option value='' disabled selected style={{display:'none'}}>设备安装地</Option>
+                            <Select
+                                placeholder='设备安装地'
+                            >
                                 {
                                     installAddrList.map((v,i)=>{
                                         return(<Option key={i} value={v.id}>{v.addr}</Option>)
@@ -513,10 +539,23 @@ const SearchForm = Form.create()(
                     <Form.Item>
                         {getFieldDecorator('relatedBuildingId', {})
                             (
-                            <Input
+                            <Select
+                                showSearch
                                 placeholder='关联建筑物'
-                                type='text'
-                            />
+                                defaultActiveFirstOption={false}
+                                showArrow={false}
+                                filterOption={false}
+                                onSearch={this.handleSearch}
+                                notFoundContent={null}
+                            >
+                                {
+                                    buildingList.map((v,i)=>{
+                                        return(
+                                            <Option key={i} value={v.buildingId}>{v.name}</Option>
+                                        )
+                                    })
+                                }
+                            </Select>
                             )
                         }
                     </Form.Item>

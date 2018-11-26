@@ -62,10 +62,12 @@
     .option{
         display: flex;
         justify-content: space-around;
-        // div{
-        //     display: flex;
-        //     justify-content: space-around;
-        // }
+        // flex-wrap: wrap;
+        div{
+            display: flex;
+            justify-content: space-around;
+            margin:4px auto;
+        }
         .edit{
             margin-right: 10px;
             border: 1px solid rgba(232,120,72,1)!important;
@@ -118,7 +120,7 @@
                         color: #0084FF;
                     }
                     td {
-                        min-width: 80px;
+                        min-width: 90px;
                         border-left:0;
                         border: 1px solid #2A325E;
                         font-weight: 600;
@@ -183,7 +185,7 @@
                             color: #0084FF;
                         }
                         td {
-                            min-width: 80px;
+                            min-width: 90px;
                             font-size: 12px;
                             background: #1C2241;
                             color: #BBC5D2;
@@ -242,6 +244,14 @@
     }
     .action{
         padding:0 16px !important;
+    }
+    @media (max-width:1156px){
+        // .autoControl{
+            .option{
+                display: flex;
+                flex-wrap: wrap;
+            }
+        // }
     }
 }
 .changeStatusModal{
@@ -321,7 +331,7 @@
                     display: flex;
                     margin:0 auto 20px !important;
                     .ant-col-4,.ant-form-item-label{
-                        width: 80px;
+                        width: 90px;
                         margin-right: 12px;
                         label{
                             color:#e7e7ec; 
@@ -465,7 +475,7 @@
                     display: flex;
                     margin:0 auto 20px !important;
                     .ant-col-4,.ant-form-item-label{
-                        width: 80px;
+                        width: 90px;
                         margin-right: 12px;
                         label{
                             color:#e7e7ec; 

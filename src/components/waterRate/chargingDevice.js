@@ -13,10 +13,10 @@ const editUrl=`${envNet}/fee/chargeFacility/update`;
 const addUrl=`${envNet}/fee/chargeFacility/add`;
 //删除设备
 const delUrl=`${envNet}/fee/chargeFacility/delete`;
+//关联建筑接口
+const buildingUrl=`${envNet}/api/Building/list`
 //下拉搜索设备调用
-const deviceUrl = `${envNet}/api/device/list`;
-//通过id获取详细信息接口（用来获取name）
-const infoUrl = `${envNet}/fee/chargeFacility/getById`
+// const deviceUrl = `${envNet}/api/device/list`;
 //表头
 const tableTitle=[
     {index:"id",item:"设备ID"},
@@ -70,6 +70,8 @@ export default class extends Component{
             delVisible:false,
             //设备id
             deviceId:'',
+            //设备独有的id,修改必传字段
+            facilityId:'',
             //是否显示修改弹窗
             editvisible:false,
             //是否显示添加弹窗
@@ -123,7 +125,7 @@ export default class extends Component{
                      <Button
                             className={styles.edit}
                             icon='edit'
-                            onClick={()=>this.edit(record.deviceId)}
+                            onClick={()=>this.edit(record.deviceId,record.facilityId)}
                         >
                             修改
                         </Button>
@@ -148,21 +150,6 @@ _searchTableData() {
         if (err) {
             return
         }
-        // if(values.realName==undefined){
-        //     values.realName=''
-        // }
-        // if(values.mobilePhone==undefined){
-        //     values.mobilePhone=''
-        // }
-        // if(values.idCard==undefined){
-        //     values.idCard=''
-        // }
-        // if(values.areaId=='area'){
-        //     values.areaId=''
-        // }
-        // if(values.isActivated=='isActivated'){
-        //     values.isActivated=''
-        // }
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -276,14 +263,55 @@ _searchTableData() {
         })
     }
     //点击修改
-    edit(deviceId){
+    edit(deviceId,facilityId){
+        const form = this.editForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            fetch(deviceUrl,{
+                ...postOption,
+                body:JSON.stringify({
+                    deviceId//通过deviceId等信息访问相关接口 
+                })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                .then(v=>{
+                    if(v.ret==1){
+                        //拿到name此处掠去此操作，没接口
+                        fetch(editUrl,{
+                            ...postOption,
+                            body:JSON.stringify({
+                                // facilityId,
+                                name,
+                                deviceId,
+                                wateringType,//通过values值拿到
+                                plantType
+                            })
+                        }).then(res=>{
+                            Promise.resolve(res.json())
+                            .then(v=>{
+                                if(v.ret==1){
+                                    this.setState({
+                                        editvisible:false
+                                    })
+                                }
+                            })
+                        })
+                    }
+                })
+            })
+        })
         this.setState({
             deviceId,
+            facilityId,
             editvisible:true
         })
     }
     //点击确定修改
     edithandleOk(){
+
         this.setState({
             editvisible:false
         })
@@ -308,16 +336,39 @@ _searchTableData() {
             if (err) {
                 return
             }
-            fetch(infoUrl,{
+
+            fetch(deviceUrl,{
                 ...postOption,
                 body:JSON.stringify({
                     "id":values.id
                 })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                .then(v=>{
+                    if(v.ret==1){
+                        //通过再次访问设备接口或者其它接口来获取到name，(wateringType，plantType)通过values拿到
+                        //此接口暂无略过操作
+                        fetch(addUrl,{
+                            ...postOption,
+                            body:JSON.stringify({
+                                name,
+                                deviceId,
+                                wateringType,
+                                plantType
+                            })
+                        }).then(res=>{
+                            Promise.resolve(res.json())
+                            .then(v=>{
+                                if(v.ret==1){
+                                    this.setState({
+                                        addvisible:false
+                                    })
+                                }
+                            })
+                        })
+                    }
+                })
             })
-        })
-        
-        this.setState({
-            addvisible:false
         })
     }
     //点击取消添加
@@ -326,10 +377,46 @@ _searchTableData() {
             addvisible:false
         })
     }
+    //换页
+    _pageChange(page){
+        const { title,searchValue } = this.state;
+        searchValue.pageIndex = page - 1;
+        searchValue.deviceTypeId=this.state.deviceTypeId;
+        searchValue.pageSize=10
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                ...searchValue
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                if(v.ret==1){
+                    // 设置页面显示的元素
+                    let data = v.data.items;
+                    //添加key
+                    data.map((v, i) => {
+                        v.key = i
+                    })
+                    this.setState({
+                        itemCount:v.data.itemCount,
+                        data
+                    })
+                    this._getTableDatas(title,data);
+                }
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+        })
+    }
     render(){
-        const { columns, tableDatas,delVisible,editvisible,deviceId,addvisible } = this.state;
+        const { columns, tableDatas,delVisible,editvisible,deviceId,addvisible,itemCount } = this.state;
         const paginationProps = {
             showQuickJumper: true,
+            // total: itemCount,
+            // // 传递页码
+            // onChange: (page) => this._pageChange(page)
         };
         return(
             <React.Fragment>
@@ -425,9 +512,40 @@ _searchTableData() {
 //搜索表单
 const SearchForm = Form.create()(
     class extends React.Component {
+        state={
+            //关联建筑物列表
+            buildingList:[],
+        }
+        //下拉搜索框搜索功能
+        handleSearch = (value) => {
+            // console.log(value)
+            fetch(buildingUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "name": value,
+                    "countDevice": true
+                })
+            }).then(res => {
+                Promise.resolve(res.json())
+                    .then(v => {
+                        if (v.ret == 1) {
+                            // 设置页面显示的元素
+                            // console.log(v.data)
+                            let buildingList = v.data
+                            this.setState({
+                                buildingList,
+                                value
+                            })
+                        }
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
+        }
         render() {
             const { form } = this.props;
             const { getFieldDecorator } = form;
+            const {buildingList}=this.state
             return (
                 <Form 
                     layout='inline'
@@ -467,41 +585,57 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('area', {initialValue:'area'})
+                        {getFieldDecorator('area', {})
                             (
-                            <Select>
-                                <Option value="area">设备安装地</Option>
-                                <Option value="all">全部</Option>
+                            <Select
+                                placeholder='设备安装地'
+                            >
+                                <Option value="">全部</Option>
                             </Select>
                             )
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('building', {initialValue: ''})
+                        {getFieldDecorator('building', {})
                             (
-                            <Input
+                            <Select
+                                showSearch
                                 placeholder='关联建筑物'
-                                type="text"
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('valveType', {initialValue: 'valveType'})
-                            (
-                            <Select>
-                                <Option value="valveType">灌区类型</Option>
-                                <Option value="all">全部</Option>
+                                defaultActiveFirstOption={false}
+                                showArrow={false}
+                                filterOption={false}
+                                onSearch={this.handleSearch}
+                                notFoundContent={null}
+                            >
+                                {
+                                    buildingList.map((v,i)=>{
+                                        return(
+                                            <Option key={i} value={v.buildingId}>{v.name}</Option>
+                                        )
+                                    })
+                                }
                             </Select>
                             )
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('plantType', {initialValue: 'plantType'})
+                        {getFieldDecorator('valveType', {})
                             (
-                            <Select>
-                                <Option value="plantType">种植类型</Option>
-                                <Option value="all">全部</Option>
+                            <Select
+                                placeholder='灌区类型'
+                            >
+                                <Option value="">全部</Option>
+                            </Select>
+                            )
+                        }
+                    </Form.Item>
+                    <Form.Item>
+                        {getFieldDecorator('plantType', {})
+                            (
+                            <Select
+                                placeholder='种植类型'
+                            >
+                                <Option value="">全部</Option>
                             </Select>
                             )
                         }
@@ -574,37 +708,34 @@ const AddForm = Form.create()(
             name:""
         }
         //下拉搜索框搜索功能
-        handleSearch = (value) => {
-            console.log(value)
-            fetch(deviceUrl, {
-                ...postOption,
-                body: JSON.stringify({
-                    "name":value,
-                    "pageIndex": 0,
-                    "pageSize": 10
-                })
-            }).then(res => {
-                Promise.resolve(res.json())
-                    .then(v => {
-                        if (v.ret == 1) {
-                            // 设置页面显示的元素
-                            let deviceList = v.data.items
-                            this.setState({
-                                deviceList,
-                            })
-                        }
-                    })
-            }).catch(err => {
-                console.log(err)
-            })
-        }
-        handleSearch = (value,selected) => {
-            console.log(value)
-        }
+        // handleSearch = (value) => {
+        //     console.log(value)
+        //     fetch(deviceUrl, {
+        //         ...postOption,
+        //         body: JSON.stringify({
+        //             "name":value,
+        //             "pageIndex": 0,
+        //             "pageSize": 10
+        //         })
+        //     }).then(res => {
+        //         Promise.resolve(res.json())
+        //             .then(v => {
+        //                 if (v.ret == 1) {
+        //                     // 设置页面显示的元素
+        //                     let deviceList = v.data.items
+        //                     this.setState({
+        //                         deviceList,
+        //                     })
+        //                 }
+        //             })
+        //     }).catch(err => {
+        //         console.log(err)
+        //     })
+        // }
         render() {
             const { visible, onCancel, onOk, form } = this.props;
             const { getFieldDecorator } = form;
-            const {deviceList}=this.state
+            // const {deviceList}=this.state
             return (
                 <Modal
                     className={styles.addModal}
@@ -618,7 +749,7 @@ const AddForm = Form.create()(
                 >
                     <Form>
                         <Form.Item label="设备型号">
-                            {getFieldDecorator('id', {initialValue: ''})
+                            {getFieldDecorator('id', {})
                             (
                                 <Select
                                     // showSearch
@@ -627,18 +758,17 @@ const AddForm = Form.create()(
                                     showArrow={false}
                                     filterOption={false}
                                     onSearch={this.handleSearch}
-                                    onChange={this.handleChange}
                                     notFoundContent={null}
                                 >
-                                    {/* <Option value='1'>1</Option>
-                                    <Option value='2'>2</Option> */}
-                                    {
+                                    <Option value='1'>1</Option>
+                                    <Option value='2'>2</Option>
+                                    {/* {
                                         deviceList.map((v,i)=>{
                                             return(
                                                 <Option value={v.deviceId} key={i}>{v.name}</Option> 
                                             )
                                         })
-                                    }
+                                    } */}
                                 </Select>
                             )}
                         </Form.Item>

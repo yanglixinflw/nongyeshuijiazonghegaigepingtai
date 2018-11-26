@@ -119,37 +119,40 @@ export default class extends Component{
             render: (record) => {
                 return (
                     <div className={styles.option}>
-                        <Link to={`/automation/autoRules:${record.ruleId}`}>
+                        <div>
+                            <Link to={`/automation/autoRules:${record.ruleId}`}>
+                                <Button
+                                    className={styles.set}
+                                    // onClick={() => this._set()}
+                                    icon='setting'
+                                >
+                                    设置自动化规则
+                                </Button>
+                            </Link>
                             <Button
-                                className={styles.set}
-                                // onClick={() => this._set()}
-                                icon='setting'
+                                className={styles.stop}
+                                icon='poweroff'
+                                onClick={()=>this.changeStatus(record.ruleId,record.isEnabled)}
                             >
-                                设置自动化规则
+                                停/启用   
                             </Button>
-                        </Link>
-                        <Button
-                            className={styles.stop}
-                            icon='poweroff'
-                            onClick={()=>this.changeStatus(record.ruleId,record.isEnabled)}
-                        >
-                         停/启用   
-                        </Button>
-                        <Button
-                            className={styles.edit}
-                            icon='edit'
-                            onClick={()=>this.edit(record.ruleId,record.name)}
-                        >
-                            修改
-                        </Button>
-                        <Button
-                            className={styles.delete}
-                            icon='delete'
-                            onClick={()=>this.delete(record.ruleId)}
-                        >
-                            删除
-                        </Button>
-                        
+                        </div>
+                        <div>
+                            <Button
+                                className={styles.edit}
+                                icon='edit'
+                                onClick={()=>this.edit(record.ruleId,record.name)}
+                            >
+                                修改
+                            </Button>
+                            <Button
+                                className={styles.delete}
+                                icon='delete'
+                                onClick={()=>this.delete(record.ruleId)}
+                            >
+                                删除
+                            </Button>
+                        </div>
                     </div>
                 )
             }
