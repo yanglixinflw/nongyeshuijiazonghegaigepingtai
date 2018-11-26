@@ -202,6 +202,8 @@ export default class extends Component {
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
                 // console.log(marker)
+                let deviceId =  marker.getExtData().deviceId
+                this._getRealTimeData(deviceId)
                 this.setState({
                     infoPositionCamera: marker.getExtData().position,
                     infoVisibleCamera: true
@@ -289,6 +291,8 @@ export default class extends Component {
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
+                let deviceId =  marker.getExtData().deviceId
+                this._getRealTimeData(deviceId)
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
                     infoVisibleWaterValve: true
@@ -324,7 +328,8 @@ export default class extends Component {
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
-                
+                let deviceId =  marker.getExtData().deviceId
+                this._getRealTimeData(deviceId)
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
                     infoVisibleWaterValve: true
@@ -350,7 +355,7 @@ export default class extends Component {
             ...postOption,
             body:JSON.stringify({
                 deviceId,
-                // showDisplayName:true
+                showDisplayName:true
             })
         }).then((res)=>{
             Promise.resolve(res.json())
@@ -358,8 +363,8 @@ export default class extends Component {
                 //超时判断
                 timeOut(v.ret)
                 if(v.ret == 1){
-                    console.log(v)
                     let infoData = v.data;
+                    // console.log(infoData)
                     // infoData.map((v,i)=>{
                     //     console.log(i,v)
                     // })
@@ -369,6 +374,8 @@ export default class extends Component {
                     })
                 }
             })
+        }).catch((err)=>{
+            console.log(err)
         })
     }
     //搜索结果高亮处理
@@ -748,7 +755,7 @@ export default class extends Component {
                     visible={waterValveVisible}
                 />
                 {/* 水表信息窗 高德地图规定同时最多只能显示一个信息窗*/}
-                {waterMeterVisible && waterMeterMarkers ?
+                {waterMeterVisible && waterMeterMarkers && infoData ?
                     <InfoWindow
                         position={infoPositionWaterValve}
                         visible={infoVisibleWaterValve}
@@ -757,7 +764,10 @@ export default class extends Component {
                         size={size}
                         events={this.windowEvents}
                     >
-                        <IwContent info={waterMeterMarkers.filter(item => item.position == infoPositionWaterValve)} />
+                        <IwContent 
+                            info={waterMeterMarkers.filter(item => item.position == infoPositionWaterValve)} 
+                            {...{infoData}}
+                        />
                     </InfoWindow>
                     : null
                 }
@@ -769,7 +779,7 @@ export default class extends Component {
                     visible={waterMeterVisible}
                 />
                 {/* 电表信息窗 高德地图规定同时最多只能显示一个信息窗*/}
-                {eleMeterVisible && eleMeterMarkers ?
+                {eleMeterVisible && eleMeterMarkers && infoData ?
                     <InfoWindow
                         position={infoPositionWaterValve}
                         visible={infoVisibleWaterValve}
@@ -778,7 +788,10 @@ export default class extends Component {
                         size={size}
                         events={this.windowEvents}
                     >
-                        <IwContent info={eleMeterMarkers.filter(item => item.position == infoPositionWaterValve)} />
+                        <IwContent 
+                            info={eleMeterMarkers.filter(item => item.position == infoPositionWaterValve)} 
+                            {...{infoData}}
+                        />
                     </InfoWindow>
                     : null
                 }
