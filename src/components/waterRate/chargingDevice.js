@@ -1,12 +1,12 @@
 import React,{Component} from 'react';
 import styles from "./chargingDevice.less"
-import { Input, Button, Form, Table, Modal, Select} from 'antd';
+import { Input, Button, Form, Table, Modal, Select,message,Row, Col,Checkbox} from 'antd';
 //开发地址
 const envNet='http://192.168.30.127:88';
 //生产环境
 // const envNet='';
 //翻页调用
-const dataUrl=`${envNet}/api/Automatic/list`;
+const dataUrl=`${envNet}/fee/chargeFacility/list`;
 //修改设备
 const editUrl=`${envNet}/fee/chargeFacility/update`;
 //添加设备
@@ -16,16 +16,22 @@ const delUrl=`${envNet}/fee/chargeFacility/delete`;
 //关联建筑接口
 const buildingUrl=`${envNet}/api/Building/list`
 //下拉搜索设备调用
-// const deviceUrl = `${envNet}/api/device/list`;
+const deviceUrl = `${envNet}/api/device/list`;
+//种植类型
+const plantTypeUrl = `${envNet}/fee/chargeFacility/plantTypeList`;
+//灌区类型
+const wateringTypeUrl = `${envNet}/fee/chargeFacility/wateringTypeList`;
+//设备安装地列表
+const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`;
 //表头
 const tableTitle=[
-    {index:"id",item:"设备ID"},
-    {index:"type",item:"设备型号"},
-    {index:"name",item:"设备名称"},
-    {index:"area",item:"设备安装地"},
-    {index:"building",item:"关联建筑物"},
-    {index:"valveType",item:"灌区类型"},
-    {index:"plantType",item:"种植类型"},
+    {index:"deviceId",item:"设备ID"},
+    {index:"deviceTypeName",item:"设备型号"},
+    {index:"deviceName",item:"设备名称"},
+    {index:"installAddr",item:"设备安装地"},
+    {index:"relatedBuilding",item:"关联建筑物"},
+    {index:"wateringTypeName",item:"灌区类型"},
+    {index:"plantTypeName",item:"种植类型"},
     {index:"updateTime",item:"更新时间"},
 ]
 // post通用设置
@@ -37,33 +43,18 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 }
-//假数据
-const data=[
-    {id:"435676651",type:"慧水超声波表",name:" 宁圩村1#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676652",type:"慧水超声波表",name:" 宁圩村2#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676653",type:"慧水超声波表",name:" 宁圩村3#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676654",type:"慧水超声波表",name:" 宁圩村4#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676655",type:"慧水超声波表",name:" 宁圩村5#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676656",type:"慧水超声波表",name:" 宁圩村6#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676657",type:"慧水超声波表",name:" 宁圩村7#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676658",type:"慧水超声波表",name:" 宁圩村8#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676659",type:"慧水超声波表",name:" 宁圩村9#水表",area:"杭州萧山",building:"一号闸阀井",valveType:"一级灌区",plantType:"水果",updateTime:"2018/09/23  09:03:32"}
-]
 const { Option }=Select
 export default class extends Component{
     constructor(props) {
         super(props)
-        const chargingDevice=data;
-        var tableData=[],tableIndex=[];//数据表的item 和 index
-        tableTitle.map(v=>{
-            tableData.push(v.item);
-            tableIndex.push(v.index)
-        })
+        const {chargingDevice}=props;
         this.state={
-            items:chargingDevice,
-            tableDatas:[],
+            //表格的列
             columns: [],
+            //表头
             title:tableTitle,
+            itemCount:chargingDevice.data.data.itemCount,//总数据数
+            data:chargingDevice.data.data.items,//表格数据源
             //搜索框默认值
             searchValue:{},
             //是否显示删除弹窗
@@ -76,12 +67,64 @@ export default class extends Component{
             editvisible:false,
             //是否显示添加弹窗
             addvisible:false,
+            //种植类型
+            plantType:[],
+            //灌区类型
+            wateringType:[],
+            //设备安装地
+            installAddrList:[],
+            //是否弹出显示设置
+            showvisible: false,
         }
     }
     componentDidMount() {
-        this._getTableDatas(this.state.title, this.state.items);
+        this._getTableDatas(this.state.title, this.state.data);
+        return (
+            //获取种植类型
+            fetch(plantTypeUrl,{
+                ...postOption
+            }).then(res=>{
+                Promise.resolve(res.json())
+                .then(v=>{
+                    let plantType=v.data
+                    this.setState({
+                        plantType
+                    })
+                })
+            }),
+            //获取灌区类型
+            fetch(wateringTypeUrl,{
+                ...postOption
+            }).then(res=>{
+                Promise.resolve(res.json())
+                .then(v=>{
+                    let wateringType=v.data
+                    this.setState({
+                        wateringType
+                    })
+                })
+            }),
+            //设备安装地
+            fetch(installAddrUrl, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: "include",
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        if (v.ret == 1) {
+                            let installAddrList = v.data
+                            this.setState({
+                                installAddrList
+                            })
+                        }
+                    })
+            }).catch((err) => {
+                console.log(err)
+            })
+        )
     }
-    _getTableDatas(title, items) {
+    _getTableDatas(title, data) {
         let columns = [];
         title.map(v => {//把title里面的数据push到column里面
             columns.push({
@@ -94,25 +137,22 @@ export default class extends Component{
         })
         //把数据都push到tableDatas里
         let tableDatas = [];
-        items.map((v, i) => {
+        data.map((v, i) => {
             tableDatas.push({
-                id:v.id,
-                type:v.type,
-                name:v.name,
-                area:v.area,
-                building:v.building,
-                valveType:v.valveType,
-                plantType:v.plantType,
+                deviceId:v.deviceId,
+                deviceTypeName:v.deviceTypeName,
+                deviceName:v.deviceName,
+                installAddr:v.installAddr,
+                relatedBuilding:v.relatedBuilding,
+                wateringTypeName:v.wateringTypeName,
+                plantTypeName:v.plantTypeName,
                 updateTime:v.updateTime,
+                facilityId:v.facilityId,
                 key: i,
             });
         })
-        this.setState({
-            columns,
-            tableDatas,
-        });
-        //操作列
-        columns.push({
+         //操作列
+         columns.push({
             title: '操作',
             key: 'action',
             align: 'center',
@@ -132,7 +172,7 @@ export default class extends Component{
                         <Button
                             className={styles.delete}
                             icon='delete'
-                            onClick={()=>this.delete(record.deviceId)}
+                            onClick={()=>this.delete(record.facilityId)}
                         >
                             删除
                         </Button>
@@ -140,46 +180,52 @@ export default class extends Component{
                 )
             }
         })
+        this.setState({
+            columns,
+            tableDatas,
+        });
     }
-// 搜索功能
-_searchTableData() {
-    const { title } = this.state;
-    const form = this.searchForm.props.form;
-    form.validateFields((err, values) => {
-        // 未定义时给空值
-        if (err) {
-            return
-        }
-        return fetch(dataUrl, {
-            ...postOption,
-            body: JSON.stringify({
-                // "name": values.realName,
-                // "mobile": values.mobilePhone,
-                // "idCard": values.idCard,
-                // "areaId": values.areaId,
-                // "isActivated": values.isActivated,
-                // "pageIndex": 0,
-                // "pageSize": 10
-            })
-        }).then(res => {
-            Promise.resolve(res.json())
-                .then(v => {
-                    if (v.ret == 1) {
-                        // 设置页面显示的元素
-                        let itemCount = v.data.itemCount
-                        let data = v.data.items
-                        this.setState({
-                            itemCount,
-                            data
-                        })
-                        this._getTableDatas(title,data);
-                    }
+    // 搜索功能
+    _searchTableData() {
+        const { title } = this.state;
+        const form = this.searchForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            return fetch(dataUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "deviceId": values.deviceId,
+                    "deviceTypeId": values.deviceTypeId,
+                    "deviceName": values.deviceName,
+                    "installAddrId": values.installAddrId,
+                    "relatedBuilding": values.relatedBuilding,
+                    "wateringType": values.wateringType,
+                    "plantType": values.plantType,
+                    "pageIndex": 0,
+                    "pageSize": 10
                 })
-        }).catch(err => {
-            console.log(err)
+            }).then(res => {
+                Promise.resolve(res.json())
+                    .then(v => {
+                        if (v.ret == 1) {
+                            // 设置页面显示的元素
+                            let itemCount = v.data.itemCount
+                            let data = v.data.items
+                            this.setState({
+                                itemCount,
+                                data
+                            })
+                            this._getTableDatas(title,data);
+                        }
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
         })
-    })
-}
+    }
     //重置
     _resetForm() {
         const { title } = this.state;
@@ -213,17 +259,72 @@ _searchTableData() {
                 })
         })
     }
-    //点击删除
-    delete(deviceId){
+    //点击显示设置
+    onShow(){
         this.setState({
-            deviceId,
+            showvisible: true
+        })
+    }
+    // 确定显示设置
+    showOk() {
+        const form = this.showSetForm.props.form;
+        form.validateFields((err, values) => {
+            // values即为表单数据
+            let { dataIndex } = values
+            // 过滤后的columns
+            let title = []
+            // 定义一个title
+            let titles = []
+            // 比对dataIndex
+            dataIndex.map((v, i) => {
+                title.push(...tableTitle.filter(item => item === v))
+            })
+            // 排序函数
+            let compare = function (prop) {
+                return function (obj1, obj2) {
+                    let val1 = obj1[prop];
+                    let val2 = obj2[prop];
+                    if (val1 < val2) {
+                        return -1;
+                    } else if (val1 > val2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+            // 排序
+            title.sort(compare('number'))
+            // 保存标题
+            title.map((v, i) => {
+                titles.push(v.item)
+            })
+            this._getTableDatas(title, this.state.data)
+            this.setState({
+                showvisible: false,
+                titles,
+                title
+            })
+        })
+
+    }
+    //取消显示设置 
+    showCancel() {
+        this.setState({
+            showvisible: false
+        })
+    }
+    //点击删除
+    delete(facilityId){
+        this.setState({
+            facilityId,
             delVisible:true
         })
     }
     //点击确定删除
     delOk(){
         let ids=[];
-        ids.push(this.state.deviceId)
+        ids.push(this.state.facilityId)
         fetch(delUrl,{
             ...postOption,
             body:JSON.stringify({
@@ -244,11 +345,11 @@ _searchTableData() {
                         .then(v=>{
                             if(v.ret==1){
                                 let data=v.data.items;
-                                this._getTableDatas(title, data);
                                 this.setState({
                                     data,
                                     delVisible:false
                                 })
+                                this._getTableDatas(this.state.title, data);
                             }
                         })
                     })
@@ -264,45 +365,6 @@ _searchTableData() {
     }
     //点击修改
     edit(deviceId,facilityId){
-        const form = this.editForm.props.form;
-        form.validateFields((err, values) => {
-            // 未定义时给空值
-            if (err) {
-                return
-            }
-            fetch(deviceUrl,{
-                ...postOption,
-                body:JSON.stringify({
-                    deviceId//通过deviceId等信息访问相关接口 
-                })
-            }).then(res=>{
-                Promise.resolve(res.json())
-                .then(v=>{
-                    if(v.ret==1){
-                        //拿到name此处掠去此操作，没接口
-                        fetch(editUrl,{
-                            ...postOption,
-                            body:JSON.stringify({
-                                // facilityId,
-                                name,
-                                deviceId,
-                                wateringType,//通过values值拿到
-                                plantType
-                            })
-                        }).then(res=>{
-                            Promise.resolve(res.json())
-                            .then(v=>{
-                                if(v.ret==1){
-                                    this.setState({
-                                        editvisible:false
-                                    })
-                                }
-                            })
-                        })
-                    }
-                })
-            })
-        })
         this.setState({
             deviceId,
             facilityId,
@@ -311,9 +373,64 @@ _searchTableData() {
     }
     //点击确定修改
     edithandleOk(){
-
-        this.setState({
-            editvisible:false
+        const form = this.editForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            //获取设备的name
+            fetch(deviceUrl,{
+                ...postOption,
+                body:JSON.stringify({
+                    "deviceId":this.state.deviceId,
+                    "pageIndex": 0,
+                    "pageSize": 1
+                })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                .then(v=>{
+                    if(v.ret==1){
+                        let name=v.data.items.name
+                        //访问修改接口
+                        fetch(editUrl,{
+                            ...postOption,
+                            body:JSON.stringify({
+                                "facilityId":this.state.facilityId,
+                                name,
+                                "deviceId":values.deviceId,
+                                "wateringType":values.wateringType,
+                                "plantType":values.plantType
+                            })
+                        }).then(res=>{
+                            Promise.resolve(res.json())
+                            .then(v=>{
+                                if(v.ret==1){
+                                    fetch(dataUrl,{
+                                        ...postOption,
+                                        body:JSON.stringify({
+                                            "pageIndex": 0,
+                                            "pageSize": 10
+                                        })
+                                    }).then(res=>{
+                                        Promise.resolve(res.json())
+                                        .then(v=>{
+                                            if(v.ret==1){
+                                                let data=v.data.items
+                                                this.setState({
+                                                    data,
+                                                    editvisible:false
+                                                })
+                                                this._getTableDatas(this.state.title,data)
+                                            }
+                                        })
+                                    })
+                                }
+                            })
+                        })
+                    }
+                })
+            })
         })
     }
     //点击取消修改
@@ -330,38 +447,59 @@ _searchTableData() {
     }
     //点击确定添加
     addhandleOk(){
+        const {title}=this.state
         const form = this.addForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
             if (err) {
                 return
             }
-
+            //通过接口获取到name值
             fetch(deviceUrl,{
                 ...postOption,
                 body:JSON.stringify({
-                    "id":values.id
+                    "deviceId":values.deviceId,
+                    "pageIndex": 0,
+                    "pageSize": 1
                 })
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
                     if(v.ret==1){
-                        //通过再次访问设备接口或者其它接口来获取到name，(wateringType，plantType)通过values拿到
-                        //此接口暂无略过操作
+                        let name=v.data.items.name
+                        //请求添加接口
                         fetch(addUrl,{
                             ...postOption,
                             body:JSON.stringify({
                                 name,
-                                deviceId,
-                                wateringType,
-                                plantType
+                                "deviceId":values.deviceId,
+                                "wateringType":values.wateringType,
+                                "plantType":values.plantType
                             })
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
                                 if(v.ret==1){
-                                    this.setState({
-                                        addvisible:false
+                                    //重新请求接口渲染页面
+                                    fetch(dataUrl,{
+                                        ...postOption,
+                                        body:JSON.stringify({
+                                            "pageIndex": 0,
+                                            "pageSize": 10
+                                        })
+                                    }).then(res=>{
+                                        Promise.resolve(res.json())
+                                        .then(v=>{
+                                            if(v.ret==1){
+                                                let data=v.data.items
+                                                this.setState({
+                                                    data,
+                                                    addvisible:false
+                                                })
+                                                this._getTableDatas(title,data)
+                                                message.success("添加成功",2)
+                                            }
+                                        })
                                     })
                                 }
                             })
@@ -411,12 +549,12 @@ _searchTableData() {
         })
     }
     render(){
-        const { columns, tableDatas,delVisible,editvisible,deviceId,addvisible,itemCount } = this.state;
+        const { columns, tableDatas,delVisible,editvisible,deviceId,addvisible,itemCount,wateringType,plantType,installAddrList,showvisible } = this.state;
         const paginationProps = {
             showQuickJumper: true,
-            // total: itemCount,
-            // // 传递页码
-            // onChange: (page) => this._pageChange(page)
+            total: itemCount,
+            // 传递页码
+            onChange: (page) => this._pageChange(page)
         };
         return(
             <React.Fragment>
@@ -428,14 +566,15 @@ _searchTableData() {
                         {/* 表单信息 */}
                         <SearchForm
                             wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                            searchHandler={() => this._searchTableDatas()}
+                            searchHandler={() => this._searchTableData()}
                             resetHandler={() => this._resetForm()}
+                            {...{wateringType,plantType,installAddrList}}
                         />
                         <div className={styles.buttonGroup}>
                             <Button
                                 className={styles.fnButton}
                                 icon="search"
-                                onClick={() => this._searchTableDatas()}
+                                onClick={() => this._searchTableData()}
                             >
                                 搜索
                             </Button>
@@ -494,7 +633,7 @@ _searchTableData() {
                         visible={editvisible}
                         onCancel={() => this.edithandleCancel()}
                         onOk={() => this.edithandleOk()}
-                        {...{deviceId}}
+                        {...{deviceId,wateringType,plantType}}
                     />
                     {/* 添加弹窗 */}
                     <AddForm
@@ -502,6 +641,14 @@ _searchTableData() {
                         visible={addvisible}
                         onCancel={() => this.addhandleCancel()}
                         onOk={() => this.addhandleOk()}
+                        {...{wateringType,plantType}}
+                    />
+                    {/* 显示设置 */}
+                    <ShowSetForm
+                        wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
+                        visible={showvisible}
+                        onCancel={() => this.showCancel()}
+                        onOk={() => this.showOk()}
                     />
                 </div>
                
@@ -543,7 +690,7 @@ const SearchForm = Form.create()(
             })
         }
         render() {
-            const { form } = this.props;
+            const { form,wateringType,plantType,installAddrList } = this.props;
             const { getFieldDecorator } = form;
             const {buildingList}=this.state
             return (
@@ -556,7 +703,7 @@ const SearchForm = Form.create()(
                         marginRight:"10px"
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('id', {initialValue: ''})
+                        {getFieldDecorator('deviceId', {initialValue: ''})
                             (
                             <Input
                                 placeholder='设备ID'
@@ -565,7 +712,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('type', {})
+                        {getFieldDecorator('deviceType', {})
                             (
                             <Input
                                 placeholder='设备型号'
@@ -585,18 +732,23 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('area', {})
+                        {getFieldDecorator('installAddr', {})
                             (
                             <Select
                                 placeholder='设备安装地'
                             >
                                 <Option value="">全部</Option>
+                                {
+                                    installAddrList.map((v,i)=>{
+                                        return (<Option key={i} value={v.id}>{v.addr}</Option>)
+                                    })
+                                }
                             </Select>
                             )
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('building', {})
+                        {getFieldDecorator('relatedBuilding', {})
                             (
                             <Select
                                 showSearch
@@ -619,12 +771,19 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('valveType', {})
+                        {getFieldDecorator('wateringType', {})
                             (
                             <Select
                                 placeholder='灌区类型'
                             >
                                 <Option value="">全部</Option>
+                                {
+                                    wateringType.map((v,i)=>{
+                                        return(
+                                            <Option key={i} value={v.id}>{v.name}</Option>
+                                        )
+                                    })
+                                }
                             </Select>
                             )
                         }
@@ -636,13 +795,19 @@ const SearchForm = Form.create()(
                                 placeholder='种植类型'
                             >
                                 <Option value="">全部</Option>
+                                {
+                                    plantType.map((v,i)=>{
+                                        return(
+                                            <Option key={i} value={v.id}>{v.name}</Option>
+                                        )
+                                    })
+                                }
                             </Select>
                             )
                         }
                     </Form.Item>
                 </Form>
             )
-
         }
     }
 )
@@ -650,7 +815,7 @@ const SearchForm = Form.create()(
 const EditForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, onCancel, onOk, form, deviceId } = this.props;
+            const { visible, onCancel, onOk, form, deviceId,wateringType,plantType } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Modal
@@ -674,10 +839,16 @@ const EditForm = Form.create()(
                             )}
                         </Form.Item>
                         <Form.Item label="灌区类型">
-                            {getFieldDecorator('valveType', {initialValue: '选择灌区类型'})
+                            {getFieldDecorator('wateringType', {initialValue: '选择灌区类型'})
                             (
                                 <Select>
-                                    
+                                    {
+                                        wateringType.map((v,i)=>{
+                                            return(
+                                                <Option value={v.id} key={i}>{v.name}</Option> 
+                                            )
+                                        })
+                                    }
                                 </Select>
                             )}
                         </Form.Item>
@@ -685,7 +856,13 @@ const EditForm = Form.create()(
                             {getFieldDecorator('plantType', {initialValue: '选择种植类型'})
                                 (
                                 <Select>
-                                    
+                                    {
+                                        plantType.map((v,i)=>{
+                                            return(
+                                                <Option value={v.id} key={i}>{v.name}</Option> 
+                                            )
+                                        })
+                                    }
                                 </Select>
                                 )
                             }
@@ -702,40 +879,38 @@ const AddForm = Form.create()(
         state={
             //设备信息数据列表
             deviceList:[],
-            //下拉搜索框初始值
-            value:undefined,
             //选中的值
             name:""
         }
         //下拉搜索框搜索功能
-        // handleSearch = (value) => {
-        //     console.log(value)
-        //     fetch(deviceUrl, {
-        //         ...postOption,
-        //         body: JSON.stringify({
-        //             "name":value,
-        //             "pageIndex": 0,
-        //             "pageSize": 10
-        //         })
-        //     }).then(res => {
-        //         Promise.resolve(res.json())
-        //             .then(v => {
-        //                 if (v.ret == 1) {
-        //                     // 设置页面显示的元素
-        //                     let deviceList = v.data.items
-        //                     this.setState({
-        //                         deviceList,
-        //                     })
-        //                 }
-        //             })
-        //     }).catch(err => {
-        //         console.log(err)
-        //     })
-        // }
+        handleSearch = (value) => {
+            console.log(value)
+            fetch(deviceUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "name":value,
+                    "pageIndex": 0,
+                    "pageSize": 10
+                })
+            }).then(res => {
+                Promise.resolve(res.json())
+                    .then(v => {
+                        if (v.ret == 1) {
+                            // 设置页面显示的元素
+                            let deviceList = v.data.items
+                            this.setState({
+                                deviceList,
+                            })
+                        }
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
+        }
         render() {
-            const { visible, onCancel, onOk, form } = this.props;
+            const { visible, onCancel, onOk, form,wateringType,plantType } = this.props;
             const { getFieldDecorator } = form;
-            // const {deviceList}=this.state
+            const {deviceList}=this.state
             return (
                 <Modal
                     className={styles.addModal}
@@ -748,49 +923,100 @@ const AddForm = Form.create()(
                     centered
                 >
                     <Form>
-                        <Form.Item label="设备型号">
-                            {getFieldDecorator('id', {})
+                        <Form.Item label="设备名称">
+                            {getFieldDecorator('deviceId', {rules: [{required:true,message:"请填选设备名称"}]})
                             (
                                 <Select
-                                    // showSearch
-                                    placeholder='请选择设备型号'
+                                    showSearch
+                                    placeholder='设备名称/ID'
                                     defaultActiveFirstOption={false}
                                     showArrow={false}
                                     filterOption={false}
                                     onSearch={this.handleSearch}
                                     notFoundContent={null}
                                 >
-                                    <Option value='1'>1</Option>
-                                    <Option value='2'>2</Option>
-                                    {/* {
+                                    {
                                         deviceList.map((v,i)=>{
                                             return(
                                                 <Option value={v.deviceId} key={i}>{v.name}</Option> 
                                             )
                                         })
-                                    } */}
+                                    }
                                 </Select>
                             )}
                         </Form.Item>
                         <Form.Item label="灌区类型">
-                            {getFieldDecorator('valveType', {initialValue: '请选择灌区类型'})
+                            {getFieldDecorator('wateringType', {initialValue: '请选择灌区类型',rules: [{required:true,message:"请选择灌区类型"}]})
                             (
                                 <Select>
-                                    <Option value="1">123</Option>
-                                    <Option value="2">456</Option>
+                                    {
+                                        wateringType.map((v,i)=>{
+                                            return(
+                                                <Option value={v.id} key={i}>{v.name}</Option> 
+                                            )
+                                        })
+                                    }
                                 </Select>
                             )}
                         </Form.Item>
                         <Form.Item label="种植类型">
-                            {getFieldDecorator('plantType', {initialValue: '请选择种植类型'})
+                            {getFieldDecorator('plantType', {initialValue: '请选择种植类型',rules: [{required:true,message:"请选择种植类型"}]})
                                 (
                                 <Select>
-                                    <Option value="1">123</Option>
-                                    <Option value="2">456</Option>
+                                    {
+                                        plantType.map((v,i)=>{
+                                            return(
+                                                <Option value={v.id} key={i}>{v.name}</Option> 
+                                            )
+                                        })
+                                    }
                                 </Select>
                                 )
                             }
                         </Form.Item>
+                    </Form>
+                </Modal>
+            )
+        }
+    }
+)
+//显示设置弹窗
+const ShowSetForm = Form.create()(
+    class extends React.Component {
+        render() {
+            const { visible, form, onOk, onCancel } = this.props
+            const { getFieldDecorator } = form;
+            const CheckboxGroup = Checkbox.Group;
+            return (
+                <Modal
+                    className={styles.showSetModal}
+                    visible={visible}
+                    title="显示设置"
+                    cancelText='取消'
+                    okText='确定'
+                    onOk={onOk}
+                    onCancel={onCancel}
+                    centered={true}
+                >
+                    <Form>
+                        {getFieldDecorator('dataIndex', {
+                            initialValue: tableTitle
+                        })
+                            (
+                            <CheckboxGroup>
+                                <Row>
+                                    {tableTitle.map((v, i) => {
+                                        return (
+                                            <Col key={i} span={8}>
+                                                <Checkbox value={tableTitle[i]}>{v.item}</Checkbox>
+                                            </Col>
+                                        )
+                                    })}
+                                </Row>
+                            </CheckboxGroup>
+                            )
+                        }
+
                     </Form>
                 </Modal>
             )

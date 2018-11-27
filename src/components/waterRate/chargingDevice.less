@@ -503,3 +503,66 @@
         }
     }
 }
+.showSetModal{
+    width: 490px !important;
+    height: 216px;
+        :global{
+            .ant-modal-close{
+                .ant-modal-close-x{
+                    .anticon,.anticon-close,.ant-modal-close-icon{
+                        color:#e7e7ec;
+                    }
+                }
+            }
+            .ant-modal-header{
+                background: #171a39;
+                border-bottom: 1px solid #363a69 !important;
+                .ant-modal-title{
+                    width: 400px;
+                    padding: 0 22px;
+                    margin-left: -23px;
+                    color:#e7e7ec;
+                    border-left:4px solid #327df4;
+                }   
+            }
+            .ant-modal-body{
+                background: #171a39;
+                .ant-form,.ant-form-horizontal{
+                    width: 442px;;
+                    .ant-checkbox-group{
+                        .ant-row{
+                            margin-left: 50px;
+                            .ant-checkbox-wrapper{
+                                color: #a4afbc;
+                                .ant-checkbox{
+                                    .ant-checkbox-inner{
+                                        background: #171a39
+                                    }
+                                }
+                                .ant-checkbox-checked{
+                                    .ant-checkbox-inner{
+                                        background: #1890ff
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } 
+            .ant-modal-footer{
+                background: #171a39;
+                border-top: 1px solid #363a69 !important;
+                text-align: center;
+                .ant-btn{
+                    border:none;
+                    color:#327df4;
+                    background: #171a39;
+                }
+                .ant-btn-primary{
+                    border-color:#1890ff;
+                    background: #1890ff;
+                    color:#ffffff;
+                }
+            }
+        }
+}

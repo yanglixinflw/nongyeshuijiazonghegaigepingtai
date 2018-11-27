@@ -52,56 +52,80 @@ export default class extends Component {
     _save () {
         this.ruleForm.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);    
-                // fetch(saveUrl,{
-                //     ...postOption,
-                //     body:JSON.stringify({
-                //         "ruleId":this.state.ruleId,
-                //         'anyConditionFireAction':values.condition,
-                //         'name':values.name,
-                //         conditions:,
-                //         actions
-                //     })
-                // }).then(res=>{
-                //     Promise.resolve(res.json())
-                //     .then(v=>{
-                //         if(v.ret==1){
-                //             fetch(ruleUrl,{
-                //                 ...postOption,
-                //                 body:JSON.stringify({
-                //                     ruleId
-                //                 })
-                //             }).then(res=>{
-                //                 Promise.resolve(res.json())
-                //                 .then(v=>{
-                //                     if(v.ret==1){
-                //                         console.log(v.data)
-                //                         message.success('保存成功', 2);
-                //                         this.setState({
-                //                             anyConditionFireAction:v.data.anyConditionFireAction,
-                //                             name:v.data.name,
-                //                             conditions:v.data.conditions,
-                //                             actions:v.data.actions
-                //                         })
-                //                     }
-                //                 })    
-                //             })
-                //         }
-                //     })
-                // })
+                console.log('Received values of form: ', values);
+                //针对compareValue出现的问题，先将其转换为字符串型，再转换回数组,并将数组元素的双引号去掉  
+                let valueArr=values.compareValue
+                let valueString=valueArr.join("-")
+                valueArr=valueString.split('-')
+                for(var i=0;i<valueArr.length;i++){
+                    valueArr[i]=parseInt(valueArr[i])
+                }
+                //拼接数组conditions
+                var conditions=[];
+                values.conditionDeviceId.map((v,i)=>{
+                    let obj={
+                        deviceId:v,
+                        parameterId:values.parameterId[i],
+                        operator:values.operator[i],
+                        compareValue:valueArr[i]
+                    }
+                    conditions.push(obj)
+                })
+                //拼接数组actions
+                var actions=[];
+                values.actionDeviceId.map((v,i)=>{
+                    let obj={
+                        deviceId:v,
+                        execCmd:values.execCmd[i]
+                    }
+                    actions.push(obj)
+                })
+                //保存
+                fetch(saveUrl,{
+                    ...postOption,
+                    body:JSON.stringify({
+                        "ruleId":this.state.ruleId,
+                        'anyConditionFireAction':values.anyConditionFireAction,
+                        'name':values.name,
+                        conditions,
+                        actions
+                    })
+                }).then(res=>{
+                    Promise.resolve(res.json())
+                    .then(v=>{
+                        if(v.ret==1){
+                            //重新获取页面
+                            fetch(ruleUrl,{
+                                ...postOption,
+                                body:JSON.stringify({
+                                    "ruleId":this.state.ruleId,
+                                })
+                            }).then(res=>{
+                                Promise.resolve(res.json())
+                                .then(v=>{
+                                    if(v.ret==1){
+                                        message.success('保存成功', 2);
+                                        this.setState({
+                                            anyConditionFireAction:v.data.anyConditionFireAction,
+                                            name:v.data.name,
+                                            conditions:v.data.conditions,
+                                            actions:v.data.actions
+                                        })
+                                    }
+                                })    
+                            })
+                        }
+                    })
+                })
             }
         });
     }
     //重置
     _resetForm() {
         this.ruleForm.props.form.resetFields()
-        let actions=[{deviceId:'',execCmd:''}]
-        let conditions=[{deviceId:'',parameterId:'',operator:'',value:''}]
         this.setState({
-            actions,
             anyConditionFireAction:'',
             name:'',
-            conditions
         })  
     }
     render() {
@@ -169,12 +193,8 @@ const RuleForm = Form.create()(
             switchList:[],
             //条件数组
             conditions:this.props.conditions,
-            //条件数组的长度
-            clength:this.props.conditions.length,
             //执行数组
             actions:this.props.actions,
-            //执行数组的长度
-            alength:this.props.actions.length,
         }
     }
          //下拉搜索框搜索功能
@@ -221,6 +241,7 @@ const RuleForm = Form.create()(
                             this.setState({
                                 value
                             })
+                            //获取参数的信息
                             fetch(paramUrl,{
                                 ...postOption,
                                 body:JSON.stringify({
@@ -237,6 +258,7 @@ const RuleForm = Form.create()(
                                     }
                                 })
                             }),
+                            //获取开关的信息
                             fetch(switchUrl,{
                                 ...postOption,
                                 body:JSON.stringify({
@@ -262,6 +284,8 @@ const RuleForm = Form.create()(
 //条件的++ --
         conditionRemove = (v) => {
             const { form } = this.props;
+            const {conditionArr}=this.state
+            conditionArr.pop(v)
             const condition = form.getFieldValue('condition');
             if (condition.length === 1) {
               return;
@@ -270,9 +294,13 @@ const RuleForm = Form.create()(
             form.setFieldsValue({
                 condition: condition.filter(key => key !== v),
             });
+            this.setState({
+                conditionArr
+            })
           }
           conditionAdd = () => {
             const { form } = this.props;
+            //conditionArr不存在的时候就让“点此添加一行”显现
             const {conditionArr}=this.state
             conditionArr.push(conditionArr.length)
             const condition = form.getFieldValue('condition');
@@ -282,37 +310,44 @@ const RuleForm = Form.create()(
             // 重要!通知表单以检测更改
             form.setFieldsValue({
                 condition: nextCondition,
-                conditionArr
             });
+            this.setState({
+                conditionArr
+            })
         }
 //执行的++--
         actionRemove = (v) => {
             const { form } = this.props;
+            const {actionArr}=this.state
+            actionArr.pop(v)
             const action = form.getFieldValue('action');
-            // const content = form.getFieldValue('content');
             if (action.length === 1) {
             return;
             }
             //可以使用数据绑定来设置
             form.setFieldsValue({
                 action: action.filter(key => key !== v),
-                // content: content.filter( key => key !== v),
             });
+            this.setState({
+                actionArr
+            })
         }
         actionAdd = () => {
             const { form } = this.props;
             const action = form.getFieldValue('action');
+            //actionArr不存在的时候就让“点此添加一行”显现
             const {actionArr}=this.state;
             actionArr.push(actionArr.length)
             //得到添加数量的数组
-            // console.log(key)
             const nextAction = action.concat({});
             // 可以使用数据绑定来设置
             // 重要!通知表单以检测更改
             form.setFieldsValue({
                 action: nextAction,
-                actionArr
             });
+            this.setState({
+                actionArr
+            })
         }
         render() {
             const { getFieldDecorator, getFieldValue } = this.props.form;
@@ -320,61 +355,6 @@ const RuleForm = Form.create()(
             const {deviceList,parameterIdList,switchList,actions,conditions,actionArr,conditionArr}=this.state
             getFieldDecorator('condition', { initialValue: conditions });
             const condition = getFieldValue('condition');
-            getFieldDecorator('action', { initialValue: actions});
-            const action = getFieldValue('action');
-            const actionForm = action.map((v,i) => {
-                return (
-                    <div className={styles.line} key={i}>
-                        <Form.Item className={styles.search}>
-                            {getFieldDecorator(`actionsDeviceId[${i}]`, {initialValue: v.deviceId || '设备名称/ID'})
-                                (
-                                <Select
-                                    showSearch
-                                    defaultActiveFirstOption={false}
-                                    showArrow={false}
-                                    filterOption={false}
-                                    onSearch={this.handleSearch}
-                                    onChange={this.handleChange}
-                                    notFoundContent={null}
-                                >
-                                    {
-                                        deviceList.map((v,i)=>{
-                                            return(
-                                                <Option value={v.deviceId} key={i}>{v.name}</Option> 
-                                            )
-                                        })
-                                    }
-                                </Select>
-                                )
-                            }
-                        </Form.Item>
-                        <Form.Item className={styles.search}>
-                        {getFieldDecorator(`execCmd[${i}]`, {initialValue: v.execCmd || '开关阀'})
-                                (<Select>
-                                    {
-                                        switchList.map((v,i)=>{
-                                            return(
-                                                <Option value={v.cmd} key={i}>{v.displayName}</Option> 
-                                            )
-                                        })
-                                    }
-                                </Select>)
-                            }
-                        </Form.Item>
-                        {i==0 ? (
-                            <Icon 
-                                type="plus" 
-                                onClick={() => this.actionAdd(v)}
-                            />
-                        ) : (
-                            <Icon 
-                                type="minus" 
-                                onClick={() => this.actionRemove(v)}
-                            />
-                        )}
-                    </div>
-                );
-              });
             const conditionForm = condition.map((v,i) => {
                 return (
                     <div className={styles.line} key={i}>
@@ -383,7 +363,6 @@ const RuleForm = Form.create()(
                                 (
                                 <Select
                                     showSearch
-                                    // placeholder=''
                                     defaultActiveFirstOption={false}
                                     showArrow={false}
                                     filterOption={false}
@@ -445,7 +424,62 @@ const RuleForm = Form.create()(
                         )}
                     </div>
                 );
-              });
+            });
+            getFieldDecorator('action', { initialValue: actions});
+            const action = getFieldValue('action');
+            const actionForm = action.map((v,i) => {
+                return (
+                    <div className={styles.line} key={i}>
+                        <Form.Item className={styles.search}>
+                            {getFieldDecorator(`actionDeviceId[${i}]`, {initialValue: v.deviceId || '设备名称/ID'})
+                                (
+                                <Select
+                                    showSearch
+                                    defaultActiveFirstOption={false}
+                                    showArrow={false}
+                                    filterOption={false}
+                                    onSearch={this.handleSearch}
+                                    onChange={this.handleChange}
+                                    notFoundContent={null}
+                                >
+                                    {
+                                        deviceList.map((v,i)=>{
+                                            return(
+                                                <Option value={v.deviceId} key={i}>{v.name}</Option> 
+                                            )
+                                        })
+                                    }
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                        <Form.Item className={styles.search}>
+                        {getFieldDecorator(`execCmd[${i}]`, {initialValue: v.execCmd || '开关阀'})
+                                (<Select>
+                                    {
+                                        switchList.map((v,i)=>{
+                                            return(
+                                                <Option value={v.cmd} key={i}>{v.displayName}</Option> 
+                                            )
+                                        })
+                                    }
+                                </Select>)
+                            }
+                        </Form.Item>
+                        {i==0 ? (
+                            <Icon 
+                                type="plus" 
+                                onClick={() => this.actionAdd(v)}
+                            />
+                        ) : (
+                            <Icon 
+                                type="minus" 
+                                onClick={() => this.actionRemove(v)}
+                            />
+                        )}
+                    </div>
+                );
+            }); 
             return (
                 <Form className={styles.form}>
                     <div className={styles.Rules}>
@@ -469,12 +503,16 @@ const RuleForm = Form.create()(
                             }
                         </Form.Item>
                         {/* 条件的添加 */}
-                        {conditionForm} 
-                        {conditionArr.length==0?(<div style={{color:"rgba(187,197,210,1)",width:"200px",height:"36px",fontSize:'16px',textAlign:'center',lineHeight:'36px',background:'rgba(20,24,49,1)'}} onClick={() => this.conditionAdd()}>点此添加条件栏</div>):null}
+                        {conditionForm}
+                        <Form.Item>
+                            {conditionArr.length==0&&condition.length==0?(<Button style={{color:"rgba(187,197,210,1)",width:"200px",height:"36px",fontSize:'16px',textAlign:'center',lineHeight:'36px',background:'rgba(20,24,49,1)'}} onClick={() => this.conditionAdd()}>点此添加条件栏</Button>):null}
+                        </Form.Item> 
                         <div className={styles.do}>执行</div>
                         {/* 执行的添加 */}
                         {actionForm}
-                        {actionArr.length==0?(<div style={{color:"rgba(187,197,210,1)",width:"200px",height:"36px",fontSize:'16px',textAlign:'center',lineHeight:'36px',background:'rgba(20,24,49,1)'}} onClick={() => this.actionAdd()}>点此添加执行栏</div>):null}
+                        <Form.Item>
+                            {actionArr.length==0&&action.length==0?(<Button style={{color:"rgba(187,197,210,1)",width:"200px",height:"36px",fontSize:'16px',textAlign:'center',lineHeight:'36px',background:'rgba(20,24,49,1)'}} onClick={() => this.actionAdd()}>点此添加执行栏</Button>):null}
+                        </Form.Item>
                     </div>
                 </Form>
             )
