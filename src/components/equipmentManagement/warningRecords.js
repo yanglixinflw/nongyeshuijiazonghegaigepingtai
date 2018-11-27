@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './warningRecords.less';
-import { Input, Button, Form, Row, Col, Table, Modal, Select, Checkbox } from 'antd';
+import { Input, Button, Form, Row, Col, Table, Modal, Select, Checkbox,Switch,message } from 'antd';
 import { Link } from 'dva/router';
 //开发地址
 const envNet = 'http://192.168.30.127:88';
@@ -14,6 +14,8 @@ const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`;
 const closeWarningUrl=`${envNet}/api/DeviceWaringRule/eventClose`;
 //关联建筑接口
 const buildingUrl=`${envNet}/api/Building/list`
+//获取通知人列表
+const roleUrl=`${envNet}/api/BaseInfo/userSimpleList?userType=1&keyword= `
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -37,14 +39,12 @@ const tableTitle = [
     { index: "buildingName", item: "关联建筑物" },
     { index: "installAddress", item: "设备安装地" }
 ]
-tableTitle.map((v, i) => {
-    v.number = i
-})
 const { Option } = Select
 export default class extends Component {
     constructor(props) {
         super(props)
         const { warningRecords } = props;
+        console.log(warningRecords)
         this.state = {
             itemCount: warningRecords.data.data.itemCount,//总数据数
             data: warningRecords.data.data.items,//表格数据源
@@ -58,10 +58,12 @@ export default class extends Component {
             installAddrList: [],
             //搜索框初始值
             searchValue: {},
-            //关闭预警字段
-            deviceId: '',
             //是否显示关闭预警显示
             closeShowvisible: false,
+            //日志记录Id
+            logId:'',
+            //通知人列表
+            roleList:[]
         };
         // console.log(this.state.data)
     }
@@ -84,6 +86,23 @@ export default class extends Component {
                 })
         }).catch((err) => {
             console.log(err)
+        }),
+        //获取通知人列表
+        fetch(roleUrl,{
+            method: 'GET',
+            mode: 'cors',
+            credentials: "include",
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                if(v.ret==1){
+                    // console.log(v.data)
+                    let roleList=v.data
+                    this.setState({
+                        roleList
+                    })
+                }
+            })
         })
     }
     _getTableDatas(title, data) {
@@ -110,7 +129,7 @@ export default class extends Component {
                     <span className={styles.option}>
                         <Button
                             className={styles.edit}
-                            onClick={() => this.closeWarning(record.deviceId)}
+                            onClick={() => this.closeWarning(record.logId)}
                             icon='stop'
                         >
                             关闭预警
@@ -142,6 +161,7 @@ export default class extends Component {
                 dealWithUser: v.dealWithUser,
                 dealWithTime: v.dealWithTime,
                 installAddress: v.installAddress,
+                logId:v.logId,
                 key: i,
             });
         })
@@ -255,24 +275,26 @@ export default class extends Component {
         })
     }
     //点击关闭预警
-    closeWarning(deviceId) {
+    closeWarning(logId) {
         this.setState({
             closeShowvisible: true,
-            deviceId
+            logId
         })
     }
     //确定关闭预警
     closeOk(){
-        const form = this.searchForm.props.form;
+        const { title } = this.state;
+        const form = this.closeWarningForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
             if (err) {
                 return
             }
+            //关闭预警接口
             fetch(closeWarningUrl,{
                 ...postOption,
                 body:JSON.stringify({
-                    "logId": this.state.deviceId,
+                    "logId": this.state.logId,
                     "dealWithOpinion": values.reason,
                     "isCreateRepairOrder": values.print,
                     "repairOrderToUserId": values.people
@@ -281,8 +303,31 @@ export default class extends Component {
                 Promise.resolve(res.json())
                 .then(v=>{
                     if(v.ret==1){
-                        this.setState({
-                            closeShowvisible:false
+                        fetch(dataUrl,{
+                            ...postOption,
+                            body:JSON.stringify({
+                                "pageIndex": 0,
+                                "pageSize": 10
+                            })
+                        }).then(res=>{
+                            Promise.resolve(res.json())
+                            .then(v=>{
+                                if(v.ret==1){
+                                    let data=v.data.items
+                                    let itemCount = v.data.itemCount;
+                                    // 给每一条数据添加key
+                                    data.map((v, i) => {
+                                        v.key = i
+                                    })
+                                    this.setState({
+                                        data,
+                                        itemCount,
+                                        closeShowvisible:false
+                                    })
+                                    message.success("关闭成功",2)
+                                    this._getTableDatas(title, data);
+                                }
+                            })
                         })
                     }
                 })
@@ -353,7 +398,7 @@ export default class extends Component {
         })
     }
     render() {
-        const { columns, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible } = this.state;
+        const { columns, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible,roleList} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -415,6 +460,7 @@ export default class extends Component {
                         visible={closeShowvisible}
                         onCancel={() => this.closeCancel()}
                         onOk={() => this.closeOk()}
+                        {...{roleList}}
                     />
                     <Table
                         columns={columns}
@@ -599,7 +645,7 @@ const ShowSetForm = Form.create()(
 const CloseWarningForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, form, onOk, onCancel } = this.props
+            const { visible, form, onOk, onCancel,roleList } = this.props
             const { getFieldDecorator } = form;
             return (
                 <Modal
@@ -623,28 +669,27 @@ const CloseWarningForm = Form.create()(
                                 )
                             }
                         </Form.Item >
-                        <Form.Item label='处理人'>
-                            {getFieldDecorator('people', { initialValue: 'lisi' })
+                        <div style={{display:'flex'}} className={styles.inline}>
+                            <Form.Item label='指派给' className={styles.people}>
+                                {getFieldDecorator('people', { initialValue: '指派人' })
+                                    (
+                                    <Select style={{width:'100px'}}>
+                                        {
+                                            roleList.map((v,i)=>{
+                                                return(<Option key={i} value={v.userId}>{v.realName}</Option>)
+                                            })
+                                        }
+                                    </Select>
+                                    )
+                                }
+                            </Form.Item>
+                            <Form.Item label='报修订单' className={styles.print}>
+                                {getFieldDecorator('print', {initialValue:''})
                                 (
-                                <Select>
-                                    <Option value='lisi'>李四</Option>
-                                    <Option value='zhangsan'>张三</Option>
-                                    {/* {
-                                        installAddrList.map((v,i)=>{
-                                            return(<Option key={i} value={v.id}>{v.addr}</Option>)
-                                        })
-                                    } */}
-                                </Select>
-                                )
-                            }
-                        </Form.Item>
-                        <Form.Item>
-                            {getFieldDecorator('print', {
-                                valuePropName: 'checked',
-                            })(
-                                <Checkbox>生成报修订单</Checkbox>
-                            )}
-                        </Form.Item>
+                                    <Switch/>
+                                )}
+                            </Form.Item>
+                        </div>
                     </Form>
                 </Modal>
             )

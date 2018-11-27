@@ -27,7 +27,7 @@ export default class extends React.Component {
     return request(`${envNet}/api/Account/captchaInfo`,{
       method:'GET',
       mode:'cors',
-    })
+    },'login')
   }
   // 点击刷新二维码
   reloadCAPTCHA=()=>{

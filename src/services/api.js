@@ -28,7 +28,7 @@ export function queryLogin(params) {
     body: JSON.stringify(
       params
     )
-  });
+  },'login');
 }
 // 设备数据 标题获取
 export function queryDeviceTitle(params) {
@@ -166,6 +166,15 @@ export function getAutoRules(params){
 //获取计费设施列表
 export function getChargingDevice(params){
   return request(`${envNet}/fee/chargeFacility/list`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
+//获取小组账户列表
+export function getGroupAccount(params){
+  return request(`${envNet}/fee/groupAccount/list`,{
     ...postOption,
     body:JSON.stringify(
       params

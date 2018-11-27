@@ -70,7 +70,9 @@ export default class extends Component{
             //操作指令数据
             cmd:[],
             //默认搜索框
-            searchValue:{}
+            searchValue:{},
+            //默认选中行
+            selectedRowKeys: [],
         }
     }
     componentDidMount() {
@@ -139,39 +141,6 @@ export default class extends Component{
                 key: i,
             });
         })
-        const rowSelection = {
-            onChange: (selectedRowKeys, selectedRows) => {
-                let data=selectedRows;
-                let deviceIds=[]
-                data.map((v)=>{
-                    if(v.deviceTypeName=="智能球阀"){
-                        this.setState({
-                            deviceTypeId:1
-                        })
-                    }else if(v.deviceTypeName=="井电双控"){
-                        this.setState({
-                            deviceTypeId:2
-                        })
-                    }
-                    deviceIds.push(v.deviceId)
-                    this.setState({
-                        deviceIds
-                    })
-                })
-                // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-            },
-            onSelect: (record, selected, selectedRows) => {
-            //   console.log(record, selected, selectedRows);
-                // console.log(selected)
-                this.setState({
-                    selected
-                })
-                
-            },
-            // onSelectAll: (selected, selectedRows, changeRows) => {
-            //   console.log(selected, selectedRows, changeRows);
-            // },
-          };
           //操作列
         columns.push({
             title: '操作',
@@ -198,8 +167,13 @@ export default class extends Component{
         this.setState({
             columns,
             tableDatas,
-            rowSelection
+            // rowSelection
         });
+    }
+    onSelectChange =(selectedRowKeys,selectedRows)=>{
+        // console.log('selectedRowKeys changed: ', selectedRowKeys);
+        // console.log(selectedRows)
+        this.setState({ selectedRowKeys });
     }
      // 搜索功能
      _searchTableData() {
@@ -228,9 +202,18 @@ export default class extends Component{
                             // 设置页面显示的元素
                             let itemCount = v.data.itemCount
                             let data = v.data.items
+                            if(data.length!=0){
+                                var deviceTypeId=''
+                                if(data[0].deviceTypeName=='井电双控'){
+                                    deviceTypeId=2
+                                }else if(data[0].deviceTypeName=='智能球阀'){
+                                    deviceTypeId=1
+                                }
+                            }
                             this.setState({
                                 itemCount,
-                                data
+                                data,
+                                deviceTypeId
                             })
                             this._getTableDatas(title,data);
                         }
@@ -292,13 +275,13 @@ export default class extends Component{
                     let data = v.data.items;
                     //添加key
                     data.map((v, i) => {
-                        v.key = i
+                        v.key = i+(page-1)*searchValue.pageSize
                     })
                     this.setState({
                         itemCount:v.data.itemCount,
-                        data
+                        tableDatas:data
                     })
-                    this._getTableDatas(title,data);
+                    // this._getTableDatas(title,data);
                 }
             })
             .catch(err=>{
@@ -325,7 +308,7 @@ export default class extends Component{
                     .then(v=>{
                         if(v.ret==1){
                             let cmd=v.data
-                            console.log(cmd)
+                            // console.log(cmd)
                             this.setState({
                                 cmd,
                                 switchvisible: true,
@@ -368,13 +351,17 @@ export default class extends Component{
         });
     }
     render(){
-        const { columns,itemCount, tableDatas, installAddrList,rowSelection,deviceTypeList,switchvisible,cmd} = this.state;
+        const { columns,itemCount, tableDatas, installAddrList,deviceTypeList,switchvisible,cmd,selectedRowKeys} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
+        const rowSelection = {
+            selectedRowKeys,
+            onChange:this.onSelectChange,
+          };
         return(
             <React.Fragment>
                 <div className={styles.valveControl}>
@@ -420,8 +407,8 @@ export default class extends Component{
                         </div> 
                     </div>
                     <Table
-                        columns={columns}
                         rowSelection={rowSelection}
+                        columns={columns}
                         className={styles.table}
                         pagination={paginationProps}
                         dataSource={tableDatas}
