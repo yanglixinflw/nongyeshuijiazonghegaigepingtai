@@ -112,6 +112,7 @@ export default class extends Component {
                     timeOut(v.ret)
                     if (v.ret == 1) {
                         let cmdList = v.data
+                        // console.log(cmdList)
                         this.setState({
                             cmdList,
                             modalVisible: true
@@ -154,7 +155,8 @@ export default class extends Component {
     //确定
     _onOk() {
         //需要获得球阀设置的value值 命令码，请求接口，提示设置成功
-        // const { deviceId,value } = this.state;
+        const { deviceId,value } = this.state;
+        console.log(deviceId,value)
         // return fetch(sendCmdUrl, {
         //     ...postOption,
         //     body: JSON.stringify({

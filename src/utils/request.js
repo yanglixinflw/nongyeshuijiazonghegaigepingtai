@@ -1,5 +1,5 @@
 import fetch from 'dva/fetch';
-
+import { timeOut } from './timeOut';
 function parseJSON(response) {
   return response.json();
 }
@@ -25,6 +25,8 @@ export default function request(url, options) {
   return fetch(url, options)
     .then(checkStatus)
     .then(parseJSON)
-    .then(data => ({ data }))
+    .then(data => {
+      timeOut(data.ret)
+      return ({ data })})
     .catch(err => ({ err }));
 }
