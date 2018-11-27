@@ -133,7 +133,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['monitor'], () => import('../routes/command/monitor')),
     },
     '/rent/groupAccount':{
-      component: dynamicWrapper(app, [], () => import('../routes/waterRate/groupAccount')),
+      component: dynamicWrapper(app, ["groupAccount"], () => import('../routes/waterRate/groupAccount')),
     },
     '/rent/device':{
       component: dynamicWrapper(app, ['chargingDevice'], () => import('../routes/waterRate/chargingDevice')),

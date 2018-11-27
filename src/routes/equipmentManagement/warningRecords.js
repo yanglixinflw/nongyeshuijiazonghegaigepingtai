@@ -13,10 +13,6 @@ export default class extends Component{
         dispatch({
             type: 'warningRecords/fetch',
             payload:{
-                "waringType": 1,
-                "warningStatus": 1,
-                "deviceId": "",
-                "installAddr": "",
                 "pageIndex": 0,
                 "pageSize": 10
               }

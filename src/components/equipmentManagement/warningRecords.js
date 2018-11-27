@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './warningRecords.less';
-import { Input, Button, Form, Row, Col, Table, Modal, Select, Checkbox,Switch } from 'antd';
+import { Input, Button, Form, Row, Col, Table, Modal, Select, Checkbox,Switch,message } from 'antd';
 import { Link } from 'dva/router';
 //开发地址
 const envNet = 'http://192.168.30.127:88';
@@ -15,7 +15,7 @@ const closeWarningUrl=`${envNet}/api/DeviceWaringRule/eventClose`;
 //关联建筑接口
 const buildingUrl=`${envNet}/api/Building/list`
 //获取通知人列表
-const roleUrl=`${envNet}/api/UserMgr/roleList`
+const roleUrl=`${envNet}/api/BaseInfo/userSimpleList?userType=1&keyword= `
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -44,6 +44,7 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { warningRecords } = props;
+        console.log(warningRecords)
         this.state = {
             itemCount: warningRecords.data.data.itemCount,//总数据数
             data: warningRecords.data.data.items,//表格数据源
@@ -86,13 +87,16 @@ export default class extends Component {
         }).catch((err) => {
             console.log(err)
         }),
+        //获取通知人列表
         fetch(roleUrl,{
-            ...postOption,
+            method: 'GET',
+            mode: 'cors',
+            credentials: "include",
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
                 if(v.ret==1){
-                    console.log(v.data)
+                    // console.log(v.data)
                     let roleList=v.data
                     this.setState({
                         roleList
@@ -279,12 +283,14 @@ export default class extends Component {
     }
     //确定关闭预警
     closeOk(){
-        const form = this.searchForm.props.form;
+        const { title } = this.state;
+        const form = this.closeWarningForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
             if (err) {
                 return
             }
+            //关闭预警接口
             fetch(closeWarningUrl,{
                 ...postOption,
                 body:JSON.stringify({
@@ -297,8 +303,31 @@ export default class extends Component {
                 Promise.resolve(res.json())
                 .then(v=>{
                     if(v.ret==1){
-                        this.setState({
-                            closeShowvisible:false
+                        fetch(dataUrl,{
+                            ...postOption,
+                            body:JSON.stringify({
+                                "pageIndex": 0,
+                                "pageSize": 10
+                            })
+                        }).then(res=>{
+                            Promise.resolve(res.json())
+                            .then(v=>{
+                                if(v.ret==1){
+                                    let data=v.data.items
+                                    let itemCount = v.data.itemCount;
+                                    // 给每一条数据添加key
+                                    data.map((v, i) => {
+                                        v.key = i
+                                    })
+                                    this.setState({
+                                        data,
+                                        itemCount,
+                                        closeShowvisible:false
+                                    })
+                                    message.success("关闭成功",2)
+                                    this._getTableDatas(title, data);
+                                }
+                            })
                         })
                     }
                 })
@@ -369,7 +398,7 @@ export default class extends Component {
         })
     }
     render() {
-        const { columns, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible,roleList } = this.state;
+        const { columns, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible,roleList} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -647,17 +676,17 @@ const CloseWarningForm = Form.create()(
                                     <Select style={{width:'100px'}}>
                                         {
                                             roleList.map((v,i)=>{
-                                                return(<Option key={i} value={v.id}>{v.name}</Option>)
+                                                return(<Option key={i} value={v.userId}>{v.realName}</Option>)
                                             })
                                         }
                                     </Select>
                                     )
                                 }
                             </Form.Item>
-                            <Form.Item label='保修订单' className={styles.print}>
-                                {getFieldDecorator('print', {})
+                            <Form.Item label='报修订单' className={styles.print}>
+                                {getFieldDecorator('print', {initialValue:''})
                                 (
-                                    <Switch defaultChecked />
+                                    <Switch/>
                                 )}
                             </Form.Item>
                         </div>

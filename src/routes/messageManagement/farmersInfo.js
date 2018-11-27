@@ -12,9 +12,9 @@ export default class extends React.Component{
         dispatch({
             type: 'farmersInfo/fetch',
             payload:{
-                "name": "",
-                "mobile": "",
-                "roleId": 0,
+                // "name": "",
+                // "mobile": "",
+                // "roleId": 0,
                 "pageIndex": 0,
                 "pageSize":10
               }
