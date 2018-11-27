@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import styles from './index.less';
-import { Input, Button, List,} from 'antd';
+import { Input, Button, List, Spin } from 'antd';
 import { Map, Markers, InfoWindow } from 'react-amap';
 import Geolocation from 'react-amap-plugin-geolocation'
 import IwContent from './infoWindow';
@@ -44,9 +44,17 @@ export default class extends Component {
             // zoomToAccuracy:true,//定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：f
             extensions: 'all'
         }
+        const mapLoading =  <Fragment>
+                                <Spin size='large'></Spin>
+                            </Fragment>
         // console.log(map)
         this.state = {
+            //地图加载时过渡样式
+            mapLoading,
+            //地图定位插件
             pluginProps,
+            //控件插件
+            plugins,
             //标记/信息窗可见性
             cameraVisible: true,
             waterMeterVisible: false,
@@ -55,8 +63,7 @@ export default class extends Component {
             //信息窗位置偏移量
             infoOffset: [-3, -20],
             //信息窗可见性
-            infoVisibleCamera: false,
-            infoVisibleWaterValve: false,
+            infoVisible: false,
             //摄像头信息窗位置，根据点击marker时 赋值
             infoPositionCamera: '',
             //水表/电表/水阀信息窗
@@ -71,8 +78,6 @@ export default class extends Component {
             // 地图中心点
             center: { longitude: 121.4719, latitude: 31.1907 },
             // center:{},
-            //控件插件
-            plugins,
             //多个Marker经纬度
             cameraMarkers: "",
             waterMeterMarkers: "",
@@ -95,7 +100,7 @@ export default class extends Component {
             //当前设备类型ID
             deviceTypeId: 5,
             //信息窗展示数据
-            infoData:null
+            infoData: null
 
         }
         //console.log(this.state.markers)
@@ -173,10 +178,9 @@ export default class extends Component {
                 // console.log(ins)
             },
             click: () => {
-                if (this.state.infoVisibleCamera == true || this.state.infoVisibleWaterValve == true) {
+                if (this.state.infoVisible == true) {
                     this.setState({
-                        infoVisibleCamera: false,
-                        infoVisibleWaterValve: false,
+                        infoVisible: false,
                     })
                 }
 
@@ -192,31 +196,31 @@ export default class extends Component {
                 })
                 // console.log(allCameraMarkers)
             },
-            click: (MapsOption, marker) => {
+            click: (marker) => {
                 this.setState({
                     infoPositionCamera: marker.getExtData().position,
-                    infoVisibleCamera: true,
+                    infoVisible: true,
                     isClicked: true
                 })
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
                 // console.log(marker)
-                let deviceId =  marker.getExtData().deviceId
+                let deviceId = marker.getExtData().deviceId
                 this._getRealTimeData(deviceId)
                 this.setState({
                     infoPositionCamera: marker.getExtData().position,
-                    infoVisibleCamera: true
+                    infoVisible: true
                 })
             },
             mouseout: (MapsOption, marker) => {
                 if (this.state.isClicked) {
                     this.setState({
-                        infoVisibleCamera: true
+                        infoVisible: true
                     })
                 } else {
                     this.setState({
-                        infoVisibleCamera: false
+                        infoVisible: false
                     })
                 }
             }
@@ -230,8 +234,7 @@ export default class extends Component {
             },
             close: () => {
                 this.setState({
-                    infoVisibleCamera: false,
-                    infoVisibleWaterValve: false,
+                    infoVisible: false,
                     isClicked: false
                 })
             },
@@ -245,30 +248,30 @@ export default class extends Component {
                     allWaterValveMarkers
                 })
             },
-            click: (MapsOption, marker) => {
+            click: (marker) => {
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
-                    infoVisibleWaterValve: true,
+                    infoVisible: true,
                     isClicked: true
                 })
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
-                let deviceId =  marker.getExtData().deviceId
+                let deviceId = marker.getExtData().deviceId
                 this._getRealTimeData(deviceId)
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
-                    infoVisibleWaterValve: true
+                    infoVisible: true
                 })
             },
             mouseout: (MapsOption, marker) => {
                 if (this.state.isClicked) {
                     this.setState({
-                        infoVisibleWaterValve: true
+                        infoVisible: true
                     })
                 } else {
                     this.setState({
-                        infoVisibleWaterValve: false
+                        infoVisible: false
                     })
                 }
             }
@@ -285,27 +288,27 @@ export default class extends Component {
             click: (MapsOption, marker) => {
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
-                    infoVisibleWaterValve: true,
+                    infoVisible: true,
                     isClicked: true
                 })
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
-                let deviceId =  marker.getExtData().deviceId
+                let deviceId = marker.getExtData().deviceId
                 this._getRealTimeData(deviceId)
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
-                    infoVisibleWaterValve: true
+                    infoVisible: true
                 })
             },
             mouseout: (MapsOption, marker) => {
                 if (this.state.isClicked) {
                     this.setState({
-                        infoVisibleWaterValve: true
+                        infoVisible: true
                     })
                 } else {
                     this.setState({
-                        infoVisibleWaterValve: false
+                        infoVisible: false
                     })
                 }
             }
@@ -322,59 +325,59 @@ export default class extends Component {
             click: (MapsOption, marker) => {
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
-                    infoVisibleWaterValve: true,
+                    infoVisible: true,
                     isClicked: true
                 })
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
-                let deviceId =  marker.getExtData().deviceId
+                let deviceId = marker.getExtData().deviceId
                 this._getRealTimeData(deviceId)
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
-                    infoVisibleWaterValve: true
+                    infoVisible: true
                 })
             },
             mouseout: (MapsOption, marker) => {
                 if (this.state.isClicked) {
                     this.setState({
-                        infoVisibleWaterValve: true
+                        infoVisible: true
                     })
                 } else {
                     this.setState({
-                        infoVisibleWaterValve: false
+                        infoVisible: false
                     })
                 }
             }
         }
     }
     //获取实时数据
-    _getRealTimeData(deviceId){
+    _getRealTimeData(deviceId) {
         // console.log(deviceId)
-        return fetch(realTimeDataUrl,{
+        return fetch(realTimeDataUrl, {
             ...postOption,
-            body:JSON.stringify({
+            body: JSON.stringify({
                 deviceId,
-                showDisplayName:true
+                showDisplayName: true
             })
-        }).then((res)=>{
+        }).then((res) => {
             Promise.resolve(res.json())
-            .then((v)=>{
-                //超时判断
-                timeOut(v.ret)
-                if(v.ret == 1){
-                    let infoData = v.data;
-                    // console.log(infoData)
-                    // infoData.map((v,i)=>{
-                    //     console.log(i,v)
-                    // })
-                    
-                    this.setState({
-                        infoData,
-                    })
-                }
-            })
-        }).catch((err)=>{
+                .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
+                    if (v.ret == 1) {
+                        let infoData = v.data;
+                        // console.log(infoData)
+                        // infoData.map((v,i)=>{
+                        //     console.log(i,v)
+                        // })
+
+                        this.setState({
+                            infoData,
+                        })
+                    }
+                })
+        }).catch((err) => {
             console.log(err)
         })
     }
@@ -575,16 +578,17 @@ export default class extends Component {
     }
     //选择设备后定位
     _chosenHandler(item) {
-        const { allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers, allWaterValveMarkers } = this.state;
+        const { allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers, allWaterValveMarkers, infoWindow } = this.state;
         let center = { longitude: item.longitude, latitude: item.latitude };
         this.setState({
-            center
+            center,
         })
         //摄像头
         allCameraMarkers.map((v, i) => {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
                 v.render(this.renderMarkerChosen)
+                this.cameraEvents.click(v)
             } else {
                 v.render(this.renderMarker)
             }
@@ -594,6 +598,7 @@ export default class extends Component {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
                 v.render(this.renderMarkerChosen)
+                this.WaterMeterEvents.click(v)
             } else {
                 v.render(this.renderMarker)
             }
@@ -603,6 +608,7 @@ export default class extends Component {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
                 v.render(this.renderMarkerChosen)
+                this.eleMeterEvents.click(v)
             } else {
                 v.render(this.renderMarker)
             }
@@ -612,6 +618,7 @@ export default class extends Component {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
                 v.render(this.renderMarkerChosen)
+                this.WaterValveEvents.click(v)
             } else {
                 v.render(this.renderMarker)
             }
@@ -619,19 +626,21 @@ export default class extends Component {
     }
     render() {
         const {
+            mapLoading,
             pluginProps,
             dataList,
             plugins, center,
             //useCluster,
             cameraVisible, waterMeterVisible, eleMeterVisible, waterValveVisible,
             cameraMarkers, waterMeterMarkers, eleMeterMarkers, waterValveMarkers,
-            infoVisibleCamera, infoVisibleWaterValve,
+            infoVisible,
             infoOffset, isCustom, size, infoPositionCamera, infoPositionWaterValve,
             infoData,
         } = this.state;
         // console.log(center)
         return (
             <Map
+                loading={mapLoading}
                 amapkey={MY_AMAP_KEY}
                 //地图控件 插件
                 plugins={plugins}
@@ -710,7 +719,7 @@ export default class extends Component {
                 {cameraVisible && cameraMarkers ?
                     <InfoWindow
                         position={infoPositionCamera}
-                        visible={infoVisibleCamera}
+                        visible={infoVisible}
                         offset={infoOffset}
                         isCustom={isCustom}
                         size={size}
@@ -730,11 +739,9 @@ export default class extends Component {
                 />
                 {/* 水阀信息窗 高德地图规定同时最多只能显示一个信息窗*/}
                 {waterValveVisible && waterValveMarkers && infoData ?
-                
-                
                     <InfoWindow
                         position={infoPositionWaterValve}
-                        visible={infoVisibleWaterValve}
+                        visible={infoVisible}
                         offset={infoOffset}
                         isCustom={isCustom}
                         size={size}
@@ -742,7 +749,7 @@ export default class extends Component {
                     >
                         <IwContent
                             info={waterValveMarkers.filter(item => item.position == infoPositionWaterValve)}
-                            {...{infoData}}
+                            {...{ infoData }}
                         />
                     </InfoWindow>
                     : null
@@ -758,15 +765,15 @@ export default class extends Component {
                 {waterMeterVisible && waterMeterMarkers && infoData ?
                     <InfoWindow
                         position={infoPositionWaterValve}
-                        visible={infoVisibleWaterValve}
+                        visible={infoVisible}
                         offset={infoOffset}
                         isCustom={isCustom}
                         size={size}
                         events={this.windowEvents}
                     >
-                        <IwContent 
-                            info={waterMeterMarkers.filter(item => item.position == infoPositionWaterValve)} 
-                            {...{infoData}}
+                        <IwContent
+                            info={waterMeterMarkers.filter(item => item.position == infoPositionWaterValve)}
+                            {...{ infoData }}
                         />
                     </InfoWindow>
                     : null
@@ -782,15 +789,15 @@ export default class extends Component {
                 {eleMeterVisible && eleMeterMarkers && infoData ?
                     <InfoWindow
                         position={infoPositionWaterValve}
-                        visible={infoVisibleWaterValve}
+                        visible={infoVisible}
                         offset={infoOffset}
                         isCustom={isCustom}
                         size={size}
                         events={this.windowEvents}
                     >
-                        <IwContent 
-                            info={eleMeterMarkers.filter(item => item.position == infoPositionWaterValve)} 
-                            {...{infoData}}
+                        <IwContent
+                            info={eleMeterMarkers.filter(item => item.position == infoPositionWaterValve)}
+                            {...{ infoData }}
                         />
                     </InfoWindow>
                     : null

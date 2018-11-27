@@ -43,6 +43,8 @@ export default class extends Component {
             })
         Promise.resolve(parameterList).then((v) => {
             // console.log(v)
+            //超时判断
+            timeOut(v.data.ret)
             if (v.data.ret === 1) {
                 if (v.data.data.length == 0) {
                     alert('该设备暂不支持预警规则设置')
@@ -57,6 +59,8 @@ export default class extends Component {
         // 获取通知角色列表
         Promise.resolve(getRoleList()).then((v) => {
             // console.log(v)
+            //超时判断
+            timeOut(v.data.ret)
             if (v.data.ret === 1) {
                 this.setState({
                     roleList: v.data.data
@@ -190,6 +194,8 @@ const RulesDetailForm = Form.create()(
         handleSearch(value, type) {
             let UserList = getUserList(value)
             Promise.resolve(UserList).then((v) => {
+                //超时判断
+                timeOut(v.data.ret)
                 // 短信通知人
                 if (type == 'sms') {
                     this.setState({
@@ -263,6 +269,8 @@ const RulesDetailForm = Form.create()(
                 "pageSize": 100
             }))
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.data.ret)
                     if (v.data.ret == 1) {
                         this.setState({
                             deviceData: v.data.data.items
@@ -276,6 +284,8 @@ const RulesDetailForm = Form.create()(
             Promise.resolve(getControlList({
                 deviceId: value
             })).then((v) => {
+                //超时判断
+                timeOut(v.data.ret)
                 if (v.data.ret == 1) {
                     this.setState({
                         controlList: v.data.data
