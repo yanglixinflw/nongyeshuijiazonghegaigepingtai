@@ -1,49 +1,58 @@
 import React,{Component} from 'react';
 import styles from "./groupAccount.less"
-import { Input, Button, Form, Cascader, Table, Divider,Select,} from 'antd';
+import { Input, Button, Form, Table,Select,Modal,message} from 'antd';
+//开发地址
+const envNet='http://192.168.30.127:88';
+//生产环境
+// const envNet='';
+//翻页调用
+const dataUrl=`${envNet}/fee/groupAccount/list`;
+//修改小组名称
+const editUrl=`${envNet}/fee/groupAccount/changeName`;
+// post通用设置
+let postOption = {
+    method: 'POST',
+    credentials: "include",
+    mode: 'cors',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+    }),
+}
+//表头
 const tableTitle=[
-    {index:"id",item:"设备ID"},
-    {index:"name",item:"设备名称"},
-    {index:"groupName",item:"小组"},
-    {index:"member",item:"小组成员"},
-    {index:"amount",item:"账户余额"},
-    {index:"useLevel",item:"当前用量"},
-    {index:"waterRight",item:"剩余水权"},
+    {index:"deviceId",item:"设备ID"},
+    {index:"deviceName",item:"设备名称"},
+    {index:"name",item:"小组"},
+    {index:"memberNames",item:"小组成员"},
+    {index:"balance",item:"账户余额"},
+    {index:"currentWaterUse",item:"当前用量"},
+    {index:"waterPower",item:"剩余水权"},
     {index:"updateTime",item:"更新时间"},
 ]
-const data=[
-    {id:"435676651",name:" 宁圩村1#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676652",name:" 宁圩村2#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676653",name:" 宁圩村3#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676654",name:" 宁圩村4#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676655",name:" 宁圩村5#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676656",name:" 宁圩村6#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676657",name:" 宁圩村7#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676658",name:" 宁圩村8#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"},
-    {id:"435676659",name:" 宁圩村9#水表",groupName:"未命名",member:"张三；李四；王五",amount:"99.99",useLevel:"99",waterRight:"33",updateTime:"2018/09/23  09:03:32"}
-]
+const { Option }=Select
 export default class extends Component{
     constructor(props) {
         super(props)
-        const groupAccount=data;
-        var tableData=[],tableIndex=[];//数据表的item 和 index
-        tableTitle.map(v=>{
-            tableData.push(v.item);
-            tableIndex.push(v.index)
-        })
+        const {groupAccount}=props;
         this.state={
-            items:groupAccount,
-            tableDatas:[],
-            columns: [],
+            //表头
             title:tableTitle,
+            itemCount:groupAccount.data.data.itemCount,//总数据数
+            data:groupAccount.data.data.items,//表格数据源
+            //表格的列
+            columns: [],
             //搜索框默认值
-            searchValue:{}
+            searchValue:{},
+            //是否显示修改弹窗
+            editvisible:false,
+            //修改的小组名称
+            name:""
         }
     }
     componentDidMount() {
-        this._getTableDatas(this.state.title, this.state.items);
+        this._getTableDatas(this.state.title, this.state.data);
     }
-    _getTableDatas(title, items) {
+    _getTableDatas(title, data) {
         let columns = [];
         title.map(v => {//把title里面的数据push到column里面
             columns.push({
@@ -56,23 +65,19 @@ export default class extends Component{
         })
         //把数据都push到tableDatas里
         let tableDatas = [];
-        items.map((v, i) => {
+        data.map((v, i) => {
             tableDatas.push({
-                id:v.id,
+                deviceId:v.deviceId,
+                deviceName:v.deviceName,
                 name:v.name,
-                groupName:v.groupName,
-                member:v.member,
-                amount:v.amount,
-                useLevel:v.useLevel,
-                waterRight:v.waterRight,
+                memberNames:v.memberNames,
+                balance:v.balance,
+                currentWaterUse:v.currentWaterUse,
+                waterPower:v.waterPower,
                 updateTime:v.updateTime,
                 key: i,
             });
         })
-        this.setState({
-            columns,
-            tableDatas,
-        });
         //操作列
         columns.push({
             title: '操作',
@@ -106,6 +111,7 @@ export default class extends Component{
                         <Button
                             className={styles.edit}
                             icon='edit'
+                            onClick={()=>this.edit(record.name)}
                         >
                             修改
                         </Button>
@@ -119,6 +125,10 @@ export default class extends Component{
                 )
             }
         })
+        this.setState({
+            columns,
+            tableDatas,
+        });
     }
      // 搜索功能
     _searchTableData() {
@@ -129,31 +139,16 @@ export default class extends Component{
             if (err) {
                 return
             }
-            // if(values.realName==undefined){
-            //     values.realName=''
-            // }
-            // if(values.mobilePhone==undefined){
-            //     values.mobilePhone=''
-            // }
-            // if(values.idCard==undefined){
-            //     values.idCard=''
-            // }
-            // if(values.areaId=='area'){
-            //     values.areaId=''
-            // }
-            // if(values.isActivated=='isActivated'){
-            //     values.isActivated=''
-            // }
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    // "name": values.realName,
-                    // "mobile": values.mobilePhone,
-                    // "idCard": values.idCard,
-                    // "areaId": values.areaId,
-                    // "isActivated": values.isActivated,
-                    // "pageIndex": 0,
-                    // "pageSize": 10
+                    "deviceId": values.deviceId,
+                    "deviceName": values.deviceName,
+                    "groupName": values.groupName,
+                    "memberNameOrMobile": values.memberNameOrMobile,
+                    "feeStatus": values.feeStatus,
+                    "pageIndex": 0,
+                    "pageSize": 10
                 })
             }).then(res => {
                 Promise.resolve(res.json())
@@ -181,34 +176,90 @@ export default class extends Component{
     // 重置表单
     form.resetFields();
     return fetch(dataUrl, {
-        ...postOption,
-        body: JSON.stringify({
-            "pageIndex": 0,
-            "pageSize": 10
-        })
-    }).then((res) => {
-        Promise.resolve(res.json())
-            .then((v) => {
-                if (v.ret == 1) {
-                    // console.log(v)
-                    let data = v.data.items;
-                    let itemCount = v.data.itemCount;
-                    // 给每一条数据添加key
-                    data.map((v, i) => {
-                        v.key = i
-                    })
-                    this.setState({
-                        data,
-                        itemCount,
-                        searchValue:{}
-                    })
-                    this._getTableDatas(title, data);
-                }
+            ...postOption,
+            body: JSON.stringify({
+                "pageIndex": 0,
+                "pageSize": 10
             })
-    })
-}
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        // console.log(v)
+                        let data = v.data.items;
+                        let itemCount = v.data.itemCount;
+                        // 给每一条数据添加key
+                        data.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            data,
+                            itemCount,
+                            searchValue:{}
+                        })
+                        this._getTableDatas(title, data);
+                    }
+                })
+        })
+    }
+    //点击修改
+    edit(name){
+        this.setState({
+            editvisible:true,
+            name
+        })
+    }
+    //点击确定修改
+    edithandleOk(){
+        const form = this.editForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            fetch(editUrl,{
+                ...postOption,
+                body:JSON.stringify({
+                    name:values.name
+                })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                .then(v=>{
+                    if(v.ret==1){
+                        fetch(dataUrl,{
+                            ...postOption,
+                            body:JSON.stringify({
+                                "pageIndex": 0,
+                                "pageSize": 10
+                            })
+                        }).then(res=>{
+                            Promise.resolve(res.json())
+                            .then(v=>{
+                                if(v.ret==1){
+                                    let data=v.data.items
+                                    this.setState({
+                                        data,
+                                        itemCount:v.data.itemCount,
+                                        editvisible:false
+                                    })
+                                    this._getTableDatas(this.state.title,data)
+                                    message.success("修改成功",2)
+                                }
+                            })
+                        })
+                    }
+                })
+            })
+        })
+    }
+    //点击取消修改
+    edithandleCancel(){
+        this.setState({
+            editvisible:false
+        })
+    }
     render(){
-        const { columns, tableDatas } = this.state;
+        const { columns, tableDatas,editvisible,name } = this.state;
         const paginationProps = {
             showQuickJumper: true,
         };
@@ -253,6 +304,14 @@ export default class extends Component{
                         dataSource={tableDatas}
                         scroll={{ x: 1500 }}
                     />
+                    {/* 修改弹窗 */}
+                    <EditForm
+                        wrappedComponentRef={(editForm) => this.editForm = editForm}
+                        visible={editvisible}
+                        onCancel={() => this.edithandleCancel()}
+                        onOk={() => this.edithandleOk()}
+                        {...{name}}
+                    />
                 </div>
             </React.Fragment>
         )
@@ -262,7 +321,7 @@ export default class extends Component{
 const SearchForm = Form.create()(
     class extends React.Component {
         render() {
-            const { form, searchHandler, resetHandler } = this.props;
+            const { form } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Form 
@@ -313,11 +372,12 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('state', {initialValue: 'state'})
+                        {getFieldDecorator('state', {})
                             (
-                            <Select>
-                                <Option value="state">所有状态</Option>
-                                <Option value=""></Option>
+                            <Select 
+                                placeholder="状态"
+                            >
+                                <Option value="">全部</Option>
                             </Select>
                             )
                         }
@@ -325,6 +385,39 @@ const SearchForm = Form.create()(
                 </Form>
             )
 
+        }
+    }
+)
+//修改弹窗表单
+const EditForm = Form.create()(
+    class extends React.Component {
+        render() {
+            const { visible, onCancel, onOk, form, name } = this.props;
+            const { getFieldDecorator } = form;
+            return (
+                <Modal
+                    className={styles.editModal}
+                    visible={visible}
+                    title="修改"
+                    onCancel={onCancel}
+                    onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
+                    centered
+                >
+                    <Form>
+                        <Form.Item label="小组名称">
+                            {getFieldDecorator('name', {initialValue: `${name}`})
+                            (
+                                <Input
+                                    placeholder='请输入要修改的小组名称'
+                                    type='text'
+                                />
+                            )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )
         }
     }
 )

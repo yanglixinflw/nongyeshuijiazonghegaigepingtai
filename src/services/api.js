@@ -172,6 +172,15 @@ export function getChargingDevice(params){
     )
   })
 }
+//获取小组账户列表
+export function getGroupAccount(params){
+  return request(`${envNet}/fee/groupAccount/list`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
 // 获取视频监控下拉列表
 export function getMonitorSelectList(){
   return request(`${envNet}/api/CamerasMonitor/buildings`,{
