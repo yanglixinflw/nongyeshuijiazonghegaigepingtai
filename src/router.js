@@ -13,7 +13,7 @@ function RouterConfig({ history, app }) {
   const BasicLayout = routerData['/'].component;
   const MapLayout =routerData['/valveControl/map'].component;
   const WarningLayout = routerData['/warning/map:id'].component;
-  // console.log(history)
+  // console.log(BasicLayout)
   return (
     <LocaleProvider locale={zhCN}>
     <ConnectedRouter history={history}>
