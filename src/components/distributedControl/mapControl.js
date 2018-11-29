@@ -58,7 +58,7 @@ export default class extends Component {
             //球阀开关弹窗可见性
             modalVisible: false,
             //该球阀开或关
-            value: 1,
+            value: '',
             //命令列表
             cmdList: [],
             //设备ID

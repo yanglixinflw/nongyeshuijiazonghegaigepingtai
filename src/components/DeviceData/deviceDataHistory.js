@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
 import styles from './common.less';
 import classnames from 'classnames';
+import { timeOut } from '../../utils/timeOut';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
 // 生产环境
@@ -147,6 +148,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         //设置页面元素
                         let tableData = v.data.items;

@@ -70,11 +70,14 @@ export default class extends Component {
         // debugger
         map.add(imageLayer);
     }
-    //地图重置
-    _mapReset(){
-        const { map } = this.state;
-        map.setZoomAndCenter(15, [116.33719, 39.942384]);
-    }
+    // //地图重置
+    // _mapReset(){
+    //     const { map } = this.state;
+    //     // map.setZoomAndCenter(15, [116.33719, 39.942384]);
+    //     console.log(map)
+    //     // map.refreshSize()
+    //     // map.re();
+    // }
     //地图放大
     _zoomIn() {
         const { map } = this.state;
@@ -117,12 +120,12 @@ export default class extends Component {
 
                 </div>
                 <div className={styles.btnMapZoom}>
-                    <Button
+                    {/* <Button
                         className={styles.btnReset}
                         onClick={() => this._mapReset()}
                     >
                         <i className={classnames('dyhsicon', 'dyhs-dituzhongzhi', `${styles.resetIcon}`)}></i>
-                    </Button>
+                    </Button> */}
                     <Button
                         className={styles.btnPlus}
                         onClick={() => this._zoomIn()}

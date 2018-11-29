@@ -28,7 +28,7 @@ export function queryLogin(params) {
     body: JSON.stringify(
       params
     )
-  });
+  },'login');
 }
 // 设备数据 标题获取
 export function queryDeviceTitle(params) {

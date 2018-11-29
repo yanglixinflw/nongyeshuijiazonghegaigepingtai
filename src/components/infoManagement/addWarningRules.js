@@ -36,6 +36,8 @@ export default class extends Component {
             })
         Promise.resolve(parameterList).then((v) => {
             // console.log(v)
+            //超时判断
+            timeOut(v.data.ret)
             if (v.data.ret === 1) {
                 if (v.data.data.length == 0) {
                     alert('该设备暂不支持预警规则设置')
@@ -50,6 +52,8 @@ export default class extends Component {
         // 获取通知角色列表
         Promise.resolve(getRoleList()).then((v) => {
             // console.log(v)
+            //超时判断
+            timeOut(v.data.ret)
             if (v.data.ret === 1) {
                 this.setState({
                     roleList: v.data.data
@@ -117,6 +121,8 @@ export default class extends Component {
                     }).then((res)=>{
                         Promise.resolve(res.json())
                         .then((v)=>{
+                            //超时判断
+                            timeOut(v.ret)
                             if(v.ret==1){
                                 
                                 message.success('添加成功', 2)
@@ -194,6 +200,8 @@ const AddRulesForm = Form.create()(
             let UserList = getUserList(value)
             Promise.resolve(UserList).then((v) => {
                 // 短信通知人
+                //超时判断
+                timeOut(v.data.ret)
                 if (type == 'sms') {
                     this.setState({
                         SMSreceiverData: v.data.data
@@ -267,6 +275,8 @@ const AddRulesForm = Form.create()(
                 "pageSize": 100
             }))
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.data.ret)
                     if (v.data.ret == 1) {
                         this.setState({
                             deviceData: v.data.data.items
@@ -280,6 +290,8 @@ const AddRulesForm = Form.create()(
             Promise.resolve(getControlList({
                 deviceId: value
             })).then((v) => {
+                //超时判断
+                timeOut(v.data.ret)
                 if (v.data.ret == 1) {
                     this.setState({
                         controlList: v.data.data
