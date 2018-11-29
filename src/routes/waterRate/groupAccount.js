@@ -19,7 +19,6 @@ export default class extends React.Component{
     render(){
         let { groupAccount, loading } = this.props;
         let arr = Object.keys(groupAccount);
-        console.log(groupAccount)
         if (arr.length === 0) return groupAccount = null;
         return (
             <React.Fragment>

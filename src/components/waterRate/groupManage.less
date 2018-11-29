@@ -1,0 +1,313 @@
+.headers {
+    height: 60px;
+    line-height: 60px;
+    background: #151836;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    padding-left: 35px;
+    margin-bottom: 20px;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    .left {
+        display: flex;
+        .arrowLeft {
+            width: 112px;
+            display: flex;
+            justify-content: space-between;
+            margin-right: 8px;
+            color: #bbc5d2;
+            :hover {
+                color: #327df4
+            }
+        }
+        .autoControl {
+            width: 138px;
+            display: flex;
+            justify-content: space-around;
+            .autoRules {
+                color: #327df4;
+            }
+        }
+    }
+    .right {
+        width: 210px;
+        display: flex;
+        justify-content: space-between;
+        margin-right: 64px;
+        margin-top: 10px;
+        .fnButton {
+            width: 94px;
+            height: 34px;
+            border: 1px solid #327df4;
+            color: #327df4;
+            background: #151836;
+        }
+    }
+}
+
+.body {
+    margin: 8px 35px;
+    display: flex;
+    .mleft {
+        width: 30%;
+        height: 650px;
+        .title {
+            font-size: 22px;
+            width: 100%;
+            height: 22px;
+            margin-bottom: 17px;
+            display: flex;
+            .border {
+                width: 3px;
+                height: 18px;
+                background: #327df4;
+                margin: 8px 4px 4px 0;
+            }
+            .mleftName {
+                color: #dadade;
+            }
+        }
+        .content {
+            width: 100%;
+            height: 612px;
+            background: #1c2241;
+            border-radius: 4px;
+            :global {
+                .ant-checkbox-group {
+                    width: 100%;
+                    .ant-row {
+                        width: 96%;
+                        height: auto;
+                        margin: auto;
+                        div {
+                            width: 100%;
+                            height: 89px;
+                            background: #2e3459;
+                            border-radius: 4px;
+                            margin-top: 13px;
+                            overflow: hidden;
+                            .ant-checkbox-wrapper {
+                                display: flex;
+                                .ant-checkbox {
+                                    height: 16px;
+                                    margin: 21px 0 0 15px;
+                                    .ant-checkbox-inner {
+                                        background: #2e3459;
+                                    }
+                                }
+                                ul {
+                                    display: flex;
+                                    flex-wrap: wrap;
+                                    margin-left: -30px;
+                                    height: 50px;
+                                    color: #dadade;
+                                    li {
+                                        margin-top: 16px;
+                                        margin-right: 6px;
+                                        list-style: none;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .middle {
+        width: 10%;
+        position: relative;
+        .btnL {
+            width: 54px;
+            height: 48px;
+            background: #327df4;
+            color:#fff;
+            text-align: center;
+            line-height: 46px;
+            border-radius: 4px;
+            font-size: 22px;
+            position: absolute;
+            top:0;
+            bottom: 100px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            cursor: pointer;
+        }
+        .btnR {
+            width: 54px;
+            height: 48px;
+            background: #327df4;
+            color:#fff;
+            text-align: center;
+            line-height: 46px;
+            border-radius: 4px;
+            font-size: 22px;
+            position: absolute;
+            top:100px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            cursor: pointer;
+        }
+    }
+    .mright {
+        .title {
+            font-size: 22px;
+            width: 100%;
+            height: 22px;
+            margin-bottom: 17px;
+            display: flex;
+            .border {
+                width: 3px;
+                height: 18px;
+                background: #327df4;
+                margin: 8px 4px 4px 0;
+            }
+            .mleftName {
+                color: #dadade;
+            }
+        }
+        .tables {
+            height: 612px;
+            .searchForm {
+                padding: 16px 10px;
+                height: 67px;
+                background: #2e3459;
+                display: flex;
+                :global {
+                    .ant-input,
+                    .ant-form-item,
+                    .ant-select-selection,
+                    .ant-select-selection--single {
+                        height: 40px;
+                        width: 130px;
+                        background: #141831;
+                        outline: none;
+                        border: none;
+                        color: #fff; // margin-right: 8x;
+                        float: left;
+                    }
+                    .ant-select-selection__rendered {
+                        margin-top: 8px;
+                    }
+                    .anticon,
+                    .anticon-down,
+                    .ant-select-arrow-icon {
+                        color: #fff;
+                    }
+                }
+                .buttonGroup {
+                    display: flex;
+                    align-items: center;
+                    .fnButton {
+                        height: 36px;
+                        border-radius: 30px; // margin-left: 16px;
+                        background: #2e386c;
+                        outline: none;
+                        border: none;
+                        color: #bac4f7;
+                    }
+                    .fnButton:nth-child(2) {
+                        margin-left: 16px;
+                    }
+                    .fnButton:hover {
+                        background: #327df4;
+                        color: #fff;
+                    }
+                }
+            }
+            :global {
+                .ant-cascader-picker-arrow {
+                    color: #4A5A72;
+                }
+                .ant-table-wrapper {
+                    .ant-table {
+                        background: #2E3459;
+                        .ant-table-content {
+                            .ant-table-header{
+                                height: 70px;
+                                &::-webkit-scrollbar {
+                                    display: none;
+                                }
+                                &::-webkit-scrollbar-button {
+                                    display: none;
+                                }
+                                &::-webkit-scrollbar-thumb {
+                                    background: #3164BF;
+                                    border-radius: 2px;
+                                }
+                                &::-webkit-scrollbar-track {
+                                    background: #2E3459;
+                                }
+                            }
+                            .ant-table-body {
+                                &::-webkit-scrollbar {
+                                    width: 6px;
+                                }
+                                &::-webkit-scrollbar-button {
+                                    display: none;
+                                }
+                                &::-webkit-scrollbar-thumb {
+                                    background: #4d5cab;
+                                    border-radius: 2px;
+                                }
+                                &::-webkit-scrollbar-track {
+                                    background: #2E3459;
+                                }
+                            }
+                        }
+                    }
+                    .ant-table-thead {
+                       
+                        tr {
+                            th {
+                                min-width: 90px;
+                                height: 50px;
+                                font-weight: 600; // height: 45px;
+                                background: #2e386c;
+                                color: #DEDEE4;
+                                border: 1px solid #2A325E;
+                            }
+                        }
+                    }
+                    .ant-table-tbody {
+                        tr {
+                            &:hover td {
+                                color: #0084FF;
+                            }
+                            &:focus td {
+                                color: #0084FF;
+                            }
+                            td {
+                                // height: 50px !important;
+                                min-width: 90px;
+                                font-size: 12px;
+                                background: #2e3459;
+                                color: #BBC5D2;
+                                border-bottom: 2px solid #2e386c;
+                                .ant-btn {
+                                    background: #1C2241;
+                                }
+                            }
+                        }
+                    }
+                    .ant-pagination.ant-table-pagination {
+                        display: none;
+                    }
+                }
+            } 
+            .tbw{
+                width: 175px;
+                min-width: 90px;
+                height: 52px !important;
+            }
+            .action{
+                padding:0 16px !important;
+            }
+        }
+    }
+}

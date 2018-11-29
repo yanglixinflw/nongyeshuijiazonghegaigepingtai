@@ -49,6 +49,7 @@ export default class extends Component {
             alength:autoRules.data.data.actions.length,
         }
     }
+    
     _save () {
         this.ruleForm.props.form.validateFields((err, values) => {
             if (!err) {
