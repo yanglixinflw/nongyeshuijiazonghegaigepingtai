@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import styles from "./groupAccount.less"
 import { Input, Button, Form, Table,Select,Modal,message} from 'antd';
+import { Link } from 'dva/router';
 //开发地址
 const envNet='http://192.168.30.127:88';
 //生产环境
@@ -9,6 +10,10 @@ const envNet='http://192.168.30.127:88';
 const dataUrl=`${envNet}/fee/groupAccount/list`;
 //修改小组名称
 const editUrl=`${envNet}/fee/groupAccount/changeName`;
+//清空当前用量
+const clearUrl=`${envNet}/fee/groupAccount/clearCurrentWaterUse`;
+//分配水权
+const assignUrl=`${envNet}/fee/groupAccount/assignWaterPower`;
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -22,7 +27,7 @@ let postOption = {
 const tableTitle=[
     {index:"deviceId",item:"设备ID"},
     {index:"deviceName",item:"设备名称"},
-    {index:"name",item:"小组"},
+    {index:"accountName",item:"小组"},
     {index:"memberNames",item:"小组成员"},
     {index:"balance",item:"账户余额"},
     {index:"currentWaterUse",item:"当前用量"},
@@ -46,7 +51,13 @@ export default class extends Component{
             //是否显示修改弹窗
             editvisible:false,
             //修改的小组名称
-            name:""
+            name:"",
+            //修改的小组id
+            userId:'',
+            //是否显示清除弹窗
+            clearVisible:false,
+            //是否显示分配水权弹窗
+            assignvisible:false
         }
     }
     componentDidMount() {
@@ -69,12 +80,13 @@ export default class extends Component{
             tableDatas.push({
                 deviceId:v.deviceId,
                 deviceName:v.deviceName,
-                name:v.name,
+                accountName:v.accountName,
                 memberNames:v.memberNames,
                 balance:v.balance,
                 currentWaterUse:v.currentWaterUse,
                 waterPower:v.waterPower,
                 updateTime:v.updateTime,
+                userId:v.userId,
                 key: i,
             });
         })
@@ -89,38 +101,43 @@ export default class extends Component{
             render: (record) => {
                 return (
                     <span className={styles.option}>
-                        <Button
-                            className={styles.record}
-                            // onClick={() => this._set()}
-                            icon='file-text'
-                        >
-                            消费记录
-                        </Button>
+                        <Link to={`/groupAccount/dealRecord:${record.userId}`}>
+                            <Button
+                                className={styles.record}
+                                icon='file-text'
+                            >
+                                交易记录
+                            </Button>
+                        </Link>
                         <Button
                             className={styles.clear}
                             icon='delete'
+                            onClick={()=>this.clear(record.userId)}
                         >
                             清空当前用量
                         </Button>
                         <Button
                             className={styles.assignment}
                             icon='share-alt'
+                            onClick={()=>this.assignWater(record.userId)}
                         >
                             分配水权
                         </Button>
                         <Button
                             className={styles.edit}
                             icon='edit'
-                            onClick={()=>this.edit(record.name)}
+                            onClick={()=>this.edit(record.accountName,record.userId)}
                         >
                             修改
                         </Button>
-                        <Button
-                        className={styles.management}
-                            icon='team'
-                        >
-                            管理小组成员
-                        </Button>
+                        <Link to={`/groupAccount/groupManage:${record.userId}`}>
+                            <Button
+                                className={styles.management}
+                                icon='team'
+                            >
+                                管理小组成员
+                            </Button>
+                        </Link>
                     </span>
                 )
             }
@@ -203,10 +220,11 @@ export default class extends Component{
         })
     }
     //点击修改
-    edit(name){
+    edit(name,userId){
         this.setState({
             editvisible:true,
-            name
+            name,
+            userId:userId
         })
     }
     //点击确定修改
@@ -220,7 +238,8 @@ export default class extends Component{
             fetch(editUrl,{
                 ...postOption,
                 body:JSON.stringify({
-                    name:values.name
+                    "groupUserId":this.state.userId,
+                    "name":values.name
                 })
             }).then(res=>{
                 Promise.resolve(res.json())
@@ -237,9 +256,10 @@ export default class extends Component{
                             .then(v=>{
                                 if(v.ret==1){
                                     let data=v.data.items
+                                    let itemCount=v.data.itemCount
                                     this.setState({
                                         data,
-                                        itemCount:v.data.itemCount,
+                                        itemCount,
                                         editvisible:false
                                     })
                                     this._getTableDatas(this.state.title,data)
@@ -258,8 +278,116 @@ export default class extends Component{
             editvisible:false
         })
     }
+    //点击清空当前用量
+    clear(userId){
+        this.setState({
+            clearVisible:true,
+            userId
+        })
+    }
+    //点击确定清空
+    clearOk(){
+        fetch(clearUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                "groupUserId":this.state.userId,  
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                if(v.ret==1){
+                    fetch(dataUrl,{
+                        ...postOption,
+                        body:JSON.stringify({
+                            "pageIndex": 0,
+                            "pageSize": 10
+                        })
+                    }).then(res=>{
+                        Promise.resolve(res.json())
+                        .then(v=>{
+                            if(v.ret==1){
+                                let data=v.data.items;
+                                let itemCount=v.data.itemCount
+                                this.setState({
+                                    data,
+                                    itemCount,
+                                    clearVisible:false
+                                })
+                                this._getTableDatas(this.state.title,data)
+                                message.success("已清空",2)
+                            }
+                        })
+                    })
+                }
+            })
+        })
+    }
+    //点击取消清空
+    clearCancel(){
+        this.setState({
+            clearVisible:false
+        })
+    }
+    //点击分配水权
+    assignWater(userId){
+        this.setState({
+            userId,
+            assignvisible:true
+        })
+    }
+    //点击确定分配水权
+    assignhandleOk(){
+        const form = this.assignWaterForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            fetch(assignUrl,{
+                ...postOption,
+                body:JSON.stringify({
+                    "groupUserId":this.state.userId,
+                    "waterPower":values.waterPower 
+                })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                .then(v=>{
+                    if(v.ret==1){
+                        fetch(dataUrl,{
+                            ...postOption,
+                            body:JSON.stringify({
+                                "pageIndex": 0,
+                                "pageSize": 10
+                            })
+                        }).then(res=>{
+                            Promise.resolve(res.json())
+                            .then(v=>{
+                                if(v.ret==1){
+                                    let data=v.data.items;
+                                    let itemCount=v.data.itemCount
+                                    this.setState({
+                                        data,
+                                        itemCount,
+                                        assignvisible:false
+                                    })
+                                    this._getTableDatas(this.state.title,data)
+                                    message.success("已重新分配",2)
+                                }
+                            })
+                        })
+                    }
+                })
+            })
+        })
+    }
+    //点击取消分配水权
+    assignhandleCancel(){
+        this.setState({
+            assignvisible:false
+        })
+    }
     render(){
-        const { columns, tableDatas,editvisible,name } = this.state;
+        const { columns, tableDatas,editvisible,name,clearVisible,assignvisible } = this.state;
         const paginationProps = {
             showQuickJumper: true,
         };
@@ -304,12 +432,33 @@ export default class extends Component{
                         dataSource={tableDatas}
                         scroll={{ x: 1500 }}
                     />
+                    {/* 删除弹窗 */}
+                    <Modal 
+                        title="删除"
+                        visible={clearVisible}
+                        className={styles.clearModal}
+                        onOk={()=>this.clearOk()}
+                        onCancel={()=>this.clearCancel()}
+                        okText="确认"
+                        cancelText="取消"
+                        centered//居中显示
+                    >
+                        <p>清空后，当前用水量将从即刻起重新计算</p>
+                    </Modal>
                     {/* 修改弹窗 */}
                     <EditForm
                         wrappedComponentRef={(editForm) => this.editForm = editForm}
                         visible={editvisible}
                         onCancel={() => this.edithandleCancel()}
                         onOk={() => this.edithandleOk()}
+                        {...{name}}
+                    />
+                    {/* 分配水权弹窗 */}
+                    <AssignWaterForm
+                        wrappedComponentRef={(assignWaterForm) => this.assignWaterForm = assignWaterForm}
+                        visible={assignvisible}
+                        onCancel={() => this.assignhandleCancel()}
+                        onOk={() => this.assignhandleOk()}
                         {...{name}}
                     />
                 </div>
@@ -398,7 +547,7 @@ const EditForm = Form.create()(
                 <Modal
                     className={styles.editModal}
                     visible={visible}
-                    title="修改"
+                    title="修改小组名称"
                     onCancel={onCancel}
                     onOk={onOk}
                     cancelText='取消'
@@ -411,6 +560,39 @@ const EditForm = Form.create()(
                             (
                                 <Input
                                     placeholder='请输入要修改的小组名称'
+                                    type='text'
+                                />
+                            )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )
+        }
+    }
+)
+//分配水权弹窗表单
+const AssignWaterForm = Form.create()(
+    class extends React.Component {
+        render() {
+            const { visible, onCancel, onOk, form } = this.props;
+            const { getFieldDecorator } = form;
+            return (
+                <Modal
+                    className={styles.editModal}
+                    visible={visible}
+                    title="分配水权"
+                    onCancel={onCancel}
+                    onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
+                    centered
+                >
+                    <Form>
+                        <Form.Item label="水权(m³)">
+                            {getFieldDecorator('waterPower', {initialValue: ''})
+                            (
+                                <Input
+                                    placeholder='请输入要分配的水权'
                                     type='text'
                                 />
                             )}

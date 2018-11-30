@@ -75,14 +75,6 @@ export default class extends Component{
             tableDatas,
         });
     }
-     //时间控件
-     onChange(dateString) {
-        // console.log('Formatted Selected Time: ', dateString);
-      }
-      
-    //   onOk(value) {
-    //     console.log('onOk: ', value);
-    //   }
        // 搜索功能
     _searchTableData() {
         const { title } = this.state;
@@ -100,18 +92,16 @@ export default class extends Component{
                   rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
                 ]
             };
-            // console.log(values)
-
-            if(values.operateUserName==undefined){
-                values.operateUserName=''
+            for(var i in values){
+                var val=values[i]
             }
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
                     "deviceId": this.state.deviceId,
-                    "operateUserName":values.operateUserName,
-                    "beginTime": values.range-time-picker[0],
-                    "endTime": values.range-time-picker[1],
+                    "operateUserName":fieldsValue.operateUserName,
+                    "beginTime": val[0],
+                    "endTime": val[1],
                     "pageIndex": 0,
                     "pageSize": 10
                 })

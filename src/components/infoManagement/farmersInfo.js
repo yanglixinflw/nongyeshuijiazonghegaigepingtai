@@ -373,7 +373,7 @@ export default class extends Component{
                     "realName": values.realName,
                     "mobilePhone": values.mobilePhone,
                     "idCard":values.idCard,
-                    "areaId":values.areaId
+                    "areaId":values.areaName
                 })
             }).then(res => {
                 Promise.resolve(res.json())
@@ -394,7 +394,7 @@ export default class extends Component{
                                         if (v.ret == 1) {
                                             this._searchTableData()
                                             this.setState({
-                                                addVisible: false
+                                                addvisible: false
                                             });
                                             form.resetFields();
                                             message.success('添加成功', 2);

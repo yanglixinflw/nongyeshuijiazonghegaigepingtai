@@ -123,7 +123,6 @@ export default class extends Component{
                             <Link to={`/automation/autoRules:${record.ruleId}`}>
                                 <Button
                                     className={styles.set}
-                                    // onClick={() => this._set()}
                                     icon='setting'
                                 >
                                     设置自动化规则

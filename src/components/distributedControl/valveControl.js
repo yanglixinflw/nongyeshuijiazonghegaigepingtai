@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from "./valveControl.less"
-import { Input,Button, Form,Table,Select,Modal,Radio} from 'antd';
+import { Input,Button, Form,Table,Select,Modal,Radio,message} from 'antd';
 import { Link } from 'dva/router';
 
 //开发地址
@@ -65,8 +65,6 @@ export default class extends Component{
             deviceIds:[],
             //开关阀显示
             switchvisible:false,
-            //是否选中
-            selected:false,
             //操作指令数据
             cmd:[],
             //默认搜索框
@@ -172,8 +170,11 @@ export default class extends Component{
     }
     onSelectChange =(selectedRowKeys,selectedRows)=>{
         // console.log('selectedRowKeys changed: ', selectedRowKeys);
-        // console.log(selectedRows)
-        this.setState({ selectedRowKeys });
+        var deviceIds=[];
+        selectedRows.map((v,i)=>{
+            deviceIds.push(v.deviceId)
+        })
+        this.setState({ selectedRowKeys,deviceIds });
     }
      // 搜索功能
      _searchTableData() {
@@ -183,6 +184,9 @@ export default class extends Component{
             // 未定义时给空值
             if (err) {
                 return
+            }
+            if(values.deviceTypeId==undefined){
+                values.deviceTypeId=1
             }
             return fetch(dataUrl, {
                 ...postOption,
@@ -228,7 +232,7 @@ export default class extends Component{
         const { title } = this.state;
         const form = this.searchForm.props.form;
         form.resetFields(); // 重置表单
-        return fetch(dataUrl, {
+        fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
                 "deviceTypeId": 1,
@@ -249,11 +253,15 @@ export default class extends Component{
                         this.setState({
                             data,
                             itemCount,
-                            searchValue:{}
+                            searchValue:{},
                         })
                         this._getTableDatas(title, data);
                     }
                 })
+        })
+        //将多选框选定状态重置
+        this.setState({
+            selectedRowKeys:[]
         })
     }
     //换页
@@ -281,7 +289,7 @@ export default class extends Component{
                         itemCount:v.data.itemCount,
                         tableDatas:data
                     })
-                    // this._getTableDatas(title,data);
+                    this._getTableDatas(title,data);
                 }
             })
             .catch(err=>{
@@ -291,11 +299,8 @@ export default class extends Component{
     }
     //开关阀按钮点击
     valveSwitch(){ 
-        // console.log(this.state.deviceIds)
-        // console.log(this.state.deviceTypeId)
         //获取设备型号可执行的指令
-        //  console.log(this.state.deviceIds)
-        if(this.state.selected==false||this.state.deviceIds.length==0){
+        if(this.state.selectedRowKeys.length==0){
             alert("请先选择设备")
         }else{
             fetch(instructUrl,{
@@ -322,6 +327,8 @@ export default class extends Component{
     switchHandleOk(){
         const form = this.switchForm.props.form;
         form.validateFields((err, values) => {
+            // console.log(values)
+            // console.log(this.state.deviceIds)
             // 未定义时给空值
             if (err) {
                 return
@@ -338,7 +345,9 @@ export default class extends Component{
                         if(v.ret==1){
                             this.setState({
                                 switchvisible: false,
+                                selectedRowKeys:[]
                             });
+                            message.success("操作成功",2)
                         }
                     })
             })
