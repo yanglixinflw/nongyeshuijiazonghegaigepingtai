@@ -200,19 +200,19 @@ export default class extends Component{
         })
     }
     render(){
-        const{groupMember,areaList,columns,tableDatas,rowSelection,}=this.state
+        const{groupMember,areaList,columns,tableDatas,rowSelection,groupId}=this.state
         return(
             <React.Fragment>
                 <div className={styles.groupManage}>
                     <div className={styles.headers}>
                         <div className={styles.left}>
-                            <Link to={`/dcs/automation`}>
+                            <Link to={`/rent/groupAccount`}>
                                 <div className={styles.arrowLeft}>
                                     <Icon type="arrow-left" theme="outlined" style={{marginTop:'22px',fontSize:'18px'}}/>
-                                    <div>计费设施</div>
+                                    <div>小组账户</div>
                                 </div>
                             </Link>
-                            <Link to={`/automation/autoRules`}>
+                            <Link to={`/groupAccount/groupManage:${groupId}`}>
                                 <div className={styles.autoControl}>
                                     <div>/</div>
                                     <div className={styles.autoRules}>用水小组管理</div>

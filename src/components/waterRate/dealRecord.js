@@ -35,10 +35,13 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 }
+let userId = parse(window.location.href.split(':'))[3];
 export default class extends Component{
     constructor(props) {
         super(props)
         this.state={
+            //小组id
+            userId,
             //数据源
            data,
            //表头信息
@@ -81,10 +84,48 @@ export default class extends Component{
         });
     }
     render(){
-        const{columns,tableDatas}=this.state
+        const{columns,tableDatas,userId}=this.state
         return(
             <React.Fragment>
                 <div className={styles.dealRecord}>
+                    <div className={styles.headers}>
+                        <div className={styles.left}>
+                            <Link to={`/rent/groupAccount`}>
+                                <div className={styles.arrowLeft}>
+                                    <Icon type="arrow-left" theme="outlined" style={{marginTop:'22px',fontSize:'18px'}}/>
+                                    <div>小组账户</div>
+                                </div>
+                            </Link>
+                            <Link to={`/groupAccount/dealRecord:${userId}`}>
+                                <div className={styles.autoControl}>
+                                    <div>/</div>
+                                    <div className={styles.autoRules}>交易记录</div>
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+                    <div className={styles.searchForm}>
+                        {/* 表单信息 */}
+                        <SearchForm
+                            wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
+                        />
+                        <div className={styles.buttonGroup}>
+                            <Button
+                                className={styles.fnButton}
+                                icon="search"
+                                onClick={() => this._searchTableData()}
+                            >
+                                搜索
+                            </Button>
+                            <Button
+                                icon='upload'
+                                className={styles.fnButton}
+                                // onClick={() => this.upload()}
+                            >
+                                数据导出
+                            </Button>
+                        </div> 
+                    </div>
                     <Table
                         columns={columns}
                         className={styles.table}
@@ -96,74 +137,47 @@ export default class extends Component{
         )
     }
 }
-// //搜索表单
-// const SearchForm = Form.create()(
-//     class extends React.Component {
-//         render() {
-//             const { form, areaList} = this.props;
-//             const { getFieldDecorator } = form;
-//             const Option = Select.Option;
-//             if (areaList.length == 0) {
-//                 return null
-//             }
-//             return (
-//                 <Form 
-//                     layout='inline'
-//                     style={{
-//                         display: 'flex',
-//                         alignItems:"center",
-//                         flexWrap:"wrap",
-//                         marginRight:'10px'
-//                     }}>
-//                     <Form.Item>
-//                         {getFieldDecorator('realName', {})
-//                             (
-//                             <Input
-//                                 placeholder='姓名'
-//                                 type='text'
-//                             />
-//                             )
-//                         }
-//                     </Form.Item>
-//                     <Form.Item>
-//                         {getFieldDecorator('mobilePhone', {})
-//                             (
-//                             <Input
-//                                 placeholder='手机'
-//                                 type='text'
-//                             />
-//                             )
-//                         }
-//                     </Form.Item>
-//                     <Form.Item>
-//                         {getFieldDecorator('idCard', {})
-//                             (
-//                             <Input
-//                                 placeholder='身份证'
-//                                 type='text'
-//                             />
-//                             )
-//                         }
-//                     </Form.Item>
-//                     <Form.Item>
-//                         {getFieldDecorator('areaId', {})
-//                             (
-//                             <Select
-//                                 placeholder='归属地区'
-//                             >
-//                                 <Option value="">全部</Option>
-//                                 {areaList.map((v, i) => {
-//                                     return (
-//                                         <Option key={i} value={v.areaId}>{v.areaName}</Option>
-//                                     )
-
-//                                 })}
-//                             </Select>
-//                             )
-//                         }
-//                     </Form.Item>
-//                 </Form>
-//             )
-//         }
-//     }
-// )
+//搜索表单
+const SearchForm = Form.create()(
+    class extends React.Component {
+        render() {
+            const { form } = this.props;
+            const { getFieldDecorator } = form;
+            const Option = Select.Option;
+            return (
+                <Form 
+                    layout='inline'
+                    style={{
+                        display: 'flex',
+                        alignItems:"center",
+                        flexWrap:"wrap",
+                        marginRight:'10px'
+                    }}>
+                    <Form.Item>
+                        {getFieldDecorator('dealNum', {})
+                            (
+                            <Input
+                                placeholder='交易编号'
+                                type='text'
+                            />
+                            )
+                        }
+                    </Form.Item>
+                    <Form.Item>
+                        {getFieldDecorator('type', {})
+                            (
+                            <Select
+                                placeholder='类型'
+                            >
+                                <Option value="">全部</Option>
+                                <Option value="1">充值</Option>
+                                <Option value="2">消费</Option>
+                            </Select>
+                            )
+                        }
+                    </Form.Item>
+                </Form>
+            )
+        }
+    }
+)

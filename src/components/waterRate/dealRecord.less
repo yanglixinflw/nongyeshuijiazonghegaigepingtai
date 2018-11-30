@@ -1,0 +1,235 @@
+
+.dealRecord{
+    .headers {
+        height: 60px;
+        line-height: 60px;
+        background: #151836;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        padding-left: 35px;
+        margin-bottom: 20px;
+        box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        .left {
+            display: flex;
+            .arrowLeft {
+                width: 112px;
+                display: flex;
+                justify-content: space-between;
+                margin-right: 8px;
+                color: #bbc5d2;
+                :hover {
+                    color: #327df4
+                }
+            }
+            .autoControl {
+                width: 138px;
+                display: flex;
+                justify-content: space-around;
+                .autoRules {
+                    color: #327df4;
+                }
+            }
+        }
+        .right {
+            width: 210px;
+            display: flex;
+            justify-content: space-between;
+            margin-right: 64px;
+            margin-top: 10px;
+            .fnButton {
+                width: 94px;
+                height: 34px;
+                border: 1px solid #327df4;
+                color: #327df4;
+                background: #151836;
+            }
+        }
+    }
+    .searchForm{
+        padding: 15px 20px;
+        height: 74px;
+        margin: 20px 38px;
+        background: #1c2241;
+        display: flex;
+        :global{
+            .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
+                height: 46px;
+                width: 172px;
+                background: #141831;
+                outline: none;
+                border: none;
+                color: #fff;
+                // margin-right: 20px;
+                float: left;
+            } 
+            .ant-select-selection__rendered{
+                margin-top:8px; 
+            }
+            .anticon,.anticon-down,.ant-select-arrow-icon{
+                color: #fff;
+            }
+        }
+        .buttonGroup{
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            .fnButton{
+                height:36px;
+                border-radius: 30px;
+                margin-left: 16px;
+                background: #2e386c;
+                outline: none;
+                border: none;
+                color: #bac4f7;
+            }
+            .fnButton:hover{
+                background: #327df4;
+                color: #fff;
+            }
+        }
+    }
+    :global {
+        .ant-cascader-picker-arrow {
+            color: #4A5A72;
+        }
+        .ant-table-fixed-right {
+            box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
+            .ant-table-thead {
+                tr {
+                    th {
+                        border: 1px solid #2A325E;
+                        font-weight: 600;
+                        background: #2E3459;
+                        color: #DEDEE4;
+                    }
+                }
+            }
+            .ant-table-tbody {
+                tr {
+                    &:hover td {
+                        background: #1C2241;
+                        color: #0084FF;
+                    }
+                    &:focus td {
+                        background: #1C2241;
+                        color: #0084FF;
+                    }
+                    td {
+                        min-width: 90px;
+                        border-left:0;
+                        border: 1px solid #2A325E;
+                        font-weight: 600;
+                        background: #1C2241;
+                        color: #DEDEE4;
+                        .ant-btn{
+                            background: #1C2241;
+                        }
+                    }
+                }
+            }
+        }
+        .ant-table-wrapper {
+            .ant-table {
+                background: #2E3459;
+                margin: 0 38px;
+                .ant-table-content {
+                        .ant-table-body {
+                            &::-webkit-scrollbar {
+                                height: 10px;
+                            }
+                            &::-webkit-scrollbar-button {
+                                display: none;
+                            }
+                            &::-webkit-scrollbar-thumb {
+                                background: #3164BF;
+                                border-radius: 2px;
+                            }
+                            &::-webkit-scrollbar-track {
+                                background: #2E3459;
+                            }
+                        }
+                    
+                    .ant-table-fixed-right table {
+                        background: #2E3459;
+                    }
+                }
+            }
+            .ant-table-thead {
+                tr {
+                    th {
+                        font-weight: 600;
+                        background: #2E3459;
+                        color: #DEDEE4;
+                        border: 1px solid #2A325E;
+                    }
+                }
+            }
+            .ant-table-tbody {
+                tr {
+                    &:hover td {
+                        color: #0084FF;
+                    }
+                    &:focus td {
+                        color: #0084FF;
+                    }
+                    td {
+                        min-width: 90px;
+                        font-size: 12px;
+                        background: #1C2241;
+                        color: #BBC5D2;
+                        border: 1px solid #2A325E;
+                        .ant-btn{
+                            background: #1C2241;
+                        }
+                    }
+                }
+            }
+            .ant-pagination.ant-table-pagination {
+                margin-top: 24px;
+                margin-bottom: 24px;
+                text-align: center;
+                float: none;
+                color: #637890;
+                .ant-pagination-prev .ant-pagination-item-link,
+                .ant-pagination-next .ant-pagination-item-link {
+                    background: #151836;
+                    border: 1px solid #637890;
+                    color: #637890;
+                }
+                .ant-pagination-item {
+                    border: 1px solid #637890;
+                    color: #637890;
+                    background: #151836;
+                    a {
+                        color: #637890;
+                    }
+                }
+                .ant-pagination-item-active {
+                    border: 0;
+                    background: #327DF4;
+                    a {
+                        color: #fff;
+                    }
+                }
+                .ant-pagination-item-ellipsis {
+                    color: #637890;
+                }
+                .ant-pagination-options-quick-jumper input {
+                    background: #151836;
+                    border: 1px solid #637890;
+                    color: #637890;
+                }
+            }
+        }
+       
+    }
+    .tbw{
+        height: 52px !important;
+    }
+    .action{
+        padding:0 16px !important;
+    }
+}
