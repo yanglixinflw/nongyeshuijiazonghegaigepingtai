@@ -807,7 +807,7 @@ const EditForm = Form.create()(
             if (editData.length == 0) {
                 return null
             }
-            console.log(editData)
+            // console.log(editData)
             return (
                 <Modal
                     centered={true}
@@ -886,7 +886,7 @@ const EditPwdForm = Form.create()(
             e.preventDefault();
             this.props.form.validateFieldsAndScroll((err, values) => {
               if (!err) {
-                console.log('Received values of form: ', values);
+                // console.log('Received values of form: ', values);
               }
             });
           }

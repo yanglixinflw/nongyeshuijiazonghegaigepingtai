@@ -44,7 +44,7 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { warningRecords } = props;
-        console.log(warningRecords)
+        // console.log(warningRecords)
         this.state = {
             itemCount: warningRecords.data.data.itemCount,//总数据数
             data: warningRecords.data.data.items,//表格数据源
@@ -486,6 +486,12 @@ const SearchForm = Form.create()(
         //下拉搜索框搜索功能
         handleSearch = (value) => {
             // console.log(value)
+            if(value==''){
+                this.setState({
+                    buildingList:[],
+                })
+                return
+            }
             fetch(buildingUrl, {
                 ...postOption,
                 body: JSON.stringify({

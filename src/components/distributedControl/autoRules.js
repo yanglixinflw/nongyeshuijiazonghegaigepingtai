@@ -31,7 +31,7 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const{autoRules}=props;
-        // console.log(autoRules)
+        console.log(autoRules)
         this.state={
             //规则id
             ruleId:props.ruleId,
@@ -49,7 +49,7 @@ export default class extends Component {
             alength:autoRules.data.data.actions.length,
         }
     }
-    
+    //保存
     _save () {
         this.ruleForm.props.form.validateFields((err, values) => {
             if (!err) {
@@ -202,7 +202,17 @@ const RuleForm = Form.create()(
     }
          //下拉搜索框搜索功能
          handleSearch = (value) => {
-            // console.log(value)
+            this.setState({
+                deviceList:[]
+            })
+            console.log(this.state.deviceList)
+            console.log(value)
+            if(value==''){
+                this.setState({
+                    deviceList:[]
+                })
+                return
+            }
             fetch(deviceUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -228,6 +238,9 @@ const RuleForm = Form.create()(
         //option的value值就是设备ID
         handleChange = (value) => {
             // console.log(value)
+            this.setState({
+                deviceList:[]
+            })
             fetch(deviceUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -356,13 +369,14 @@ const RuleForm = Form.create()(
             const { getFieldDecorator, getFieldValue } = this.props.form;
             const{ anyConditionFireAction,name }=this.props
             const {deviceList,parameterIdList,switchList,actions,conditions,actionArr,conditionArr}=this.state
+            //条件列表渲染
             getFieldDecorator('condition', { initialValue: conditions });
             const condition = getFieldValue('condition');
             const conditionForm = condition.map((v,i) => {
                 return (
                     <div className={styles.line} key={i}>
                         <Form.Item className={styles.search}>
-                            {getFieldDecorator(`conditionDeviceId[${i}]`, {initialValue: v.deviceId || '设备名称/ID'})
+                            {getFieldDecorator(`conditionDeviceId[${i}]`, {initialValue: v.deviceName || '设备名称/ID'})
                                 (
                                 <Select
                                     showSearch
@@ -411,7 +425,7 @@ const RuleForm = Form.create()(
                         </Form.Item>
                         <Form.Item className={styles.end}>
                             {getFieldDecorator(`compareValue[${i}]`, {initialValue: v.compareValue || ''})
-                                (<Input placeholder='值' type='number'/>)
+                                (<Input placeholder='值' type='text'/>)
                             }
                         </Form.Item>
                         {i==0 ? (
@@ -428,13 +442,14 @@ const RuleForm = Form.create()(
                     </div>
                 );
             });
+            //执行列表渲染
             getFieldDecorator('action', { initialValue: actions});
             const action = getFieldValue('action');
             const actionForm = action.map((v,i) => {
                 return (
                     <div className={styles.line} key={i}>
                         <Form.Item className={styles.search}>
-                            {getFieldDecorator(`actionDeviceId[${i}]`, {initialValue: v.deviceId || '设备名称/ID'})
+                            {getFieldDecorator(`actionDeviceId[${i}]`, {initialValue: v.deviceName || '设备名称/ID'})
                                 (
                                 <Select
                                     showSearch

@@ -35,7 +35,7 @@ export default class extends Component{
         let groupId = parse(window.location.href.split(':'))[3];
         const{groupManage}=props.groupManage;
         const{farmersInfo}=props.groupManage
-        console.log(groupManage)
+        // console.log(groupManage)
         this.state={
             //小组id
             groupId,
@@ -102,7 +102,7 @@ export default class extends Component{
         })
         const rowSelection = {
             onChange: (selectedRowKeys, selectedRows) => {
-              console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            //   console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
               this.setState({
                 selectedRows
               })
@@ -162,12 +162,12 @@ export default class extends Component{
     //保存
     _save(){
         const{groupId,groupMember}=this.state;
-        console.log(groupMember)
+        // console.log(groupMember)
         var peasantIds=[]
         groupMember.map(v=>{
             peasantIds.push(v.memberUserId)
         })
-        console.log(peasantIds)
+        // console.log(peasantIds)
         fetch(saveUrl,{
             ...postOption,
             body:JSON.stringify({
