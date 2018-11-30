@@ -141,11 +141,17 @@ export default class extends Component{
     }
     //将左边的选中项移除
     remove(){
-        const{checkedValue,groupMember}=this.setState
+        const{checkedValue,groupMember}=this.state
+        //如果什么都没选
+        if(checkedValue==''){
+            return
+        }
+        //grouoMember只可读，所以将它赋值给group
+        var group=groupMember
         //移除选中项
         var array = checkedValue.map((v,i)=>{
-            groupMember = groupMember.filter(item => item.memberUserId !==v);
-            return groupMember
+            group = group.filter(item => item.memberUserId !==v);
+            return group
         })
         //得到移除选中项后的数组
         var arr=array[array.length-1]
@@ -156,14 +162,16 @@ export default class extends Component{
     //保存
     _save(){
         const{groupId,groupMember}=this.state;
+        console.log(groupMember)
         var peasantIds=[]
         groupMember.map(v=>{
             peasantIds.push(v.memberUserId)
         })
+        console.log(peasantIds)
         fetch(saveUrl,{
             ...postOption,
             body:JSON.stringify({
-                groupId,
+                "groupUserId":groupId,
                 peasantIds
             })
         }).then(res=>{
@@ -173,7 +181,7 @@ export default class extends Component{
                     fetch(dataUrl,{
                         ...postOption,
                         body:JSON.stringify({
-                            groupId
+                            "groupUserId":groupId
                         })
                     }).then(res=>{
                         Promise.resolve(res.json())
@@ -235,10 +243,10 @@ export default class extends Component{
                                                 <Col key={i}>
                                                     <Checkbox value={v.memberUserId}>
                                                         <ul>
-                                                            <li>姓名：{v.realName}</li>
-                                                            <li>所属片区：{v.areaName}</li>
-                                                            <li>电话：{v.mobilePhone}</li>
-                                                            <li>身份证：{v.idCard}</li>
+                                                            <li title={v.realName}>姓名：{v.realName}</li>
+                                                            <li title={v.mobilePhone}>电话：{v.mobilePhone}</li>
+                                                            <li title={v.areaName}>所属片区：{v.areaName}</li>
+                                                            <li title={v.idCard}>身份证：{v.idCard}</li>
                                                         </ul>
                                                     </Checkbox>
                                                 </Col>

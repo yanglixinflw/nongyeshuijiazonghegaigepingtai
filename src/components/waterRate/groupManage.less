@@ -74,6 +74,20 @@
             height: 612px;
             background: #1c2241;
             border-radius: 4px;
+            overflow: auto;
+            &::-webkit-scrollbar {
+                width: 6px;
+            }
+            &::-webkit-scrollbar-button {
+                display: none;
+            }
+            &::-webkit-scrollbar-thumb {
+                background: #3164BF;
+                border-radius: 2px;
+            }
+            &::-webkit-scrollbar-track {
+                background: #2E3459;
+            }
             :global {
                 .ant-checkbox-group {
                     width: 100%;
@@ -83,12 +97,13 @@
                         margin: auto;
                         div {
                             width: 100%;
-                            height: 89px;
+                            height:89px;
                             background: #2e3459;
                             border-radius: 4px;
                             margin-top: 13px;
                             overflow: hidden;
                             .ant-checkbox-wrapper {
+                                height: auto;
                                 display: flex;
                                 .ant-checkbox {
                                     height: 16px;
@@ -103,7 +118,12 @@
                                     margin-left: -30px;
                                     height: 50px;
                                     color: #dadade;
+                                   
                                     li {
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                        white-space:nowrap !important;
+                                        display: block;
                                         margin-top: 16px;
                                         margin-right: 6px;
                                         list-style: none;
@@ -206,10 +226,13 @@
                     .fnButton {
                         height: 36px;
                         border-radius: 30px; // margin-left: 16px;
-                        background: #2e386c;
+                        background: #2e3459;
                         outline: none;
-                        border: none;
-                        color: #bac4f7;
+                        border: 1px solid #327df4;
+                        color: #327df4;
+                        i{
+                            color: #327df4
+                        }
                     }
                     .fnButton:nth-child(2) {
                         margin-left: 16px;
@@ -217,6 +240,9 @@
                     .fnButton:hover {
                         background: #327df4;
                         color: #fff;
+                        i{
+                            color: #fff;
+                        }
                     }
                 }
             }
@@ -235,13 +261,6 @@
                                 }
                                 &::-webkit-scrollbar-button {
                                     display: none;
-                                }
-                                &::-webkit-scrollbar-thumb {
-                                    background: #3164BF;
-                                    border-radius: 2px;
-                                }
-                                &::-webkit-scrollbar-track {
-                                    background: #2E3459;
                                 }
                             }
                             .ant-table-body {
@@ -307,6 +326,80 @@
             }
             .action{
                 padding:0 16px !important;
+            }
+        }
+    }
+}
+@media(max-width:1580px) {
+    .body{
+        .mleft{
+            .content{
+                :global {
+                    .ant-checkbox-group {
+                        .ant-row {
+                            div {
+                                height: 135px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .mright{
+            .tables{
+                .searchForm{
+                    :global {
+                        .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
+                            min-width: 100px;
+                            width: 100px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@media(max-width:1337px) {
+    .body{
+        .mleft{
+            .content{
+                :global {
+                    .ant-checkbox-group {
+                        .ant-row {
+                            div {
+                                height: 178px;
+                                .ant-checkbox-wrapper {
+                                    ul li{
+                                        min-width: 180px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@media(max-width:1280px) {
+    .body{
+        .mleft{
+            height: 716px;
+            .content{
+                height: 678px !important;
+            }
+        }
+        .mright{
+            .tables{
+                .searchForm{
+                    height: 134px;
+                    :global {
+                        .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
+                            min-width: 100px;
+                            width: 100px;
+                        }
+                    }
+                }
             }
         }
     }

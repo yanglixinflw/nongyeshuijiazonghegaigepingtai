@@ -34,7 +34,7 @@ export default class extends Component {
         // console.log(autoRules)
         this.state={
             //规则id
-            ruleId:autoRules.data.data.ruleId,
+            ruleId:props.ruleId,
             //全部/部分
             anyConditionFireAction:autoRules.data.data.anyConditionFireAction,
             //规则名称
@@ -53,7 +53,7 @@ export default class extends Component {
     _save () {
         this.ruleForm.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
+                // console.log('Received values of form: ', values);
                 //针对compareValue出现的问题，先将其转换为字符串型，再转换回数组,并将数组元素的双引号去掉  
                 let valueArr=values.compareValue
                 let valueString=valueArr.join("-")
@@ -124,9 +124,11 @@ export default class extends Component {
     //重置
     _resetForm() {
         this.ruleForm.props.form.resetFields()
+        // var conditions=[{deviceId:''},{parameterId:""},{operator:''},{compareValue:""}]
         this.setState({
             anyConditionFireAction:'',
             name:'',
+            // conditions
         })  
     }
     render() {
@@ -200,7 +202,7 @@ const RuleForm = Form.create()(
     }
          //下拉搜索框搜索功能
          handleSearch = (value) => {
-            console.log(value)
+            // console.log(value)
             fetch(deviceUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -225,7 +227,7 @@ const RuleForm = Form.create()(
         }
         //option的value值就是设备ID
         handleChange = (value) => {
-            console.log(value)
+            // console.log(value)
             fetch(deviceUrl, {
                 ...postOption,
                 body: JSON.stringify({

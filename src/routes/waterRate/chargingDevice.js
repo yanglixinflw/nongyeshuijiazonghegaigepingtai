@@ -19,7 +19,7 @@ export default class extends React.Component{
     }
     render(){
         let { chargingDevice, loading } = this.props;
-        console.log(chargingDevice)
+        // console.log(chargingDevice)
         let arr = Object.keys(chargingDevice);
         if (arr.length === 0) return chargingDevice = null;
         return (

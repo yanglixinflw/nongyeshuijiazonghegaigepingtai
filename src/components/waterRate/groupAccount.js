@@ -106,7 +106,7 @@ export default class extends Component{
                                 className={styles.record}
                                 icon='file-text'
                             >
-                                消费记录
+                                交易记录
                             </Button>
                         </Link>
                         <Button
