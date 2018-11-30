@@ -23,8 +23,8 @@ let postOption = {
 const getCmdListUrl = `${envNet}/api/device/control/cmdList`;
 //发送指令
 const sendCmdUrl = `${envNet}/api/device/control/sendCmd`;
-//获取设备的详细信息
-const deviceInfoUrl = `${envNet}/api/device/details`
+//获取设备的状态
+const deviceStatusUrl = `${envNet}/api/device/getDeviceStatus`
 export default class extends Component {
     constructor(props) {
         super(props)
@@ -57,8 +57,8 @@ export default class extends Component {
             clicked: false,
             //球阀开关弹窗可见性
             modalVisible: false,
-            //该球阀开或关
-            value: '',
+            //该球阀开或关状态
+            statusValue: '',
             //命令列表
             cmdList: [],
             //设备ID
@@ -98,8 +98,9 @@ export default class extends Component {
             }
         }
     }
-    //点击标记时获取指令 /获取当前设备状态
+    //点击标记时获取指令  //获取当前设备状态
     _getCmdList(deviceTypeId,deviceId) {
+        //获取指令
         fetch(getCmdListUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -112,7 +113,7 @@ export default class extends Component {
                     timeOut(v.ret)
                     if (v.ret == 1) {
                         let cmdList = v.data
-                        // console.log(cmdList)
+                        console.log(cmdList)
                         this.setState({
                             cmdList,
                             modalVisible: true
@@ -120,7 +121,8 @@ export default class extends Component {
                     }
                 })
         })
-        fetch(deviceInfoUrl,{
+        //获取当前设备状态
+        fetch(deviceStatusUrl,{
             ...postOption,
             body:JSON.stringify({
                 deviceId
@@ -131,7 +133,13 @@ export default class extends Component {
                 //超时判断
                 timeOut(v.ret)
                 if(v.ret == 1){
-                    console.log(v)
+                    // console.log(v)
+                    let statusValue = v.data.status
+                    statusValue=statusValue==0?'Valve-Close':'Valve-Open';
+                    // console.log(statusValue)
+                    this.setState({
+                        statusValue
+                    })
                 }
             })
         })
@@ -143,7 +151,7 @@ export default class extends Component {
     }
     _onChange(e) {
         this.setState({
-            value: e.target.value,
+            statusValue: e.target.value,
         })
     }
     //取消
@@ -155,29 +163,31 @@ export default class extends Component {
     //确定
     _onOk() {
         //需要获得球阀设置的value值 命令码，请求接口，提示设置成功
-        const { deviceId,value } = this.state;
-        console.log(deviceId,value)
-        // return fetch(sendCmdUrl, {
-        //     ...postOption,
-        //     body: JSON.stringify({
-        //         deviceId,
-        //         strCmd: value
-        //     })
-        // }).then((res) => {
-        //     Promise.resolve(res.json())
-        //         .then((v) => {
-        //             //超时判断
-        //             timeOut(v.ret)
-        //             if (v.ret == 1) {
-        //                 message.success('指令发送成功', 2);
-        //                 this.setState({
-        //                     modalVisible: false
-        //                 })
-        //             }
-        //         })
-        // }).catch((err)=>{
-        //     console.log(err)
-        // })
+        const { deviceId,statusValue } = this.state;
+        // console.log(deviceId,statusValue)
+        let deviceIds = []
+        deviceIds.push(deviceId)
+        return fetch(sendCmdUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                deviceIds,
+                strCmd: statusValue
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
+                    if (v.ret == 1) {
+                        message.success('指令发送成功', 2);
+                        this.setState({
+                            modalVisible: false
+                        })
+                    }
+                })
+        }).catch((err)=>{
+            console.log(err)
+        })
 
     }
 
@@ -187,9 +197,10 @@ export default class extends Component {
             ballPosition,
             modalVisible,
             //该球阀开或关
-            // value,
+            statusValue,
             cmdList
         } = this.state;
+        // console.log(statusValue)
         return (
             <div className={styles.mapControl}>
                 <Map
@@ -219,7 +230,7 @@ export default class extends Component {
                     onOk={() => this._onOk()}
                 >
                     <Radio.Group
-                        // value={value}
+                        value={statusValue}
                         onChange={(e) => this._onChange(e)}
                     >
                         {cmdList?

@@ -196,7 +196,7 @@ export default class extends Component {
                 })
                 // console.log(allCameraMarkers)
             },
-            click: (marker) => {
+            click: (MapsOption,marker) => {
                 this.setState({
                     infoPositionCamera: marker.getExtData().position,
                     infoVisible: true,
@@ -248,7 +248,8 @@ export default class extends Component {
                     allWaterValveMarkers
                 })
             },
-            click: (marker) => {
+            click: (MapsOption,marker) => {
+                // console.log(marker)
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
                     infoVisible: true,
@@ -257,6 +258,7 @@ export default class extends Component {
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
+                console.log(marker)
                 let deviceId = marker.getExtData().deviceId
                 this._getRealTimeData(deviceId)
                 this.setState({
@@ -367,7 +369,7 @@ export default class extends Component {
                     timeOut(v.ret)
                     if (v.ret == 1) {
                         let infoData = v.data;
-                        // console.log(infoData)
+                        // console.log(v)
                         // infoData.map((v,i)=>{
                         //     console.log(i,v)
                         // })
@@ -576,6 +578,14 @@ export default class extends Component {
             })
         }
     }
+    //判断输入框为空时，dataList也为空
+    _changeHandler(e){
+        if(e.target.value == ''){
+            this.setState({
+                dataList: []
+            })
+        }
+    }
     //选择设备后定位
     _chosenHandler(item) {
         const { allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers, allWaterValveMarkers, infoWindow } = this.state;
@@ -657,7 +667,7 @@ export default class extends Component {
                     <Input
                         placeholder='请查询设备编号或设备名称'
                         onPressEnter={(e) => this._searchHandler(e)}
-                    // onChange={(e) => this._searchHandler(e)}
+                        onChange={(e) => this._changeHandler(e)}
                     />
                     {
                         dataList.length !== 0 ?
@@ -726,7 +736,7 @@ export default class extends Component {
                         events={this.windowEvents}
                     >
                         <IwContent
-                            info={cameraMarkers.filter(item => item.position == infoPositionCamera)}
+                            deviceInfo={cameraMarkers.filter(item => item.position == infoPositionCamera)}
                         />
                     </InfoWindow>
                     : null
@@ -748,7 +758,7 @@ export default class extends Component {
                         events={this.windowEvents}
                     >
                         <IwContent
-                            info={waterValveMarkers.filter(item => item.position == infoPositionWaterValve)}
+                            deviceInfo={waterValveMarkers.filter(item => item.position == infoPositionWaterValve)}
                             {...{ infoData }}
                         />
                     </InfoWindow>
@@ -772,7 +782,7 @@ export default class extends Component {
                         events={this.windowEvents}
                     >
                         <IwContent
-                            info={waterMeterMarkers.filter(item => item.position == infoPositionWaterValve)}
+                            deviceInfo={waterMeterMarkers.filter(item => item.position == infoPositionWaterValve)}
                             {...{ infoData }}
                         />
                     </InfoWindow>
@@ -796,7 +806,7 @@ export default class extends Component {
                         events={this.windowEvents}
                     >
                         <IwContent
-                            info={eleMeterMarkers.filter(item => item.position == infoPositionWaterValve)}
+                            deviceInfo={eleMeterMarkers.filter(item => item.position == infoPositionWaterValve)}
                             {...{ infoData }}
                         />
                     </InfoWindow>
