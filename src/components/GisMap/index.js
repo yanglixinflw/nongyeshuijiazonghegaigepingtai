@@ -258,7 +258,7 @@ export default class extends Component {
             },
             dragend: (MapsOption, marker) => { /* ... */ },
             mouseover: (MapsOption, marker) => {
-                console.log(marker)
+                // console.log(marker)
                 let deviceId = marker.getExtData().deviceId
                 this._getRealTimeData(deviceId)
                 this.setState({
