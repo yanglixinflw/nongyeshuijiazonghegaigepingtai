@@ -21,6 +21,9 @@ export default class extends Component {
         // console.log(deviceId)
         const { dispatch } = this.props;
         dispatch({
+            type:'warningDetail/clear'
+        })
+        dispatch({
             type: 'warningDetail/fetch',
             payload: {
                 deviceId,
