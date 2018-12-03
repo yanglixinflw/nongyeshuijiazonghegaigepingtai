@@ -7,6 +7,7 @@ import IwContent from './infoWindow';
 import MarkerExterior from './markerExterior';
 import MyCustomize from './myCustomize';
 import { timeOut } from '../../utils/timeOut';
+import _ from 'lodash';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
 // 开发环境
 const envNet = 'http://192.168.30.127:88';
@@ -44,9 +45,9 @@ export default class extends Component {
             // zoomToAccuracy:true,//定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：f
             extensions: 'all'
         }
-        const mapLoading =  <Fragment>
-                                <Spin size='large'></Spin>
-                            </Fragment>
+        const mapLoading = <Fragment>
+            <Spin size='large'></Spin>
+        </Fragment>
         // console.log(map)
         this.state = {
             //地图加载时过渡样式
@@ -196,7 +197,7 @@ export default class extends Component {
                 })
                 // console.log(allCameraMarkers)
             },
-            click: (MapsOption,marker) => {
+            click: (MapsOption, marker) => {
                 this.setState({
                     infoPositionCamera: marker.getExtData().position,
                     infoVisible: true,
@@ -248,7 +249,7 @@ export default class extends Component {
                     allWaterValveMarkers
                 })
             },
-            click: (MapsOption,marker) => {
+            click: (MapsOption, marker) => {
                 // console.log(marker)
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
@@ -541,11 +542,50 @@ export default class extends Component {
         // console.log(this.state.deviceTypeId)
     }
     //搜索
-    _searchHandler(e) {
-        // console.log(e.target.value)
+    // _searchHandler(e) {
+    //     // console.log(e)
+    //     const { deviceTypeId } = this.state;
+    //     let keyword = e.target.value;
+    //     //console.log(keyword)
+    //     if (keyword !== '') {
+    //         return fetch(searchUrl, {
+    //             ...postOption,
+    //             body: JSON.stringify({
+    //                 keyword,
+    //                 deviceTypeId,
+    //                 pageSize: '10'
+    //             })
+    //         }).then((res) => {
+    //             Promise.resolve(res.json())
+    //                 .then((v) => {
+    //                     //判断是否超时
+    //                     timeOut(v.ret)
+    //                     if (v.ret == 1) {
+    //                         let dataList = v.data.items;
+    //                         this._getDataList(dataList, keyword)
+    //                         this.setState({
+    //                             dataList
+    //                         })
+    //                     } else {
+    //                         this.setState({
+    //                             dataList: []
+    //                         })
+    //                     }
+    //                 })
+    //         })
+    //     } else {
+    //         this.setState({
+    //             dataList: []
+    //         })
+    //     }
+    // }
+    //搜索
+    _changeHandler() {
+        // console.log(this.refs.searchInput.input.value)
+        //判断输入框为空时，dataList也为空
         const { deviceTypeId } = this.state;
-        let keyword = e.target.value;
-        //console.log(keyword)
+        let keyword = this.refs.searchInput.input.value;
+        // console.log(keyword)
         if (keyword !== '') {
             return fetch(searchUrl, {
                 ...postOption,
@@ -573,14 +613,6 @@ export default class extends Component {
                     })
             })
         } else {
-            this.setState({
-                dataList: []
-            })
-        }
-    }
-    //判断输入框为空时，dataList也为空
-    _changeHandler(e){
-        if(e.target.value == ''){
             this.setState({
                 dataList: []
             })
@@ -666,8 +698,9 @@ export default class extends Component {
                 <div className={styles.search}>
                     <Input
                         placeholder='请查询设备编号或设备名称'
-                        onPressEnter={(e) => this._searchHandler(e)}
-                        onChange={(e) => this._changeHandler(e)}
+                        // onPressEnter={(e) => this._searchHandler(e)}
+                        ref='searchInput'
+                        onChange={_.debounce(() => this._changeHandler(), 300)}
                     />
                     {
                         dataList.length !== 0 ?
