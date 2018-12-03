@@ -202,9 +202,9 @@ const RuleForm = Form.create()(
     }
          //下拉搜索框搜索功能
          handleSearch = (value) => {
-            this.setState({
-                deviceList:[]
-            })
+            // this.setState({
+            //     deviceList:[]
+            // })
             console.log(this.state.deviceList)
             console.log(value)
             if(value==''){
