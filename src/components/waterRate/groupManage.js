@@ -35,7 +35,7 @@ export default class extends Component{
         let groupId = parse(window.location.href.split(':'))[3];
         const{groupManage}=props.groupManage;
         const{farmersInfo}=props.groupManage
-        console.log(groupManage)
+        // console.log(groupManage)
         this.state={
             //小组id
             groupId,
@@ -102,7 +102,7 @@ export default class extends Component{
         })
         const rowSelection = {
             onChange: (selectedRowKeys, selectedRows) => {
-              console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            //   console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
               this.setState({
                 selectedRows
               })
@@ -162,12 +162,12 @@ export default class extends Component{
     //保存
     _save(){
         const{groupId,groupMember}=this.state;
-        console.log(groupMember)
+        // console.log(groupMember)
         var peasantIds=[]
         groupMember.map(v=>{
             peasantIds.push(v.memberUserId)
         })
-        console.log(peasantIds)
+        // console.log(peasantIds)
         fetch(saveUrl,{
             ...postOption,
             body:JSON.stringify({
@@ -200,19 +200,19 @@ export default class extends Component{
         })
     }
     render(){
-        const{groupMember,areaList,columns,tableDatas,rowSelection,}=this.state
+        const{groupMember,areaList,columns,tableDatas,rowSelection,groupId}=this.state
         return(
             <React.Fragment>
                 <div className={styles.groupManage}>
                     <div className={styles.headers}>
                         <div className={styles.left}>
-                            <Link to={`/dcs/automation`}>
+                            <Link to={`/rent/groupAccount`}>
                                 <div className={styles.arrowLeft}>
                                     <Icon type="arrow-left" theme="outlined" style={{marginTop:'22px',fontSize:'18px'}}/>
-                                    <div>计费设施</div>
+                                    <div>小组账户</div>
                                 </div>
                             </Link>
-                            <Link to={`/automation/autoRules`}>
+                            <Link to={`/groupAccount/groupManage:${groupId}`}>
                                 <div className={styles.autoControl}>
                                     <div>/</div>
                                     <div className={styles.autoRules}>用水小组管理</div>
