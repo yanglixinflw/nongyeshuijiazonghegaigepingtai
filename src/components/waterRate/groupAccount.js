@@ -406,7 +406,7 @@ export default class extends Component{
                             <Button
                                 className={styles.fnButton}
                                 icon="search"
-                                onClick={() => this._searchTableDatas()}
+                                onClick={() => this._searchTableData()}
                             >
                                 搜索
                             </Button>
