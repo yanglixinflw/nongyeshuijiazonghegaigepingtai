@@ -5,22 +5,13 @@ import { Link } from 'dva/router';
 import { parse } from 'qs';
 //头信息
 const tableTitle=[
-    {index:"dealNum",item:"交易编号"},
-    {index:"optionName",item:"操作人"},
-    {index:"type",item:"类型"},
-    {index:"dealSum",item:"交易金额"},
+    {index:"transactionId",item:"交易编号"},
+    {index:"operateUserName",item:"操作人"},
+    {index:"transactionType",item:"类型"},
+    {index:"money",item:"交易金额"},
     {index:"balance",item:"账户余额"},
-    {index:"dealStatus",item:"交易状态"},
-    {index:"dealTime",item:"交易时间"},
-]
-//假数据
-const data=[
-    {dealNum:"99303949930391",optionName:"张三",type:'充值',dealSum:"2.22",balance:"99.99",dealStatus:'交易成功',dealTime:"2018/09/23  09:03:32"},
-    {dealNum:"99303949930392",optionName:"张三",type:'充值',dealSum:"2.22",balance:"99.99",dealStatus:'交易成功',dealTime:"2018/09/23  09:03:32"},
-    {dealNum:"99303949930393",optionName:"张三",type:'充值',dealSum:"2.22",balance:"99.99",dealStatus:'交易成功',dealTime:"2018/09/23  09:03:32"},
-    {dealNum:"99303949930394",optionName:"张三",type:'充值',dealSum:"2.22",balance:"99.99",dealStatus:'交易成功',dealTime:"2018/09/23  09:03:32"},
-    {dealNum:"99303949930395",optionName:"张三",type:'充值',dealSum:"2.22",balance:"99.99",dealStatus:'交易成功',dealTime:"2018/09/23  09:03:32"},
-    {dealNum:"99303949930396",optionName:"张三",type:'充值',dealSum:"2.22",balance:"99.99",dealStatus:'交易成功',dealTime:"2018/09/23  09:03:32"},
+    {index:"status",item:"交易状态"},
+    {index:"transactionTime",item:"交易时间"},
 ]
 import {ENVNet} from '../../services/netCofig'
 // post通用设置
@@ -36,13 +27,14 @@ let userId = parse(window.location.href.split(':'))[3];
 export default class extends Component{
     constructor(props) {
         super(props)
+        const{dealRecord}=props;
         this.state={
             //小组id
             userId,
-            //数据源
-           data,
-           //表头信息
-           title:tableTitle,
+            //表头
+            title:tableTitle,
+            itemCount:dealRecord.data.data.itemCount,//总数据数
+            data:dealRecord.data.data.items,//表格数据源
            //列
            columns:[]
         }
@@ -65,13 +57,13 @@ export default class extends Component{
         //表单数据
         data.map((v, i) => {
             tableDatas.push({
-                dealNum:v.dealNum,
-                optionName:v.optionName,
-                type:v.type,
-                dealSum:v.dealSum,
+                transactionId:v.transactionId,
+                operateUserName:v.operateUserName,
+                transactionType:v.transactionType,
+                money:v.money,
                 balance:v.balance,
-                dealStatus:v.dealStatus,
-                dealTime:v.dealTime,
+                status:v.status,
+                transactionTime:v.transactionTime,
                 key: i,
             });
         })
@@ -80,6 +72,43 @@ export default class extends Component{
             tableDatas
         });
     }
+  // 搜索功能
+  _searchTableData() {
+    const { title,userId } = this.state;
+    const form = this.searchForm.props.form;
+    form.validateFields((err, values) => {
+      // 未定义时给空值
+      if (err) {
+        return
+      }
+      return fetch(dataUrl, {
+        ...postOption,
+        body: JSON.stringify({
+          "feeUserId": userId,
+          "transactionId": values.transactionId,
+          "transactionType":values.transactionType,
+          "pageIndex": 0,
+          "pageSize": 10
+        })
+      }).then(res => {
+        Promise.resolve(res.json())
+          .then(v => {
+            if (v.ret == 1) {
+              // 设置页面显示的元素
+              let itemCount = v.data.itemCount
+              let data = v.data.items
+              this.setState({
+                itemCount,
+                data
+              })
+              this._getTableDatas(title,data);
+            }
+          })
+      }).catch(err => {
+        console.log(err)
+      })
+    })
+  }
     render(){
         const{columns,tableDatas,userId}=this.state
         return(

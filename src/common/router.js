@@ -136,7 +136,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ["groupAccount"], () => import('../routes/waterRate/groupAccount')),
     },
     '/groupAccount/dealRecord:id':{
-      component: dynamicWrapper(app, [], () => import('../routes/waterRate/dealRecord')),
+      component: dynamicWrapper(app, ["dealRecord"], () => import('../routes/waterRate/dealRecord')),
     },
     '/groupAccount/groupManage:id':{
       component: dynamicWrapper(app, ["groupManage"], () => import('../routes/waterRate/groupManage')),

@@ -179,14 +179,14 @@ export function getGroupAccount(params){
   })
 }
 // //获取交易记录（消费记录）列表
-// export function getDealRecord(params){
-//   return request(`${ENVNet}/`,{
-//     ...postOption,
-//     body:JSON.stringify(
-//       params
-//     )
-//   })
-// }
+export function getDealRecord(params){
+  return request(`${ENVNet}/fee/transaction/records`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
 //获取小组管理
 export function getGroupManage(params){
   return request(`${ENVNet}/fee/groupAccount/getGroupMembers`,{
