@@ -22,10 +22,7 @@ const data=[
     {dealNum:"99303949930395",optionName:"张三",type:'充值',dealSum:"2.22",balance:"99.99",dealStatus:'交易成功',dealTime:"2018/09/23  09:03:32"},
     {dealNum:"99303949930396",optionName:"张三",type:'充值',dealSum:"2.22",balance:"99.99",dealStatus:'交易成功',dealTime:"2018/09/23  09:03:32"},
 ]
-//开发地址
-const envNet='http://192.168.30.127:88';
-//生产环境
-// const envNet='';
+import {ENVNet} from '../../services/netCofig'
 // post通用设置
 let postOption = {
     method: 'POST',

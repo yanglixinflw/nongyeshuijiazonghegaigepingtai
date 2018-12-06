@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import MapWarning from '../../components/equipmentManagement/mapWarning';
 import { parse } from 'qs';
 import { timeOut } from '../../utils/timeOut';
-// 开发环境
-const envNet = 'http://192.168.30.127:88';
-// 生产环境
-// const envNet = '';
-const dataUrl = `${envNet}/api/DeviceWaringRule/eventList`;
+import {ENVNet} from '../../services/netCofig'
+const dataUrl = `${ENVNet}/api/DeviceWaringRule/eventList`;
 // post通用设置
 let postOption = {
     method: 'POST',

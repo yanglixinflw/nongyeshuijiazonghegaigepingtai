@@ -3,12 +3,9 @@ import { Button, Form, Table, Checkbox, Modal, Row, Col } from 'antd';
 import styles from './common.less';
 import classnames from 'classnames';
 import { timeOut } from '../../utils/timeOut';
-// 开发环境
-const envNet = 'http://192.168.30.127:88';
-// 生产环境
-// const envNet = '';
+import {ENVNet} from '../../services/netCofig'
 //翻页url
-const dataUrl = `${envNet}/api/DeviceData/historyData`;
+const dataUrl = `${ENVNet}/api/DeviceData/historyData`;
 // post通用设置
 let postOption = {
     method: 'POST',

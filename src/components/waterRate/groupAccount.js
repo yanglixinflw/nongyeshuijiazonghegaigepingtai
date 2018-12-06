@@ -2,18 +2,15 @@ import React,{Component} from 'react';
 import styles from "./groupAccount.less"
 import { Input, Button, Form, Table,Select,Modal,message} from 'antd';
 import { Link } from 'dva/router';
-//开发地址
-const envNet='http://192.168.30.127:88';
-//生产环境
-// const envNet='';
+import {ENVNet} from '../../services/netCofig'
 //翻页调用
-const dataUrl=`${envNet}/fee/groupAccount/list`;
+const dataUrl=`${ENVNet}/fee/groupAccount/list`;
 //修改小组名称
-const editUrl=`${envNet}/fee/groupAccount/changeName`;
+const editUrl=`${ENVNet}/fee/groupAccount/changeName`;
 //清空当前用量
-const clearUrl=`${envNet}/fee/groupAccount/clearCurrentWaterUse`;
+const clearUrl=`${ENVNet}/fee/groupAccount/clearCurrentWaterUse`;
 //分配水权
-const assignUrl=`${envNet}/fee/groupAccount/assignWaterPower`;
+const assignUrl=`${ENVNet}/fee/groupAccount/assignWaterPower`;
 // post通用设置
 let postOption = {
     method: 'POST',

@@ -2,20 +2,17 @@ import React, { Component } from 'react';
 import styles from './warningRecords.less';
 import { Input, Button, Form, Row, Col, Table, Modal, Select, Checkbox,Switch,message } from 'antd';
 import { Link } from 'dva/router';
-//开发地址
-const envNet = 'http://192.168.30.127:88';
-//生产环境
-// const envNet='';
+import {ENVNet} from '../../services/netCofig'
 //翻页调用
-const dataUrl = `${envNet}/api/DeviceWaringRule/eventList`;
+const dataUrl = `${ENVNet}/api/DeviceWaringRule/eventList`;
 //设备安装地列表
-const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`;
+const installAddrUrl=`${ENVNet}/api/BaseInfo/installAddrList`;
 //关闭预警事件
-const closeWarningUrl=`${envNet}/api/DeviceWaringRule/eventClose`;
+const closeWarningUrl=`${ENVNet}/api/DeviceWaringRule/eventClose`;
 //关联建筑接口
-const buildingUrl=`${envNet}/api/Building/list`
+const buildingUrl=`${ENVNet}/api/Building/list`
 //获取通知人列表
-const roleUrl=`${envNet}/api/BaseInfo/userSimpleList?userType=1&keyword= `
+const roleUrl=`${ENVNet}/api/BaseInfo/userSimpleList?userType=1&keyword= `
 // post通用设置
 let postOption = {
     method: 'POST',

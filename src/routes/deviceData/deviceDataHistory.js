@@ -4,10 +4,9 @@ import { Spin} from 'antd';
 import BreadcrumbView from '../../components/PageHeader/breadcrumb';
 import { parse } from 'qs';
 import History from '../../components/DeviceData/deviceDataHistory';
-// 开发环境
-const envNet = 'http://192.168.30.127:88';
+import {ENVNet} from '../../services/netCofig'
 //请求title url
-const getTitle = `${envNet}/api/DeviceData/columns`;
+const getTitle = `${ENVNet}/api/DeviceData/columns`;
 // post通用设置
 let postOption = {
     method: 'POST',

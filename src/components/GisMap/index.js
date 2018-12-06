@@ -9,14 +9,11 @@ import MyCustomize from './myCustomize';
 import { timeOut } from '../../utils/timeOut';
 import _ from 'lodash';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
-// 开发环境
-const envNet = 'http://192.168.30.127:88';
-//生产环境
-// const envNet = '';
+import {ENVNet} from '../../services/netCofig'
 //搜索
-const searchUrl = `${envNet}/api/device/gisDeviceList`;
+const searchUrl = `${ENVNet}/api/device/gisDeviceList`;
 //获取实时数据
-const realTimeDataUrl = `${envNet}/api/DeviceData/realtimeData`
+const realTimeDataUrl = `${ENVNet}/api/DeviceData/realtimeData`
 // post通用设置
 let postOption = {
     method: 'POST',

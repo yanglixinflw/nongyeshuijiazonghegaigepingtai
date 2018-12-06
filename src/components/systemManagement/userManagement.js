@@ -2,24 +2,21 @@ import React, { Component } from 'react';
 import styles from './index.less'
 import { Button, Table, Form, Input, Select, Modal, message } from 'antd';
 import { timeOut } from '../../utils/timeOut';
-// 开发环境
-const envNet = 'http://192.168.30.127:88';
-// 生产环境
-// const envNet = '';
+import {ENVNet} from '../../services/netCofig'
 ////获取用户角色列表url
-const roleUrl = `${envNet}/api/UserMgr/roleList`;
+const roleUrl = `${ENVNet}/api/UserMgr/roleList`;
 //获取部门列表url
-const deptUrl = `${envNet}/api/UserMgr/deptList`;
+const deptUrl = `${ENVNet}/api/UserMgr/deptList`;
 //搜索 翻页url
-const dataUrl = `${envNet}/api/UserMgr/list`;
+const dataUrl = `${ENVNet}/api/UserMgr/list`;
 //添加url
-const addUrl = `${envNet}/api/UserMgr/add`;
+const addUrl = `${ENVNet}/api/UserMgr/add`;
 //修改url
-const updateUrl = `${envNet}/api/UserMgr/update`;
+const updateUrl = `${ENVNet}/api/UserMgr/update`;
 //删除url
-const deleteUrl = `${envNet}/api/UserMgr/delete`;
+const deleteUrl = `${ENVNet}/api/UserMgr/delete`;
 //点击修改是获取用户详细信息
-const detailUrl = `${envNet}/api/UserMgr/details`;
+const detailUrl = `${ENVNet}/api/UserMgr/details`;
 // post通用设置
 let postOption = {
     method: 'POST',

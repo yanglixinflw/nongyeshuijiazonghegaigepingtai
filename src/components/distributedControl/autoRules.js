@@ -4,10 +4,7 @@ import { Input, Button, Form, Select,Icon,Radio,message} from 'antd';
 import {Link} from 'dva/router';
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
-//开发地址
-const envNet = 'http://192.168.30.127:88';
-//生产环境
-// const envNet='';
+import {ENVNet} from '../../services/netCofig'
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -18,15 +15,15 @@ let postOption = {
     }),
 }
 //搜索设备调用
-const deviceUrl = `${envNet}/api/device/list`;
+const deviceUrl = `${ENVNet}/api/device/list`;
 //获取设备参数列表
-const paramUrl = `${envNet}/api/DeviceType/deviceParameters`;
+const paramUrl = `${ENVNet}/api/DeviceType/deviceParameters`;
 //获取开关阀列表
-const switchUrl = `${envNet}/api/device/control/cmdList`;
+const switchUrl = `${ENVNet}/api/device/control/cmdList`;
 //保存数据
-const saveUrl = `${envNet}/api/Automatic/saveRuleSettings`
+const saveUrl = `${ENVNet}/api/Automatic/saveRuleSettings`
 //获取规则详情
-const ruleUrl = `${envNet}/api/Automatic/getRuleSettings`
+const ruleUrl = `${ENVNet}/api/Automatic/getRuleSettings`
 export default class extends Component {
     constructor(props) {
         super(props)

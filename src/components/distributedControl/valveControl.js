@@ -2,23 +2,19 @@ import React,{Component} from 'react';
 import styles from "./valveControl.less"
 import { Input,Button, Form,Table,Select,Modal,Radio,message} from 'antd';
 import { Link } from 'dva/router';
-
-//开发地址
-const envNet='http://192.168.30.127:88';
-//生产环境
-// const envNet='';
+import {ENVNet} from '../../services/netCofig'
 //设备安装地列表
-const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`
+const installAddrUrl=`${ENVNet}/api/BaseInfo/installAddrList`
 //翻页调用
-const dataUrl=`${envNet}/api/device/control/list`;
+const dataUrl=`${ENVNet}/api/device/control/list`;
 //设备类型列表
-const deviceTypeUrl=`${envNet}/api/device/control/deviceTypeList`
+const deviceTypeUrl=`${ENVNet}/api/device/control/deviceTypeList`
 //获取设备型号可执行的指令列表
-const instructUrl=`${envNet}/api/device/control/cmdList`
+const instructUrl=`${ENVNet}/api/device/control/cmdList`
 //向设备发送指令
-const sendCmdUrl=`${envNet}/api/device/control/sendCmd`
+const sendCmdUrl=`${ENVNet}/api/device/control/sendCmd`
 //关联建筑接口
-const buildingUrl=`${envNet}/api/Building/list`
+const buildingUrl=`${ENVNet}/api/Building/list`
 // post通用设置
 let postOption = {
     method: 'POST',

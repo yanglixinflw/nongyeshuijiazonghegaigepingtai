@@ -4,12 +4,9 @@ import { Input, Button, Form, Select, Table, Checkbox, Modal, Row, Col } from 'a
 import { Link } from 'dva/router';
 import _ from 'lodash';
 import { timeOut } from '../../utils/timeOut';
-// 开发环境
-const envNet = 'http://192.168.30.127:88';
-// 生产环境
-// const envNet = '';
+import {ENVNet} from '../../services/netCofig'
 //搜索 翻页url
-const dataUrl = `${envNet}/api/DeviceData/list`;
+const dataUrl = `${ENVNet}/api/DeviceData/list`;
 // post通用设置
 let postOption = {
     method: 'POST',

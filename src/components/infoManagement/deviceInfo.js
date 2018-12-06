@@ -27,19 +27,16 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 }
-// 开发环境
-const envNet = 'http://192.168.30.127:88'
-// 生产环境
-// const envNet=''
+import {ENVNet} from '../../services/netCofig'
 // 搜索、翻页接口、重置表单
-const getDataUrl = `${envNet}/api/Device/list`
+const getDataUrl = `${ENVNet}/api/Device/list`
 // 获取公司管护人列表
-const getManagerUserUrl = `${envNet}/api/BaseInfo/orgUserList`
-const addDataUrl = `${envNet}/api/device/add`
-const deleteUrl = `${envNet}/api/device/delete`
+const getManagerUserUrl = `${ENVNet}/api/BaseInfo/orgUserList`
+const addDataUrl = `${ENVNet}/api/device/add`
+const deleteUrl = `${ENVNet}/api/device/delete`
 // 获取修改信息
-const detailsUrl = `${envNet}/api/device/details`
-const updataUrl = `${envNet}/api/device/update`
+const detailsUrl = `${ENVNet}/api/device/details`
+const updataUrl = `${ENVNet}/api/device/update`
 // 源columns拥有编号
 const sourceColumns = [
     { title: "设备ID", dataIndex: "deviceId" },
