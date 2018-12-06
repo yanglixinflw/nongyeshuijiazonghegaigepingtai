@@ -198,6 +198,7 @@ export default class extends Component {
                 // console.log(allCameraMarkers)
             },
             click: (MapsOption, marker) => {
+                console.log(marker)
                 this.setState({
                     infoPositionCamera: marker.getExtData().position,
                     infoVisible: true,
@@ -393,7 +394,6 @@ export default class extends Component {
                 v.deviceId = v.deviceId.replace(re, `<span class=${styles.keyWordSt}>${keyword}</span>`)
             })
         }
-
     }
     //标记正常时渲染方法
     renderMarker(extData) {
@@ -630,7 +630,7 @@ export default class extends Component {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
                 v.render(this.renderMarkerChosen)
-                this.cameraEvents.click(v)
+                this.cameraEvents.click('',v)
             } else {
                 v.render(this.renderMarker)
             }
@@ -640,7 +640,7 @@ export default class extends Component {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
                 v.render(this.renderMarkerChosen)
-                this.WaterMeterEvents.click(v)
+                this.WaterMeterEvents.click('',v)
             } else {
                 v.render(this.renderMarker)
             }
@@ -650,7 +650,7 @@ export default class extends Component {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
                 v.render(this.renderMarkerChosen)
-                this.eleMeterEvents.click(v)
+                this.eleMeterEvents.click('',v)
             } else {
                 v.render(this.renderMarker)
             }
@@ -660,7 +660,7 @@ export default class extends Component {
             let position = v.getPosition()
             if (position.lng == center.longitude && position.lat == center.latitude) {
                 v.render(this.renderMarkerChosen)
-                this.WaterValveEvents.click(v)
+                this.WaterValveEvents.click('',v)
             } else {
                 v.render(this.renderMarker)
             }
