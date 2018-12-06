@@ -13,12 +13,7 @@ const tableTitle=[
     {index:"status",item:"交易状态"},
     {index:"transactionTime",item:"交易时间"},
 ]
-//开发地址
-const envNet='http://192.168.30.127:88';
-//生产环境
-// const envNet='';
-//翻页搜索调用
-const dataUrl=`${envNet}/fee/transaction/records`;
+import {ENVNet} from '../../services/netCofig'
 // post通用设置
 let postOption = {
     method: 'POST',

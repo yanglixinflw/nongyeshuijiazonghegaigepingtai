@@ -10,16 +10,13 @@ const tableTitle=[
     {index:"idCard",item:"身份证"},
     {index:"areaName",item:"归属地区"},
 ]
-//开发地址
-const envNet='http://192.168.30.127:88';
-//生产环境
-// const envNet='';
+import {ENVNet} from '../../services/netCofig'
 //小组账户数据
-const dataUrl=`${envNet}/fee/groupAccount/getGroupMembers`;
+const dataUrl=`${ENVNet}/fee/groupAccount/getGroupMembers`;
 //获取归属地地址
-const areaUrl=`${envNet}/api/Area/list`;
+const areaUrl=`${ENVNet}/api/Area/list`;
 //保存数据接口
-const saveUrl=`${envNet}/fee/groupAccount/SaveMembers`;
+const saveUrl=`${ENVNet}/fee/groupAccount/SaveMembers`;
 // post通用设置
 let postOption = {
     method: 'POST',

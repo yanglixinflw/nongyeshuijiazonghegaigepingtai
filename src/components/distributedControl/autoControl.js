@@ -2,20 +2,19 @@ import React,{Component} from 'react';
 import styles from "./autoControl.less"
 import { Input, Button, Form, Table,Modal } from 'antd';
 import { Link } from 'dva/router';
-//开发地址
-const envNet='http://192.168.30.127:88';
+import {ENVNet} from '../../services/netCofig'
 //生产环境
-// const envNet='';
+// const ENVNet='';
 //翻页调用
-const dataUrl=`${envNet}/api/Automatic/list`;
+const dataUrl=`${ENVNet}/api/Automatic/list`;
 //转换状态调用
-const changeUrl=`${envNet}/api/Automatic/changeStatus`;
+const changeUrl=`${ENVNet}/api/Automatic/changeStatus`;
 //快捷添加自动化规则
-const addUrl=`${envNet}/api/Automatic/add`;
+const addUrl=`${ENVNet}/api/Automatic/add`;
 //修改自动化规则名称
-const editUrl=`${envNet}/api/Automatic/update`;
+const editUrl=`${ENVNet}/api/Automatic/update`;
 //删除自动化规则名称
-const delUrl=`${envNet}/api/Automatic/delete`;
+const delUrl=`${ENVNet}/api/Automatic/delete`;
 const tableTitle=[
     {index:"ruleId",item:"自动化编号"},
     {index:"name",item:"自动化名称"},

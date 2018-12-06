@@ -3,13 +3,11 @@ import styles from "./operatingRecord.less"
 import { Input, Button, Form,Table,Icon,DatePicker} from 'antd';
 import { Link } from 'dva/router';
 import { parse } from 'qs';
-
-//开发地址
-const envNet='http://192.168.30.127:88';
+import {ENVNet} from '../../services/netCofig'
 //翻页调用
-const dataUrl=`${envNet}/api/device/control/operateLogs`;
+const dataUrl=`${ENVNet}/api/device/control/operateLogs`;
 //生产环境
-// const envNet='';
+// const ENVNet='';
 //表头
 // post通用设置
 let postOption = {

@@ -1,22 +1,19 @@
 import React,{Component} from 'react';
 import styles from './farmersInfo.less';
 import { Input,Button,Form,Select,Table,Modal,message} from 'antd';
-//开发地址
-const envNet='http://192.168.30.127:88';
-//生产环境
-// const envNet='';
+import {ENVNet} from '../../services/netCofig'
 //翻页调用
-const dataUrl=`${envNet}/api/PeasantMgr/list`;
+const dataUrl=`${ENVNet}/api/PeasantMgr/list`;
 //删除调用
-const delUrl=`${envNet}/api/PeasantMgr/delete`;
+const delUrl=`${ENVNet}/api/PeasantMgr/delete`;
 //添加调用
-const addUrl=`${envNet}/api/PeasantMgr/add`;
+const addUrl=`${ENVNet}/api/PeasantMgr/add`;
 //修改农户信息调用
-const updateUrl=`${envNet}/api/PeasantMgr/update`;
+const updateUrl=`${ENVNet}/api/PeasantMgr/update`;
 //修改密码调用
-const changePwdUrl=`${envNet}/api/PeasantMgr/changePwd`;
+const changePwdUrl=`${ENVNet}/api/PeasantMgr/changePwd`;
 //获取归属地地址
-const areaUrl=`${envNet}/api/Area/list`;
+const areaUrl=`${ENVNet}/api/Area/list`;
 // post通用设置
 let postOption = {
     method: 'POST',

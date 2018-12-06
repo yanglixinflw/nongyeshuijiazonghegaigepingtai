@@ -17,11 +17,8 @@ let postOption = {
         'Content-Type': 'application/json',
     }),
 }
-// 开发环境
-const envNet = 'http://192.168.30.127:88'
-// 生产环境
-// const envNet=''
-const addWarningRulesNet = `${envNet}/api/DeviceWaringRule/add`
+import {ENVNet} from '../../services/netCofig'
+const addWarningRulesNet = `${ENVNet}/api/DeviceWaringRule/add`
 export default class extends Component {
     state = {
         // 参数列表

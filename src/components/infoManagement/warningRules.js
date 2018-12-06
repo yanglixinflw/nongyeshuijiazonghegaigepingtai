@@ -3,14 +3,11 @@ import styles from "./warningRules.less"
 import { Button, Select, Table, Modal, message } from 'antd';
 import { routerRedux } from 'dva/router';
 import { Link } from 'dva/router';
-//开发环境
-const envNet = 'http://192.168.30.127:88';
-//生产环境
-// const envNet='';
+import {ENVNet} from '../../services/netCofig'
 //翻页调用
-const dataUrl = `${envNet}/api/DeviceWaringRule/ruleList`;
+const dataUrl = `${ENVNet}/api/DeviceWaringRule/ruleList`;
 // 删除调用
-const deleteUrl = `${envNet}/api/DeviceWaringRule/delete`
+const deleteUrl = `${ENVNet}/api/DeviceWaringRule/delete`
 // post通用设置
 let postOption = {
     method: 'POST',

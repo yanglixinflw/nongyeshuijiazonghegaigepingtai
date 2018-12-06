@@ -6,12 +6,9 @@ import store from '../../index'
 import { timeOut } from '../../utils/timeOut';
 import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList } from '../../services/api';
 import _ from 'lodash';
-// 开发环境
-const envNet = 'http://192.168.30.127:88';
-// 生产环境
-// const envNet = '';
+import {ENVNet} from '../../services/netCofig'
 //修改预警规则Url
-const updateUrl = `${envNet}/api/DeviceWaringRule/update`;
+const updateUrl = `${ENVNet}/api/DeviceWaringRule/update`;
 // post通用设置
 let postOption = {
     method: 'POST',

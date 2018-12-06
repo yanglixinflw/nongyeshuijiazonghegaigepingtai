@@ -1,28 +1,25 @@
 import React,{Component} from 'react';
 import styles from "./chargingDevice.less"
 import { Input, Button, Form, Table, Modal, Select,message,Row, Col,Checkbox} from 'antd';
-//开发地址
-const envNet='http://192.168.30.127:88';
-//生产环境
-// const envNet='';
+import {ENVNet} from '../../services/netCofig'
 //翻页调用
-const dataUrl=`${envNet}/fee/chargeFacility/list`;
+const dataUrl=`${ENVNet}/fee/chargeFacility/list`;
 //修改设备
-const editUrl=`${envNet}/fee/chargeFacility/update`;
+const editUrl=`${ENVNet}/fee/chargeFacility/update`;
 //添加设备
-const addUrl=`${envNet}/fee/chargeFacility/add`;
+const addUrl=`${ENVNet}/fee/chargeFacility/add`;
 //删除设备
-const delUrl=`${envNet}/fee/chargeFacility/delete`;
+const delUrl=`${ENVNet}/fee/chargeFacility/delete`;
 //关联建筑接口
-const buildingUrl=`${envNet}/api/Building/list`
+const buildingUrl=`${ENVNet}/api/Building/list`
 //下拉搜索设备调用
-const deviceUrl = `${envNet}/api/device/list`;
+const deviceUrl = `${ENVNet}/api/device/list`;
 //种植类型
-const plantTypeUrl = `${envNet}/fee/chargeFacility/plantTypeList`;
+const plantTypeUrl = `${ENVNet}/fee/chargeFacility/plantTypeList`;
 //灌区类型
-const wateringTypeUrl = `${envNet}/fee/chargeFacility/wateringTypeList`;
+const wateringTypeUrl = `${ENVNet}/fee/chargeFacility/wateringTypeList`;
 //设备安装地列表
-const installAddrUrl=`${envNet}/api/BaseInfo/installAddrList`;
+const installAddrUrl=`${ENVNet}/api/BaseInfo/installAddrList`;
 //表头
 const tableTitle=[
     {index:"deviceId",item:"设备ID"},

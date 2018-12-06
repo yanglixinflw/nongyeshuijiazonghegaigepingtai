@@ -6,10 +6,7 @@ import MyCustomize from './myCustomize';
 import { timeOut } from '../../utils/timeOut';
 import { Modal, Radio, message } from 'antd';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
-// 开发环境
-const envNet = 'http://192.168.30.127:88';
-// 生产环境
-// const envNet = '';
+import {ENVNet} from '../../services/netCofig'
 // post通用设置
 let postOption = {
     method: 'POST',
@@ -20,11 +17,11 @@ let postOption = {
     }),
 };
 //获取可执行命令
-const getCmdListUrl = `${envNet}/api/device/control/cmdList`;
+const getCmdListUrl = `${ENVNet}/api/device/control/cmdList`;
 //发送指令
-const sendCmdUrl = `${envNet}/api/device/control/sendCmd`;
+const sendCmdUrl = `${ENVNet}/api/device/control/sendCmd`;
 //获取设备的状态
-const deviceStatusUrl = `${envNet}/api/device/getDeviceStatus`
+const deviceStatusUrl = `${ENVNet}/api/device/getDeviceStatus`
 export default class extends Component {
     constructor(props) {
         super(props)

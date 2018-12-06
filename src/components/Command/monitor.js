@@ -7,9 +7,8 @@ import EZUIPlayer from '../../assets/ezuikit'
 import classnames from 'classnames'
 import { Dropdown, Select, message } from 'antd'
 import _ from 'lodash'
+import {ENVNet} from '../../services/netCofig'
 const Option = Select.Option
-//开发地址
-const envNet = 'http://192.168.30.127:88';
 // post通用设置
 const postOption = {
     method: 'POST',
@@ -26,9 +25,9 @@ message.config({
     maxCount: 1,
 });
 // 控制接口
-const contorlUrl = `${envNet}/api/CamerasMonitor/ptz/start`
+const contorlUrl = `${ENVNet}/api/CamerasMonitor/ptz/start`
 // 获取视频列表
-const getMonitorUrl = `${envNet}/api/CamerasMonitor/cameras`
+const getMonitorUrl = `${ENVNet}/api/CamerasMonitor/cameras`
 export default class extends Component {
     constructor(props) {
         super(props)

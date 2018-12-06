@@ -2,8 +2,7 @@ import React,{Fragment} from 'react';
 import { connect } from 'dva'
 import Login from '../../components/Login'
 import request from './../../utils/request';
-// 开发环境
-const envNet = 'http://192.168.30.127:88'
+import {ENVNet} from '../../services/netCofig'
 
 @connect(({ login, loading }) => ({
   login,
@@ -18,13 +17,13 @@ export default class extends React.Component {
       // 将codeId储存
       this.setState({
         codeId:v.data.data.codeId,
-        url:`${envNet}${v.data.data.url}`
+        url:`${ENVNet}${v.data.data.url}`
       })
     })
   }
   // 获取验证码
   getCAPTCHA(){
-    return request(`${envNet}/api/Account/captchaInfo`,{
+    return request(`${ENVNet}/api/Account/captchaInfo`,{
       method:'GET',
       mode:'cors',
     },'login')
@@ -36,7 +35,7 @@ export default class extends React.Component {
       // 将codeId储存
       this.setState({
         codeId:v.data.data.codeId,
-        url:`${envNet}${v.data.data.url}`
+        url:`${ENVNet}${v.data.data.url}`
       })
     })
   }
