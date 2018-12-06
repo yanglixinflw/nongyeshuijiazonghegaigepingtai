@@ -4,8 +4,10 @@ import { Input, Button, Form, Select, Icon, InputNumber ,message} from 'antd';
 import { Link,routerRedux } from 'dva/router';
 import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList } from '../../services/api'
 const Option = Select.Option;
+// import timeOut
 import _ from 'lodash'
 import store from '../../index'
+import { timeOut } from './../../utils/timeOut';
 // post通用设置
 let postOption = {
     method: 'POST',

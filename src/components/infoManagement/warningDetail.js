@@ -99,7 +99,7 @@ export default class extends Component {
     //保存完之后的刷新自定义规则列表
     _refreshList() {
         const { deviceId } = this.state;
-        Promise.resolve(queryWarningDetail(deviceId))
+        Promise.resolve(queryWarningDetail({deviceId}))
             .then((v) => {
                 //超时判断
                 timeOut(v.data.ret)
@@ -200,10 +200,12 @@ export default class extends Component {
     //预警模板保存
     _temSaveHandler() {
         const form = this.temRulesForm.props.form;
-        const { ruleId } = this.state
+        const { ruleId,} = this.state
         form.validateFields((err, values) => {
             if (!err) {
                 // console.log(values)
+                // //设备Id
+                // values.deviceId = deviceId
                 //预警规则ID
                 values.ruleId = ruleId
                 // 设备类型ID
@@ -289,9 +291,12 @@ export default class extends Component {
     //添加保存
     _addSaveHandler() {
         const form = this.addRulesForm.props.form;
+        const {deviceId} = this.state;
         form.validateFields((err, values) => {
             if (!err) {
                 // console.log(values)
+                //设备ID
+                values.deviceId = deviceId
                 // 设备类型ID
                 values.deviceTypeId = localStorage.getItem('selectDeviceTypeId')
                 // 短信是否通知

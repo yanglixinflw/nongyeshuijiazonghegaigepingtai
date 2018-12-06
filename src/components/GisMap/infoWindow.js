@@ -49,9 +49,9 @@ export default class extends Component {
                                     :
                                     infoData.map((v, i) => {
                                         return (
-                                            <div>
-                                                <p className={styles.labelName} key={i}>{v.displayName}{v.unit}<span>{v.value}</span></p>
-                                            </div>
+
+                                            <p className={styles.labelName} key={i}>{v.displayName}{v.unit}<span>{v.value}</span></p>
+
                                         )
                                     })
                             }
@@ -83,9 +83,9 @@ export default class extends Component {
                                     :
                                     infoData.map((v, i) => {
                                         return (
-                                            <div>
-                                                <p className={styles.labelName} key={i}>{v.displayName}{v.unit}<span>{v.value}</span></p>
-                                            </div>
+
+                                            <p className={styles.labelName} key={i}>{v.displayName}{v.unit}<span>{v.value}</span></p>
+
                                         )
                                     })
 
@@ -118,9 +118,9 @@ export default class extends Component {
                                     :
                                     infoData.map((v, i) => {
                                         return (
-                                            <div>
-                                                <p className={styles.labelName} key={i}>{v.displayName}{v.unit}<span>{v.value}</span></p>
-                                            </div>
+
+                                            <p className={styles.labelName} key={i}>{v.displayName}{v.unit}<span>{v.value}</span></p>
+
                                         )
                                     })
 

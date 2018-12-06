@@ -13,5 +13,8 @@ export default {
     fetchOk(state, { payload }) {
       return { ...state, ...payload }
     },
+    clear(){
+      return {}
+    }
   }
 }
