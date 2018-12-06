@@ -24,9 +24,9 @@ const paramUrl = `${envNet}/api/DeviceType/deviceParameters`;
 //获取开关阀列表
 const switchUrl = `${envNet}/api/device/control/cmdList`;
 //保存数据
-const saveUrl = `${envNet}/api/Automatic/saveRuleSettings`
+const saveUrl = `${envNet}/api/Automatic/saveRuleSettings`;
 //获取规则详情
-const ruleUrl = `${envNet}/api/Automatic/getRuleSettings`
+const ruleUrl = `${envNet}/api/Automatic/getRuleSettings`;
 export default class extends Component {
     constructor(props) {
         super(props)

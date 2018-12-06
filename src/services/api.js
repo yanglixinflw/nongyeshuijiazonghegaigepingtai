@@ -181,15 +181,15 @@ export function getGroupAccount(params){
     )
   })
 }
-// //获取交易记录（消费记录）列表
-// export function getDealRecord(params){
-//   return request(`${envNet}/`,{
-//     ...postOption,
-//     body:JSON.stringify(
-//       params
-//     )
-//   })
-// }
+//获取交易记录（消费记录）列表
+export function getDealRecord(params){
+  return request(`${envNet}/fee/transaction/records`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
 //获取小组管理
 export function getGroupManage(params){
   return request(`${envNet}/fee/groupAccount/getGroupMembers`,{

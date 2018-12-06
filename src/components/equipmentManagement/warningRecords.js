@@ -535,6 +535,8 @@ const SearchForm = Form.create()(
                                 placeholder="预警类型"
                             >
                                 <Option value=''>全部</Option>
+                                <Option value='1'>功能预警</Option>
+                                <Option value='2'>运营预警</Option>
                             </Select>
                             )
                         }
@@ -546,6 +548,9 @@ const SearchForm = Form.create()(
                                 placeholder="状态"
                             >
                                 <Option value=''>全部</Option>
+                                <Option value='1'>正常</Option>
+                                <Option value='2'>预警</Option>
+                                <Option value='3'>关闭</Option>
                             </Select>
                             )
                         }
