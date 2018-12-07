@@ -76,7 +76,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/models/deviceDataHistory.js">
           <provider selected="true" editor-type-id="text-editor">
             <state>
@@ -94,10 +94,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/routes/deviceData/deviceDataHistory.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2175">
+            <state relative-caret-position="250">
+              <caret line="10" column="14" lean-forward="true" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
               <folding>
                 <element signature="e#0#51#0" expanded="true" />
               </folding>
@@ -112,6 +113,8 @@
       <find>_editFarmerInfo</find>
       <find>Select</find>
       <find>link</find>
+      <find>historyId</find>
+      <find>queryDeviceHistory</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -269,12 +272,12 @@
       <workItem from="1543802372049" duration="2122000" />
       <workItem from="1543829157722" duration="193000" />
       <workItem from="1543973865112" duration="6099000" />
-      <workItem from="1544060159877" duration="9702000" />
+      <workItem from="1544060159877" duration="12157000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27457000" />
+    <option name="totallyTimeSpent" value="29912000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -488,10 +491,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/models/deviceDataHistory.js">
+    <entry file="file://$PROJECT_DIR$/src/routes/deviceData/deviceDataHistory.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="50" lean-forward="true" selection-start-column="50" selection-end-column="50" />
+        <state relative-caret-position="250">
+          <caret line="10" column="14" lean-forward="true" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#51#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -502,12 +508,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/routes/deviceData/deviceDataHistory.js">
+    <entry file="file://$PROJECT_DIR$/src/models/deviceDataHistory.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2175">
-          <folding>
-            <element signature="e#0#51#0" expanded="true" />
-          </folding>
+        <state>
+          <caret column="50" lean-forward="true" selection-start-column="50" selection-end-column="50" />
         </state>
       </provider>
     </entry>
