@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="045366d6-f127-48ce-8dc3-45e6b2a482b8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/distributedControl/autoRules.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/distributedControl/autoRules.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/equipmentManagement/warningRecords.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/equipmentManagement/warningRecords.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/waterRate/dealRecord.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/waterRate/dealRecord.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/dealRecord.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/dealRecord.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/waterRate/dealRecord.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/waterRate/dealRecord.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/api.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -38,14 +30,14 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="html" value="2" />
-          <entry key="js" value="23" />
+          <entry key="js" value="26" />
           <entry key="less" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="HTML" value="2" />
-          <entry key="JavaScript" value="23" />
+          <entry key="JavaScript" value="26" />
           <entry key="Less" value="1" />
         </counts>
       </usages-collector>
@@ -72,13 +64,42 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/equipmentManagement/warningRecords.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="475">
-              <caret line="568" column="58" selection-start-line="568" selection-start-column="58" selection-end-line="568" selection-end-column="58" />
+            <state relative-caret-position="125">
+              <caret line="50" column="30" lean-forward="true" selection-start-line="50" selection-start-column="30" selection-end-line="50" selection-end-column="30" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/models/deviceDataHistory.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="50" lean-forward="true" selection-start-column="50" selection-end-column="50" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/services/api.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="223">
+              <caret line="57" column="34" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/routes/deviceData/deviceDataHistory.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2175">
+              <folding>
+                <element signature="e#0#51#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -163,13 +184,26 @@
               <item name="nongyeshuijia" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="equipmentManagement" type="462c0819:PsiDirectoryNode" />
+              <item name="DeviceData" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="nongyeshuijia" type="b2602c69:ProjectViewProjectNode" />
+              <item name="nongyeshuijia" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="nongyeshuijia" type="b2602c69:ProjectViewProjectNode" />
               <item name="nongyeshuijia" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="routes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="nongyeshuijia" type="b2602c69:ProjectViewProjectNode" />
+              <item name="nongyeshuijia" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="deviceData" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="nongyeshuijia" type="b2602c69:ProjectViewProjectNode" />
@@ -235,12 +269,12 @@
       <workItem from="1543802372049" duration="2122000" />
       <workItem from="1543829157722" duration="193000" />
       <workItem from="1543973865112" duration="6099000" />
-      <workItem from="1544060159877" duration="7362000" />
+      <workItem from="1544060159877" duration="9702000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25117000" />
+    <option name="totallyTimeSpent" value="27457000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -269,7 +303,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.11292074" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.18458198" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -341,13 +375,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="325">
           <caret line="13" column="7" selection-start-line="13" selection-start-column="7" selection-end-line="13" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/services/api.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="186" column="18" selection-start-line="186" selection-start-column="18" selection-end-line="186" selection-end-column="18" />
         </state>
       </provider>
     </entry>
@@ -453,10 +480,33 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/equipmentManagement/warningRecords.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="568" column="58" selection-start-line="568" selection-start-column="58" selection-end-line="568" selection-end-column="58" />
+        <state relative-caret-position="125">
+          <caret line="50" column="30" lean-forward="true" selection-start-line="50" selection-start-column="30" selection-end-line="50" selection-end-column="30" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/models/deviceDataHistory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="50" lean-forward="true" selection-start-column="50" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/services/api.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="57" column="34" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes/deviceData/deviceDataHistory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2175">
+          <folding>
+            <element signature="e#0#51#0" expanded="true" />
           </folding>
         </state>
       </provider>

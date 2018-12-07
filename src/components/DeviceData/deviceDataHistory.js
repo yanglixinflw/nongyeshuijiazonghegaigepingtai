@@ -32,7 +32,7 @@ export default class extends Component {
         })
         //获取设备信息
         let deviceInfo = JSON.parse(localStorage.getItem('deviceInfo'));
-        // console.log(filtertitle);
+        // console.log(this.props.deviceDataHistory.data);
         // 获取标题和数据
         this.state = {
             // 页面typeId
@@ -40,7 +40,7 @@ export default class extends Component {
             //设备信息
             deviceInfo,
             //数据总数
-            itemCount: 100,
+            itemCount: this.props.deviceDataHistory.data.data.itemCount,
             // 拼接后的表头
             commonColumns,
             //表头
