@@ -2,17 +2,8 @@ import React, { Component } from 'react';
 import MapWarning from '../../components/equipmentManagement/mapWarning';
 import { parse } from 'qs';
 import { timeOut } from '../../utils/timeOut';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 const dataUrl = `${ENVNet}/api/DeviceWaringRule/eventList`;
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-};
 export default class extends Component {
     constructor(props){
         super(props)

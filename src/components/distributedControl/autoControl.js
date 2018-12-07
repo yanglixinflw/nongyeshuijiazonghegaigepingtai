@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import styles from "./autoControl.less"
 import { Input, Button, Form, Table,Modal } from 'antd';
 import { Link } from 'dva/router';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //生产环境
 // const ENVNet='';
 //翻页调用
@@ -22,15 +22,6 @@ const tableTitle=[
     {index:"isEnabled",item:"状态"},
     {index:"updateTime",item:"更新时间"},
 ]
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 export default class extends Component{
     constructor(props) {
         super(props)

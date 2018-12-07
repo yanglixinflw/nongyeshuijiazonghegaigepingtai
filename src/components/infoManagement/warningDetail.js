@@ -4,7 +4,7 @@ import { Select, Button, Form, Modal, Input, message, InputNumber } from 'antd';
 import { timeOut } from '../../utils/timeOut';
 import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList, queryWarningDetail } from '../../services/api'
 import _ from 'lodash';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //保存/添加预警规则Url
 const addUrl = `${ENVNet}/api/DeviceWaringRule/add`;
 //获取修改预警规则详情
@@ -15,15 +15,6 @@ const updateUrl = `${ENVNet}/api/DeviceWaringRule/update`;
 const deleteUrl = `${ENVNet}/api/DeviceWaringRule/delete`;
 //获取预警模板
 const TemRulesListUrl = `${ENVNet}/api/DeviceWaringRule/ruleList`
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-};
 export default class extends Component {
     constructor(props) {
         super(props)

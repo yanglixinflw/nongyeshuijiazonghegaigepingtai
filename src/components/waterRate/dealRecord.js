@@ -13,16 +13,7 @@ const tableTitle=[
     {index:"status",item:"交易状态"},
     {index:"transactionTime",item:"交易时间"},
 ]
-import {ENVNet} from '../../services/netCofig'
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
+import {ENVNet,postOption} from '../../services/netCofig'
 let userId = parse(window.location.href.split(':'))[3];
 export default class extends Component{
     constructor(props) {

@@ -6,16 +6,7 @@ import MyCustomize from './myCustomize';
 import { timeOut } from '../../utils/timeOut';
 import { Modal, Radio, message } from 'antd';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
-import {ENVNet} from '../../services/netCofig'
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-};
+import {ENVNet,postOption} from '../../services/netCofig'
 //获取可执行命令
 const getCmdListUrl = `${ENVNet}/api/device/control/cmdList`;
 //发送指令

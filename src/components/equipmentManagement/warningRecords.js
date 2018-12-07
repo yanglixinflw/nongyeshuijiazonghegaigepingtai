@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styles from './warningRecords.less';
 import { Input, Button, Form, Row, Col, Table, Modal, Select, Checkbox,Switch,message } from 'antd';
 import { Link } from 'dva/router';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl = `${ENVNet}/api/DeviceWaringRule/eventList`;
 //设备安装地列表
@@ -13,15 +13,6 @@ const closeWarningUrl=`${ENVNet}/api/DeviceWaringRule/eventClose`;
 const buildingUrl=`${ENVNet}/api/Building/list`
 //获取通知人列表
 const roleUrl=`${ENVNet}/api/BaseInfo/userSimpleList?userType=1&keyword= `
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 //头信息
 const tableTitle = [
     { index: "time", item: "预警时间" },

@@ -9,20 +9,11 @@ import MyCustomize from './myCustomize';
 import { timeOut } from '../../utils/timeOut';
 import _ from 'lodash';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //搜索
 const searchUrl = `${ENVNet}/api/device/gisDeviceList`;
 //获取实时数据
 const realTimeDataUrl = `${ENVNet}/api/DeviceData/realtimeData`
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-};
 export default class extends Component {
     constructor(props) {
         super(props)

@@ -18,16 +18,7 @@ import moment from 'moment'
 import { Link } from 'dva/router';
 const Item = Form.Item
 const Option = Select.Option
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 // 搜索、翻页接口、重置表单
 const getDataUrl = `${ENVNet}/api/Device/list`
 // 获取公司管护人列表
