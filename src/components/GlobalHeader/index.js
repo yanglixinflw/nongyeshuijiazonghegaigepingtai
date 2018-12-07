@@ -3,17 +3,8 @@ import styles from './index.less'
 import { routerRedux } from 'dva/router';
 import { Button, Menu, Dropdown, Icon ,Modal,Badge} from 'antd'
 import {Link} from 'dva/router';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 const dataUrl=`${ENVNet}/api/DeviceWaringRule/eventList`;
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 // 确认退出className
 const confirmLogout=styles.confirmLogout
 const confirm = Modal.confirm;

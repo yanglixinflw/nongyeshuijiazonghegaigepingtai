@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styles from './index.less'
 import { Button, Table, Form, Input, Select, Modal, message } from 'antd';
 import { timeOut } from '../../utils/timeOut';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 ////获取用户角色列表url
 const roleUrl = `${ENVNet}/api/UserMgr/roleList`;
 //获取部门列表url
@@ -17,15 +17,6 @@ const updateUrl = `${ENVNet}/api/UserMgr/update`;
 const deleteUrl = `${ENVNet}/api/UserMgr/delete`;
 //点击修改是获取用户详细信息
 const detailUrl = `${ENVNet}/api/UserMgr/details`;
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-};
 // 全部title
 const tableTitle = [
     '账号', 

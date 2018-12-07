@@ -4,16 +4,7 @@ import { Input, Button, Form, Select,Icon,Radio,message} from 'antd';
 import {Link} from 'dva/router';
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
-import {ENVNet} from '../../services/netCofig'
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
+import {ENVNet,postOption} from '../../services/netCofig'
 //搜索设备调用
 const deviceUrl = `${ENVNet}/api/device/list`;
 //获取设备参数列表

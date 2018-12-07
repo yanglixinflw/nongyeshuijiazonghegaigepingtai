@@ -10,22 +10,13 @@ const tableTitle=[
     {index:"idCard",item:"身份证"},
     {index:"areaName",item:"归属地区"},
 ]
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //小组账户数据
 const dataUrl=`${ENVNet}/fee/groupAccount/getGroupMembers`;
 //获取归属地地址
 const areaUrl=`${ENVNet}/api/Area/list`;
 //保存数据接口
 const saveUrl=`${ENVNet}/fee/groupAccount/SaveMembers`;
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 export default class extends Component{
     constructor(props) {
         super(props)

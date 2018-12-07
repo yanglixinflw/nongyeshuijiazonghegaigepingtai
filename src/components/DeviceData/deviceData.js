@@ -4,18 +4,9 @@ import { Input, Button, Form, Select, Table, Checkbox, Modal, Row, Col } from 'a
 import { Link } from 'dva/router';
 import _ from 'lodash';
 import { timeOut } from '../../utils/timeOut';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //搜索 翻页url
 const dataUrl = `${ENVNet}/api/DeviceData/list`;
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 const Option = Select.Option
 export default class extends Component {
     constructor(props) {

@@ -8,16 +8,7 @@ const Option = Select.Option;
 import _ from 'lodash'
 import store from '../../index'
 import { timeOut } from './../../utils/timeOut';
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 const addWarningRulesNet = `${ENVNet}/api/DeviceWaringRule/add`
 export default class extends Component {
     state = {

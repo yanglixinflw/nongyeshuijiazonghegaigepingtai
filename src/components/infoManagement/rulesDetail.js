@@ -6,18 +6,9 @@ import store from '../../index'
 import { timeOut } from '../../utils/timeOut';
 import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList } from '../../services/api';
 import _ from 'lodash';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //修改预警规则Url
 const updateUrl = `${ENVNet}/api/DeviceWaringRule/update`;
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-};
 export default class extends Component {
     constructor(props) {
         super(props)

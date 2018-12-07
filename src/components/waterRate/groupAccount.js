@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import styles from "./groupAccount.less"
 import { Input, Button, Form, Table,Select,Modal,message} from 'antd';
 import { Link } from 'dva/router';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl=`${ENVNet}/fee/groupAccount/list`;
 //修改小组名称
@@ -11,15 +11,6 @@ const editUrl=`${ENVNet}/fee/groupAccount/changeName`;
 const clearUrl=`${ENVNet}/fee/groupAccount/clearCurrentWaterUse`;
 //分配水权
 const assignUrl=`${ENVNet}/fee/groupAccount/assignWaterPower`;
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 //表头
 const tableTitle=[
     {index:"deviceId",item:"设备ID"},

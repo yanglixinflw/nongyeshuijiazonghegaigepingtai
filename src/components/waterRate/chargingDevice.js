@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import styles from "./chargingDevice.less"
 import { Input, Button, Form, Table, Modal, Select,message,Row, Col,Checkbox} from 'antd';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl=`${ENVNet}/fee/chargeFacility/list`;
 //修改设备
@@ -31,15 +31,6 @@ const tableTitle=[
     {index:"plantTypeName",item:"种植类型"},
     {index:"updateTime",item:"更新时间"},
 ]
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 const { Option }=Select
 export default class extends Component{
     constructor(props) {
