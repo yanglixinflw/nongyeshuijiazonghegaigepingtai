@@ -231,11 +231,11 @@ export default class extends Component {
             onChange: (page) => this._pageChange(page)
         };
         return (
-            <React.Fragment>
+            <div className={styles.deleteGlobal}>
                 <div className={styles.header}>
                     <span>|</span>预警规则
                 </div>
-                <div className={styles.searchForm}>
+                <div className={styles.tableData}>
                     <div className={styles.buttonGroup}>
                         <Button
                             icon='plus'
@@ -248,7 +248,6 @@ export default class extends Component {
                 </div>
                 <Table
                     columns={columns}
-                    className={styles.table}
                     pagination={paginationProps}
                     dataSource={tableDatas}
                 // scroll={{ x: 1300 }}
@@ -298,7 +297,7 @@ export default class extends Component {
                         </Select>
                     </div>
                 </Modal>
-            </React.Fragment>
+            </div>
         )
     }
 }

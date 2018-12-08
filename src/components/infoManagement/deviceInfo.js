@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import styles from './deviceInfo.less'
 import QRCode from 'qrcode.react'
 import {
@@ -135,7 +135,7 @@ export default class extends Component {
             key: 'action',
             align: 'center',
             fixed: 'right',
-            width: 410,
+            // width: 410,
             className: `${styles.action}`,
             render: (record) => {
                 return (
@@ -570,7 +570,7 @@ export default class extends Component {
         };
         // console.log(modifyData)
         return (
-            <Fragment>
+            <div className={styles.deviceInfoTable}>
                 <ShowSetForm
                     wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
                     visible={showSetVisible}
@@ -671,16 +671,17 @@ export default class extends Component {
                     </div>
                 </div>
                 <Table
+                    
                     columns={columns}
                     dataSource={tableData}
                     pagination={paginationProps}
                     scroll={
                         // { x: columns.length > 10 ?2000: false }
-                        { x: columns.length < 4 ? false : 2000 }
+                        { x: columns.length < 4 ? false : true }
                         // { x: 2000 }
                     }
                 />
-            </Fragment>
+            </div>
         )
     }
 }
