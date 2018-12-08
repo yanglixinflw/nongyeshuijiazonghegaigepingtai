@@ -216,7 +216,7 @@ export default class extends Component {
                     rowKey={() => Math.random()}
                     scroll={
                         // { x: columns.length > 10 ? 2800 : false }
-                        { x: columns.length < 4 ? false : 2000 }
+                        { x: columns.length < 4 ? false : true }
                     }
                 />
             </div>
