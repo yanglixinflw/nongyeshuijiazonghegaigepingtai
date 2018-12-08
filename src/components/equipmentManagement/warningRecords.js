@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styles from './warningRecords.less';
 import { Input, Button, Form, Row, Col, Table, Modal, Select, Checkbox,Switch,message } from 'antd';
 import { Link } from 'dva/router';
+import classnames from 'classnames'
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl = `${ENVNet}/api/DeviceWaringRule/eventList`;
@@ -407,29 +408,31 @@ export default class extends Component {
                         />
                         <div className={styles.buttonGroup}>
                             <Button
-                                icon='search'
+                                // icon='search'
                                 className={styles.fnButton}
                                 onClick={() => this._searchTableData()}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
                                 搜索
                             </Button>
                             <Button
-                                icon='reload'
+                                // icon='reload'
                                 className={styles.fnButton}
                                 onClick={() => this._resetForm()}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.searchIcon}`)}></i>
                                 重置
                             </Button>
                             <Button
                                 icon='eye'
-                                className={styles.fnButton}
+                                className={styles.fnButton2}
                                 onClick={() => this.onShow()}
                             >
                                 显示设置
                             </Button>
                             <Button
                                 icon='upload'
-                                className={styles.fnButton}
+                                className={styles.fnButton2}
                             >
                                 数据导出
                             </Button>
