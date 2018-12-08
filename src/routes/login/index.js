@@ -21,6 +21,9 @@ export default class extends React.Component {
       })
     })
   }
+  componentDidMount(){
+    console.log(1)
+  }
   // 获取验证码
   getCAPTCHA(){
     return request(`${ENVNet}/api/Account/captchaInfo`,{
