@@ -927,7 +927,7 @@ const EditPwdForm = Form.create()(
                                 {validator: this.validateToNextPassword}
                             ],
                             })(
-                                <Input type="password"/>
+                                <Input placeholder='密码由6~20位字母和数字组成' type="password"/>
                             )}
                         </Form.Item>
                         <Form.Item
@@ -940,7 +940,7 @@ const EditPwdForm = Form.create()(
                                     {validator: this.compareToFirstPassword}
                                 ],
                             })(
-                                <Input type="password" onBlur={this.onBlur}/>
+                                <Input type="password" placeholder='确认新密码' onBlur={this.onBlur}/>
                             )}
                         </Form.Item>
                     </Form>
