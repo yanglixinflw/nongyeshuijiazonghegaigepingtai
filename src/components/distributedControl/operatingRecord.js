@@ -70,17 +70,22 @@ export default class extends Component{
             if (err) {
                 return
             }
+            // console.log(fieldsValue)
+          if(fieldsValue['range-time-picker']!==undefined){
             const rangeTimeValue = fieldsValue['range-time-picker'];
             const values = {
-                ...fieldsValue,
-                'range-time-picker': [
-                  rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
-                  rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
-                ]
+              ...fieldsValue,
+              'range-time-picker': [
+                rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
+                rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
+              ]
             };
             for(var i in values){
-                var val=values[i]
+              var val=values[i]
             }
+          }else{
+            var val=["",""]
+          }
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({

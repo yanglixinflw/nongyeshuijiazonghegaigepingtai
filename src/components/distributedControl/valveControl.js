@@ -485,7 +485,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('id', {})
+                        {getFieldDecorator('deviceId', {})
                             (
                             <Input
                                 placeholder='设备ID'

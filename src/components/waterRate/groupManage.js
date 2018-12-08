@@ -3,6 +3,7 @@ import styles from "./groupManage.less"
 import { Input, Button, Form, Table,Select,message,Icon,Checkbox, Row, Col} from 'antd';
 import { Link } from 'dva/router';
 import { parse } from 'qs';
+import {ENVNet,postOption} from '../../services/netCofig'
 //头信息
 const tableTitle=[
     {index:"realName",item:"姓名"},
@@ -10,7 +11,6 @@ const tableTitle=[
     {index:"idCard",item:"身份证"},
     {index:"areaName",item:"归属地区"},
 ]
-import {ENVNet,postOption} from '../../services/netCofig'
 //小组账户数据
 const dataUrl=`${ENVNet}/fee/groupAccount/getGroupMembers`;
 //获取归属地地址
@@ -230,12 +230,16 @@ export default class extends Component{
                                             return(
                                                 <Col key={i}>
                                                     <Checkbox value={v.memberUserId}>
-                                                        <ul>
-                                                            <li title={v.realName}>姓名：{v.realName}</li>
-                                                            <li title={v.mobilePhone}>电话：{v.mobilePhone}</li>
-                                                            <li title={v.areaName}>所属片区：{v.areaName}</li>
-                                                            <li title={v.idCard}>身份证：{v.idCard}</li>
-                                                        </ul>
+                                                        <div>
+                                                            <ul>
+                                                                <li title={v.realName}>姓名：{v.realName}</li>
+                                                                <li title={v.idCard}>身份证：{v.idCard}</li>
+                                                            </ul>
+                                                            <ul>
+                                                                <li title={v.mobilePhone}>电话：{v.mobilePhone}</li>
+                                                                <li title={v.areaName}>所属片区：{v.areaName}</li>
+                                                            </ul>
+                                                        </div>
                                                     </Checkbox>
                                                 </Col>
                                             )}    
@@ -245,8 +249,8 @@ export default class extends Component{
                             </div>
                         </div>
                         <div className={styles.middle}>
-                            <div className={styles.btnL} onClick={()=>this.push()}>&lt;</div>
-                            <div className={styles.btnR} onClick={()=>this.remove()}>&gt;</div>
+                            <Button type="primary" className={styles.btnL} onClick={()=>this.push()}>&lt;</Button>
+                            <Button type="primary" className={styles.btnR} onClick={()=>this.remove()}>&gt;</Button>
                         </div>
                         <div className={styles.mright}>
                             <div className={styles.title}>
