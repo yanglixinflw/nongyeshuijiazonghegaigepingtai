@@ -3,21 +3,9 @@ import styles from "./operatingRecord.less"
 import { Input, Button, Form,Table,Icon,DatePicker} from 'antd';
 import { Link } from 'dva/router';
 import { parse } from 'qs';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl=`${ENVNet}/api/device/control/operateLogs`;
-//生产环境
-// const ENVNet='';
-//表头
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 const tableTitle=[
     {index:"operateUserName",item:"操作员"},
     {index:"cmdName",item:"动作"},

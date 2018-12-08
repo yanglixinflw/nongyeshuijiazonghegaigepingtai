@@ -4,18 +4,9 @@ import { Spin} from 'antd';
 import BreadcrumbView from '../../components/PageHeader/breadcrumb';
 import { parse } from 'qs';
 import History from '../../components/DeviceData/deviceDataHistory';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //请求title url
 const getTitle = `${ENVNet}/api/DeviceData/columns`;
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-};
 @connect(({ deviceDataHistory, loading }) => ({
     deviceDataHistory,
     loading: loading.models.deviceDataHistory,

@@ -3,20 +3,11 @@ import styles from "./warningRules.less"
 import { Button, Select, Table, Modal, message } from 'antd';
 import { routerRedux } from 'dva/router';
 import { Link } from 'dva/router';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl = `${ENVNet}/api/DeviceWaringRule/ruleList`;
 // 删除调用
 const deleteUrl = `${ENVNet}/api/DeviceWaringRule/delete`
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 const Option = Select.Option;
 //头信息
 const title = [

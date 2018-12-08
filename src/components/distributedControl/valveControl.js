@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import styles from "./valveControl.less"
 import { Input,Button, Form,Table,Select,Modal,Radio,message} from 'antd';
 import { Link } from 'dva/router';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //设备安装地列表
 const installAddrUrl=`${ENVNet}/api/BaseInfo/installAddrList`
 //翻页调用
@@ -15,15 +15,6 @@ const instructUrl=`${ENVNet}/api/device/control/cmdList`
 const sendCmdUrl=`${ENVNet}/api/device/control/sendCmd`
 //关联建筑接口
 const buildingUrl=`${ENVNet}/api/Building/list`
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 //表头
 const tableTitle=[
     {index:"deviceTypeName",item:"设备型号"},

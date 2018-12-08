@@ -1,14 +1,5 @@
 import request from '../utils/request';
-import {ENVNet} from './netCofig'
-// post通用设置
-let postOption = {
-  method: 'POST',
-  credentials: "include",
-  mode: 'cors',
-  headers: new Headers({
-    'Content-Type': 'application/json',
-  }),
-}
+import {ENVNet,postOption} from './netCofig'
 //设备数据 智能球阀/设备井电/清易气象/清易墒情
 export function queryDevice(params){
   return request(`${ENVNet}/api/DeviceData/list`,{

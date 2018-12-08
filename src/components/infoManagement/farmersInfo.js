@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import styles from './farmersInfo.less';
 import { Input,Button,Form,Select,Table,Modal,message} from 'antd';
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl=`${ENVNet}/api/PeasantMgr/list`;
 //删除调用
@@ -14,15 +14,6 @@ const updateUrl=`${ENVNet}/api/PeasantMgr/update`;
 const changePwdUrl=`${ENVNet}/api/PeasantMgr/changePwd`;
 //获取归属地地址
 const areaUrl=`${ENVNet}/api/Area/list`;
-// post通用设置
-let postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 //头信息
 const tableTitle=[
     {index:"realName",item:"姓名"},

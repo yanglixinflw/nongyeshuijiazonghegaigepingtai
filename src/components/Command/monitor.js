@@ -7,17 +7,8 @@ import EZUIPlayer from '../../assets/ezuikit'
 import classnames from 'classnames'
 import { Dropdown, Select, message } from 'antd'
 import _ from 'lodash'
-import {ENVNet} from '../../services/netCofig'
+import {ENVNet,postOption} from '../../services/netCofig'
 const Option = Select.Option
-// post通用设置
-const postOption = {
-    method: 'POST',
-    credentials: "include",
-    mode: 'cors',
-    headers: new Headers({
-        'Content-Type': 'application/json',
-    }),
-}
 // 控制提示信息配置
 message.config({
     top: 100,
