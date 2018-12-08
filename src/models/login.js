@@ -14,11 +14,14 @@ export default {
              payload: response })
             // 返回结果为1，则表示登录成功
             if(response.data.ret==1){
+                console.log(response)
                 // 跳转到首页
                 yield put(routerRedux.replace('/gismap/gismapPage'));
                 let yzNumber=Math.floor(Math.random()*100+100)
                 // 使用islogin保存登录状态
                 localStorage.setItem('welcome',yzNumber)
+                // 设置用户名
+                localStorage.setItem('userName',response.data.data.loginName)
                 // 保存屏幕数
                 localStorage.setItem('monitorNum',9)
                 // console.log('登录成功--models')

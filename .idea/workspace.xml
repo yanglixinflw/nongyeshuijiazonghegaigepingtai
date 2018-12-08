@@ -2,9 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="045366d6-f127-48ce-8dc3-45e6b2a482b8" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/components/DeviceData/common.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DeviceData/common.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/GlobalHeader/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalHeader/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/equipmentManagement/warningRecords.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/equipmentManagement/warningRecords.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.less" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/systemManagement/index.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/systemManagement/index.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/waterRate/chargingDevice.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/waterRate/chargingDevice.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/waterRate/groupAccount.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/waterRate/groupAccount.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/systemManagement/userManagement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/systemManagement/userManagement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/basicLayout.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/basicLayout.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/login/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/login/index.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -19,7 +26,7 @@
     <session id="902355902">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="11" />
+          <entry key="project.closed" value="12" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.2" value="2" />
@@ -68,20 +75,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/waterRate/chargingDevice.less">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
-              <caret line="37" column="12" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="26" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/systemManagement/index.less">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="238" column="33" selection-start-line="238" selection-start-column="33" selection-end-line="238" selection-end-column="33" />
+            <state relative-caret-position="-25">
+              <caret line="26" column="29" lean-forward="true" selection-start-line="26" selection-start-column="29" selection-end-line="26" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -90,12 +88,12 @@
         <entry file="file://$PROJECT_DIR$/src/components/infoManagement/farmersInfo.less">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2914">
-              <caret line="356" column="12" selection-start-line="356" selection-start-column="12" selection-end-line="365" selection-end-column="13" />
+              <caret line="357" column="12" selection-start-line="357" selection-start-column="12" selection-end-line="366" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/waterRate/groupAccount.less">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="400">
@@ -317,12 +315,12 @@
       <workItem from="1543802372049" duration="2122000" />
       <workItem from="1543829157722" duration="193000" />
       <workItem from="1543973865112" duration="6099000" />
-      <workItem from="1544060159877" duration="37027000" />
+      <workItem from="1544060159877" duration="37156000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="54782000" />
+    <option name="totallyTimeSpent" value="54911000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -351,7 +349,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.07166124" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.4256243" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -618,24 +616,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/systemManagement/index.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="238" column="33" selection-start-line="238" selection-start-column="33" selection-end-line="238" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/infoManagement/farmersInfo.less">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2914">
-          <caret line="356" column="12" selection-start-line="356" selection-start-column="12" selection-end-line="365" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/waterRate/chargingDevice.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="37" column="12" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="26" />
+          <caret line="357" column="12" selection-start-line="357" selection-start-column="12" selection-end-line="366" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -643,6 +627,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="400">
           <caret line="190" column="38" selection-start-line="190" selection-start-column="38" selection-end-line="190" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/systemManagement/index.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="423">
+          <caret line="242" column="21" lean-forward="true" selection-start-line="242" selection-start-column="21" selection-end-line="242" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/waterRate/chargingDevice.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-25">
+          <caret line="26" column="29" lean-forward="true" selection-start-line="26" selection-start-column="29" selection-end-line="26" selection-end-column="29" />
         </state>
       </provider>
     </entry>

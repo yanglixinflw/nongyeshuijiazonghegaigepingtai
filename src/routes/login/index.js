@@ -3,7 +3,7 @@ import { connect } from 'dva'
 import Login from '../../components/Login'
 import request from './../../utils/request';
 import {ENVNet} from '../../services/netCofig'
-
+import { routerRedux } from 'dva/router';
 @connect(({ login, loading }) => ({
   login,
   // 正在提交
@@ -22,7 +22,13 @@ export default class extends React.Component {
     })
   }
   componentDidMount(){
-    console.log(1)
+    const {dispatch}=this.props
+    // 验证是否已登录
+    let loginOrNot = localStorage.getItem('welcome')
+    if (loginOrNot >= 100) {
+      // 进入主页
+      dispatch(routerRedux.push('/'));
+    } 
   }
   // 获取验证码
   getCAPTCHA(){

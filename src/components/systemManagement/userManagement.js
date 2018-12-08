@@ -620,19 +620,21 @@ const SearchForm = Form.create()(
                     </Form.Item>
                     <Form.Item>
                         <Button
-                            icon='search'
+                            // icon='search'
                             className={styles.searchButton}
                             onClick={() => searchHandler()}
                             htmlType='submit'
                         >
+                            <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
                             搜索</Button>
                     </Form.Item>
                     <Form.Item>
                         <Button
-                            icon='reload'
+                            // icon='reload'
                             className={styles.searchButton}
                             onClick={() => resetHandler()}
                         >
+                            <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.searchIcon}`)}></i>
                             重置</Button>
                     </Form.Item>
                 </Form>
