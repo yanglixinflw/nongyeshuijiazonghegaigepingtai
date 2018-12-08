@@ -45,11 +45,14 @@
                     outline: 0;
                     border: 0;
                     margin-right: 3px;
-                    color: #ACB5E8;
+                    color: #fff;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     font-size: 12px;
+                    ::-webkit-input-placeholder{
+                        color:#46586E;
+                    }
                 }
                 .ant-select-selection {
                     height: 46px;
@@ -294,8 +297,10 @@
                 button:first-child {
                     border: 0;
                     background: #171A39;
+                    color:#327DF4;
                     &:hover {
-                        color: #327DF4;
+                        background: #327DF4;
+                        color: #fff;
                     }
                 }
                 button:last-child {
@@ -382,8 +387,10 @@
                 button:first-child {
                     border: 0;
                     background: #171A39;
+                    color:#327DF4;
                     &:hover {
-                        color: #327DF4;
+                        background: #327DF4;
+                        color: #fff;
                     }
                 }
                 button:last-child {

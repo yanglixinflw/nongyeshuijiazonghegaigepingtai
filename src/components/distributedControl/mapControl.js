@@ -16,7 +16,7 @@ const deviceStatusUrl = `${ENVNet}/api/device/getDeviceStatus`
 export default class extends Component {
     constructor(props) {
         super(props)
-        console.log(props)
+        // console.log(props)
         const plugins = [
             // 比例尺
             'Scale',
@@ -50,13 +50,16 @@ export default class extends Component {
             //命令列表
             cmdList: [],
             //设备ID
-            deviceId: ''
+            deviceId: '',
+            //设备名称
+            name:''
         }
     }
     componentDidMount() {
         let ballPosition = [];
         //将拿到的数据做处理
         const ballData = this.props.mapGis.waterValve.data.data.items;
+        // console.log(ballData)
         ballData.map((v, i) => {
             let position = {};
             position.longitude = v.longitude;
@@ -65,7 +68,8 @@ export default class extends Component {
             ballPosition.push({
                 position,
                 deviceTypeId: v.deviceTypeId,
-                deviceId: v.deviceId
+                deviceId: v.deviceId,
+                name:v.name
             })
         })
         this.setState({
@@ -76,12 +80,14 @@ export default class extends Component {
             click: (MapsOption, marker) => {
                 //点击某个marker时请求接口获得该球阀的开关信息设置value
                 // console.log(marker)
-                // console.log(marker.getExtData())
-                let deviceTypeId = marker.getExtData().deviceTypeId
-                let deviceId = marker.getExtData().deviceId
+                // console.log(marker.getExtData());
+                let deviceTypeId = marker.getExtData().deviceTypeId;
+                let deviceId = marker.getExtData().deviceId;
+                let name = marker.getExtData().name;
                 this._getCmdList(deviceTypeId,deviceId)
                 this.setState({
-                    deviceId
+                    deviceId,
+                    name
                 })
             }
         }
@@ -101,7 +107,7 @@ export default class extends Component {
                     timeOut(v.ret)
                     if (v.ret == 1) {
                         let cmdList = v.data
-                        console.log(cmdList)
+                        // console.log(cmdList)
                         this.setState({
                             cmdList,
                             modalVisible: true
@@ -186,7 +192,8 @@ export default class extends Component {
             modalVisible,
             //该球阀开或关
             statusValue,
-            cmdList
+            cmdList,
+            name
         } = this.state;
         // console.log(statusValue)
         return (
@@ -213,6 +220,7 @@ export default class extends Component {
                     className={styles.controlModal}
                     centered={true}
                     visible={modalVisible}
+                    // title={name}
                     title='球阀开关'
                     onCancel={() => this._onCancel()}
                     onOk={() => this._onOk()}
