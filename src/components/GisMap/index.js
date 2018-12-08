@@ -400,6 +400,7 @@ export default class extends Component {
     _cameraHandler() {
         const { allCameraMarkers, allWaterValveMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
         // console.log(allCameraMarkers)
+        this.refs.searchInput.input.value='';
         allCameraMarkers.map((v, i) => {
             if (v.Pg.visible == true) {
                 let deviceTypeId = '';
@@ -441,6 +442,7 @@ export default class extends Component {
     _WatermeterHandler() {
         const { allCameraMarkers, allWaterValveMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
         // console.log(allWaterMeterMarkers)
+        this.refs.searchInput.input.value='';
         allWaterMeterMarkers.map((v, i) => {
             if (v.Pg.visible == true) {
                 let deviceTypeId = '';
@@ -480,6 +482,7 @@ export default class extends Component {
     //电表
     _ElectricmeterHandler() {
         const { allWaterValveMarkers, allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
+        this.refs.searchInput.input.value='';
         allEleMeterMarkers.map((v, i) => {
             if (v.Pg.visible == true) {
                 let deviceTypeId = '';
@@ -519,6 +522,7 @@ export default class extends Component {
     //水阀
     _WatervalveHandler() {
         const { allWaterValveMarkers, allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
+        this.refs.searchInput.input.value='';
         allWaterValveMarkers.map((v, i) => {
             if (v.Pg.visible == true) {
                 let deviceTypeId = '';
