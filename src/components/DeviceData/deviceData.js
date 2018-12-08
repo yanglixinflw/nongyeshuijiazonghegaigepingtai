@@ -353,7 +353,7 @@ export default class extends Component {
                     dataSource={tableData}
                     rowKey={record => record.deviceId}
                     scroll={
-                        { x: columns.length < 4 ? false : 3000 }
+                        { x: columns.length < 4 ? false : true }
                     }
                 />
             </div>

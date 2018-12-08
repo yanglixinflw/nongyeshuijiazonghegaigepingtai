@@ -42,6 +42,8 @@
 // 表格单元最小宽度
 .tbw {
     min-width: 100px;
+    // max-width: 200px;
+    width: 100%;
 }
 
 //搜索
@@ -119,6 +121,9 @@
 }
 .deviceData{
     :global {
+        .ant-table-fixed-right .ant-table-tbody tr td .ant-btn{
+            margin-right: 0;
+        }
         .ant-table-fixed-right {
             box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
             .ant-table-thead {
@@ -202,6 +207,7 @@
                     }
                 }
             }
+            .ant-table td { white-space: nowrap; }
             .ant-table-tbody {
                 tr {
                     &:hover td {
@@ -494,7 +500,7 @@
     }
 }
 .action{
-    padding:0px  16px !important;
+    padding:0px  0px !important;
     :global{
         .ant-btn{
             padding:0px 6px !important;
