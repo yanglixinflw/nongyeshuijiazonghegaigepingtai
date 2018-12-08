@@ -60,6 +60,9 @@
                 }
             }
         }
+        .ant-list-empty-text {
+            color: #fff;
+        }
         .ant-list-vertical .ant-list-item-content {
             display: flex !important;
             margin: 0 !important;
@@ -78,15 +81,20 @@
 .itemName {
     color: #BBC5D2;
     font-size: 12px;
-    margin: 0 12px 0 0; // width:40px;
+    margin: 0 12px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    max-width: 85px;
     .keyWordSt {
         color: #327DF4 !important;
     }
 }
+
 .deviceId {
     color: #BBC5D2;
     font-size: 12px;
-    margin: 0 12px 0 0;
+    margin: 0 ;
     max-width: 165px;
     white-space: nowrap;
     overflow: hidden;
@@ -95,14 +103,16 @@
         color: #327DF4 !important;
     }
 }
-.warningWarn{
+
+.warningWarn {
     display: block;
-    width:38px;
+    width: 38px;
     height: 38px;
     position: absolute;
     right: 12px;
     background: url(../../assets/warningWarn.png) no-repeat;
 }
+
 .keyWordSt {
     color: #327DF4 !important;
 }
@@ -121,46 +131,42 @@
     position: absolute;
     top: 36px;
     right: 283px;
-    :global {
-        .ant-btn {
-            margin-right: 35px;
-            border: 0;
-            background: #141831;
-            color: #BBC5D2;
-            width: 68px;
-            height: 68px;
-            margin-left: 7px;
+    .onActive {
+        margin-right: 35px;
+        border: 0;
+        width: 68px;
+        height: 68px;
+        margin-left: 7px;
+        font-size: 12px;
+        padding: 0px 5px;
+        overflow: hidden;
+        vertical-align: middle;
+        white-space: pre-wrap; 
+        background: #327DF4;
+        color: #fff;
+        span {
             font-size: 12px;
-            padding: 0px 5px;
-            overflow: hidden;
-            vertical-align: middle;
-            white-space: pre-wrap;
-            &:focus {
-                background: #327DF4;
-                color: #fff;
-                span {
-                    color: #fff;
-                }
-            }
-            &:hover {
-                background: #327DF4;
-                color: #fff;
-                span {
-                    color: #fff;
-                }
-            }
-            &:active {
-                background: #327DF4;
-                color: #fff;
-                span {
-                    color: #fff;
-                }
-            }
-            span {
-                font-size: 12px;
-                font-weight: 600;
-                color: #BBC5D2;
-            }
+            font-weight: 600;
+            color: #fff;
+        }
+    }
+    .offActive{
+        margin-right: 35px;
+        border: 0;
+        background: #141831;
+        color: #BBC5D2;
+        width: 68px;
+        height: 68px;
+        margin-left: 7px;
+        font-size: 12px;
+        padding: 0px 5px;
+        overflow: hidden;
+        vertical-align: middle;
+        white-space: pre-wrap; 
+        span {
+            font-size: 12px;
+            font-weight: 600;
+            color: #BBC5D2;
         }
     }
     .camera {
@@ -170,14 +176,14 @@
         height: 44px;
         background: url(../../assets/camera.png) center no-repeat;
     }
-    .waterMeter{
+    .waterMeter {
         margin: 0 7px;
         display: block;
         width: 44px;
         height: 44px;
         background: url(../../assets/waterMeter.png) center no-repeat;
     }
-    .eleMeter{
+    .eleMeter {
         margin: 0 7px;
         display: block;
         width: 44px;
@@ -230,14 +236,14 @@
             display: none !important;
         }
     }
-    .amap-copyright{
+    .amap-copyright {
         display: none !important;
     }
-    .amap-logo{
+    .amap-logo {
         display: none !important;
     }
-    .amap-scale-text{
-        color:#fff
+    .amap-scale-text {
+        color: #fff
     }
 }
 
@@ -326,8 +332,7 @@
             animation-iteration-count: infinite;
             animation-timing-function: linear;
         }
-    } 
-    //普通显示摄像头
+    } //普通显示摄像头
     .normal {
         display: block;
         width: 44px;
@@ -335,7 +340,8 @@
         background: url(../../assets/normalCamera.png) no-repeat;
     }
 }
-.markerWaterM{
+
+.markerWaterM {
     //预警显示水表
     .warning {
         display: block;
@@ -378,8 +384,7 @@
             animation-iteration-count: infinite;
             animation-timing-function: linear;
         }
-    } 
-    //被选中的水表
+    } //被选中的水表
     .chosen {
         display: block;
         width: 44px;
@@ -421,8 +426,7 @@
             animation-iteration-count: infinite;
             animation-timing-function: linear;
         }
-    } 
-    //普通显示水表
+    } //普通显示水表
     .normal {
         display: block;
         width: 44px;
@@ -430,6 +434,7 @@
         background: url(../../assets/normalWMeter.png) no-repeat;
     }
 }
+
 .markerEleMeter {
     //预警显示电表
     .warning {
@@ -473,8 +478,7 @@
             animation-iteration-count: infinite;
             animation-timing-function: linear;
         }
-    } 
-    //被选中的电表
+    } //被选中的电表
     .chosen {
         display: block;
         width: 44px;
@@ -516,8 +520,7 @@
             animation-iteration-count: infinite;
             animation-timing-function: linear;
         }
-    } 
-    //普通显示电表
+    } //普通显示电表
     .normal {
         display: block;
         width: 44px;
@@ -722,8 +725,8 @@
     height: 129px;
     overflow-y: auto;
     padding: 15px;
-    &::-webkit-scrollbar{
-        width:5px;
+    &::-webkit-scrollbar {
+        width: 5px;
     }
     &::-webkit-scrollbar-button {
         display: none;
@@ -787,15 +790,15 @@
         text-align: center;
     }
 }
-.cameraWarningWindow{
+
+.cameraWarningWindow {
     .warinngMsg {
         margin-top: 20px;
         margin-bottom: 45px;
         font-size: 16px;
         color: #FF5555;
         text-align: center;
-    }
-    //遮罩层
+    } //遮罩层
     .mask {
         position: absolute;
         left: 8px;
@@ -809,6 +812,7 @@
         padding: 5px 0px;
     }
 }
+
 .cameraWindow {
     //遮罩层
     .mask {
@@ -905,10 +909,10 @@
         .camera {
             margin: 0 2px;
         }
-        .waterMeter{
+        .waterMeter {
             margin: 0 2px;
         }
-        .eleMeter{
+        .eleMeter {
             margin: 0 2px;
         }
         .waterValve {

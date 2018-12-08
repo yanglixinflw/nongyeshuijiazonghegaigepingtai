@@ -9,7 +9,7 @@ import MyCustomize from './myCustomize';
 import { timeOut } from '../../utils/timeOut';
 import _ from 'lodash';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
-import {ENVNet} from '../../services/netCofig'
+import { ENVNet } from '../../services/netCofig'
 //搜索
 const searchUrl = `${ENVNet}/api/device/gisDeviceList`;
 //获取实时数据
@@ -92,13 +92,17 @@ export default class extends Component {
             //marker是否被点击
             isClicked: false,
             //搜索下拉列表数据
-            dataList: [],
+            dataList: null,
             //搜索关键字
             keyword: '',
             //当前设备类型ID
             deviceTypeId: 5,
             //信息窗展示数据
-            infoData: null
+            infoData: null,
+            isActive1: true,
+            isActive2: false,
+            isActive3: false,
+            isActive4: false,
 
         }
         //console.log(this.state.markers)
@@ -167,7 +171,7 @@ export default class extends Component {
             eleMeterMarkers: eleMeterPosition,
             waterValveMarkers: waterValvePosition,
         })
-        if (dataList.length !== 0) {
+        if (dataList !== null) {
             this._getDataList(dataList, keyword)
         }
         //地图触发事件
@@ -410,19 +414,26 @@ export default class extends Component {
                 let deviceTypeId = '';
                 v.hide();
                 this.setState({
+                    isActive1: false,
                     deviceTypeId,
-                    cameraVisible: false
+                    cameraVisible: false,
+                    dataList: null
                 })
+
             } else {
                 let deviceTypeId = 5;
                 v.show();
                 this.setState({
+                    isActive1: true,
+                    isActive2: false,
+                    isActive3: false,
+                    isActive4: false,
                     deviceTypeId,
                     cameraVisible: true,
                     waterValveVisible: false,
                     eleMeterVisible: false,
                     waterMeterVisible: false
-                })
+                }, this._changeHandler)
             }
         })
         allWaterValveMarkers.map((v, i) => {
@@ -444,19 +455,25 @@ export default class extends Component {
                 let deviceTypeId = '';
                 v.hide();
                 this.setState({
+                    isActive2: false,
                     deviceTypeId,
-                    waterMeterVisible: false
+                    waterMeterVisible: false,
+                    dataList: null
                 })
             } else {
                 let deviceTypeId = 2;
                 v.show();
                 this.setState({
+                    isActive1: false,
+                    isActive2: true,
+                    isActive3: false,
+                    isActive4: false,
                     deviceTypeId,
                     cameraVisible: false,
                     waterValveVisible: false,
                     eleMeterVisible: false,
                     waterMeterVisible: true
-                })
+                }, this._changeHandler)
             }
         })
         allCameraMarkers.map((v, i) => {
@@ -477,19 +494,25 @@ export default class extends Component {
                 let deviceTypeId = '';
                 v.hide();
                 this.setState({
+                    isActive3: false,
                     deviceTypeId,
                     eleMeterVisible: false,
+                    dataList: null
                 })
             } else {
                 let deviceTypeId = 3;
                 v.show();
                 this.setState({
+                    isActive1: false,
+                    isActive2: false,
+                    isActive3: true,
+                    isActive4: false,
                     deviceTypeId,
                     cameraVisible: false,
                     waterMeterVisible: false,
                     waterValveVisible: false,
                     eleMeterVisible: true
-                })
+                }, this._changeHandler)
             }
         })
         allCameraMarkers.map((v, i) => {
@@ -510,19 +533,25 @@ export default class extends Component {
                 let deviceTypeId = '';
                 v.hide();
                 this.setState({
+                    isActive4: false,
                     deviceTypeId,
-                    waterValveVisible: false
+                    waterValveVisible: false,
+                    dataList: null
                 })
             } else {
                 let deviceTypeId = 1;
                 v.show();
                 this.setState({
+                    isActive1: false,
+                    isActive2: false,
+                    isActive3: false,
+                    isActive4: true,
                     deviceTypeId,
                     cameraVisible: false,
                     waterMeterVisible: false,
                     eleMeterVisible: false,
                     waterValveVisible: true
-                })
+                }, this._changeHandler)
             }
         })
         allCameraMarkers.map((v, i) => {
@@ -611,7 +640,7 @@ export default class extends Component {
             })
         } else {
             this.setState({
-                dataList: []
+                dataList: null
             })
         }
     }
@@ -624,44 +653,63 @@ export default class extends Component {
         })
         //摄像头
         allCameraMarkers.map((v, i) => {
-            let position = v.getPosition()
-            if (position.lng == center.longitude && position.lat == center.latitude) {
+            let position = v.getExtData().position;
+            if (position.longitude == center.longitude && position.latitude == center.latitude) {
                 v.render(this.renderMarkerChosen)
-                this.cameraEvents.click('',v)
+                this.cameraEvents.click('', v)
             } else {
                 v.render(this.renderMarker)
             }
         })
         //水表
         allWaterMeterMarkers.map((v, i) => {
-            let position = v.getPosition()
-            if (position.lng == center.longitude && position.lat == center.latitude) {
+            let position = v.getExtData().position;
+            if (position.longitude == center.longitude && position.latitude == center.latitude) {
                 v.render(this.renderMarkerChosen)
-                this.WaterMeterEvents.click('',v)
+                this.WaterMeterEvents.click('', v)
             } else {
                 v.render(this.renderMarker)
             }
         })
         //电表
         allEleMeterMarkers.map((v, i) => {
-            let position = v.getPosition()
-            if (position.lng == center.longitude && position.lat == center.latitude) {
+            let position = v.getExtData().position;
+            if (position.longitude == center.longitude && position.latitude == center.latitude) {
                 v.render(this.renderMarkerChosen)
-                this.eleMeterEvents.click('',v)
+                this.eleMeterEvents.click('', v)
             } else {
                 v.render(this.renderMarker)
             }
         })
         //水阀
         allWaterValveMarkers.map((v, i) => {
-            let position = v.getPosition()
-            if (position.lng == center.longitude && position.lat == center.latitude) {
+            let position = v.getExtData().position;
+            if (position.longitude == center.longitude && position.latitude == center.latitude) {
                 v.render(this.renderMarkerChosen)
-                this.WaterValveEvents.click('',v)
+                this.WaterValveEvents.click('', v)
             } else {
                 v.render(this.renderMarker)
             }
         })
+    }
+    _onFocusHandler(e) {
+        // console.log(e)
+        if (e.target.value == '') {
+            this.setState({
+                dataList: []
+            })
+        }
+        // this.setState({
+        //     dataList:[]
+        // })
+    }
+    _onBlurHandler(e) {
+        // console.log(e)
+        if (e.target.value == '') {
+            this.setState({
+                dataList: null
+            })
+        }
     }
     render() {
         const {
@@ -670,6 +718,7 @@ export default class extends Component {
             dataList,
             plugins, center,
             //useCluster,
+            isActive1, isActive2, isActive3, isActive4,
             cameraVisible, waterMeterVisible, eleMeterVisible, waterValveVisible,
             cameraMarkers, waterMeterMarkers, eleMeterMarkers, waterValveMarkers,
             infoVisible,
@@ -694,13 +743,15 @@ export default class extends Component {
                 />
                 <div className={styles.search}>
                     <Input
+                        onFocus={(e) => this._onFocusHandler(e)}
+                        onBlur={(e) => this._onBlurHandler(e)}
                         placeholder='请查询设备编号或设备名称'
                         // onPressEnter={(e) => this._searchHandler(e)}
                         ref='searchInput'
                         onChange={_.debounce(() => this._changeHandler(), 300)}
                     />
                     {
-                        dataList.length !== 0 ?
+                        dataList !== null ?
                             <div className={styles.dataList}>
                                 <List
                                     itemLayout="vertical"
@@ -728,29 +779,37 @@ export default class extends Component {
                                     }
                                 />
                             </div>
-                            : null
+                            :
+                            // <div>暂无数据</div>
+                            null
                     }
                 </div>
                 <div className={styles.btnGroup}>
                     <Button
+                        className={isActive1 ? styles.onActive : styles.offActive}
                         onClick={() => this._cameraHandler()}
                     >
                         <i className={styles.camera}></i>
                         <span>摄像头</span>
                     </Button>
                     <Button
+                        className={isActive2 ? styles.onActive : styles.offActive}
                         onClick={() => this._WatermeterHandler()}
                     >
                         <i className={styles.waterMeter}></i>
                         <span>水表</span>
                     </Button>
                     <Button
+                        className={isActive3 ? styles.onActive : styles.offActive}
                         onClick={() => this._ElectricmeterHandler()}
                     >
                         <i className={styles.eleMeter}></i>
                         <span>电表</span>
                     </Button>
-                    <Button onClick={() => this._WatervalveHandler()}>
+                    <Button
+                        className={isActive4 ? styles.onActive : styles.offActive}
+                        onClick={() => this._WatervalveHandler()}
+                    >
                         <i className={styles.waterValve}></i>
                         <span>水阀</span>
                     </Button>
