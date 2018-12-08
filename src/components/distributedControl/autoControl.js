@@ -156,9 +156,6 @@ export default class extends Component{
         if (err) {
             return
         }
-        if(values.name==undefined){
-            values.name=''
-        }
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -219,7 +216,7 @@ export default class extends Component{
         })
     }
     //翻页
-    _pageChange(page){
+  _pageChange(page){
         const { title,searchValue } = this.state;
         searchValue.pageIndex = page - 1;
         searchValue.pageSize=10
@@ -233,7 +230,9 @@ export default class extends Component{
             .then(v=>{
                 if(v.ret==1){
                     // 设置页面显示的元素
+                  console.log(v)
                     let data = v.data.items;
+                    console.log(data)
                     //添加key
                     data.map((v, i) => {
                         v.key = i
@@ -459,11 +458,11 @@ export default class extends Component{
     render(){
         const { columns,itemCount, tableDatas,changeStatus,changeStatusVisible,addvisible,editvisible,name,ruleId,delVisible } = this.state;
         const paginationProps = {
-            showQuickJumper: true,
-            total: itemCount,
-            // 传递页码
-            onChange: (page) => this._pageChange(page)
-        };
+        showQuickJumper: true,
+        total: itemCount,
+        // 传递页码
+        onChange: (page) => this._pageChange(page)
+      };
         return(
             <React.Fragment>
                 <div className={styles.autoControl}>
