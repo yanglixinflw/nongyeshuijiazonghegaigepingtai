@@ -26,13 +26,17 @@
             .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
                 height: 46px;
                 width: 172px;
+                font-size: 12px;
                 background: #141831;
                 outline: none;
                 border: none;
+                border-radius: 4px;
                 color: #fff;
-                // margin-right: 20px;
                 float: left;
-            } 
+            }
+          .ant-input::-webkit-input-placeholder{
+            color:#46566e;
+          }
             .ant-select-selection__rendered{
                 margin-top:8px; 
             }
@@ -46,12 +50,16 @@
             flex-wrap: wrap;
             .fnButton{
                 height:36px;
+                font-size: 14px;
                 border-radius: 30px;
                 margin-left: 16px;
                 background: #2e386c;
                 outline: none;
                 border: none;
                 color: #bac4f7;
+              i{
+                font-size: 16px;
+              }
             }
             .fnButton:hover{
                 background: #327df4;
@@ -63,14 +71,25 @@
         display: flex;
         align-content: space-around;
         flex-wrap: wrap;
-        .record{
+        .record {
+          :global{
+            .anticon,.anticon-file-text {
+              font-size: 14px;
+            }
+          }
             margin-top: 10px;
             margin-right: 10px;
             border: 1px solid #327DF4!important;
             color: #327DF4!important;
             background: #1C2241;
+
         }
         .edit{
+          :global{
+            .anticon,.anticon-edit{
+              font-size: 14px;
+            }
+          }
             margin-right: 10px;
             margin-top: 10px;
             background: #1C2241;
@@ -78,6 +97,11 @@
             color:rgba(232,120,72,1)!important;
         }
         .clear{
+          :global{
+            .anticon,.anticon-delete{
+              font-size: 14px;
+            }
+          }
             margin-top: 10px;
             margin-right: 10px;
             border: 1px solid #ff5062!important;
@@ -85,6 +109,11 @@
             background: #1C2241;
         }
         .assignment{
+          :global{
+            .anticon,.anticon-share-alt{
+              font-size: 14px;
+            }
+          }
             margin-top: 10px;
             margin-right: 10px;
             border: 1px solid #6050f1!important;
@@ -92,6 +121,11 @@
             background: #1C2241;
         }
         .management{
+          :global{
+            .anticon,.anticon-team{
+              font-size: 14px;
+            }
+          }
             margin-right: 10px;
             border: 1px solid #19cf86!important;
             color:#19cf86!important;
@@ -100,57 +134,20 @@
         }
     }
     :global {
+      .ant-btn{
+        font-size: 12px;
+      }
         .ant-cascader-picker-arrow {
             color: #4A5A72;
         }
         .ant-table-fixed-right {
             box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
-            .ant-table-thead {
-                tr {
-                    th {
-                        border: 1px solid #2A325E;
-                        
-                        font-weight: 600;
-                        background: #2E3459;
-                        color: #DEDEE4;
-                    }
-                }
-            }
-            .ant-table-tbody {
-                tr {
-                    &:hover td {
-                        background: #1C2241;
-                        color: #0084FF;
-                    }
-                    &:focus td {
-                        background: #1C2241;
-                        color: #0084FF;
-                    }
-                    td {
-                        min-width: 100px;
-                        border-left:0;
-                        border: 1px solid #2A325E;
-                        font-weight: 600;
-                        background: #1C2241;
-                        color: #DEDEE4;
-                        &:hover {
-                            background: #1C2241;
-                            color: #0084FF;
-                        }
-                        &:focus {
-                            background: #1C2241;
-                            color: #0084FF;
-                        }
-                    }
-                }
-            }
         }
         .ant-table-wrapper {
             .ant-table {
                 background: #2E3459;
                 margin: 0 38px;
                 .ant-table-content {
-                    
                         .ant-table-body {
                             &::-webkit-scrollbar {
                                 height: 10px;
@@ -172,7 +169,6 @@
                     }
                 }
             }
-            
                 .ant-table-thead {
                     tr {
                         th {
@@ -192,6 +188,7 @@
                             color: #0084FF;
                         }
                         td {
+                            padding: 10 10px!important;
                             min-width: 100px;
                             font-size: 12px;
                             background: #1C2241;

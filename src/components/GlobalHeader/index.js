@@ -4,6 +4,7 @@ import { routerRedux } from 'dva/router';
 import { Button, Menu, Dropdown, Icon ,Modal,Badge} from 'antd'
 import {Link} from 'dva/router';
 import {ENVNet,postOption} from '../../services/netCofig'
+// 预警事件列表
 const dataUrl=`${ENVNet}/api/DeviceWaringRule/eventList`;
 // 确认退出className
 const confirmLogout=styles.confirmLogout
@@ -14,7 +15,7 @@ export default class extends React.Component {
         const downData = (
             <Menu>
                 <Menu.Item
-                onClick={()=>{console.log('修改密码')}}
+                onClick={()=>this.changePsw()}
                 >
                     修改密码
                 </Menu.Item>
@@ -86,6 +87,10 @@ export default class extends React.Component {
                 })
         })
     }
+    // 修改密码
+    changePsw(){
+        console.log(123)
+    }
      // 退出登录
   _showConfirm(){
     const {dispatch}=this.props
@@ -123,6 +128,13 @@ export default class extends React.Component {
   }
     render() {
         const { downData,menu} = this.state
+        let userName ={
+            get value(){
+                let username = localStorage.getItem('userName')
+                return {username}
+            }
+        }
+        // console.log(userName.value.username)
         return (
             <div className={styles.header}>
                 <Dropdown overlay={menu} trigger={['click']}>
@@ -132,7 +144,7 @@ export default class extends React.Component {
                 </Dropdown>
                 <Dropdown overlay={downData}>
                     <Button icon='user' className={styles.user}>
-                        用户名 <Icon type='down'></Icon>
+                        {userName.value.username}<Icon type='down'></Icon>
                     </Button>
                 </Dropdown>
             </div>
