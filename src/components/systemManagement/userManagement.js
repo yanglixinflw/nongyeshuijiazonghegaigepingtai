@@ -606,7 +606,7 @@ const SearchForm = Form.create()(
                             )
                         }
                     </Form.Item>
-                    <Form.Item>
+                    <Form.Item className={styles.mobile}>
                         {getFieldDecorator('mobile', {
                             initialValue: ''
                         })
