@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import styles from "./valveControl.less"
 import { Input,Button, Form,Table,Select,Modal,Radio,message} from 'antd';
 import { Link } from 'dva/router';
+import classnames from 'classnames';
 import {ENVNet,postOption} from '../../services/netCofig'
 //设备安装地列表
 const installAddrUrl=`${ENVNet}/api/BaseInfo/installAddrList`
@@ -371,21 +372,23 @@ export default class extends Component{
                         <div className={styles.buttonGroup}>
                             <Button
                                 className={styles.fnButton}
-                                icon="search"
+                                // icon="search"
                                 onClick={() => this._searchTableData()}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
                                 搜索
                             </Button>
                             <Button
-                                icon='reload'
+                                // icon='reload'
                                 className={styles.fnButton}
                                 onClick={() => this._resetForm()}
                             >
+                                 <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.resetIcon}`)}></i>
                                 重置
                             </Button>
                             <Button
                                 icon='poweroff'
-                                className={styles.fnButton}
+                                className={styles.fnButton2}
                                 onClick={()=>this.valveSwitch()}
                             >
                                 阀门开关
@@ -393,7 +396,7 @@ export default class extends Component{
                             <Link to={`/valveControl/map`} target='_blank'>
                                 <Button
                                     icon='environment'
-                                    className={styles.fnButton}
+                                    className={styles.fnButton2}
                                 >
                                     在地图操作
                                 </Button>
