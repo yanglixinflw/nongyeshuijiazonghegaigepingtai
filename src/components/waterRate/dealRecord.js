@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import styles from "./dealRecord.less"
 import { Input, Button, Form, Table,Select,message,Icon } from 'antd';
+import classnames from 'classnames'
 import { Link } from 'dva/router';
 import { parse } from 'qs';
 //头信息
@@ -129,17 +130,17 @@ export default class extends Component{
                         <div className={styles.buttonGroup}>
                             <Button
                                 className={styles.fnButton}
-                                icon="search"
                                 onClick={() => this._searchTableData()}
                             >
-                                搜索
+                            <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
+                                <div>搜索</div>
                             </Button>
                             <Button
-                                icon='upload'
                                 className={styles.fnButton}
                                 // onClick={() => this.upload()}
                             >
-                                数据导出
+                            <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.searchIcon}`)}></i>
+                               <div>数据导出</div>
                             </Button>
                         </div> 
                     </div>
