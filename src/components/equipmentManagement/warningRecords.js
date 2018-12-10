@@ -180,7 +180,6 @@ export default class extends Component {
             Promise.resolve(res.json())
                 .then((v) => {
                     if (v.ret == 1) {
-                        console.log(v);
                         // 设置页面显示的元素
                         let data = v.data.items;
                         //添加key

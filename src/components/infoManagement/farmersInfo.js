@@ -260,7 +260,7 @@ export default class extends Component{
     //修改用户信息的弹出框点击确定
     editOkHandler (){
         const form = this.editForm.props.form;
-        let {userId}=this.state;
+        let {userId,title}=this.state;
         form.validateFields((err,values) => {
             // values即为表单数据
             if (err) {
@@ -281,13 +281,33 @@ export default class extends Component{
                 Promise.resolve(res.json())
                     .then((v) => {
                         if (v.ret == 1) {
-                            this.setState({
-                                editvisible: false
+                            fetch(dataUrl,{
+                                ...postOption,
+                                body:JSON.stringify({
+                                    "pageIndex": 0,
+                                    "pageSize": 10
+                                })
+                            }).then(res=>{
+                                Promise.resolve(res.json())
+                                .then(v=>{
+                                    if(v.ret==1){
+                                        let data = v.data.items;
+                                        //添加key
+                                        data.map((v, i) => {
+                                            v.key = i
+                                        })
+                                        this.setState({
+                                            itemCount: v.data.itemCount,
+                                            editvisible: false,
+                                            data
+                                        })
+                                        this._getTableDatas(title, data);
+                                        message.success('修改成功', 2);
+                                    }else {
+                                        message.error(v.msg, 2);
+                                    }
+                                })
                             })
-                            form.resetFields();
-                            message.success('修改成功', 2);
-                        } else {
-                            message.error(v.msg, 2);
                         }
                     })
             }).catch((err) => {
@@ -311,7 +331,7 @@ export default class extends Component{
     //修改密码点击确定
     editPwdOkHandler(){
         const form = this.editPwdForm.props.form;
-        let {userId}=this.state;
+        let {userId,title}=this.state;
         form.validateFields((err,values) => {
             // values即为表单数据
             if (err) {
@@ -327,14 +347,34 @@ export default class extends Component{
                 Promise.resolve(res.json())
                     .then((v) => {
                         if (v.ret == 1) {
-                            this.setState({
-                                editPwdvisible: false
+                            fetch(dataUrl,{
+                                ...postOption,
+                                body:JSON.stringify({
+                                    "pageIndex": 0,
+                                    "pageSize": 10
+                                })
+                            }).then(res=>{
+                                Promise.resolve(res.json())
+                                .then(v=>{
+                                    if(v.ret==1){
+                                        let data = v.data.items;
+                                        //添加key
+                                        data.map((v, i) => {
+                                            v.key = i
+                                        })
+                                        this.setState({
+                                            itemCount: v.data.itemCount,
+                                            editPwdvisible: false,
+                                            data
+                                        })
+                                        this._getTableDatas(title, data);
+                                        message.success('修改成功', 2);
+                                    }else {
+                                        message.error(v.msg, 2);
+                                    }
+                                })
                             })
-                            form.resetFields();
-                            message.success('修改成功', 2);
-                        } else {
-                            message.error(v.msg, 2);
-                        }
+                        } 
                     })
             }).catch((err) => {
                 console.log(err)

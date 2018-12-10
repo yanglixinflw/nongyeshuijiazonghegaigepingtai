@@ -161,7 +161,6 @@ export default class extends Component{
         selectedRows.map((v,i)=>{
             deviceIds.push(v.deviceId)
         })
-        console.log(deviceIds)
         this.setState({ selectedRowKeys,deviceIds });
     }
      // 搜索功能

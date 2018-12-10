@@ -128,13 +128,13 @@ export default class extends Component{
                             }
                         </div>
                         <div>
-                            <Button
+                            {/* <Button
                                 className={styles.edit}
                                 icon='edit'
                                 onClick={()=>this.edit(record.ruleId,record.name)}
                             >
                                 修改
-                            </Button>
+                            </Button> */}
                             <Button
                                 className={styles.delete}
                                 icon='delete'
