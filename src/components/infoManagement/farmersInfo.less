@@ -1,5 +1,5 @@
 //引入线上图标
-@import 'http://at.alicdn.com/t/font_869092_lzfptbjsxoa.css';
+@import 'http://at.alicdn.com/t/font_869092_9hm3dscqat6.css';
 .farmersInfo {
     .header {
         height: 60px;
@@ -38,15 +38,16 @@
                 border-radius: 4px;
             }
             .ant-input::-webkit-input-placeholder{
-                color:#46566e;
+                color:#4A5A72;
+            }
+            .ant-select-selection__placeholder{
+                color:#4A5A72;
             }
             .ant-select-selection__rendered {
                 margin-top: 8px;
             }
-            .anticon,
-            .anticon-down,
             .ant-select-arrow-icon {
-                color: #fff;
+                color: #4A5A72;
             }
         }
         .buttonGroup {
@@ -54,6 +55,7 @@
             align-items: center;
             flex-wrap: wrap;
             .fnButton {
+                width:97px;
                 height: 36px;
                 border-radius: 30px;
                 margin-left: 16px;
@@ -61,10 +63,45 @@
                 outline: none;
                 border: none;
                 color: #bac4f7;
+                &:hover{
+                    background: #327df4;
+                    color: #fff;
+                }
+                .searchIcon{
+                    position: relative;
+                    left:-8px;
+                    top:1px;
+                }
+                .resetIcon{
+                    position: relative;
+                    left:-8px;
+                    top:1px;
+                }
+                :global{
+                    .anticon-plus {
+                        position: relative;
+                        top:1px;
+                        font-size: 16px;
+                    }
+                }
             }
-            .fnButton:hover {
-                background: #327df4;
-                color: #fff;
+            .fnButton2{
+                width:133px;
+                height: 36px;
+                border-radius: 30px;
+                margin-left: 16px;
+                background: #2e386c;
+                outline: none;
+                border: none;
+                color: #bac4f7;
+                &:hover{
+                    background: #327df4;
+                    color: #fff;
+                }
+                .exportIcon{
+                    position: relative;
+                    left:-8px;
+                }
             }
         }
     }
