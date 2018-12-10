@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styles from './autoRules.less';
 import { Input, Button, Form, Select,Icon,Radio,message} from 'antd';
+import {getAutoRules} from '../../services/api'
 import {Link} from 'dva/router';
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
@@ -19,7 +20,7 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const{autoRules}=props;
-        console.log(autoRules)
+        console.log(props)
         this.state={
             //规则id
             ruleId:props.ruleId,
@@ -111,13 +112,28 @@ export default class extends Component {
     }
     //重置
     _resetForm() {
-        this.ruleForm.props.form.resetFields()
+        this.ruleForm.props.form.resetFields();
+        const {ruleId} = this.state;
         // var conditions=[{deviceId:''},{parameterId:""},{operator:''},{compareValue:""}]
-        this.setState({
-            anyConditionFireAction:'',
-            name:'',
-            // conditions
-        })  
+        // this.setState({
+        //     anyConditionFireAction:false,
+        //     name:'',
+        //     // conditions
+        // })
+        Promise.resolve(getAutoRules({ruleId}))
+        .then((v)=>{
+            if(v.data.ret==1){
+                // console.log(v.data)
+                let actions = v.data.data.actions;
+                let anyConditionFireAction = v.data.data.anyConditionFireAction;
+                let conditions = v.data.data.conditions;
+                let name = v.data.data.name;
+                this.setState({
+                    actions,anyConditionFireAction,conditions,name
+                })
+            }
+        })
+         
     }
     render() {
         const { anyConditionFireAction,name,conditions,actions } = this.state;
@@ -173,9 +189,9 @@ const RuleForm = Form.create()(
         super(props)
         this.state={
             //条件初始数组
-            conditionArr:[],
+            conditionArr:props.conditions,
             //执行初始数组
-            actionArr:[],
+            actionArr:props.actions,
             //设备列表
             deviceList:[],
             //参数id列表
@@ -187,14 +203,15 @@ const RuleForm = Form.create()(
             //执行数组
             actions:this.props.actions,
         }
+        // console.log(this.state.conditionArr)
     }
          //下拉搜索框搜索功能
          handleSearch = (value) => {
             // this.setState({
             //     deviceList:[]
             // })
-            console.log(this.state.deviceList)
-            console.log(value)
+            // console.log(this.state.deviceList)
+            // console.log(value)
             if(value==''){
                 this.setState({
                     deviceList:[]
