@@ -381,7 +381,7 @@ export default class extends Component{
                                 className={styles.fnButton}
                                 onClick={() => this._resetForm()}
                             >
-                                 <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.resetIcon}`)}></i>
+                                <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.resetIcon}`)}></i>
                                 重置
                             </Button>
                             <Button

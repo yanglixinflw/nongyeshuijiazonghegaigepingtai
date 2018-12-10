@@ -1,55 +1,21 @@
 .headers {
-    height: 60px;
-    line-height: 60px;
-    background: #151836;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    font-size: 16px;
-    padding-left: 35px;
-    margin-bottom: 20px;
-    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    .left{
-        display: flex;
-        .arrowLeft{
-            width: 112px;
-            display: flex;
-            justify-content: space-between;
-            margin-right: 8px;
-            color: #bbc5d2;
-            :hover{
-                color:#327df4
-            }
-        }
-        .autoControl{
-            width: 138px;
-            display: flex;
-            justify-content: space-around;
-            .autoRules{
-                color: #327df4;
-            }
-        }
-    }
-    .right{
-        width: 210px;
-        display: flex;
-        justify-content: space-between;
-        margin-right: 64px;
-        margin-top: 10px;
+    position: relative;
+    .btnGroup{
+        position: absolute;
+        top:-66px;
+        right: 42px;
         .fnButton{
-            width: 94px;
+            width: 97px;
             height: 34px;
             border: 1px solid #327df4;
             color: #327df4;
             background: #151836;
+            margin-left: 18px;
         }
     }
 }
 .mbody{
-    width: 96%;
-    height:100%;
-    margin: auto;
+    margin:0 42px;
     font-size: 18px;
     background: #1c2241;
        .form{
