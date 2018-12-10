@@ -71,7 +71,7 @@
                 }
                 div{
                     margin-top: -4px;
-                    line-height: 42px;
+                    line-height: 44px;
                 }
             }
             .fnButton:hover{
@@ -293,6 +293,7 @@
         }
         .ant-modal-header{
             background: #171a39;
+            font-size: 16px;
             border-bottom: 1px solid #363a69 !important;
             .ant-modal-title{
                 width: 400px;
@@ -306,21 +307,33 @@
             background: #171a39;
             .ant-form,.ant-form-horizontal{
                 padding-top:14px;
+                .ant-select-selection__placeholder{
+                    font-size: 12px;
+                }
                 .ant-row,.ant-form-item{
                     width: 350px;
                     display: flex;
                     margin:0 auto 20px !important;
                     .ant-col-4,.ant-form-item-label{
+                        font-size: 14px;
                         width: 80px;
                         margin-right: 12px;
                         label{
                             color:#e7e7ec; 
                         }
                     }
-                    .ant-col-16,.ant-form-item-control-wrapper{
+                    .ant-form-item-control-wrapper{
+                        .ant-form-item-control,.has-success{
+                            .ant-form-item-children{
+                                .ant-input,.ant-input-disabled{
+                                    font-size: 12px!important;
+                                }
+                            }
+                        }
                         .ant-input{
                             width: 250px;
                             height:36px;
+                            font-size: 12px!important;
                             padding: 0 14px;
                             background: #272d52;
                             border: none;
@@ -329,6 +342,7 @@
                                 border:1px solid #327DF4;
                             }
                         }
+                        
                     }
                 }
             }

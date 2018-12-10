@@ -537,7 +537,7 @@ const EditForm = Form.create()(
                 <Modal
                     className={styles.editModal}
                     visible={visible}
-                    title="修改小组名称"
+                    title="小组更名"
                     onCancel={onCancel}
                     onOk={onOk}
                     cancelText='取消'
