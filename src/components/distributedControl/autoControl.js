@@ -89,10 +89,7 @@ export default class extends Component{
                 });
             }
         })
-        this.setState({
-            columns,
-            tableDatas,
-        });
+        
         //操作列
         columns.push({
             title: '操作',
@@ -148,6 +145,10 @@ export default class extends Component{
                 )
             }
         })
+        this.setState({
+            columns,
+            tableDatas,
+        });
     }
   // 搜索功能
   _searchTableDatas() {
