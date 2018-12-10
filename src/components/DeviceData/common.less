@@ -1,5 +1,5 @@
 //引入线上图标
-@import 'http://at.alicdn.com/t/font_869092_8a2wfaaqc9t.css';
+@import 'http://at.alicdn.com/t/font_869092_9hm3dscqat6.css';
 .header {
     height: 60px;
     line-height: 60px;
@@ -36,7 +36,7 @@
         .ant-form {
             line-height: 75px;
             .ant-btn {
-                width: 98px;
+                width: 90px;
                 margin-right: 0px;
             }
         }
@@ -49,6 +49,9 @@
             margin-right: 3px;
             color: #ACB5E8;
             font-size: 12px;
+            &::-webkit-input-placeholder{
+                color:#4A5A72;
+            }
         }
         .ant-select-selection--single {
             height: 46px;
@@ -65,6 +68,7 @@
         }
         .ant-select-selection__placeholder {
             top: 72%;
+            color:#4A5A72;
         }
         .ant-select-selection-selected-value {
             color: white;
@@ -74,7 +78,7 @@
         .ant-btn {
             border-radius: 50px;
             height: 38px;
-            width: 130px;
+            width: 133px;
             background: #2E386C;
             margin-right: 16px;
             color: #ACB5E8;
@@ -94,6 +98,31 @@
                 color:#fff;
             }
         }
+    }
+    .showSet{
+        .showIcon{
+            position: relative;
+            left:-11px;
+        }
+        .upLoadIcon{
+            position: relative;
+            left:-11px;
+        }
+    }
+    .searchButton{
+        .searchIcon{ 
+            top:2px;
+            position: relative;
+            left:-8px;
+        }
+        .resetIcon{
+            top:2px;
+            position: relative;
+            left:-8px;
+        }
+    }
+    .installAddress{
+        margin-right: 46px;
     }
 }
 .deviceData{
@@ -310,22 +339,10 @@
                 }
                 .ant-btn {
                     max-width: 70px;
-                    position: relative;
-                    .anticon {
-                        position: absolute;
-                        top: 12px;
-                        left: 10px;
-                    }
                 }
             }
             .ant-btn {
                 max-width: 90px;
-                position: relative;
-                .anticon {
-                    position: absolute;
-                    top: 12px;
-                    left: 5px;
-                }
             }
         }
     }
@@ -350,22 +367,11 @@
                     max-width: 70px;
                     margin-left: 0px;
                     position: relative;
-                    .anticon {
-                        position: absolute;
-                        top: 12px;
-                        left: 10px;
-                    }
                 }
             }
             .ant-btn {
                 max-width: 90px;
                 margin-left: 0px;
-                position: relative;
-                .anticon {
-                    position: absolute;
-                    top: 12px;
-                    left: 5px;
-                }
             }
         }
     }
@@ -389,22 +395,32 @@
                 .ant-btn {
                     max-width: 70px;
                     margin-left: 0px;
-                    position: relative;
-                    .anticon {
-                        position: absolute;
-                        top: 12px;
-                        left: 10px;
-                    }
                 }
             }
             .ant-btn {
                 max-width: 90px;
+            }
+        }
+        .searchButton{
+            .searchIcon{ 
+                top:2px;
                 position: relative;
-                .anticon {
-                    position: absolute;
-                    top: 12px;
-                    left: 5px;
-                }
+                left:-5px;
+            }
+            .resetIcon{
+                top:2px;
+                position: relative;
+                left:-5px;
+            }
+        }
+        .showSet{
+            .showIcon{
+                position: relative;
+                left:-8px;
+            }
+            .upLoadIcon{
+                position: relative;
+                left:-8px;
             }
         }
     }
@@ -428,23 +444,25 @@
                 .ant-btn {
                     max-width: 70px;
                     margin-left: 0px;
-                    position: relative;
-                    .anticon {
-                        position: absolute;
-                        top: 12px;
-                        left: 10px;
-                    }
                 }
             }
             .ant-btn {
-                max-width: 80px;
+                max-width: 90px;
                 margin-right: 5px;
+            }
+        }
+        .showSet{
+            .showIcon{
                 position: relative;
-                .anticon {
-                    position: absolute;
-                    top: 12px;
-                    left: 2px;
-                }
+                left:-5px;
+            }
+            span{
+                position: relative;
+                left:-2px;
+            }
+            .upLoadIcon{
+                position: relative;
+                left:-5px;
             }
         }
     }
@@ -702,13 +720,26 @@
                 margin-right: 12px;
             }
         }
+        .showSet{
+            margin-left:46px;
+            .showIcon{
+                position: relative;
+                left: -11px;
+            }
+        }
+        .export{
+            margin-left:16px;
+            .exportIcon{
+                position: relative;
+                left: -11px;
+            }
+        }
         :global {
             .ant-btn {
                 margin-top: 28px;
                 border-radius: 50px;
                 height: 42px;
-                width: 130px;
-                margin-left: 16px;
+                width: 133px;
                 background: #2E386C;
                 color: #ACB5E8;
                 border: 0;
@@ -786,6 +817,20 @@
                         top: 14px;
                         left: 10px;
                     }
+                }
+            }
+            .showSet{
+                margin-left:46px;
+                .showIcon{
+                    position: relative;
+                    left: -5px;
+                }
+            }
+            .export{
+                margin-left:16px;
+                .exportIcon{
+                    position: relative;
+                    left: -5px;
                 }
             }
         }

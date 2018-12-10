@@ -195,15 +195,19 @@ export default class extends Component {
                         {deviceInfo.installAddr}
                     </div>
                     <Button
-                        icon='eye'
+                        // icon='eye'
+                        className={styles.showSet}
                         onClick={() => this._showSetHandler(true)}
                     >
+                        <i className={classnames('dyhsicon', 'dyhs-xianshi', `${styles.showIcon}`)}></i>
                         显示设置
                     </Button>
                     <Button
-                        icon='upload'
+                        // icon='upload'
+                        className={styles.export}
                         onClick={() => this._exportDataHandler()}
                     >
+                        <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.exportIcon}`)}></i>
                         导出数据
                     </Button>
                 </div>
