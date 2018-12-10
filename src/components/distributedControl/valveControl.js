@@ -509,6 +509,7 @@ const SearchForm = Form.create()(
                             <Select
                                 placeholder='设备安装地'
                             >
+                            <Option  value=''>全部</Option>
                                 {
                                     installAddrList.map((v,i)=>{
                                         return(<Option key={i} value={v.id}>{v.addr}</Option>)
