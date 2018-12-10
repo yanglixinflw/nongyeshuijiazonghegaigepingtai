@@ -61,8 +61,6 @@ export default class extends Component{
             wateringType:[],
             //设备安装地
             installAddrList:[],
-            //是否弹出显示设置
-            showvisible: false,
         }
     }
     componentDidMount() {
@@ -101,6 +99,7 @@ export default class extends Component{
                 Promise.resolve(res.json())
                     .then((v) => {
                         if (v.ret == 1) {
+                            console.log(v.data)
                             let installAddrList = v.data
                             this.setState({
                                 installAddrList
@@ -182,13 +181,13 @@ export default class extends Component{
             if (err) {
                 return
             }
+            console.log(values)
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
                     "deviceId": values.deviceId,
-                    "deviceTypeId": values.deviceTypeId,
                     "deviceName": values.deviceName,
-                    "installAddrId": values.installAddrId,
+                    "installAddrId": values.installAddr,
                     "relatedBuilding": values.relatedBuilding,
                     "wateringType": values.wateringType,
                     "plantType": values.plantType,
@@ -247,61 +246,6 @@ export default class extends Component{
                 })
         })
     }
-    //点击显示设置
-    onShow(){
-        this.setState({
-            showvisible: true
-        })
-    }
-    // 确定显示设置
-    showOk() {
-        const form = this.showSetForm.props.form;
-        form.validateFields((err, values) => {
-            // values即为表单数据
-            let { dataIndex } = values
-            // 过滤后的columns
-            let title = []
-            // 定义一个title
-            let titles = []
-            // 比对dataIndex
-            dataIndex.map((v, i) => {
-                title.push(...tableTitle.filter(item => item === v))
-            })
-            // 排序函数
-            let compare = function (prop) {
-                return function (obj1, obj2) {
-                    let val1 = obj1[prop];
-                    let val2 = obj2[prop];
-                    if (val1 < val2) {
-                        return -1;
-                    } else if (val1 > val2) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-            }
-            // 排序
-            title.sort(compare('number'))
-            // 保存标题
-            title.map((v, i) => {
-                titles.push(v.item)
-            })
-            this._getTableDatas(title, this.state.data)
-            this.setState({
-                showvisible: false,
-                titles,
-                title
-            })
-        })
-
-    }
-    //取消显示设置 
-    showCancel() {
-        this.setState({
-            showvisible: false
-        })
-    }
     //点击删除
     delete(facilityId){
         this.setState({
@@ -333,8 +277,14 @@ export default class extends Component{
                         .then(v=>{
                             if(v.ret==1){
                                 let data=v.data.items;
+                                let itemCount = v.data.itemCount;
+                                // 给每一条数据添加key
+                                data.map((v, i) => {
+                                    v.key = i
+                                })
                                 this.setState({
                                     data,
+                                    itemCount,
                                     delVisible:false
                                 })
                                 this._getTableDatas(this.state.title, data);
@@ -480,8 +430,14 @@ export default class extends Component{
                                         .then(v=>{
                                             if(v.ret==1){
                                                 let data=v.data.items
+                                                let itemCount = v.data.itemCount;
+                                                // 给每一条数据添加key
+                                                data.map((v, i) => {
+                                                    v.key = i
+                                                })
                                                 this.setState({
                                                     data,
+                                                    itemCount,
                                                     addvisible:false
                                                 })
                                                 this._getTableDatas(title,data)
@@ -537,7 +493,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { columns, tableDatas,delVisible,editvisible,deviceId,addvisible,itemCount,wateringType,plantType,installAddrList,showvisible } = this.state;
+        const { columns, tableDatas,delVisible,editvisible,deviceId,addvisible,itemCount,wateringType,plantType,installAddrList } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -579,13 +535,6 @@ export default class extends Component{
                                 onClick={() => this.add()}
                             >
                                 添加
-                            </Button>
-                            <Button
-                                icon='eye'
-                                className={styles.fnButton}
-                                onClick={() => this.onShow()}
-                            >
-                               显示设置
                             </Button>
                             <Button
                                 icon='upload'
@@ -630,13 +579,6 @@ export default class extends Component{
                         onCancel={() => this.addhandleCancel()}
                         onOk={() => this.addhandleOk()}
                         {...{wateringType,plantType}}
-                    />
-                    {/* 显示设置 */}
-                    <ShowSetForm
-                        wrappedComponentRef={(showSetForm) => this.showSetForm = showSetForm}
-                        visible={showvisible}
-                        onCancel={() => this.showCancel()}
-                        onOk={() => this.showOk()}
                     />
                 </div>
                
@@ -695,16 +637,6 @@ const SearchForm = Form.create()(
                             (
                             <Input
                                 placeholder='设备ID'
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('deviceType', {})
-                            (
-                            <Input
-                                placeholder='设备型号'
-                                type='text'
                             />
                             )
                         }
@@ -962,49 +894,6 @@ const AddForm = Form.create()(
                                 )
                             }
                         </Form.Item>
-                    </Form>
-                </Modal>
-            )
-        }
-    }
-)
-//显示设置弹窗
-const ShowSetForm = Form.create()(
-    class extends React.Component {
-        render() {
-            const { visible, form, onOk, onCancel } = this.props
-            const { getFieldDecorator } = form;
-            const CheckboxGroup = Checkbox.Group;
-            return (
-                <Modal
-                    className={styles.showSetModal}
-                    visible={visible}
-                    title="显示设置"
-                    cancelText='取消'
-                    okText='确定'
-                    onOk={onOk}
-                    onCancel={onCancel}
-                    centered={true}
-                >
-                    <Form>
-                        {getFieldDecorator('dataIndex', {
-                            initialValue: tableTitle
-                        })
-                            (
-                            <CheckboxGroup>
-                                <Row>
-                                    {tableTitle.map((v, i) => {
-                                        return (
-                                            <Col key={i} span={8}>
-                                                <Checkbox value={tableTitle[i]}>{v.item}</Checkbox>
-                                            </Col>
-                                        )
-                                    })}
-                                </Row>
-                            </CheckboxGroup>
-                            )
-                        }
-
                     </Form>
                 </Modal>
             )

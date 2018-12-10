@@ -156,7 +156,7 @@ export default class extends Component{
         });
     }
     onSelectChange =(selectedRowKeys,selectedRows)=>{
-        // console.log('selectedRowKeys changed: ', selectedRowKeys);
+        console.log('selectedRowKeys changed: ', selectedRowKeys);
         var deviceIds=[];
         selectedRows.map((v,i)=>{
             deviceIds.push(v.deviceId)
@@ -314,8 +314,6 @@ export default class extends Component{
     switchHandleOk(){
         const form = this.switchForm.props.form;
         form.validateFields((err, values) => {
-            // console.log(values)
-            // console.log(this.state.deviceIds)
             // 未定义时给空值
             if (err) {
                 return
@@ -357,7 +355,7 @@ export default class extends Component{
         const rowSelection = {
             selectedRowKeys,
             onChange:this.onSelectChange,
-          };
+        };
         return(
             <React.Fragment>
                 <div className={styles.valveControl}>

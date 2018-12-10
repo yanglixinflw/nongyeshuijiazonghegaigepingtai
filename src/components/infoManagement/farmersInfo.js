@@ -261,7 +261,7 @@ export default class extends Component{
     editOkHandler (){
         const form = this.editForm.props.form;
         let {userId}=this.state;
-        form.validateFields((err) => {
+        form.validateFields((err,values) => {
             // values即为表单数据
             if (err) {
                 return;
@@ -270,7 +270,12 @@ export default class extends Component{
             return fetch(updateUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "userId":userId
+                    "userId":userId,
+                    "realName": values.realName,
+                    "mobilePhone": values.mobilePhone,
+                    "idCard": values.idCard,
+                    // "password":values.password,
+                    "areaId": values.areaId
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
@@ -921,7 +926,7 @@ const EditPwdForm = Form.create()(
                             >
                             {getFieldDecorator('password', {
                                 rules: [{
-                                required: true, message: '请输入新密码'}, 
+                                required: true, pattern: '^[0-9a-zA-Z]{6,20}$', message: '请输入新密码'}, 
                                 { min: 6, message: '不要小于6个字符' },
                                 { max: 20, message: '不要超过20个字符'},
                                 {validator: this.validateToNextPassword}

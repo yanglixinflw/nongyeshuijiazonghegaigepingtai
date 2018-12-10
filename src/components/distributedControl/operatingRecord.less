@@ -24,7 +24,7 @@
                 }
             }
             .warningRules{
-                width: 118px;
+                width: 98px;
                 display: flex;
                 justify-content: space-around;
                 .addRules{
@@ -53,6 +53,7 @@
             .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
                 height: 46px;
                 width: 172px;
+                font-size: 12px;
                 background: #141831;
                 outline: none;
                 border: none;
@@ -60,6 +61,9 @@
                 // margin-right: 20px;
                 float: left;
             } 
+            .ant-input::-webkit-input-placeholder{
+                color:#46566e;
+            }
             .ant-select-selection__rendered{
                 margin-top:8px; 
             }
@@ -74,11 +78,16 @@
                 height:36px;
                 border-radius: 30px;
                 margin-left: 186px;
+                margin-top:3px;
                 margin-right: -170px;
                 background: #2e386c;
+                font-size: 14px;
                 outline: none;
                 border: none;
                 color: #bac4f7;
+                i{
+                    font-size: 16px;
+                }
             }
             .fnButton:hover{
                 background: #327df4;
@@ -87,50 +96,14 @@
         }
     }
     :global {
+        .ant-btn{
+            font-size: 12px;
+        }
         .ant-cascader-picker-arrow {
             color: #4A5A72;
         }
         .ant-table-fixed-right {
             box-shadow: -10px 0 6px -4px rgba(0, 0, 0, 0.2);
-            .ant-table-thead {
-                tr {
-                    th {
-                        border: 1px solid #2A325E;
-                        
-                        font-weight: 600;
-                        background: #2E3459;
-                        color: #DEDEE4;
-                    }
-                }
-            }
-            .ant-table-tbody {
-                tr {
-                    &:hover td {
-                        background: #1C2241;
-                        color: #0084FF;
-                    }
-                    &:focus td {
-                        background: #1C2241;
-                        color: #0084FF;
-                    }
-                    td {
-                        min-width: 50px;
-                        border-left:0;
-                        border: 1px solid #2A325E;
-                        font-weight: 600;
-                        background: #1C2241;
-                        color: #DEDEE4;
-                        &:hover {
-                            background: #1C2241;
-                            color: #0084FF;
-                        }
-                        &:focus {
-                            background: #1C2241;
-                            color: #0084FF;
-                        }
-                    }
-                }
-            }
         }
         .ant-table-wrapper {
             .ant-table {
@@ -179,6 +152,7 @@
                             color: #0084FF;
                         }
                         td {
+                            padding: 0 0 !important;
                             min-width: 50px;
                             font-size: 12px;
                             background: #1C2241;

@@ -33,14 +33,12 @@ export default class extends Component{
             columns: [],
             //表头
             title:tableTitle,
-            //启用/停用
-            changeStatus:"停用",
             //停用/启用弹窗是否显示
             changeStatusVisible:false,
             //规则id
             ruleId:"",
             //规则的状态
-            isEnabled:"",
+            isEnabled:true,
             //是否显示添加弹窗
             addvisible:false,
             //是否显示修改弹窗
@@ -58,7 +56,6 @@ export default class extends Component{
     }
     _getTableDatas(title, data) {
         let columns = [];
-        let changeStatus="停用"
         title.map(v => {//把title里面的数据push到column里面
             columns.push({
                 title: v.item,
@@ -80,7 +77,6 @@ export default class extends Component{
                     ruleId:v.ruleId,
                     key: i,
                 });
-                changeStatus="停用"
             }else{
                 tableDatas.push({
                     name:v.name,
@@ -90,13 +86,11 @@ export default class extends Component{
                     ruleId:v.ruleId,
                     key: i,
                 });
-                changeStatus="启用"
             }
         })
         this.setState({
             columns,
             tableDatas,
-            changeStatus
         });
         //操作列
         columns.push({
@@ -118,13 +112,20 @@ export default class extends Component{
                                     设置自动化规则
                                 </Button>
                             </Link>
-                            <Button
+                            {record.isEnabled=="启用"?<Button
                                 className={styles.stop}
                                 icon='poweroff'
                                 onClick={()=>this.changeStatus(record.ruleId,record.isEnabled)}
                             >
-                                停/启用   
+                                停用   
+                            </Button>:<Button
+                                className={styles.stop}
+                                icon='poweroff'
+                                onClick={()=>this.changeStatus(record.ruleId,record.isEnabled)}
+                            >
+                                启用   
                             </Button>
+                            }
                         </div>
                         <div>
                             <Button
@@ -230,7 +231,7 @@ export default class extends Component{
             .then(v=>{
                 if(v.ret==1){
                     // 设置页面显示的元素
-                  console.log(v)
+                //   console.log(v)
                     let data = v.data.items;
                     console.log(data)
                     //添加key
@@ -456,7 +457,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { columns,itemCount, tableDatas,changeStatus,changeStatusVisible,addvisible,editvisible,name,ruleId,delVisible } = this.state;
+        const { columns,itemCount, tableDatas,changeStatusVisible,addvisible,editvisible,name,ruleId,delVisible,isEnabled } = this.state;
         const paginationProps = {
         showQuickJumper: true,
         total: itemCount,
@@ -507,7 +508,7 @@ export default class extends Component{
                     />
                     {/* 停用/启用弹窗 */}
                     <Modal 
-                        title={changeStatus}
+                        title={isEnabled==false?'启用':'停用'}
                         visible={changeStatusVisible}
                         className={styles.changeStatusModal}
                         onOk={()=>this.changeStatusOk()}
@@ -516,7 +517,7 @@ export default class extends Component{
                         cancelText="取消"
                         centered//居中显示
                     >
-                        <p>确认{changeStatus}规则</p>
+                        <p>确认{isEnabled==true?'停用':'启用'}规则</p>
                     </Modal>
                     {/* 添加弹窗 */}
                     <AddForm
