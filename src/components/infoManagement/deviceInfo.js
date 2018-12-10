@@ -636,8 +636,7 @@ export default class extends Component {
                         deviceTypeList={deviceTypeList}
                         relatedBuilding={relatedBuilding}
                     />
-                    <div className={styles.buttonGroup}
-                    >
+                    <div className={styles.buttonGroup}>
                         <Button
                             className={styles.searchButton}
                             // icon="search"

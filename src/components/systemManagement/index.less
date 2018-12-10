@@ -33,13 +33,15 @@
         line-height: 75px;
         display: flex;
         background: #1C2241;
-        padding-top: 15px;
         padding-left: 21px;
         margin-bottom: 20px;
         margin-left: 35px;
         margin-right: 35px;
         :global {
             .ant-form {
+                .ant-form-item-control{
+                    line-height: 75px;
+                }
                 .ant-input {
                     height: 46px;
                     width: 210px;
@@ -75,8 +77,9 @@
                 }
             }
             .ant-btn {
+                margin-top:18px;
                 width: 97px;
-                margin-top: 4px;
+                // margin-top: 4px;
                 border-radius: 50px;
                 height: 38px;
                 background: #2E386C;
