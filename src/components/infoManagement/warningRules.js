@@ -55,6 +55,7 @@ export default class extends Component {
             deleteId
         })
     }
+    //点击确定删除
     _deleteOk() {
         const { deleteId } = this.state
         return fetch(deleteUrl, {
@@ -66,15 +67,37 @@ export default class extends Component {
             Promise.resolve(res.json())
                 .then((v) => {
                     if (v.ret == 1) {
-                        message.success('删除成功', 2)
-                        this.setState({
-                            deleteModalVisible: false,
-                        })
-                        this._getTableDatas(this.state.title, this.state.data);
+                        fetch(dataUrl,{
+                            ...postOption,
+                            body:JSON.stringify({
+                                "pageIndex": 0,
+                                "pageSize": 10
+                            })
+                        }).then(res=>{
+                            Promise.resolve(res.json())
+                            .then(v=>{
+                                if(v.ret==1){
+                                    let data=v.data.items;
+                                    let itemCount = v.data.itemCount;
+                                    // 给每一条数据添加key
+                                    data.map((v, i) => {
+                                        v.key = i
+                                    })
+                                    message.success('删除成功', 2)
+                                    this.setState({
+                                        data,
+                                        itemCount,
+                                        deleteModalVisible: false,
+                                    })
+                                    this._getTableDatas(this.state.title, data);
+                                }
+                            })
+                        }) 
                     }
                 })
         })
     }
+    //点击取消删除
     _deleteCancel() {
         // console.log('Cancel')
         this.setState({
@@ -207,7 +230,7 @@ export default class extends Component {
                             itemCount: v.data.itemCount,
                             data
                         })
-                        this._getTableDatas(this.state.title, this.state.data);
+                        this._getTableDatas(this.state.title, data);
                     }
                 })
                 .catch((err) => {

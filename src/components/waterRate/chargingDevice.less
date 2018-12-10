@@ -18,7 +18,7 @@
     }
     .searchForm{
         padding: 15px 20px;
-        height: 150px;
+        height: 74px;
         margin: 20px 38px;
         background: #1c2241;
         display: flex;
@@ -150,7 +150,7 @@
                                 color: #0084FF;
                             }
                             td {
-                                padding: 0 0;
+                                padding: 0 0!important;
                                 min-width: 80px;
                                 font-size: 12px;
                                 background: #1C2241;
@@ -210,6 +210,11 @@
     }
     .action {
         padding:0 0 !important;
+    }
+    @media(max-width:1890px) {
+        .searchForm {
+            height: 148px;
+        }
     }
     @media(max-width:1401px) {
         .searchForm {
@@ -469,21 +474,20 @@
             background: #171a39;
             border-top: 1px solid #363a69 !important;
             text-align: center;
-            .ant-btn{
-                border:none;
-                color:#a4afbc;
-                background: #171a39;
-                &:hover{
-                    color:#327DF4;
+            .ant-btn {
+                color: #327DF4;
+                background: none;
+                border: none;
+                &:hover {
+                  background-color: #327DF4;
+                  border-color: #327DF4;
+                  color: white;
                 }
-            }
+              }
             .ant-btn-primary{
-                border-color:#272d52;
-                background: #272d52;
-                &:hover{
-                    background: #327DF4;
-                    color:#fff;
-                }
+                border-color:#1890ff;
+                background: #1890ff;
+                color:#ffffff;
             }
         }
         .ant-form-item-label label:after {
@@ -491,66 +495,4 @@
         }
     }
 }
-.showSetModal{
-    width: 490px !important;
-    height: 216px;
-        :global{
-            .ant-modal-close{
-                .ant-modal-close-x{
-                    .anticon,.anticon-close,.ant-modal-close-icon{
-                        color:#e7e7ec;
-                    }
-                }
-            }
-            .ant-modal-header{
-                background: #171a39;
-                border-bottom: 1px solid #363a69 !important;
-                .ant-modal-title{
-                    width: 400px;
-                    padding: 0 22px;
-                    margin-left: -23px;
-                    color:#e7e7ec;
-                    border-left:4px solid #327df4;
-                }   
-            }
-            .ant-modal-body{
-                background: #171a39;
-                .ant-form,.ant-form-horizontal{
-                    width: 442px;;
-                    .ant-checkbox-group{
-                        .ant-row{
-                            margin-left: 50px;
-                            .ant-checkbox-wrapper{
-                                color: #a4afbc;
-                                .ant-checkbox{
-                                    .ant-checkbox-inner{
-                                        background: #171a39
-                                    }
-                                }
-                                .ant-checkbox-checked{
-                                    .ant-checkbox-inner{
-                                        background: #1890ff
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } 
-            .ant-modal-footer{
-                background: #171a39;
-                border-top: 1px solid #363a69 !important;
-                text-align: center;
-                .ant-btn{
-                    border:none;
-                    color:#327df4;
-                    background: #171a39;
-                }
-                .ant-btn-primary{
-                    border-color:#1890ff;
-                    background: #1890ff;
-                    color:#ffffff;
-                }
-            }
-        }
-}
+
