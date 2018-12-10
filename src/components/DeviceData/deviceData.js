@@ -348,7 +348,7 @@ export default class extends Component {
                         className={styles.showSet}
                         onClick={() => this._exportDataHandler()}
                     >
-                        <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.upLoadIcon}`)}></i>
+                        <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.exportIcon}`)}></i>
                         导出数据
                     </Button>
                 </div>
