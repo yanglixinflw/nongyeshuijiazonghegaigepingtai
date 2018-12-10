@@ -1,5 +1,5 @@
 //引入线上图标
-@import 'http://at.alicdn.com/t/font_869092_lzfptbjsxoa.css';
+@import 'http://at.alicdn.com/t/font_869092_9hm3dscqat6.css';
 .chargingDevice{
     .header {
         height: 60px;
@@ -34,9 +34,12 @@
                 color: #fff;
                 float: left;
             }
-          .ant-input::-webkit-input-placeholder{
-            color:#46566e;
-          }
+            .ant-input::-webkit-input-placeholder{
+                color:#46566e;
+            }
+            .ant-select-selection__placeholder{
+                color:#46566e;
+            }
             .ant-select-selection__rendered{
                 margin-top:8px; 
             }
@@ -54,12 +57,23 @@
                 border-radius: 30px;
                 margin-left: 16px;
                 background: #2e386c;
+                display: flex;
                 outline: none;
                 border: none;
                 color: #bac4f7;
-              i{
-                font-size: 16px;
-              }
+                i{
+                    color: #bac4f7;
+                    font-size: 16px;
+                }
+                .searchIcon{
+                    font-size: 16px;
+                    margin-right: 6px;
+                    line-height: 36px;
+                }
+                div{
+                    margin-top: -4px;
+                    line-height: 42px;
+                }
             }
             .fnButton:hover{
                 background: #327df4;
@@ -150,7 +164,7 @@
                                 color: #0084FF;
                             }
                             td {
-                                padding: 0 0!important;
+                                padding: 0 16px!important;
                                 min-width: 80px;
                                 font-size: 12px;
                                 background: #1C2241;

@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import styles from "./chargingDevice.less"
-import { Input, Button, Form, Table, Modal, Select,message,Row, Col,Checkbox} from 'antd';
+import { Input, Button, Form, Table, Modal, Select,message } from 'antd';
+import classnames from 'classnames'
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl=`${ENVNet}/fee/chargeFacility/list`;
@@ -517,17 +518,17 @@ export default class extends Component{
                         <div className={styles.buttonGroup}>
                             <Button
                                 className={styles.fnButton}
-                                icon="search"
                                 onClick={() => this._searchTableData()}
                             >
-                                搜索
+                                <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
+                                <div>搜索</div>
                             </Button>
                             <Button
-                                icon='reload'
                                 className={styles.fnButton}
                                 onClick={() => this._resetForm()}
                             >
-                                重置
+                                <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.searchIcon}`)}></i>
+                                <div>重置</div>
                             </Button>
                             <Button
                                 icon='plus'
@@ -537,10 +538,10 @@ export default class extends Component{
                                 添加
                             </Button>
                             <Button
-                                icon='upload'
                                 className={styles.fnButton}
                             >
-                                导出数据
+                                <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.searchIcon}`)}></i>
+                                <div>导出数据</div>
                             </Button>
                         </div> 
                     </div>

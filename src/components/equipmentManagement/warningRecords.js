@@ -33,7 +33,6 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { warningRecords } = props;
-        // console.log(warningRecords)
         this.state = {
             itemCount: warningRecords.data.data.itemCount,//总数据数
             data: warningRecords.data.data.items,//表格数据源
