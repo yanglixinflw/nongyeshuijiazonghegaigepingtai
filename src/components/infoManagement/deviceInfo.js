@@ -136,7 +136,7 @@ export default class extends Component {
             key: 'action',
             align: 'center',
             fixed: 'right',
-            // width: 410,
+            width: 363,
             className: `${styles.action}`,
             render: (record) => {
                 return (

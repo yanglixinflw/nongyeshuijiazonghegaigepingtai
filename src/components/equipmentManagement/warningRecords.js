@@ -116,16 +116,23 @@ export default class extends Component {
             render: (record) => {
                 return (
                     <span className={styles.option}>
-                        <Button
-                            className={styles.edit}
+                        {record.warningStatus=='3'?<Button
+                            className={styles.closeDis}
+                            onClick={() => this.closeWarning(record.logId)}
+                            disabled
+                            icon='stop'
+                        >
+                            关闭预警
+                        </Button>:<Button
+                            className={styles.close}
                             onClick={() => this.closeWarning(record.logId)}
                             icon='stop'
                         >
                             关闭预警
-                        </Button>
+                        </Button>}
                         <Link to={`/warning/map:${record.deviceId}`} target='_blank'>
                             <Button
-                                className={styles.delete}
+                                className={styles.location}
                                 icon='environment'
                             >
                                 定位至事件地点
