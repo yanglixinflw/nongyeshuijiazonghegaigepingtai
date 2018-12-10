@@ -424,16 +424,18 @@ export default class extends Component {
                                 重置
                             </Button>
                             <Button
-                                icon='eye'
+                                // icon='eye'
                                 className={styles.fnButton2}
                                 onClick={() => this.onShow()}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-xianshi', `${styles.searchIcon}`)}></i>
                                 显示设置
                             </Button>
                             <Button
-                                icon='upload'
+                                // icon='upload'
                                 className={styles.fnButton2}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.searchIcon}`)}></i>
                                 数据导出
                             </Button>
                         </div>
