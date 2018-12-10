@@ -40,7 +40,6 @@ export default class extends Component{
             itemCount:valveControl.data.data.itemCount,//总数据数
             data:valveControl.data.data.items,//表格数据源
             columns: [],
-            rowSelection:{},
             //设备安装地列表
             installAddrList:[],
             //设备类型列表
@@ -153,7 +152,6 @@ export default class extends Component{
         this.setState({
             columns,
             tableDatas,
-            // rowSelection
         });
     }
     onSelectChange =(selectedRowKeys,selectedRows)=>{
@@ -277,7 +275,7 @@ export default class extends Component{
                         itemCount:v.data.itemCount,
                         tableDatas:data
                     })
-                    this._getTableDatas(title,data);
+                    // this._getTableDatas(title,data);
                 }
             })
             .catch(err=>{
