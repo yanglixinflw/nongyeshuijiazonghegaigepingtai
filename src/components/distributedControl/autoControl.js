@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import styles from "./autoControl.less"
 import { Input, Button, Form, Table,Modal } from 'antd';
 import { Link } from 'dva/router';
+import classnames from 'classnames';
 import {ENVNet,postOption} from '../../services/netCofig'
 //生产环境
 // const ENVNet='';
@@ -88,10 +89,7 @@ export default class extends Component{
                 });
             }
         })
-        this.setState({
-            columns,
-            tableDatas,
-        });
+        
         //操作列
         columns.push({
             title: '操作',
@@ -147,6 +145,10 @@ export default class extends Component{
                 )
             }
         })
+        this.setState({
+            columns,
+            tableDatas,
+        });
     }
   // 搜索功能
   _searchTableDatas() {
@@ -478,16 +480,18 @@ export default class extends Component{
                         <div className={styles.buttonGroup}>
                             <Button
                                 className={styles.fnButton}
-                                icon="search"
+                                // icon="search"
                                 onClick={() => this._searchTableDatas()}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
                                 搜索
                             </Button>
                             <Button
-                                icon='reload'
+                                // icon='reload'
                                 className={styles.fnButton}
                                 onClick={() => this._resetForm()}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.resetIcon}`)}></i>
                                 重置
                             </Button>
                             <Button

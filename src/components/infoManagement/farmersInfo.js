@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import styles from './farmersInfo.less';
 import { Input,Button,Form,Select,Table,Modal,message} from 'antd';
+import classnames from 'classnames';
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl=`${ENVNet}/api/PeasantMgr/list`;
@@ -586,16 +587,18 @@ export default class extends Component{
                         <div className={styles.buttonGroup}>
                             <Button
                                 className={styles.fnButton}
-                                icon="search"
+                                // icon="search"
                                 onClick={() => this._searchTableData()}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
                                 搜索
                             </Button>
                             <Button
-                                icon='reload'
+                                // icon='reload'
                                 className={styles.fnButton}
                                 onClick={() => this._resetForm()}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.resetIcon}`)}></i>
                                 重置
                             </Button>
                             <Button
@@ -606,10 +609,11 @@ export default class extends Component{
                                 添加
                             </Button>
                             <Button
-                                icon='upload'
-                                className={styles.fnButton}
+                                // icon='upload'
+                                className={styles.fnButton2}
                                 onClick={() => this._exportDataHandler()}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.exportIcon}`)}></i>
                                 导出数据
                             </Button>
                         </div> 
