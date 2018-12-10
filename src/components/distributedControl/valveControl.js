@@ -3,6 +3,7 @@ import styles from "./valveControl.less"
 import { Input,Button, Form,Table,Select,Modal,Radio,message} from 'antd';
 import { Link } from 'dva/router';
 import classnames from 'classnames';
+import _ from 'lodash';
 import {ENVNet,postOption} from '../../services/netCofig'
 //设备安装地列表
 const installAddrUrl=`${ENVNet}/api/BaseInfo/installAddrList`
@@ -528,7 +529,7 @@ const SearchForm = Form.create()(
                                 defaultActiveFirstOption={false}
                                 showArrow={false}
                                 filterOption={false}
-                                onSearch={this.handleSearch}
+                                onSearch={_.debounce(() => this.handleSearch(),300)}
                                 notFoundContent={null}
                             >
                                 {

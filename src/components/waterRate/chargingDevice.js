@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import styles from "./chargingDevice.less"
 import { Input, Button, Form, Table, Modal, Select,message } from 'antd';
 import classnames from 'classnames'
+import _ from 'lodash'
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl=`${ENVNet}/fee/chargeFacility/list`;
@@ -62,6 +63,10 @@ export default class extends Component{
             wateringType:[],
             //设备安装地
             installAddrList:[],
+            //当前种植类型
+            plant:'',
+            //当前灌区类型
+            water:''
         }
     }
     componentDidMount() {
@@ -100,7 +105,6 @@ export default class extends Component{
                 Promise.resolve(res.json())
                     .then((v) => {
                         if (v.ret == 1) {
-                            console.log(v.data)
                             let installAddrList = v.data
                             this.setState({
                                 installAddrList
@@ -182,7 +186,6 @@ export default class extends Component{
             if (err) {
                 return
             }
-            console.log(values)
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -303,12 +306,30 @@ export default class extends Component{
         })
     }
     //点击修改
-    edit(deviceId,facilityId){
-        this.setState({
-            deviceId,
-            facilityId,
-            editvisible:true
-        })
+    edit(deviceId,facilityId){  
+        fetch(dataUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                deviceId,
+                "pageIndex": 0,
+                "pageSize": 10
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                if(v.ret==1){
+                    var water=v.data.items[0].wateringTypeName;
+                    var plant=v.data.items[0].plantTypeName
+                    this.setState({
+                        deviceId,
+                        facilityId,
+                        editvisible:true,
+                        plant,
+                        water
+                    })
+                }
+            })
+        })    
     }
     //点击确定修改
     edithandleOk(){
@@ -494,7 +515,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { columns, tableDatas,delVisible,editvisible,deviceId,addvisible,itemCount,wateringType,plantType,installAddrList } = this.state;
+        const { columns, tableDatas,delVisible,editvisible,deviceId,addvisible,itemCount,wateringType,plantType,installAddrList,plant,water } = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -571,7 +592,7 @@ export default class extends Component{
                         visible={editvisible}
                         onCancel={() => this.edithandleCancel()}
                         onOk={() => this.edithandleOk()}
-                        {...{deviceId,wateringType,plantType}}
+                        {...{deviceId,wateringType,plantType,plant,water }}
                     />
                     {/* 添加弹窗 */}
                     <AddForm
@@ -677,7 +698,7 @@ const SearchForm = Form.create()(
                                 defaultActiveFirstOption={false}
                                 showArrow={false}
                                 filterOption={false}
-                                onSearch={this.handleSearch}
+                                onSearch={_.debounce(() => this.handleSearch(),300)}
                                 notFoundContent={null}
                             >
                                 {
@@ -736,7 +757,7 @@ const SearchForm = Form.create()(
 const EditForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, onCancel, onOk, form, deviceId,wateringType,plantType } = this.props;
+            const { visible, onCancel, onOk, form, deviceId,wateringType,plantType,plant,water } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Modal
@@ -760,7 +781,7 @@ const EditForm = Form.create()(
                             )}
                         </Form.Item>
                         <Form.Item label="灌区类型">
-                            {getFieldDecorator('wateringType', {initialValue: '选择灌区类型'})
+                            {getFieldDecorator('wateringType', {initialValue: `${water}`})
                             (
                                 <Select>
                                     {
@@ -774,7 +795,7 @@ const EditForm = Form.create()(
                             )}
                         </Form.Item>
                         <Form.Item label="种植类型">
-                            {getFieldDecorator('plantType', {initialValue: '选择种植类型'})
+                            {getFieldDecorator('plantType', {initialValue: `${plant}`})
                                 (
                                 <Select>
                                     {
@@ -805,7 +826,6 @@ const AddForm = Form.create()(
         }
         //下拉搜索框搜索功能
         handleSearch = (value) => {
-            console.log(value)
             fetch(deviceUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -853,7 +873,7 @@ const AddForm = Form.create()(
                                     defaultActiveFirstOption={false}
                                     showArrow={false}
                                     filterOption={false}
-                                    onSearch={this.handleSearch}
+                                    onSearch={_.debounce(() => this.handleSearch(),300)}
                                     notFoundContent={null}
                                 >
                                     {
