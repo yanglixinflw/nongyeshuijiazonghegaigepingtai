@@ -28,8 +28,8 @@ export default class extends Component{
         const {autoControl}=props;
         this.state={
             //表数据源
-            itemCount:autoControl.data.itemCount,//总数据数
-            data:autoControl.data.items,//表格数据源
+            itemCount:autoControl.data.data.itemCount,//总数据数
+            data:autoControl.data.data.items,//表格数据源
             columns: [],
             //表头
             title:tableTitle,
