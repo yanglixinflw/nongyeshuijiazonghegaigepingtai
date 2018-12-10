@@ -18,116 +18,115 @@
 
 // 表格单元最小宽度
 .tbw {
-    min-width: 100px;
-    // max-width: 200px;
+    min-width: 100px; // max-width: 200px;
     width: 100%;
 }
 
-//搜索
-.searchForm {
-    height: 75px;
-    line-height: 75px;
-    margin: 0 38px 20px;
-    display: flex;
-    background: #1C2241;
-    padding-top: 15px;
-    padding-left: 21px;
-    :global {
-        .ant-form {
-            line-height: 75px;
-            .ant-btn {
-                width: 90px;
-                margin-right: 0px;
+.deviceData {
+    //搜索
+    .searchForm {
+        height: 75px;
+        line-height: 75px;
+        margin: 0 38px 20px;
+        display: flex;
+        background: #1C2241;
+        padding-top: 15px;
+        padding-left: 21px;
+        :global {
+            .ant-form {
+                line-height: 75px;
+                .ant-btn {
+                    width: 90px;
+                    margin-right: 0px;
+                }
             }
-        }
-        .ant-input {
-            height: 46px;
-            width: 210px;
-            background: #141831;
-            outline: 0;
-            border: 0;
-            margin-right: 3px;
-            color: #ACB5E8;
-            font-size: 12px;
-            &::-webkit-input-placeholder{
-                color:#4A5A72;
+            .ant-input {
+                height: 46px;
+                width: 210px;
+                background: #141831;
+                outline: 0;
+                border: 0;
+                margin-right: 3px;
+                color: #ACB5E8;
+                font-size: 12px;
+                &::-webkit-input-placeholder {
+                    color: #4A5A72;
+                }
             }
-        }
-        .ant-select-selection--single {
-            height: 46px;
-            width: 210px;
-            background: #141831;
-            outline: 0;
-            border: 0;
-            position: relative;
-            top: -5px;
-            font-size: 12px;
-            .ant-select-arrow {
+            .ant-select-selection--single {
+                height: 46px;
+                width: 210px;
+                background: #141831;
+                outline: 0;
+                border: 0;
+                position: relative;
+                top: -5px;
+                font-size: 12px;
+                .ant-select-arrow {
+                    color: #4A5A72;
+                }
+            }
+            .ant-select-selection__placeholder {
+                top: 72%;
                 color: #4A5A72;
             }
-        }
-        .ant-select-selection__placeholder {
-            top: 72%;
-            color:#4A5A72;
-        }
-        .ant-select-selection-selected-value {
-            color: white;
-            position: relative;
-            top: 8px;
-        }
-        .ant-btn {
-            border-radius: 50px;
-            height: 38px;
-            width: 133px;
-            background: #2E386C;
-            margin-right: 16px;
-            color: #ACB5E8;
-            border: 0;
-            outline: 0;
-            &:hover {
-                background: #327DF4;
-                color: #fff;
+            .ant-select-selection-selected-value {
+                color: white;
+                position: relative;
+                top: 8px;
             }
-            &:focus {
-                background: #327DF4;
-                color: #fff;
-                color:#fff;
-            }
-            &:focus {
-                background: #327DF4;
-                color:#fff;
+            .ant-btn {
+                border-radius: 50px;
+                height: 38px;
+                width: 133px;
+                background: #2E386C;
+                margin-right: 16px;
+                color: #ACB5E8;
+                border: 0;
+                outline: 0;
+                &:hover {
+                    background: #327DF4;
+                    color: #fff;
+                }
+                &:focus {
+                    background: #327DF4;
+                    color: #fff;
+                    color: #fff;
+                }
+                &:focus {
+                    background: #327DF4;
+                    color: #fff;
+                }
             }
         }
-    }
-    .showSet{
-        .showIcon{
-            position: relative;
-            left:-11px;
+        .showSet {
+            .showIcon {
+                position: relative;
+                left: -8px;
+            }
+            .exportIcon {
+                position: relative;
+                left: -8px;
+            }
         }
-        .upLoadIcon{
-            position: relative;
-            left:-11px;
+        .searchButton {
+            .searchIcon {
+                top: 2px;
+                position: relative;
+                left: -8px;
+            }
+            .resetIcon {
+                top: 2px;
+                position: relative;
+                left: -8px;
+            }
+        }
+        .installAddress {
+            margin-right: 46px;
         }
     }
-    .searchButton{
-        .searchIcon{ 
-            top:2px;
-            position: relative;
-            left:-8px;
-        }
-        .resetIcon{
-            top:2px;
-            position: relative;
-            left:-8px;
-        }
-    }
-    .installAddress{
-        margin-right: 46px;
-    }
-}
-.deviceData{
     :global {
-        .ant-table-fixed-right .ant-table-tbody tr td .ant-btn{
+        .ant-table-fixed-right .ant-table-tbody tr td .ant-btn {
             margin-right: 0;
         }
         .ant-table-fixed-right {
@@ -142,7 +141,6 @@
                     }
                 }
             }
-        
         }
         .ant-table-wrapper {
             .ant-table {
@@ -179,7 +177,9 @@
                     }
                 }
             }
-            .ant-table td { white-space: nowrap; }
+            .ant-table td {
+                white-space: nowrap;
+            }
             .ant-table-tbody {
                 tr {
                     &:hover td {
@@ -189,7 +189,7 @@
                         color: #0084FF;
                     }
                     td {
-                        height: 52px ;
+                        height: 52px;
                         padding: 0 16px;
                         font-size: 12px;
                         background: #1C2241;
@@ -248,292 +248,284 @@
                 }
             }
         }
-    }
-}
-
-
-//媒体查询
-@media(max-width:1580px) {
-    .searchForm {
-        :global {
-            .ant-form {
-                .ant-input {
-                    max-width: 190px;
+    } //媒体查询
+    @media(max-width:1580px) {
+        .searchForm {
+            :global {
+                .ant-form {
+                    .ant-input {
+                        max-width: 190px;
+                    }
+                    .ant-select-selection--single {
+                        max-width: 190px;
+                    }
+                    .ant-btn {
+                        max-width: 90px;
+                    }
                 }
-                .ant-select-selection--single {
-                    max-width: 190px;
+                .ant-btn {
+                    max-width: 120px;
+                }
+            }
+        }
+    }
+    @media(max-width:1480px) {
+        .searchForm {
+            :global {
+                .ant-form {
+                    .ant-input {
+                        max-width: 160px;
+                    }
+                    .ant-select-selection--single {
+                        max-width: 160px;
+                    }
+                    .ant-btn {
+                        max-width: 90px;
+                    }
+                }
+                .ant-btn {
+                    max-width: 120px;
+                }
+            }
+        }
+    }
+    @media(max-width:1390px) {
+        .searchForm {
+            :global {
+                .ant-form {
+                    .ant-form-item {
+                        margin-right: 10px;
+                    }
+                    .ant-input {
+                        max-width: 160px;
+                        margin-right: 0px;
+                    }
+                    .ant-select-selection--single {
+                        max-width: 160px;
+                        margin-left: 5px;
+                        margin-right: 0px;
+                    }
+                    .ant-btn {
+                        max-width: 80px;
+                        margin-left: 0px;
+                        margin-right: 10px;
+                    }
+                }
+                .ant-btn {
+                    max-width: 110px;
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+    @media(max-width:1305px) {
+        .searchForm {
+            :global {
+                .ant-form {
+                    .ant-input {
+                        max-width: 160px;
+                        margin-right: 0px;
+                    }
+                    .ant-select-selection--single {
+                        max-width: 160px;
+                        margin-left: 0px;
+                    }
+                    .ant-btn {
+                        max-width: 70px;
+                    }
                 }
                 .ant-btn {
                     max-width: 90px;
                 }
             }
-            .ant-btn {
-                max-width: 120px;
+        }
+    }
+    @media(max-width:1240px) {
+        .searchForm {
+            :global {
+                .ant-form {
+                    .ant-form-item {
+                        margin-right: 10px;
+                    }
+                    .ant-input {
+                        max-width: 150px;
+                        margin-right: 0px;
+                    }
+                    .ant-select-selection--single {
+                        max-width: 150px;
+                        margin-left: 0px;
+                    }
+                    .ant-btn {
+                        max-width: 70px;
+                        margin-left: 0px;
+                        position: relative;
+                    }
+                }
+                .ant-btn {
+                    max-width: 90px;
+                    margin-left: 0px;
+                }
             }
         }
     }
-}
-
-@media(max-width:1480px) {
-    .searchForm {
-        :global {
-            .ant-form {
-                .ant-input {
-                    max-width: 160px;
-                }
-                .ant-select-selection--single {
-                    max-width: 160px;
+    @media(max-width:1190px) {
+        .searchForm {
+            :global {
+                .ant-form {
+                    .ant-form-item {
+                        margin-right: 10px;
+                    }
+                    .ant-input {
+                        max-width: 130px;
+                        margin-right: 0px;
+                    }
+                    .ant-select-selection--single {
+                        max-width: 130px;
+                        margin-left: 0px;
+                    }
+                    .ant-btn {
+                        max-width: 70px;
+                        margin-left: 0px;
+                    }
                 }
                 .ant-btn {
                     max-width: 90px;
                 }
             }
-            .ant-btn {
-                max-width: 120px;
-            }
-        }
-    }
-}
-
-@media(max-width:1390px) {
-    .searchForm {
-        :global {
-            .ant-form {
-                .ant-form-item {
-                    margin-right: 10px;
-                }
-                .ant-input {
-                    max-width: 160px;
-                    margin-right: 0px;
-                }
-                .ant-select-selection--single {
-                    max-width: 160px;
-                    margin-left: 5px;
-                    margin-right: 0px;
-                }
-                .ant-btn {
-                    max-width: 80px;
-                    margin-left: 0px;
-                    margin-right: 10px;
-                }
-            }
-            .ant-btn {
-                max-width: 110px;
-                margin-left: 10px;
-            }
-        }
-    }
-}
-
-@media(max-width:1305px) {
-    .searchForm {
-        :global {
-            .ant-form {
-                .ant-input {
-                    max-width: 160px;
-                    margin-right: 0px;
-                }
-                .ant-select-selection--single {
-                    max-width: 160px;
-                    margin-left: 0px;
-                }
-                .ant-btn {
-                    max-width: 70px;
-                }
-            }
-            .ant-btn {
-                max-width: 90px;
-            }
-        }
-    }
-}
-
-@media(max-width:1240px) {
-    .searchForm {
-        :global {
-            .ant-form {
-                .ant-form-item {
-                    margin-right: 10px;
-                }
-                .ant-input {
-                    max-width: 150px;
-                    margin-right: 0px;
-                }
-                .ant-select-selection--single {
-                    max-width: 150px;
-                    margin-left: 0px;
-                }
-                .ant-btn {
-                    max-width: 70px;
-                    margin-left: 0px;
+            .searchButton {
+                .searchIcon {
+                    top: 2px;
                     position: relative;
+                    left: -5px;
+                }
+                .resetIcon {
+                    top: 2px;
+                    position: relative;
+                    left: -5px;
                 }
             }
-            .ant-btn {
-                max-width: 90px;
-                margin-left: 0px;
+            .showSet {
+                .showIcon {
+                    position: relative;
+                    left: -8px;
+                }
+                .upLoadIcon {
+                    position: relative;
+                    left: -8px;
+                }
             }
         }
     }
-}
-
-@media(max-width:1190px) {
-    .searchForm {
-        :global {
-            .ant-form {
-                .ant-form-item {
-                    margin-right: 10px;
-                }
-                .ant-input {
-                    max-width: 130px;
-                    margin-right: 0px;
-                }
-                .ant-select-selection--single {
-                    max-width: 130px;
-                    margin-left: 0px;
+    @media(max-width:1130px) {
+        .searchForm {
+            :global {
+                .ant-form {
+                    .ant-form-item {
+                        margin-right: 5px;
+                    }
+                    .ant-input {
+                        max-width: 110px;
+                        margin-right: 0px;
+                    }
+                    .ant-select-selection--single {
+                        max-width: 110px;
+                        margin-left: 0px;
+                    }
+                    .ant-btn {
+                        max-width: 70px;
+                        margin-left: 0px;
+                    }
                 }
                 .ant-btn {
-                    max-width: 70px;
-                    margin-left: 0px;
-                }
-            }
-            .ant-btn {
-                max-width: 90px;
-            }
-        }
-        .searchButton{
-            .searchIcon{ 
-                top:2px;
-                position: relative;
-                left:-5px;
-            }
-            .resetIcon{
-                top:2px;
-                position: relative;
-                left:-5px;
-            }
-        }
-        .showSet{
-            .showIcon{
-                position: relative;
-                left:-8px;
-            }
-            .upLoadIcon{
-                position: relative;
-                left:-8px;
-            }
-        }
-    }
-}
-
-@media(max-width:1130px) {
-    .searchForm {
-        :global {
-            .ant-form {
-                .ant-form-item {
+                    max-width: 90px;
                     margin-right: 5px;
                 }
-                .ant-input {
-                    max-width: 110px;
-                    margin-right: 0px;
+            }
+            .showSet {
+                .showIcon {
+                    position: relative;
+                    left: -5px;
                 }
-                .ant-select-selection--single{
-                    max-width: 110px;
-                    margin-left: 0px;
+                span {
+                    position: relative;
+                    left: -2px;
                 }
-                .ant-btn {
-                    max-width: 70px;
-                    margin-left: 0px;
+                .upLoadIcon {
+                    position: relative;
+                    left: -5px;
                 }
             }
+        }
+    }
+    .action {
+        // width: 100%;
+        padding: 0px 0px !important;
+        :global {
             .ant-btn {
-                max-width: 90px;
-                margin-right: 5px;
-            }
-        }
-        .showSet{
-            .showIcon{
-                position: relative;
-                left:-5px;
-            }
-            span{
-                position: relative;
-                left:-2px;
-            }
-            .upLoadIcon{
-                position: relative;
-                left:-5px;
+                // padding:0px 6px !important;
+                margin: 0px 6px !important;
             }
         }
     }
 }
-.action{
-    // width: 100%;
-    padding:0px  0px !important;
-    :global{
-        .ant-btn{
-            // padding:0px 6px !important;
-            margin: 0px 6px !important;
-        }
-    }
-}
-.showSetModal{
-    :global{
-        .ant-modal-header{
+
+.showSetModal {
+    :global {
+        .ant-modal-header {
             padding: 16px 0;
             background: #171A39;
-            border-bottom:1px solid #363A69;
+            border-bottom: 1px solid #363A69;
         }
-        .ant-modal-close-x{
-            font-size:14px;
-            color:#fff
+        .ant-modal-close-x {
+            font-size: 14px;
+            color: #fff
         }
-        .ant-modal-title{
+        .ant-modal-title {
             padding: 0 20px;
             border-left: 4px #327DF4 solid;
-            font-size:14px;
-            color:#fff
+            font-size: 14px;
+            color: #fff
         }
-        .ant-modal-footer{
-            border-top:1px solid #363A69;
+        .ant-modal-footer {
+            border-top: 1px solid #363A69;
             text-align: center;
-            .ant-btn{
-                color:#327DF4;
+            .ant-btn {
+                color: #327DF4;
                 background: none;
-                border:none;
-                &:hover{
+                border: none;
+                &:hover {
                     background-color: #327DF4;
-                border-color: #327DF4;
-                color:white;
+                    border-color: #327DF4;
+                    color: white;
                 }
             }
-            .ant-btn-primary{
-                background-color:#327DF4;
+            .ant-btn-primary {
+                background-color: #327DF4;
                 border-color: #327DF4;
-                color:white;
+                color: white;
             }
         }
-        .ant-modal-content{
+        .ant-modal-content {
             background: #171A39;
-            
         }
-        .ant-checkbox-wrapper{
-            color:white;
+        .ant-checkbox-wrapper {
+            color: white;
         }
-        .ant-checkbox-inner{
+        .ant-checkbox-inner {
             background: none;
-            border-color:#2A3059;
+            border-color: #2A3059;
         }
-        .ant-checkbox-checked .ant-checkbox-inner{
+        .ant-checkbox-checked .ant-checkbox-inner {
             background: #1890ff;
-            border-color:#1890ff;
+            border-color: #1890ff;
         }
     }
 }
+
 //历史数据 
 .history {
     // 表格单元最小宽度
-    .tbw{
+    .tbw {
         min-width: 100px;
     }
     :global {
@@ -627,7 +619,7 @@
                         color: #0084FF;
                     }
                     td {
-                        height: 52px ;
+                        height: 52px;
                         padding: 0 16px;
                         font-size: 12px;
                         background: #1C2241;
@@ -679,8 +671,7 @@
                 }
             }
         }
-    }
-    //设备信息
+    } //设备信息
     .deviceInfo {
         display: flex;
         height: 95px;
@@ -707,31 +698,31 @@
                 vertical-align: middle;
                 margin-right: 12px;
             }
-            .name{
+            .name {
                 font-size: 45px;
                 color: #327DF4;
                 vertical-align: middle;
                 margin-right: 12px;
             }
-            .installAddr{
+            .installAddr {
                 font-size: 45px;
                 color: #327DF4;
                 vertical-align: middle;
                 margin-right: 12px;
             }
         }
-        .showSet{
-            margin-left:46px;
-            .showIcon{
+        .showSet {
+            margin-left: 46px;
+            .showIcon {
                 position: relative;
-                left: -11px;
+                left: -8px;
             }
         }
-        .export{
-            margin-left:16px;
-            .exportIcon{
+        .export {
+            margin-left: 16px;
+            .exportIcon {
                 position: relative;
-                left: -11px;
+                left: -8px;
             }
         }
         :global {
@@ -745,11 +736,11 @@
                 border: 0;
                 &:hover {
                     background: #327DF4;
-                    color:#fff;
+                    color: #fff;
                 }
                 &:focus {
                     background: #327DF4;
-                    color:#fff;
+                    color: #fff;
                 }
             }
         }
@@ -769,7 +760,7 @@
     }
     @media(max-width:1480px) {
         .deviceInfo {
-            .info{
+            .info {
                 padding: 0 20px;
             }
             :global {
@@ -819,16 +810,16 @@
                     }
                 }
             }
-            .showSet{
-                margin-left:46px;
-                .showIcon{
+            .showSet {
+                margin-left: 46px;
+                .showIcon {
                     position: relative;
                     left: -5px;
                 }
             }
-            .export{
-                margin-left:16px;
-                .exportIcon{
+            .export {
+                margin-left: 16px;
+                .exportIcon {
                     position: relative;
                     left: -5px;
                 }
@@ -843,7 +834,6 @@
                     .ant-form-item {
                         .ant-input {
                             max-width: 110px;
-                            
                         }
                     }
                 }
@@ -861,7 +851,7 @@
     }
     @media(max-width:1050px) {
         .deviceInfo {
-            .info{
+            .info {
                 padding: 0 10px;
             }
             :global {
@@ -870,7 +860,6 @@
                     .ant-form-item {
                         .ant-input {
                             max-width: 110px;
-                            
                         }
                     }
                 }

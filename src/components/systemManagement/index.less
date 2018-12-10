@@ -98,17 +98,27 @@
             margin-right: 46px;
         }
         .searchButton{
-            span{
-                position: absolute;
-                top:9px;
-                left:44px;
+            .searchIcon{
+                position: relative;
+                left: -8px;
+                top:1px;
             }
         }
-        .searchIcon{
-            position: absolute;
-            top:9px;
-            left: 20px;
-            
+        .resetButton{
+            .resetIcon{
+                position: relative;
+                left:-8px;
+                top:1px;
+            }
+        }
+        .addBtn{
+            :global{
+                .anticon{
+                    position: relative;
+                    top:1px;
+                    font-size: 16px;
+                }
+            }
         }
     }
     :global {

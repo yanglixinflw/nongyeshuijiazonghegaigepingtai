@@ -112,7 +112,7 @@ export default class extends Component {
             align: 'center',
             fixed: "right",
             className: `${styles.action}`,
-            width: 200,
+            width: 289,
             render: (record) => {
                 return (
                     <span className={styles.option}>
@@ -467,7 +467,7 @@ export default class extends Component {
                         pagination={paginationProps}
                         dataSource={tableDatas}
                         scroll={
-                            { x: columns.length < 4 ? false : 2000 }
+                            { x: columns.length < 4 ? false : true }
                         }
                     />
                 </div>

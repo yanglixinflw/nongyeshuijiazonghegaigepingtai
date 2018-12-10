@@ -520,6 +520,7 @@ export default class extends Component {
                         {...{ roleList }}
                     />
                     <Button
+                        className={styles.addBtn}
                         icon="plus"
                         onClick={() => this._addHandler()}
                     >添加</Button>
@@ -631,10 +632,10 @@ const SearchForm = Form.create()(
                     <Form.Item>
                         <Button
                             // icon='reload'
-                            className={styles.searchButton}
+                            className={styles.resetButton}
                             onClick={() => resetHandler()}
                         >
-                            <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.searchIcon}`)}></i>
+                            <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.resetIcon}`)}></i>
                             重置</Button>
                     </Form.Item>
                 </Form>
