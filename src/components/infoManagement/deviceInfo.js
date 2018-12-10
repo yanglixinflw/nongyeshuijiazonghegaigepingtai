@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styles from './deviceInfo.less'
 import QRCode from 'qrcode.react'
+import classnames from 'classnames';
 import {
     Form,
     Button,
@@ -639,33 +640,40 @@ export default class extends Component {
                     >
                         <Button
                             className={styles.searchButton}
-                            icon="search"
+                            // icon="search"
                             onClick={() => this._searchTableData()}
                         >
+                            <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
                             搜索
                         </Button>
                         <Button
-                            icon='reload'
+                            // icon='reload'
                             className={styles.searchButton}
                             onClick={() => this._resetForm()}
                         >
+                            <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.resetIcon}`)}></i>
                             重置</Button>
                         <Button
                             icon='plus'
+                            className={styles.searchButton}
                             onClick={() => this._addHandler()}
                         >
                             添加
                         </Button>
                         <Button
-                            icon='eye'
+                            // icon='eye'
+                            className={styles.showSet}
                             onClick={() => this._showSetHandler()}
                         >
+                            <i className={classnames('dyhsicon', 'dyhs-xianshi', `${styles.showIcon}`)}></i>
                             显示设置
                         </Button>
                         <Button
-                            icon='upload'
+                            // icon='upload'
+                            className={styles.showSet}
                             onClick={() => this._uploadHandler()}
                         >
+                            <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.exportIcon}`)}></i>
                             导出数据
                         </Button>
                     </div>
