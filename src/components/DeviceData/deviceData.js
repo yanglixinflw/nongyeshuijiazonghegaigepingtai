@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styles from './common.less';
 import { Input, Button, Form, Select, Table, Checkbox, Modal, Row, Col } from 'antd';
 import { Link } from 'dva/router';
+import classnames from 'classnames';
 import _ from 'lodash';
 import { timeOut } from '../../utils/timeOut';
 import {ENVNet,postOption} from '../../services/netCofig'
@@ -89,7 +90,7 @@ export default class extends Component {
             key: 'action',
             align: 'center',
             fixed: 'right',
-            width: 100,
+            // width: 100,
             className: `${styles.action}`,
             render: (record) => {
                 return (
@@ -335,15 +336,20 @@ export default class extends Component {
                         installAddress={installAddress}
                     />
                     <Button
-                        icon='eye'
+                        // icon='eye'
+                        className={styles.showSet}
                         onClick={() => this._showSetHandler(true)}
                     >
+                        <i className={classnames('dyhsicon', 'dyhs-xianshi', `${styles.showIcon}`)}></i>
                         显示设置
                     </Button>
                     <Button
-                        icon='upload'
+                        // icon='upload'
+                        className={styles.showSet}
                         onClick={() => this._exportDataHandler()}
-                    >导出数据
+                    >
+                        <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.upLoadIcon}`)}></i>
+                        导出数据
                     </Button>
                 </div>
                 <Table
@@ -393,7 +399,7 @@ const SearchForm = Form.create()(
                             )
                         }
                     </Form.Item>
-                    <Form.Item>
+                    <Form.Item className={styles.installAddress}>
                         {getFieldDecorator('installAddrId')
                             (
                             <Select
@@ -420,19 +426,21 @@ const SearchForm = Form.create()(
                     </Form.Item>
                     <Form.Item>
                         <Button
-                            icon='search'
+                            // icon='search'
                             className={styles.searchButton}
                             onClick={() => searchHandler()}
                         >
+                            <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
                             搜索</Button>
                     </Form.Item>
                     <Form.Item>
                         <Button
-                            icon='reload'
+                            // icon='reload'
                             className={styles.searchButton}
                             onClick={() => resetHandler()}
                             htmlType='submit'
                         >
+                            <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.resetIcon}`)}></i>
                             重置</Button>
                     </Form.Item>
                 </Form>
