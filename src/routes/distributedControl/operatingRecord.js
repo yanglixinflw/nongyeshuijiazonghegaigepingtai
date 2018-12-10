@@ -14,6 +14,9 @@ export default class extends React.Component{
         // console.log(deviceId)
         const { dispatch } = this.props;
         dispatch({
+            type:'operatingRecord/clear'
+        })
+        dispatch({
             type: 'operatingRecord/fetch',
             payload:{
                 deviceId,
@@ -26,7 +29,7 @@ export default class extends React.Component{
         let { operatingRecord, loading } = this.props;
         // console.log(operatingRecord)
         let arr = Object.keys(operatingRecord);
-        if (arr.length <=0) return operatingRecord = null;
+        if (arr.length ==0) return operatingRecord = null;
         return (
             <React.Fragment>
                 <Spin size='large' spinning={loading}>
