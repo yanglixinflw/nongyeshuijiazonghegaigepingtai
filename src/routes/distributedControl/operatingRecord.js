@@ -3,6 +3,7 @@ import OperatingRecord from '../../components/distributedControl/operatingRecord
 import { connect } from 'dva';
 import { Spin } from 'antd'
 import { parse } from 'qs';
+import BreadcrumbView from '../../components/PageHeader/breadcrumb';
 @connect(({ operatingRecord, loading }) => ({
     operatingRecord,
     loading: loading.models.operatingRecord
@@ -29,6 +30,9 @@ export default class extends React.Component{
         return (
             <React.Fragment>
                 <Spin size='large' spinning={loading}>
+                    <BreadcrumbView
+                        {...this.props}
+                    />
                     <OperatingRecord
                         {...{operatingRecord}}
                     /> 

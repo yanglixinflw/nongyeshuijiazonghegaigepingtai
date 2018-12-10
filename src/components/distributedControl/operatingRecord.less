@@ -1,5 +1,5 @@
 //引入线上图标
-@import 'http://at.alicdn.com/t/font_869092_lzfptbjsxoa.css';
+@import 'http://at.alicdn.com/t/font_869092_9hm3dscqat6.css';
 .operatingRecord{
     .headers {
         height: 60px;
@@ -48,6 +48,9 @@
                 // width: 212px;
                 .ant-calendar-picker-input,.ant-input{
                     width: 100%;
+                    .anticon{
+                        color: #fff;
+                    }
                 }
             }
             .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
@@ -67,14 +70,12 @@
             .ant-select-selection__rendered{
                 margin-top:8px; 
             }
-            .anticon,.anticon-down,.ant-select-arrow-icon{
-                color: #fff;
-            }
         }
         .buttonGroup{
             display: flex;
             // align-items: center;
             .fnButton{
+                width:97px;
                 height:36px;
                 border-radius: 30px;
                 margin-left: 186px;
@@ -85,13 +86,20 @@
                 outline: none;
                 border: none;
                 color: #bac4f7;
-                i{
-                    font-size: 16px;
+                &:hover{
+                    background: #327df4;
+                    color: #fff;
                 }
-            }
-            .fnButton:hover{
-                background: #327df4;
-                color: #fff;
+                .searchIcon{
+                    position: relative;
+                    left:-8px;
+                    top:1px;
+                }
+                .resetIcon{
+                    position: relative;
+                    left:-8px;
+                    top:1px;
+                }
             }
         }
     }

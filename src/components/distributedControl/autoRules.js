@@ -124,7 +124,7 @@ export default class extends Component {
         return (
             <React.Fragment>
                 <div className={styles.headers}>
-                    <div className={styles.left}>
+                    {/* <div className={styles.left}>
                         <Link to={`/dcs/automation`}>
                             <div className={styles.arrowLeft}>
                                 <Icon type="arrow-left" theme="outlined" style={{marginTop:'22px',fontSize:'18px'}}/>
@@ -137,8 +137,8 @@ export default class extends Component {
                                 <div className={styles.autoRules}>设置自动化规则</div>
                             </div>
                         </Link>
-                    </div>
-                    <div className={styles.right}>
+                    </div> */}
+                    <div className={styles.btnGroup}>
                         <Button
                             icon='reload'
                             className={styles.fnButton}
