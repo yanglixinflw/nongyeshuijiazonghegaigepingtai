@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Map, Markers } from 'react-amap';
 import styles from './mapControl.less';
-import MarkerExterior from '../GisMap/markerExterior';
+import MarkerExterior from './markerExterior';
 import MyCustomize from './myCustomize';
 import { timeOut } from '../../utils/timeOut';
 import { Modal, Radio, message } from 'antd';
@@ -34,9 +34,12 @@ export default class extends Component {
                 },
             },
         ]
+        let center = {};
+        center.longitude = props.mapGis.waterValve.data.data.items[0].longitude;
+        center.latitude = props.mapGis.waterValve.data.data.items[0].latitude;
         this.state = {
             // 地图中心点
-            center: { longitude: 120.26, latitude: 30.29 },
+            center,
             //控件插件
             plugins,
             //球阀position
@@ -69,7 +72,8 @@ export default class extends Component {
                 position,
                 deviceTypeId: v.deviceTypeId,
                 deviceId: v.deviceId,
-                name:v.name
+                name:v.name,
+                status:v.status
             })
         })
         this.setState({
@@ -91,6 +95,10 @@ export default class extends Component {
                 })
             }
         }
+    }
+    //统计信息
+    _countHandler(){
+
     }
     //点击标记时获取指令  //获取当前设备状态
     _getCmdList(deviceTypeId,deviceId) {
@@ -198,6 +206,11 @@ export default class extends Component {
         // console.log(statusValue)
         return (
             <div className={styles.mapControl}>
+                {/* 统计信息面板 */}
+                <div className={styles.statisticsPanel}>
+                   <div className={styles.valveOpen}></div>
+                   <div className={styles.valveClose}></div>
+                </div>
                 <Map
                     amapkey={MY_AMAP_KEY}
                     //地图控件 插件

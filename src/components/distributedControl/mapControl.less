@@ -14,6 +14,14 @@
             }
         }
     }
+    //统计信息面板
+    .statisticsPanel{
+        position: absolute;
+        z-index: 2;
+        background: rgba(0,0,0,0.5);
+        width: 226px;
+        height: 168px;
+    }
     
 }
 .controlModal{
@@ -142,5 +150,380 @@
     .btnLess {
         top: 80px;
         left: -64px;
+    }
+}
+.markerCamera {
+    //预警显示摄像头
+    .warning {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/warningCamera.png) no-repeat;
+        .warningAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 3px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+    } //被选中的摄像头
+    .chosen {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/ssCamera.png) no-repeat;
+        .chosenAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+    } //普通显示摄像头
+    .normal {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/normalCamera.png) no-repeat;
+    }
+}
+
+.markerWaterM {
+    //预警显示水表
+    .warning {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/warningWMeter.png) no-repeat;
+        .warningAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 3px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+    } //被选中的水表
+    .chosen {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/ssWMeter.png) no-repeat;
+        .chosenAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+    } //普通显示水表
+    .normal {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/normalWMeter.png) no-repeat;
+    }
+}
+
+.markerEleMeter {
+    //预警显示电表
+    .warning {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/warningEMeter.png) no-repeat;
+        .warningAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 3px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+    } //被选中的电表
+    .chosen {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/ssEMeter.png) no-repeat;
+        .chosenAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+    } //普通显示电表
+    .normal {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/normalEMeter.png) no-repeat;
+    }
+}
+
+.markerWaterV {
+    //预警显示水阀
+    .warning {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/warningWValve.png) no-repeat;
+        .warningAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .warningAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 3px solid #FF5555;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+    } //被选中的水阀
+    .chosen {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/ssWValve.png) no-repeat;
+        .chosenAnimation1 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint1 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation2 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint2 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        .chosenAnimation3 {
+            position: absolute;
+            top: 33px;
+            left: -6px;
+            width: 56px;
+            height: 44px;
+            border: 4px solid #327DF4;
+            border-radius: 50%;
+            animation: flashPoint3 2s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+    } //普通显示水阀
+    .normal {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/normalWValve.png) no-repeat;
     }
 }
