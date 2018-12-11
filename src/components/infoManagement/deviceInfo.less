@@ -59,7 +59,7 @@
             background: #141831;
             outline: 0;
             border: 0;
-            color: #4A5A72;
+            color: #FFF;
             font-size: 12px;
             &::-webkit-input-placeholder{
                 color:#4A5A72;
@@ -110,6 +110,11 @@
                 color: #4A5A72;
             }
         }
+        .ant-select-search--inline .ant-select-search__field{
+            color:#FFF;
+            position: relative;
+            top:8px;
+        }
         .ant-select-selection__placeholder {
             top: 72%;
             color:#4A5A72;
@@ -130,11 +135,13 @@
 }
 
 .addModal {
+    // width: 1000px !important;
     width: 840px !important;
     .FlexForm {
         display: flex; // flex-direction:column;
         justify-content: space-between;
         flex-wrap: wrap;
+        // flex-direction:column;
     }
     .formInput {
         width: 200px;
@@ -188,7 +195,8 @@
             width: 94px;
         }
         .ant-form-item {
-            display: inline-block
+            display: inline-block;
+            width: 310px;
         }
         .ant-form-item-control-wrapper {
             display: inline-block
@@ -209,14 +217,27 @@
             border: none;
         }
         .ant-form-explain {
-            display: inline-block;
+            // display: inline-block;
             margin-left: 6px;
+            position: absolute;
         }
         .ant-calendar-picker-clear {
             background: #272D52;
         }
         .ant-calendar-picker-icon {
             color: #bbc5d2
+        }
+        .ant-form-item-required{
+            position: relative;
+            // top: 28px;
+            // height: 94px;
+            display: inline-block;
+        }
+        .ant-form-item-label{
+            overflow: visible
+        }
+        .ant-form-item-with-help{
+            margin-bottom: 24px;
         }
     }
 }
