@@ -17,9 +17,10 @@ import {
 } from 'antd'
 import moment from 'moment'
 import { Link } from 'dva/router';
+import _ from 'lodash'
 const Item = Form.Item
 const Option = Select.Option
-import {ENVNet,postOption} from '../../services/netCofig'
+import { ENVNet, postOption } from '../../services/netCofig'
 // 搜索、翻页接口、重置表单
 const getDataUrl = `${ENVNet}/api/Device/list`
 // 获取公司管护人列表
@@ -29,6 +30,8 @@ const deleteUrl = `${ENVNet}/api/device/delete`
 // 获取修改信息
 const detailsUrl = `${ENVNet}/api/device/details`
 const updataUrl = `${ENVNet}/api/device/update`
+//关联建筑接口
+const buildingUrl = `${ENVNet}/api/Building/list`
 // 源columns拥有编号
 const sourceColumns = [
     { title: "设备ID", dataIndex: "deviceId" },
@@ -54,10 +57,10 @@ export default class extends Component {
         super(props)
         const { DeviceTypeList,
             InstallList,
-            RelatedBuilding,
-            CompanyList
+            CompanyList,
+            RelatedBuilding
         } = this.props
-        // console.log(props.data.data.items)
+        // console.log(RelatedBuilding)
         this.state = {
             // 显示设置可见
             showSetVisible: false,
@@ -105,11 +108,32 @@ export default class extends Component {
             // 修改弹窗
             modifyModalVisible: false,
             // modifyModalVisible: true,
+            // 修改弹窗管理人员列表
+            modifyAdminList: []
         }
     }
     componentDidMount() {
         // 初始化处理表单数据
         this._getTableData(this.state.data, this.state.filterColumns)
+        // 测试修改弹窗
+        // fetch(detailsUrl, {
+        //     ...postOption,
+        //     body: JSON.stringify({
+        //         deviceId:'E69E8FF2-6896-4807-BB88-4CC501A7ED6B'
+        //     })
+        // }).then((res) => {
+        //     Promise.resolve(res.json())
+        //         .then((v) => {
+        //             // console.log(v)
+        //             if (v.ret == 1) {
+        //                 this.setState({
+        //                     modifyModalVisible: true,
+        //                     // modifyDeviceId: deviceId,
+        //                     modifyData: v.data
+        //                 })
+        //             }
+        //         })
+        // })
     }
     //保存当前设备的类型ID
     _saveDeviceTypeId(deviceTypeId) {
@@ -144,7 +168,7 @@ export default class extends Component {
                         <Button
                             className={styles.scan}
                             icon='scan'
-                            onClick={() => this.qrcodeHandler(true,record.deviceId)}
+                            onClick={() => this.qrcodeHandler(true, record.deviceId)}
                         >
                             生成二维码
                         </Button>
@@ -167,7 +191,7 @@ export default class extends Component {
                         <Button
                             className={styles.delete}
                             icon='delete'
-                            onClick={() => this._deleteHandler(true,record.deviceId)}
+                            onClick={() => this._deleteHandler(true, record.deviceId)}
                         >
                             删除
                         </Button>
@@ -209,20 +233,27 @@ export default class extends Component {
             showSetVisible: true
         })
     }
+    // 设置管理员列表
+    setAdminList(v) {
+        // console.log(v.data)
+        this.setState({
+            modifyAdminList: v.data
+        })
+    }
     // 点击删除
-    _deleteHandler(show,deviceId) {
+    _deleteHandler(show, deviceId) {
         // 点击删除
-        if(show){
+        if (show) {
             this.setState({
                 deleteModalVisible: show,
                 modifyDeviceId: deviceId
             })
-        }else{
+        } else {
             this.setState({
                 deleteModalVisible: show,
             })
         }
-        
+
     }
     // 确认删除
     _deleteOk() {
@@ -471,19 +502,19 @@ export default class extends Component {
         })
     }
     // 二维码弹窗
-    qrcodeHandler(show,deviceId) {
+    qrcodeHandler(show, deviceId) {
         // console.log(deviceId)
-        if(show){
+        if (show) {
             this.setState({
                 qrcodeModalVisible: true,
                 modifyDeviceId: deviceId
             })
-        }else{
+        } else {
             this.setState({
                 qrcodeModalVisible: false
             })
         }
-        
+
     }
     // 修改按钮
     _modifyHandler(deviceId) {
@@ -495,17 +526,35 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
-                    // console.log(v)
                     if (v.ret == 1) {
+                        // 初始化管理人员列表
+                        fetch(`${getManagerUserUrl}?orgId=${v.data.managedCompanyId}`, {
+                            method: 'GET',
+                            mode: 'cors',
+                            credentials: "include",
+                        }).then((res) => {
+                            Promise.resolve(res.json())
+                                .then((v) => {
+                                    if (v.ret == 1) {
+                                        // console.log(v);
+                                        this.setState({
+                                            modifyAdminList: v.data
+                                        })
+                                    }
+                                })
+                        }).catch((err) => {
+                            console.log(err)
+                        })
                         this.setState({
                             modifyModalVisible: true,
                             modifyDeviceId: deviceId,
-                            modifyData: v.data
+                            modifyData: v.data,
                         })
                     }
                 })
         })
-
+        // 重置关联建筑物列表
+        this.handleSearch('')
     }
     // 确认修改
     _modifyOk() {
@@ -514,6 +563,7 @@ export default class extends Component {
             if (err) {
                 return
             } else {
+                // console.log(values)
                 let enableTime = values.enableTime.format('YYYY-MM-DD')
                 values.enableTime = enableTime
                 fetch(updataUrl, {
@@ -546,6 +596,28 @@ export default class extends Component {
             modifyDeviceId: '',
         })
     }
+    // 获取设备安装地列表
+    handleSearch(value) {
+        fetch(buildingUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                "name": value,
+            })
+        }).then(res => {
+            Promise.resolve(res.json())
+                .then(v => {
+                    if (v.ret == 1) {
+                        // 设置页面显示的元素
+                        // console.log(v.data)
+                        this.setState({
+                            relatedBuilding: v.data,
+                        })
+                    }
+                })
+        }).catch(err => {
+            console.log(err)
+        })
+    }
     render() {
         const {
             columns,
@@ -561,7 +633,8 @@ export default class extends Component {
             qrcodeModalVisible,
             modifyDeviceId,
             modifyData,
-            modifyModalVisible
+            modifyModalVisible,
+            modifyAdminList
         } = this.state
         const paginationProps = {
             showQuickJumper: true,
@@ -569,7 +642,7 @@ export default class extends Component {
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
-        // console.log(modifyData)
+        // console.log(companyList)
         return (
             <div className={styles.deviceInfoTable}>
                 <ShowSetForm
@@ -587,6 +660,7 @@ export default class extends Component {
                     deviceTypeList={deviceTypeList}
                     relatedBuilding={relatedBuilding}
                     companyList={companyList}
+                    handleSearch={(v)=>this.handleSearch(v)}
                 />
                 {/* 删除弹窗 */}
                 <Modal
@@ -595,7 +669,7 @@ export default class extends Component {
                     cancelText='取消'
                     okText='确定'
                     onOk={() => this._deleteOk()}
-                    onCancel={() => this._deleteHandler(false,)}
+                    onCancel={() => this._deleteHandler(false)}
                     className={styles.deleteModal}
                     centered={true}
                 >
@@ -625,6 +699,9 @@ export default class extends Component {
                     deviceTypeList={deviceTypeList}
                     relatedBuilding={relatedBuilding}
                     companyList={companyList}
+                    modifyAdminList={modifyAdminList}
+                    handleSearch={(v)=>this.handleSearch(v)}
+                    setAdminList={(v) => this.setAdminList(v)}
                 />
                 <div className={styles.header}>
                     <span>|</span>设备信息
@@ -634,6 +711,7 @@ export default class extends Component {
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
                         installAddress={installAddress}
                         deviceTypeList={deviceTypeList}
+                        handleSearch={(v)=>this.handleSearch(v)}
                         relatedBuilding={relatedBuilding}
                     />
                     <div className={styles.buttonGroup}>
@@ -678,7 +756,7 @@ export default class extends Component {
                     </div>
                 </div>
                 <Table
-                    
+
                     columns={columns}
                     dataSource={tableData}
                     pagination={paginationProps}
@@ -697,7 +775,11 @@ export default class extends Component {
 const SearchForm = Form.create()(
     class extends Component {
         render() {
-            const { form, installAddress, deviceTypeList, relatedBuilding } = this.props;
+            const { form, 
+                installAddress, 
+                deviceTypeList,
+                relatedBuilding,
+                handleSearch } = this.props;
             const { getFieldDecorator } = form;
             // console.log(relatedBuilding)
             return (
@@ -790,12 +872,19 @@ const SearchForm = Form.create()(
                             (
                             <Select
                                 placeholder='关联建筑物'
+                                defaultActiveFirstOption={false}
+                                showArrow={false}
+                                showSearch
+                                filterOption={false}
+                                onSearch={_.debounce((value) => handleSearch(value), 300)}
+                                notFoundContent={null}
                             >
                                 <Option value=''>全部</Option>
                                 {
                                     relatedBuilding.length === 0 ? null
                                         :
                                         relatedBuilding.map((v, i) => {
+                                            // console.log(v)
                                             return (
                                                 <Option
                                                     value={v.buildingId}
@@ -812,13 +901,15 @@ const SearchForm = Form.create()(
                     </Item>
                     <Item>
                         {getFieldDecorator('warningRules', {
-                            initialValue: ''
                         })
                             (
-                            <Input
+                            <Select
                                 placeholder='预警规则'
-                                type='text'
-                            />
+                            >
+                                <Option value=''>全部</Option>
+                                <Option value={true}>有</Option>
+                                <Option value={false}>无</Option>
+                            </Select>
                             )
                         }
                     </Item>
@@ -877,8 +968,11 @@ const AddForm = Form.create()(
             // 是否选择公司
             selectCompany: false,
             // 公司管理员列表
-            adminList: []
+            adminList: [],
+            // 关联建筑物列表
+            relatedBuilding: []
         }
+        
         showAdmin(id) {
             if (id != '') {
                 fetch(`${getManagerUserUrl}?orgId=${id}`, {
@@ -905,21 +999,28 @@ const AddForm = Form.create()(
                 })
             }
         }
+        // 重置管护人员
+        resetManager() {
+            this.props.form.setFieldsValue({
+                managerUserId: "",
+            });
+        }
         render() {
-            const { visible,
+            const {
+                visible,
                 form,
                 onOk,
                 onCancel,
-                relatedBuilding,
                 deviceTypeList,
                 installAddress,
-                companyList
+                relatedBuilding,
+                companyList,
+                handleSearch
             } = this.props
             const { getFieldDecorator } = form;
             const { selectCompany, adminList } = this.state
             let today = new Date()
             let defaultEnd = moment(today).format('YYYY-MM-DD')
-            // console.log(adminList)
             return (
                 <Modal
                     visible={visible}
@@ -956,7 +1057,6 @@ const AddForm = Form.create()(
                                             )
                                         })
                                     }
-
                                 </Select>
                                 )
                             }
@@ -1006,7 +1106,7 @@ const AddForm = Form.create()(
                         <Item label="启用日期">
                             {getFieldDecorator('enableTime',
                                 {
-                                    rules: [{ required: true }],
+                                    // rules: [{ required: true }],
                                     initialValue: moment(defaultEnd)
                                 }
                             )
@@ -1020,23 +1120,33 @@ const AddForm = Form.create()(
                         </Item>
                         <Item label="关联建筑物">
                             {getFieldDecorator('relatedBuildingId', {
-                                rules: [{ required: true, message: '设备安装地不能为空' }]
+                                // rules: [{ required: true, message: '设备安装地不能为空' }]
                             })
                                 (
                                 <Select
                                     placeholder='关联建筑物'
                                     className={styles.formInput}
+                                    defaultActiveFirstOption={false}
+                                    showArrow={false}
+                                    showSearch
+                                    filterOption={false}
+                                    onSearch={_.debounce((value) => handleSearch(value), 300)}
+                                    notFoundContent={null}
                                 >
                                     {
-                                        relatedBuilding.map((v, i) => {
-                                            return (
-                                                <Option
-                                                    value={v.buildingId}
-                                                    key={v.buildingId}>
-                                                    {v.name}
-                                                </Option>
-                                            )
-                                        })
+                                        relatedBuilding.length === 0 ? null
+                                            :
+                                            relatedBuilding.map((v, i) => {
+                                                // console.log(v)
+                                                return (
+                                                    <Option
+                                                        value={v.buildingId}
+                                                        key={v.buildingId}>
+                                                        {v.name}
+                                                    </Option>
+                                                )
+
+                                            })
                                     }
                                 </Select>
                                 )
@@ -1045,7 +1155,7 @@ const AddForm = Form.create()(
                         <Item label='地理经度'>
                             {getFieldDecorator('longitude',
                                 {
-                                    rules: [{ required: true, message: '地理经度不能为空' }]
+                                    // rules: [{ required: true, message: '地理经度不能为空' }]
                                 }
                             )
                                 (
@@ -1059,7 +1169,7 @@ const AddForm = Form.create()(
                         <Item label='地理纬度'>
                             {getFieldDecorator('latitude',
                                 {
-                                    rules: [{ required: true, message: '地理纬度不能为空' }]
+                                    // rules: [{ required: true, message: '地理纬度不能为空' }]
                                 }
                             )
                                 (
@@ -1072,13 +1182,14 @@ const AddForm = Form.create()(
                         </Item>
                         <Item label="运维公司">
                             {getFieldDecorator('managedCompanyId', {
-                                rules: [{ required: true, message: '运维公司不能为空' }]
+                                // rules: [{ required: true, message: '运维公司不能为空' }]
                             })
                                 (
                                 <Select
                                     placeholder='运维公司'
                                     className={styles.formInput}
                                     onChange={id => this.showAdmin(id)}
+                                    onSelect={() => this.resetManager()}
                                 >
                                     {
                                         companyList.map((v, i) => {
@@ -1100,12 +1211,13 @@ const AddForm = Form.create()(
                             selectCompany ?
                                 <Item label='管护人员'>
                                     {getFieldDecorator('managerUserId', {
-                                        rules: [{ required: true, message: '管护人员不能为空' }]
+                                        // rules: [{ required: true, message: '管护人员不能为空' }]
                                     })
                                         (
                                         <Select
                                             placeholder='管护人员'
                                             className={styles.formInput}
+
                                         >
                                             {
                                                 adminList.map((v, i) => {
@@ -1128,7 +1240,7 @@ const AddForm = Form.create()(
                         <Item label='网关ID'>
                             {getFieldDecorator('gatewayAddr',
                                 {
-                                    rules: [{ required: true, message: '网关ID不能为空' }]
+                                    // rules: [{ required: true, message: '网关ID不能为空' }]
                                 }
                             )
                                 (
@@ -1142,7 +1254,7 @@ const AddForm = Form.create()(
                         <Item label='出厂编号'>
                             {getFieldDecorator('deviceSerial',
                                 {
-                                    rules: [{ required: true, message: '出厂编号不能为空' }]
+                                    // rules: [{ required: true, message: '出厂编号不能为空' }]
                                 }
                             )
                                 (
@@ -1162,11 +1274,7 @@ const AddForm = Form.create()(
 // 修改弹窗
 const ModifyForm = Form.create()(
     class extends Component {
-        state = {
-            // 公司管理员列表
-            adminList: []
-        }
-        showAdmin(id) {
+        showAdmin(id, callBack) {
             if (id != '') {
                 fetch(`${getManagerUserUrl}?orgId=${id}`, {
                     method: 'GET',
@@ -1177,36 +1285,57 @@ const ModifyForm = Form.create()(
                         .then((v) => {
                             if (v.ret == 1) {
                                 // console.log(v);
-                                this.setState({
-                                    adminList: v.data
-                                })
+                                callBack(v)
+
                             }
                         })
                 }).catch((err) => {
                     console.log(err)
                 })
-            } else {
-                this.setState({
-                    selectCompany: false,
-                })
             }
+        }
+        // 获取 管护人员列表
+        getManagerPersons() {
+            const form = this.props.form
+            const { setAdminList } = this.props
+            form.validateFields((err, values) => {
+                if (err) {
+                    return
+                } else {
+                    this.showAdmin(values.managedCompanyId, (v) => {
+                        // console.log(this.props)
+                        setAdminList(v)
+                    })
+                    // console.log(values)
+                }
+                // console.log(valuse)
+            })
+            // console.log(1)
+        }
+        // 重置管护人员
+        resetManager() {
+            this.props.form.setFieldsValue({
+                managerUserId: "",
+            });
         }
         render() {
             const { visible,
                 onOk,
                 onCancel,
                 modifyData,
-                relatedBuilding,
                 deviceTypeList,
                 installAddress,
                 companyList,
+                modifyAdminList,
+                relatedBuilding,
+                handleSearch,
                 form
             } = this.props
-            const { adminList } = this.state
             const { getFieldDecorator } = form;
-            // console.log(modifyData)
+            // console.log(this.props.modifyAdminList)
             // console.log(relatedBuilding)
             // console.log(installAddress)
+            // console.log(modifyData.relatedBuildingId)
             return (
                 <Modal
                     visible={visible}
@@ -1224,7 +1353,7 @@ const ModifyForm = Form.create()(
                         <Item label="设备ID">
                             {getFieldDecorator('deviceId',
                                 {
-                                    rules: [{ required: true }],
+                                    // rules: [{ required: true }],
                                     initialValue: modifyData.deviceId
                                 }
                             )
@@ -1241,7 +1370,7 @@ const ModifyForm = Form.create()(
                         <Item label="设备型号">
                             {getFieldDecorator('deviceTypeId',
                                 {
-                                    rules: [{ required: true, message: '设备型号不能为空' }],
+                                    // rules: [{ required: true, message: '设备型号不能为空' }],
                                     initialValue: modifyData.deviceTypeId
                                 }
                             )
@@ -1284,7 +1413,7 @@ const ModifyForm = Form.create()(
                         <Item label="设备安装地">
                             {getFieldDecorator('installAddrId',
                                 {
-                                    rules: [{ required: true, message: '设备安装地不能为空' }],
+                                    // rules: [{ required: true, message: '设备安装地不能为空' }],
                                     initialValue: modifyData.installAddrId
                                 }
                             )
@@ -1312,7 +1441,7 @@ const ModifyForm = Form.create()(
                         <Item label="启用日期">
                             {getFieldDecorator('enableTime',
                                 {
-                                    rules: [{ required: true }],
+                                    // rules: [{ required: true }],
                                     initialValue:
                                         modifyData.enableTime == 'null' ?
                                             ""
@@ -1329,24 +1458,34 @@ const ModifyForm = Form.create()(
                         </Item>
                         <Item label="关联建筑物">
                             {getFieldDecorator('relatedBuildingId', {
-                                rules: [{ required: true, message: '设备安装地不能为空' }],
+                                // rules: [{ required: true, message: '设备安装地不能为空' }],
                                 initialValue: modifyData.relatedBuildingId
                             })
                                 (
-                                <Select
+                                    <Select
                                     placeholder='关联建筑物'
                                     className={styles.formInput}
+                                    defaultActiveFirstOption={false}
+                                    showArrow={false}
+                                    showSearch
+                                    filterOption={false}
+                                    onSearch={_.debounce((value) => handleSearch(value), 300)}
+                                    notFoundContent={null}
                                 >
                                     {
-                                        relatedBuilding.map((v, i) => {
-                                            return (
-                                                <Option
-                                                    value={v.buildingId}
-                                                    key={v.buildingId}>
-                                                    {v.name}
-                                                </Option>
-                                            )
-                                        })
+                                        relatedBuilding.length === 0 ? null
+                                            :
+                                            relatedBuilding.map((v, i) => {
+                                                // console.log(v)
+                                                return (
+                                                    <Option
+                                                        value={v.buildingId}
+                                                        key={v.buildingId}>
+                                                        {v.name}
+                                                    </Option>
+                                                )
+
+                                            })
                                     }
                                 </Select>
                                 )
@@ -1355,7 +1494,7 @@ const ModifyForm = Form.create()(
                         <Item label='地理经度'>
                             {getFieldDecorator('longitude',
                                 {
-                                    rules: [{ required: true, message: '地理经度不能为空' }],
+                                    // rules: [{ required: true, message: '地理经度不能为空' }],
                                     initialValue: modifyData.longitude
                                 }
                             )
@@ -1370,7 +1509,7 @@ const ModifyForm = Form.create()(
                         <Item label='地理纬度'>
                             {getFieldDecorator('latitude',
                                 {
-                                    rules: [{ required: true, message: '地理纬度不能为空' }],
+                                    // rules: [{ required: true, message: '地理纬度不能为空' }],
                                     initialValue: modifyData.latitude
                                 }
                             )
@@ -1384,14 +1523,16 @@ const ModifyForm = Form.create()(
                         </Item>
                         <Item label="运维公司">
                             {getFieldDecorator('managedCompanyId', {
-                                rules: [{ required: true, message: '运维公司不能为空' }],
+                                // rules: [{ required: true, message: '运维公司不能为空' }],
                                 initialValue: modifyData.managedCompanyId
+                                // initialValue: modifyData.managedCompanyName
                             })
                                 (
                                 <Select
                                     placeholder='运维公司'
                                     className={styles.formInput}
-                                    onChange={id => this.showAdmin(id)}
+                                    // 选择运维公司时重置管护人员
+                                    onSelect={() => this.resetManager()}
                                 >
                                     {
                                         companyList.map((v, i) => {
@@ -1412,16 +1553,18 @@ const ModifyForm = Form.create()(
 
                         <Item label='管护人员'>
                             {getFieldDecorator('managerUserId', {
-                                rules: [{ required: true, message: '管护人员不能为空' }],
-                                initialValue: modifyData.managerUserId
+                                // rules: [{ required: true, message: '管护人员不能为空' }],
+                                initialValue: modifyData.managerUserId,
+                                // initialValue: modifyData.managerUserName,
                             })
                                 (
                                 <Select
                                     placeholder='管护人员'
                                     className={styles.formInput}
+                                    onMouseEnter={() => this.getManagerPersons()}
                                 >
                                     {
-                                        adminList.map((v, i) => {
+                                        modifyAdminList.map((v, i) => {
                                             return (
                                                 <Option
                                                     value={v.id}
@@ -1439,7 +1582,7 @@ const ModifyForm = Form.create()(
                         <Item label='网关ID'>
                             {getFieldDecorator('gatewayAddr',
                                 {
-                                    rules: [{ required: true, message: '网关ID不能为空' }],
+                                    // rules: [{ required: true, message: '网关ID不能为空' }],
                                     initialValue: modifyData.gatewayAddr
                                 }
                             )
@@ -1454,7 +1597,7 @@ const ModifyForm = Form.create()(
                         <Item label='出厂编号'>
                             {getFieldDecorator('deviceSerial',
                                 {
-                                    rules: [{ required: true, message: '出厂编号不能为空' }],
+                                    // rules: [{ required: true, message: '出厂编号不能为空' }],
                                     initialValue: modifyData.deviceSerial
                                 }
                             )
