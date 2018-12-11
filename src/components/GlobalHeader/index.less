@@ -1,33 +1,51 @@
+//引入线上图标
+@import 'http://at.alicdn.com/t/font_869092_jsmyszuqbb.css';
 .header {
     float: right;
-    color:white ;
-    :global{
-        .ant-scroll-number,.ant-badge-count{
-           right:20px;
+    color: white;
+    :global {
+        .ant-scroll-number,
+        .ant-badge-count {
+            right: 20px;
         }
-        .ant-btn{
+        .ant-btn {
             background: #1F2F49;
-            border:none;
-            color:white;
-            
-        }
-        .ant-btn:hover{
-                color:rgb(51,125,246);
+            border: none;
+            color: white;
+            font-size: 16px;
         }
     }
-    .news{
-         margin-right: 16px; 
+    .news {
+        margin-right: 16px;
+        &:hover {
+            color: rgb(51, 125, 246);
+        }
         :global {
-            .anticon,.anticon-user{
+            .anticon,
+            .anticon-user {
                 font-size: 16px !important;
             }
-        }   
+            .ant-btn:hover {
+                color: rgb(51, 125, 246);
+            }
+        }
     }
     .user {
+        display: inline-block;
+        &:hover {
+            color: rgb(51, 125, 246);
+        }
         :global {
-            .anticon,.anticon-user{
+            .anticon,
+            .anticon-user {
                 font-size: 16px !important;
             }
+            .ant-btn:hover {
+                color: rgb(51, 125, 246);
+            }
         }
+    }
+    .headerIcon{
+        font-size: 24px;
     }
 }

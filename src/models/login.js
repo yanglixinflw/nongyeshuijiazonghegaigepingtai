@@ -22,6 +22,8 @@ export default {
                 localStorage.setItem('welcome',yzNumber)
                 // 设置用户名
                 localStorage.setItem('userName',response.data.data.loginName)
+                // 登录后设置无验证码
+                localStorage.setItem('firstLogin',false)
                 // 保存屏幕数
                 localStorage.setItem('monitorNum',9)
                 // console.log('登录成功--models')

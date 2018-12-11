@@ -9,8 +9,17 @@ export function queryDevice(params){
     )
   });
 }
-// 登录逻辑
+// 有验证码登录逻辑
 export function queryLogin(params) {
+  return request(`${ENVNet}/api/Account/login`, {
+    ...postOption,
+    body: JSON.stringify(
+      params
+    )
+  },'login');
+}
+// 无验证码登录逻辑
+export function queryLoginNoCaptcha(params) {
   return request(`${ENVNet}/api/Account/login`, {
     ...postOption,
     body: JSON.stringify(

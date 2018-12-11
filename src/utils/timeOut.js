@@ -4,6 +4,7 @@ import { message } from 'antd';
 // 全局提示样式
 message.config({
     top: 400,
+    maxCount:1,
   });
 export function timeOut(v){
     if(typeof(store)==='undefined'){

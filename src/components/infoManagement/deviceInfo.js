@@ -253,7 +253,6 @@ export default class extends Component {
                 deleteModalVisible: show,
             })
         }
-
     }
     // 确认删除
     _deleteOk() {
@@ -1286,7 +1285,6 @@ const ModifyForm = Form.create()(
                             if (v.ret == 1) {
                                 // console.log(v);
                                 callBack(v)
-
                             }
                         })
                 }).catch((err) => {
