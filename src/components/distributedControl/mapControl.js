@@ -6,7 +6,7 @@ import MyCustomize from './myCustomize';
 import { timeOut } from '../../utils/timeOut';
 import { Modal, Radio, message } from 'antd';
 const MY_AMAP_KEY = 'cba14bed102c3aa9a34455dfe21c8a6e';
-import {ENVNet,postOption} from '../../services/netCofig'
+import { ENVNet, postOption } from '../../services/netCofig'
 //获取可执行命令
 const getCmdListUrl = `${ENVNet}/api/device/control/cmdList`;
 //发送指令
@@ -43,7 +43,7 @@ export default class extends Component {
             //控件插件
             plugins,
             //球阀position
-            ballPosition:[],
+            ballPosition: [],
             //marker是否被点击
             clicked: false,
             //球阀开关弹窗可见性
@@ -55,11 +55,13 @@ export default class extends Component {
             //设备ID
             deviceId: '',
             //设备名称
-            name:''
+            name: ''
         }
     }
     componentDidMount() {
         let ballPosition = [];
+        let openCount = 0;
+        let closeCount = 0;
         //将拿到的数据做处理
         const ballData = this.props.mapGis.waterValve.data.data.items;
         // console.log(ballData)
@@ -72,12 +74,20 @@ export default class extends Component {
                 position,
                 deviceTypeId: v.deviceTypeId,
                 deviceId: v.deviceId,
-                name:v.name,
-                status:v.status
+                name: v.name,
+                status: v.status
             })
+            if (v.status == 0) {
+                return closeCount++;
+            } else if (v.status == 1) {
+                return openCount++;
+            }
         })
+        // console.log(closeCount,openCount)
         this.setState({
             ballPosition,
+            openCount,
+            closeCount
         })
         //阀门标记触发事件
         this.valveEvents = {
@@ -88,7 +98,7 @@ export default class extends Component {
                 let deviceTypeId = marker.getExtData().deviceTypeId;
                 let deviceId = marker.getExtData().deviceId;
                 let name = marker.getExtData().name;
-                this._getCmdList(deviceTypeId,deviceId)
+                this._getCmdList(deviceTypeId, deviceId)
                 this.setState({
                     deviceId,
                     name
@@ -97,11 +107,11 @@ export default class extends Component {
         }
     }
     //统计信息
-    _countHandler(){
+    _countHandler() {
 
     }
     //点击标记时获取指令  //获取当前设备状态
-    _getCmdList(deviceTypeId,deviceId) {
+    _getCmdList(deviceTypeId, deviceId) {
         //获取指令
         fetch(getCmdListUrl, {
             ...postOption,
@@ -124,32 +134,32 @@ export default class extends Component {
                 })
         })
         //获取当前设备状态
-        fetch(deviceStatusUrl,{
+        fetch(deviceStatusUrl, {
             ...postOption,
-            body:JSON.stringify({
+            body: JSON.stringify({
                 deviceId
             })
-        }).then((res)=>{
+        }).then((res) => {
             Promise.resolve(res.json())
-            .then((v)=>{
-                //超时判断
-                timeOut(v.ret)
-                if(v.ret == 1){
-                    // console.log(v)
-                    let statusValue = v.data.status
-                    statusValue=statusValue==0?'Valve-Close':'Valve-Open';
-                    // console.log(statusValue)
-                    this.setState({
-                        statusValue
-                    })
-                }
-            })
+                .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
+                    if (v.ret == 1) {
+                        // console.log(v)
+                        let statusValue = v.data.status
+                        statusValue = statusValue == 0 ? 'Valve-Close' : 'Valve-Open';
+                        // console.log(statusValue)
+                        this.setState({
+                            statusValue
+                        })
+                    }
+                })
         })
     }
     //阀门标记渲染方法
     renderMarkerLayout(extData) {
         // console.log(extData)
-        return <MarkerExterior markers={extData} chosenMarker={false} />
+        return <MarkerExterior markers={extData} />
     }
     _onChange(e) {
         this.setState({
@@ -165,7 +175,7 @@ export default class extends Component {
     //确定
     _onOk() {
         //需要获得球阀设置的value值 命令码，请求接口，提示设置成功
-        const { deviceId,statusValue } = this.state;
+        const { deviceId, statusValue } = this.state;
         // console.log(deviceId,statusValue)
         let deviceIds = []
         deviceIds.push(deviceId)
@@ -187,7 +197,7 @@ export default class extends Component {
                         })
                     }
                 })
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err)
         })
 
@@ -201,15 +211,23 @@ export default class extends Component {
             //该球阀开或关
             statusValue,
             cmdList,
-            name
+            openCount,
+            closeCount
+            // name
         } = this.state;
         // console.log(statusValue)
         return (
             <div className={styles.mapControl}>
                 {/* 统计信息面板 */}
                 <div className={styles.statisticsPanel}>
-                   <div className={styles.valveOpen}></div>
-                   <div className={styles.valveClose}></div>
+                    <div className={styles.valveOpen}>
+                        运行
+                        <div className={styles.count}>{openCount}</div>
+                    </div>
+                    <div className={styles.valveClose}>
+                        关闭
+                        <div className={styles.count}>{closeCount}</div>
+                    </div>
                 </div>
                 <Map
                     amapkey={MY_AMAP_KEY}
@@ -242,14 +260,14 @@ export default class extends Component {
                         value={statusValue}
                         onChange={(e) => this._onChange(e)}
                     >
-                        {cmdList?
-                            cmdList.map((v,i)=>{
+                        {cmdList ?
+                            cmdList.map((v, i) => {
                                 return (
-                                    <Radio key={i} value={v.cmd}>{v.displayName}</Radio>   
+                                    <Radio key={i} value={v.cmd}>{v.displayName}</Radio>
                                 )
                             })
-                             
-                        :null}
+
+                            : null}
                         {/* <Radio value={1}>开</Radio>
                         <Radio value={2}>关</Radio> */}
                     </Radio.Group>
