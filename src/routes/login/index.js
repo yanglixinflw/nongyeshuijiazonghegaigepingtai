@@ -12,6 +12,10 @@ import { routerRedux } from 'dva/router';
 export default class extends React.Component {
   constructor(props) {
     super(props)
+    this.state={
+      // 错误次数
+      errorCount:0
+    }
     let data=this.getCAPTCHA()
     Promise.resolve(data).then((v)=>{
       // 将codeId储存
@@ -58,17 +62,39 @@ export default class extends React.Component {
     const { dispatch } = this.props
     // 先本地验证，无错误时提交验证用户密码
     if(!err){
-    dispatch({
-      type: 'login/fetchLogin',
-      payload: {
-        ...value
+      let firstLogin= localStorage.getItem('firstLogin')
+      // 出现验证码框
+      if(firstLogin==null){
+        dispatch({
+          type: 'login/fetchLogin',
+          payload: {
+            ...value
+          }
+        })
+      }else{
+        dispatch({
+          type: 'login/LoginNoCaptcha',
+          payload: {
+            ...value
+          },
+          callback:()=>this.countFunction()
+        })
       }
-    })
     }
+    
+  }
+  // 定义计数器
+  countFunction(){
+    let {errorCount}=this.state
+    errorCount++
+    this.setState({
+      errorCount
+    })
   }
   render() {
     // 返回error信息到页面内
     let  { login ,submitting} = this.props
+    let {errorCount}=this.state
     let {msg}=login
     let arr =Object.keys(login)
     if(arr.length==2){
@@ -83,6 +109,7 @@ export default class extends React.Component {
           loginFunc={this.submitHandler}
           errorMessage={msg}
           submitting={submitting}
+          errorCount={errorCount}
           CAPTCHA={this.state}
           reloadCAPTCHA={this.reloadCAPTCHA}
         >

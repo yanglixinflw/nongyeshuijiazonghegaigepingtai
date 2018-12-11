@@ -115,7 +115,11 @@ export default class extends React.Component {
                         .then((v) => {
                             //   console.log(v)
                             if (v.ret == 1) {
-                                localStorage.clear()
+                                // localStorage.clear()
+                                // 初始化登录状态
+                                localStorage.removeItem('monitorNum')
+                                localStorage.removeItem('userName')
+                                localStorage.removeItem('welcome')
                                 // 退出登录
                                 dispatch(routerRedux.push('/login'));
                             }
@@ -148,7 +152,7 @@ export default class extends React.Component {
                 </Dropdown>
                 <Dropdown overlay={downData}>
                     <div className={styles.user}>
-                    <i className={classnames('dyhsicon', 'dyhs-zhanghudenglu', `${styles.headerIcon}`)}></i>
+                        <i className={classnames('dyhsicon', 'dyhs-zhanghudenglu', `${styles.headerIcon}`)}></i>
                         <Button>
                             {userName.value.username}<Icon type='down'></Icon>
                         </Button>

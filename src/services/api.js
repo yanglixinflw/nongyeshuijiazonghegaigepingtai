@@ -20,7 +20,7 @@ export function queryLogin(params) {
 }
 // 无验证码登录逻辑
 export function queryLoginNoCaptcha(params) {
-  return request(`${ENVNet}/api/Account/login`, {
+  return request(`${ENVNet}/api/Account/mobileLogin`, {
     ...postOption,
     body: JSON.stringify(
       params

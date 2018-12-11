@@ -14,13 +14,21 @@ export function timeOut(v){
         // 未登录直接跳转登录页面
     if(localStorage.getItem('welcome')===null){
         message.error('长时间未操作已超时，请重新登录',4)
-        localStorage.clear()
+        // localStorage.clear()
+        // 初始化登录状态
+        localStorage.removeItem('monitorNum')
+        localStorage.removeItem('userName')
+        localStorage.removeItem('welcome')
         dispatch(routerRedux.push(`/login`))
     }
     //  请求超时跳转用户登录页面
     if(v===-9){
         message.error('长时间未操作已超时，请重新登录',4)
-        localStorage.clear()
+        // localStorage.clear()
+        // 初始化登录状态
+        localStorage.removeItem('monitorNum')
+        localStorage.removeItem('userName')
+        localStorage.removeItem('welcome')
         dispatch(routerRedux.push(`/login`))
         location.reload()   
     }
