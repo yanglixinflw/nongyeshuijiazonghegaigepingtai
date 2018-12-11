@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import styles from "./groupAccount.less"
 import { Input, Button, Form, Table,Select,Modal,message} from 'antd';
 import { Link } from 'dva/router';
+import classnames from 'classnames';
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl=`${ENVNet}/fee/groupAccount/list`;
@@ -393,23 +394,23 @@ export default class extends Component{
                         <div className={styles.buttonGroup}>
                             <Button
                                 className={styles.fnButton}
-                                icon="search"
                                 onClick={() => this._searchTableData()}
                             >
-                                搜索
+                                <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
+                                <div>搜索</div>
                             </Button>
                             <Button
-                                icon='reload'
                                 className={styles.fnButton}
                                 onClick={() => this._resetForm()}
                             >
-                                重置
+                                <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.searchIcon}`)}></i>
+                                <div>重置</div>
                             </Button>
                             <Button
-                                icon='upload'
                                 className={styles.fnButton}
                             >
-                                导出数据
+                                <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.searchIcon}`)}></i>
+                                <div>导出数据</div>
                             </Button>
                         </div> 
                     </div>
@@ -470,7 +471,7 @@ const SearchForm = Form.create()(
                         marginRight:"10px"
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('id', {initialValue: ''})
+                        {getFieldDecorator('deviceId', {initialValue: ''})
                             (
                             <Input
                                 placeholder='设备ID'
@@ -479,7 +480,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('name', {})
+                        {getFieldDecorator('deviceName', {})
                             (
                             <Input
                                 placeholder='设备名称'
@@ -492,14 +493,14 @@ const SearchForm = Form.create()(
                         {getFieldDecorator('groupName', {})
                             (
                             <Input
-                                placeholder='名称'
+                                placeholder='小组名称'
                                 type='text'
                             />
                             )
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('name/phone', {})
+                        {getFieldDecorator('memberNameOrMobile', {})
                             (
                             <Input
                                 placeholder='农户姓名/手机'
@@ -509,12 +510,13 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('state', {})
+                        {getFieldDecorator('feeStatus', {})
                             (
                             <Select 
                                 placeholder="状态"
                             >
-                                <Option value="">全部</Option>
+                                <Option value="0">所有</Option>
+                                <Option value="1">欠费</Option>
                             </Select>
                             )
                         }
@@ -535,7 +537,7 @@ const EditForm = Form.create()(
                 <Modal
                     className={styles.editModal}
                     visible={visible}
-                    title="修改小组名称"
+                    title="小组更名"
                     onCancel={onCancel}
                     onOk={onOk}
                     cancelText='取消'

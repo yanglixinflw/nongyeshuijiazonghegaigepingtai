@@ -3,6 +3,7 @@ import AutoRules from '../../components/distributedControl/autoRules';
 import { connect } from 'dva';
 import { Spin } from 'antd';
 import { parse } from 'qs';
+import BreadcrumbView from '../../components/PageHeader/breadcrumb';
 @connect(({ autoRules, loading }) => ({
     autoRules,
     loading: loading.models.autoRules
@@ -39,6 +40,9 @@ export default class extends React.Component{
         return (
             <React.Fragment>
                 <Spin size='large' spinning={loading}>
+                    <BreadcrumbView
+                        {...this.props}
+                    />
                     <AutoRules
                         {...{autoRules,ruleId }}
                     /> 

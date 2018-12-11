@@ -1,5 +1,5 @@
 //引入线上图标
-@import 'http://at.alicdn.com/t/font_869092_lzfptbjsxoa.css';
+@import 'http://at.alicdn.com/t/font_869092_9hm3dscqat6.css';
 .autoControl{
     .header {
         height: 60px;
@@ -23,7 +23,7 @@
         background: #1c2241;
         display: flex;
         :global{
-            .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
+            .ant-input{
                 height: 46px;
                 width: 172px;
                 font-size: 12px;
@@ -31,18 +31,15 @@
                 outline: none;
                 border: none;
                 border-radius: 4px;
-                color: #4A5A72;
+                color: #fff;
                 // margin-right: 20px;
                 float: left;
             } 
             .ant-input::-webkit-input-placeholder{
-                color:#46566e;
+                color:#4A5A72;
             }
             .ant-select-selection__rendered{
                 margin-top:8px; 
-            }
-            .anticon,.anticon-down,.ant-select-arrow-icon{
-                color: #fff;
             }
         }
         .buttonGroup{
@@ -50,6 +47,7 @@
             align-items: center;
             flex-wrap: wrap;
             .fnButton{
+                width: 97px;
                 height:36px;
                 border-radius: 30px;
                 margin-left: 16px;
@@ -58,13 +56,25 @@
                 border: none;
                 font-size: 14px;
                 color: #bac4f7;
+                &:hover{
+                    background: #327df4;
+                    color: #fff;
+                }
                 i{
+                    position: relative;
+                    top:1px;
                     font-size: 16px;
                 }
-            }
-            .fnButton:hover{
-                background: #327df4;
-                color: #fff;
+                .searchIcon{
+                    position: relative;
+                    top:1px;
+                    left:-8px;
+                }
+                .resetIcon{
+                    position: relative;
+                    top:1px;
+                    left:-8px;
+                }
             }
         }
     }
@@ -178,7 +188,7 @@
                             color: #0084FF;
                         }
                         td {
-                            padding: 0 0 !important;
+                            padding: 0 16px !important;
                             min-width: 90px;
                             font-size: 12px;
                             background: #1C2241;
@@ -489,6 +499,7 @@
                         .ant-input{
                             width: 250px;
                             height:36px;
+                            font-size: 12px;
                             padding: 0 14px;
                             background: #272d52;
                             border: none;

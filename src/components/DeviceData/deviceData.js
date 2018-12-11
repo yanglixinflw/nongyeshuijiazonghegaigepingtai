@@ -175,7 +175,7 @@ export default class extends Component {
     _resetForm() {
         const { filterColumns, deviceTypeId } = this.state;
         const form = this.searchForm.props.form;
-        console.log(deviceTypeId)
+        // console.log(deviceTypeId)
         // 重置表单
         form.resetFields();
         return fetch(dataUrl, {

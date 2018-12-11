@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styles from './warningRecords.less';
 import { Input, Button, Form, Row, Col, Table, Modal, Select, Checkbox,Switch,message } from 'antd';
 import { Link } from 'dva/router';
+import _ from 'lodash';
 import classnames from 'classnames'
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
@@ -33,7 +34,6 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { warningRecords } = props;
-        // console.log(warningRecords)
         this.state = {
             itemCount: warningRecords.data.data.itemCount,//总数据数
             data: warningRecords.data.data.items,//表格数据源
@@ -589,7 +589,7 @@ const SearchForm = Form.create()(
                                 defaultActiveFirstOption={false}
                                 showArrow={false}
                                 filterOption={false}
-                                onSearch={this.handleSearch}
+                                onSearch={_.debounce(() => this.handleSearch(),300)}
                                 notFoundContent={null}
                             >
                                 {

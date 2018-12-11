@@ -714,8 +714,7 @@ export default class extends Component {
                         handleSearch={(v)=>this.handleSearch(v)}
                         relatedBuilding={relatedBuilding}
                     />
-                    <div className={styles.buttonGroup}
-                    >
+                    <div className={styles.buttonGroup}>
                         <Button
                             className={styles.searchButton}
                             // icon="search"

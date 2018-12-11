@@ -1,4 +1,4 @@
-
+@import 'http://at.alicdn.com/t/font_869092_9hm3dscqat6.css';
 .dealRecord{
     .headers {
         height: 60px;
@@ -25,11 +25,14 @@
                 }
             }
             .autoControl {
-                width: 98px;
+                width: 78px;
                 display: flex;
-                justify-content: space-around;
+                justify-content: space-between;
+                color: #bbc5d2;
                 .autoRules {
-                    color: #327df4;
+                    &:hover{
+                        color:#327df4
+                    }
                 }
             }
         }
@@ -65,6 +68,9 @@
                 color: #fff;
                 // margin-right: 20px;
                 float: left;
+                i{
+                    color:#46566e;
+                }
             } 
             .ant-input::-webkit-input-placeholder{
                 color:#46566e;
@@ -92,8 +98,16 @@
                 outline: none;
                 border: none;
                 color: #bac4f7;
-                i{
-                    font-size: 16px
+                overflow: hidden;
+                display: flex;
+                .searchIcon{
+                    font-size: 16px;
+                    margin-right: 6px;
+                    line-height: 36px;
+                }
+                div{
+                    margin-top: -4px;
+                    line-height: 42px;
                 }
             }
             .fnButton:hover{

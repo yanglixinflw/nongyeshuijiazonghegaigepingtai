@@ -1,5 +1,5 @@
 //引入线上图标
-@import 'http://at.alicdn.com/t/font_869092_lzfptbjsxoa.css';
+@import 'http://at.alicdn.com/t/font_869092_9hm3dscqat6.css';
 .chargingDevice{
     .header {
         height: 60px;
@@ -33,10 +33,16 @@
                 border-radius: 4px;
                 color: #fff;
                 float: left;
+                i{
+                    color:#46566e;
+                }
             }
-          .ant-input::-webkit-input-placeholder{
-            color:#46566e;
-          }
+            .ant-input::-webkit-input-placeholder{
+                color:#46566e;
+            }
+            .ant-select-selection__placeholder{
+                color:#46566e;
+            }
             .ant-select-selection__rendered{
                 margin-top:8px; 
             }
@@ -54,12 +60,25 @@
                 border-radius: 30px;
                 margin-left: 16px;
                 background: #2e386c;
+                display: flex;
+                line-height: 36px;
                 outline: none;
                 border: none;
                 color: #bac4f7;
-              i{
-                font-size: 16px;
-              }
+                i{
+                    color: #bac4f7;
+                    font-size: 16px;
+                    line-height: 40px;
+                }
+                .searchIcon{
+                    font-size: 16px;
+                    margin-right: 6px;
+                    line-height: 36px;
+                }
+                div{
+                    margin-top: -4px;
+                    line-height: 44px;
+                }
             }
             .fnButton:hover{
                 background: #327df4;
@@ -150,7 +169,7 @@
                                 color: #0084FF;
                             }
                             td {
-                                padding: 0 0!important;
+                                padding: 0 16px!important;
                                 min-width: 80px;
                                 font-size: 12px;
                                 background: #1C2241;
@@ -289,6 +308,7 @@
                         .ant-input{
                             width: 250px;
                             height:36px;
+                            font-size: 12px;
                             padding: 0 14px;
                             background: #272d52;
                             border: none;
@@ -296,6 +316,9 @@
                             &:focus{
                                 border:1px solid #327DF4;
                             }
+                        }
+                        .ant-select{
+                            font-size: 12px;
                         }
                         .ant-select-selection{
                             width: 250px;
@@ -435,17 +458,21 @@
                             color:#e7e7ec; 
                         }
                     }
-                    .ant-col-16,.ant-form-item-control-wrapper{
+                    .ant-form-item-control-wrapper{
                         .ant-input{
                             width: 250px;
                             height:36px;
                             padding: 0 14px;
+                            font-size: 12px!important;
                             background: #272d52;
                             border: none;
                             color:#a4afbc;
                             &:focus{
                                 border:1px solid #327DF4;
                             }
+                        }
+                        .ant-select{
+                            font-size: 12px;
                         }
                         .ant-select-selection{
                             width: 250px;
@@ -456,6 +483,7 @@
                             color:#D4D5DC;
                             .ant-select-selection-selected-value{
                                 width: 100%;
+                                font-size: 12px!important;
                                 height:100%;
                                 line-height: 36px;
                             }

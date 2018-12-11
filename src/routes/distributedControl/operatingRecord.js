@@ -3,6 +3,7 @@ import OperatingRecord from '../../components/distributedControl/operatingRecord
 import { connect } from 'dva';
 import { Spin } from 'antd'
 import { parse } from 'qs';
+import BreadcrumbView from '../../components/PageHeader/breadcrumb';
 @connect(({ operatingRecord, loading }) => ({
     operatingRecord,
     loading: loading.models.operatingRecord
@@ -12,6 +13,9 @@ export default class extends React.Component{
         let deviceId = parse(window.location.href.split(':'))[3];
         // console.log(deviceId)
         const { dispatch } = this.props;
+        dispatch({
+            type:'operatingRecord/clear'
+        })
         dispatch({
             type: 'operatingRecord/fetch',
             payload:{
@@ -25,10 +29,13 @@ export default class extends React.Component{
         let { operatingRecord, loading } = this.props;
         // console.log(operatingRecord)
         let arr = Object.keys(operatingRecord);
-        if (arr.length <=0) return operatingRecord = null;
+        if (arr.length ==0) return operatingRecord = null;
         return (
             <React.Fragment>
                 <Spin size='large' spinning={loading}>
+                    <BreadcrumbView
+                        {...this.props}
+                    />
                     <OperatingRecord
                         {...{operatingRecord}}
                     /> 

@@ -1,5 +1,5 @@
 //引入线上图标
-@import 'http://at.alicdn.com/t/font_869092_lzfptbjsxoa.css';
+@import 'http://at.alicdn.com/t/font_869092_9hm3dscqat6.css';
 .groupAccount{
     .header {
         height: 60px;
@@ -33,6 +33,9 @@
                 border-radius: 4px;
                 color: #fff;
                 float: left;
+                i{
+                    color:#46566e;
+                }
             }
           .ant-input::-webkit-input-placeholder{
             color:#46566e;
@@ -55,14 +58,21 @@
                 height:36px;
                 font-size: 14px;
                 border-radius: 30px;
+                display: flex;
                 margin-left: 16px;
                 background: #2e386c;
                 outline: none;
                 border: none;
                 color: #bac4f7;
-              i{
-                font-size: 16px;
-              }
+                .searchIcon{
+                    font-size: 16px;
+                    margin-right: 6px;
+                    line-height: 36px;
+                }
+                div{
+                    margin-top: -4px;
+                    line-height: 44px;
+                }
             }
             .fnButton:hover{
                 background: #327df4;
@@ -283,6 +293,7 @@
         }
         .ant-modal-header{
             background: #171a39;
+            font-size: 16px;
             border-bottom: 1px solid #363a69 !important;
             .ant-modal-title{
                 width: 400px;
@@ -296,21 +307,33 @@
             background: #171a39;
             .ant-form,.ant-form-horizontal{
                 padding-top:14px;
+                .ant-select-selection__placeholder{
+                    font-size: 12px;
+                }
                 .ant-row,.ant-form-item{
                     width: 350px;
                     display: flex;
                     margin:0 auto 20px !important;
                     .ant-col-4,.ant-form-item-label{
+                        font-size: 14px;
                         width: 80px;
                         margin-right: 12px;
                         label{
                             color:#e7e7ec; 
                         }
                     }
-                    .ant-col-16,.ant-form-item-control-wrapper{
+                    .ant-form-item-control-wrapper{
+                        .ant-form-item-control,.has-success{
+                            .ant-form-item-children{
+                                .ant-input,.ant-input-disabled{
+                                    font-size: 12px!important;
+                                }
+                            }
+                        }
                         .ant-input{
                             width: 250px;
                             height:36px;
+                            font-size: 12px!important;
                             padding: 0 14px;
                             background: #272d52;
                             border: none;
@@ -319,6 +342,7 @@
                                 border:1px solid #327DF4;
                             }
                         }
+                        
                     }
                 }
             }

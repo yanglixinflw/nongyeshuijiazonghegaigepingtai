@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import styles from "./operatingRecord.less"
 import { Input, Button, Form,Table,Icon,DatePicker} from 'antd';
 import { Link } from 'dva/router';
+import classnames from 'classnames';
 import { parse } from 'qs';
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
@@ -154,7 +155,7 @@ export default class extends Component{
         return(
             <React.Fragment>
                 <div className={styles.operatingRecord}>
-                    <div className={styles.headers}>
+                    {/* <div className={styles.headers}>
                         <div className={styles.left}>
                             <Link to={`/dcs/valveControl`}>
                                 <div className={styles.arrowLeft}>
@@ -169,7 +170,7 @@ export default class extends Component{
                                 </div>
                             </Link>
                         </div>
-                    </div>
+                    </div> */}
                     <div className={styles.searchForm}>
                         {/* 表单信息 */}
                         <SearchForm
@@ -178,16 +179,18 @@ export default class extends Component{
                         <div className={styles.buttonGroup}>
                             <Button
                                 className={styles.fnButton}
-                                icon="search"
+                                // icon="search"
                                 onClick={() => this._searchTableData()}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
                                 搜索
                             </Button>
                             <Button
-                                icon='reload'
+                                // icon='reload'
                                 className={styles.fnButton}
                                 onClick={() => this._resetForm()}
                             >
+                                <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.resetIcon}`)}></i>
                                 重置
                             </Button>
                         </div> 

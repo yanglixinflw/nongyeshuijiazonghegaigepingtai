@@ -1,5 +1,5 @@
 //引入线上图标
-@import 'http://at.alicdn.com/t/font_869092_lzfptbjsxoa.css';
+@import 'http://at.alicdn.com/t/font_869092_9hm3dscqat6.css';
 .valveControl{
     .header {
         height: 60px;
@@ -36,13 +36,16 @@
                 float: left;
             } 
             .ant-input::-webkit-input-placeholder{
-                color:#46566e;
+                color:#4A5A72;
             }
             .ant-select-selection__rendered{
                 margin-top:8px; 
             }
-            .anticon,.anticon-down,.ant-select-arrow-icon{
-                color: #fff;
+            .ant-select-selection__placeholder{
+                color:#4A5A72;
+            }
+            .ant-select-arrow-icon{
+                color: #4A5A72;
             }
         }
         .buttonGroup{
@@ -50,6 +53,7 @@
             align-items: center;
             flex-wrap: wrap;
             .fnButton{
+                width: 97px;
                 height:36px;
                 border-radius: 30px;
                 margin-left: 16px;
@@ -58,19 +62,44 @@
                 border: none;
                 color: #bac4f7;
                 font-size: 14px;
-                i{
-                    font-size:16px;
+                &:hover{
+                    background: #327df4;
+                    color: #fff;
+                }
+                .searchIcon{
+                    position: relative;
+                    top:1px;
+                    left:-6px;
+                }
+                .resetIcon{
+                    position: relative;
+                    top:1px;
+                    left:-6px;    
                 }
             }
-            .fnButton:hover{
-                background: #327df4;
-                color: #fff;
+            .fnButton2{
+                width: 133px;
+                height:36px;
+                border-radius: 30px;
+                margin-left: 16px;
+                background: #2e386c;
+                outline: none;
+                border: none;
+                color: #bac4f7;
+                font-size: 14px;
+                i{  
+                    position: relative;
+                    top:1px;
+                    font-size:16px;
+                }
+                &:hover{
+                    background: #327df4;
+                    color: #fff;
+                }
             }
         }
     }
     .option{
-        display: flex;
-        justify-content: space-around;
         .set{
             :global{
                 .anticon,.anticon-file-text{
@@ -138,8 +167,8 @@
                             color: #0084FF;
                         }
                         td {
-                            padding: 0 0!important;
-                            min-width: 60px;
+                            padding: 0 10px!important;
+                            min-width: 56px;
                             font-size: 12px;
                             background: #1C2241;
                             color: #BBC5D2;
@@ -205,7 +234,7 @@
             height: 150px; 
         }
     }
-    @media(max-width:1196px) {
+    @media(max-width:1221px) {
         .searchForm {
             height: 150px;
             :global {
