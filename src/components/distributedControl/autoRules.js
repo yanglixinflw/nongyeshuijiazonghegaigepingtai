@@ -3,6 +3,7 @@ import styles from './autoRules.less';
 import { Input, Button, Form, Select,Icon,Radio,message,InputNumber} from 'antd';
 import {getAutoRules} from '../../services/api'
 import {Link} from 'dva/router';
+import { timeOut } from '../../utils/timeOut';
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 import {ENVNet,postOption} from '../../services/netCofig'
@@ -89,6 +90,8 @@ export default class extends Component {
                     }).then(res=>{
                         Promise.resolve(res.json())
                         .then(v=>{
+                            //超时判断
+                            timeOut(v.ret);
                             if(v.ret==1){
                                 //重新获取页面
                                 fetch(ruleUrl,{
@@ -109,6 +112,8 @@ export default class extends Component {
                                             })
                                         }
                                     })    
+                                }).catch((err)=>{
+                                    console.log(err)
                                 })
                             }
                         })
