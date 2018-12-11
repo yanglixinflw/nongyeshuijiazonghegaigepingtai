@@ -680,6 +680,12 @@ const CloseWarningForm = Form.create()(
                             }
                         </Form.Item >
                         <div style={{display:'flex'}} className={styles.inline}>
+                            <Form.Item label='报修订单' className={styles.print}>
+                                {getFieldDecorator('print', {initialValue:''})
+                                (
+                                    <Switch/>
+                                )}
+                            </Form.Item>
                             <Form.Item label='指派给' className={styles.people}>
                                 {getFieldDecorator('people', { initialValue: '指派人' })
                                     (
@@ -692,12 +698,6 @@ const CloseWarningForm = Form.create()(
                                     </Select>
                                     )
                                 }
-                            </Form.Item>
-                            <Form.Item label='报修订单' className={styles.print}>
-                                {getFieldDecorator('print', {initialValue:''})
-                                (
-                                    <Switch/>
-                                )}
                             </Form.Item>
                         </div>
                     </Form>
