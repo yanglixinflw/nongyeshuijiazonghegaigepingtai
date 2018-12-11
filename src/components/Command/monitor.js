@@ -266,7 +266,7 @@ export default class extends Component {
     yunControl(direction) {
         const { yuntaiSpeedNumber, controlVideoId } = this.state
         // 操作命令(上:0,下:1,左:2,右:3,左上:4,左下:5,右上:6,右下:7,放大:8,缩小:9,近焦距:10,远焦距:11)
-        // console.log(direction)
+        // console.log(controlVideoId)
         if (controlVideoId == '') {
             alert('请先选中控制的摄像头')
         } else {
@@ -337,8 +337,10 @@ export default class extends Component {
             yuntaiSpeed,
             selectList,
             awaitArray,
+            controlVideoId
             // monitorNum
         } = this.state
+        // console.log(controlVideoId)
         // let videoStlye={}
         // if (monitorNum==9){
         //     videoStlye={
@@ -377,9 +379,12 @@ export default class extends Component {
                                         </div>
                                     )
                                 } else {
+                                    // console.log(v.video[0].deviceId)
                                     return (
                                         <div
-                                            className={classnames(`${playBoxStyle}`, `${styles.video}`)}
+                                            className={classnames(`${playBoxStyle}`, 
+                                            `${styles.video}`,
+                                            v.video[0].deviceId==controlVideoId?`${styles.videofocus}`:null)}
                                             key={i}
                                             onFocus={() => this.getFocousVideo(v.video[0].deviceId)}
                                             tabIndex='0'
@@ -404,6 +409,7 @@ export default class extends Component {
                                                 style={{
                                                     width: '100%',
                                                     height: '100%',
+                                                    border:`1px red solid`
                                                 }}
                                             >
                                                 <source src={v.video[0].playList.rtmp} type="rtmp/flv" />

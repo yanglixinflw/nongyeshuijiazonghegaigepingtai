@@ -25,7 +25,8 @@ export default class extends React.Component {
         const {
             errorMessage,
             CAPTCHA,
-            reloadCAPTCHA
+            reloadCAPTCHA,
+            errorCount
         }=this.props
 
         return (
@@ -49,6 +50,7 @@ export default class extends React.Component {
                                         this._loginSumbit(e)
                                     }}
                                     errorMessage={errorMessage}
+                                    errorCount={errorCount}
                                     {...CAPTCHA}
                                     reloadCAPTCHA={reloadCAPTCHA}
                                 />
@@ -71,12 +73,19 @@ const LoginForm = Form.create()(
     class extends React.Component {
         constructor(props) {
             super(props)
+            let firstLogin= localStorage.getItem('firstLogin')
+            if(firstLogin==null){
+                firstLogin=true
+            }else{
+                firstLogin=false
+            }
+            // console.log(firstLogin)
             this.state = {
                 // 是否勾选自动登录
                 autoLogin: false,
                 // 是否显示验证码框
-                showYzm: true,
-                // showYzm: false,
+                showYzm: firstLogin,
+                // showYzm: true,
                 // 登录载入状态
                 isLoading: false,
             }
@@ -85,7 +94,6 @@ const LoginForm = Form.create()(
             this.setState({
                 isLoading: true,
             })
-
             // 模拟loading
             setTimeout(() => {
                 this.setState({
@@ -94,17 +102,28 @@ const LoginForm = Form.create()(
             }, 2000)
             // 没有错误信息时消除loading并跳转
         }
+        // 监听props变化
+        componentWillReceiveProps(){
+            let {errorCount}=this.props
+            if(errorCount>=2){
+                this.setState({
+                    showYzm:true
+                })
+                return true
+            }
+        }
         render() {
             const { showYzm, isLoading } = this.state
-            const { form, submitHandler,errorMessage ,url,reloadCAPTCHA} = this.props
+            const { form, submitHandler,errorMessage ,url,reloadCAPTCHA,errorCount} = this.props
             const { getFieldDecorator } = form;
             // 设置输入密码的外边距
             let passWordMargin
             if (!showYzm) {
-                passWordMargin = 0
+                passWordMargin = 25
             } else {
                 passWordMargin = null
             }
+            console.log(showYzm)
             return (
                     <Form
                         autoComplete="off"
