@@ -48,7 +48,7 @@ export default class extends Component {
             if (!err) {
                 // console.log('Received values of form: ', values);
                 //针对compareValue出现的问题，先将其转换为字符串型，再转换回数组,并将数组元素的双引号去掉  
-                console.log(values)
+                // console.log(values)
                 // let valueArr=values.compareValue
                 // let valueString=valueArr.join("-")
                 // valueArr=valueString.split('-')
