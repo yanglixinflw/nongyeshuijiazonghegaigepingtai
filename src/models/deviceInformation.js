@@ -2,8 +2,8 @@ import {
     getDeviceInfo,
     getInstallAddrList,
     getDeviceTypeList,
-    getRelatedBuilding,
-    getCompanyList
+    getCompanyList,
+    getRelatedBuilding
 } from '../services/api';
 
 export default {
@@ -27,20 +27,20 @@ export default {
                 payload:list
             })
         },
+        // 关联建筑物列表
+        *getRelatedBuilding({payload},{call,put}){
+            const list =yield call(getRelatedBuilding,payload)
+            yield put ({
+                type:'fetchRelatedBuilding',
+                payload:list
+            })
+        },
         // 设备类型
         *getDeviceTypeList({payload},{call,put}){
             const TypeList =yield call(getDeviceTypeList,payload)
             yield put ({
                 type:'fetchDeviceType',
                 payload:TypeList
-            })
-        },
-        // 关联建筑物
-        *getRelatedBuilding({payload},{call,put}){
-            const relatedBuilding =yield call(getRelatedBuilding,payload)
-            yield put ({
-                type:'fetchRelatedBuilding',
-                payload:relatedBuilding
             })
         },
         // 公司列表
@@ -64,12 +64,12 @@ export default {
             state.DeviceTypeList=payload
             return {...state}
         },
-        fetchRelatedBuilding(state,{payload}){
-            state.RelatedBuilding=payload
-            return {...state}
-        },
         fetchCompanyList(state,{payload}){
             state.CompanyList=payload
+            return {...state}
+        },
+        fetchRelatedBuilding(state,{payload}){
+            state.RelatedBuilding=payload
             return {...state}
         },
         clear(){

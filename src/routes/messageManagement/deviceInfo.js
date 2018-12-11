@@ -29,10 +29,6 @@ export default class extends React.Component {
     // 获取关联建筑物列表
     dispatch({
       type: 'deviceInformation/getRelatedBuilding',
-      payload:{
-        countDevice:false,
-        name:''
-      }
     })
     // 默认全部列表请求方式
     dispatch({
