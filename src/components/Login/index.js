@@ -110,11 +110,6 @@ const LoginForm = Form.create()(
                     showYzm:true
                 })
                 return true
-            }else{
-                this.setState({
-                    showYzm:false
-                })
-                return false
             }
         }
         render() {
@@ -128,6 +123,7 @@ const LoginForm = Form.create()(
             } else {
                 passWordMargin = null
             }
+            console.log(showYzm)
             return (
                     <Form
                         autoComplete="off"
