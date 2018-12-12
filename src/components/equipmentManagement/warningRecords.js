@@ -66,6 +66,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         let installAddrList = v.data
                         this.setState({
@@ -84,6 +86,8 @@ export default class extends Component {
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
+                //超时判断
+                timeOut(v.ret)
                 if(v.ret==1){
                     // console.log(v.data)
                     let roleList=v.data
@@ -179,6 +183,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         // 设置页面显示的元素
                         let data = v.data.items;
@@ -221,6 +227,8 @@ export default class extends Component {
             }).then(res => {
                 Promise.resolve(res.json())
                     .then(v => {
+                        //超时判断
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             let itemCount = v.data.itemCount
@@ -251,6 +259,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         // console.log(v)
                         let data = v.data.items;
@@ -297,6 +307,8 @@ export default class extends Component {
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
                     if(v.ret==1){
                         fetch(dataUrl,{
                             ...postOption,
@@ -307,6 +319,8 @@ export default class extends Component {
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
+                                //超时判断
+                                timeOut(v.ret)
                                 if(v.ret==1){
                                     let data=v.data.items
                                     let itemCount = v.data.itemCount;
@@ -500,6 +514,8 @@ const SearchForm = Form.create()(
             }).then(res => {
                 Promise.resolve(res.json())
                     .then(v => {
+                        //超时判断
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             // console.log(v.data)

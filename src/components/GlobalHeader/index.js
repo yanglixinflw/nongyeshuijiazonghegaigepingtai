@@ -92,6 +92,12 @@ export default class extends React.Component {
     changePsw() {
         console.log(123)
     }
+    //点击预警消息清空气泡
+       clear(){
+        this.setState({
+            count:0
+        })
+    }
     // 退出登录
     _showConfirm() {
         const { dispatch } = this.props
@@ -146,7 +152,7 @@ export default class extends React.Component {
                     <Badge count={this.state.count}>
                         <div className={styles.news}>
                             <i className={classnames('dyhsicon', 'dyhs-yujingshijian', `${styles.headerIcon}`)}></i>
-                            <Button >预警消息</Button>
+                            <Button onClick={()=>this.clear()}>预警消息</Button>
                         </div>
                     </Badge>
                 </Dropdown>

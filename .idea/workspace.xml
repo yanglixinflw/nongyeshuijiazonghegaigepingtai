@@ -2,16 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="045366d6-f127-48ce-8dc3-45e6b2a482b8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/DeviceData/common.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DeviceData/common.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/GlobalHeader/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalHeader/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/equipmentManagement/warningRecords.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/equipmentManagement/warningRecords.less" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/infoManagement/farmersInfo.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/systemManagement/index.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/systemManagement/index.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/systemManagement/userManagement.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/systemManagement/userManagement.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/basicLayout.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/basicLayout.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/login/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/login/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/waterRate/groupAccount.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/waterRate/groupAccount.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/waterRate/groupAccount.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/waterRate/groupAccount.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/waterRate/groupManage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/waterRate/groupManage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/waterRate/groupManage.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/waterRate/groupManage.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/waterRate/groupManage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/waterRate/groupManage.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -26,14 +22,15 @@
     <session id="902355902">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="12" />
+          <entry key="project.closed" value="13" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.2" value="2" />
           <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.4" value="5" />
+          <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="12" />
+          <entry key="project.opened" value="13" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -78,8 +75,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/waterRate/chargingDevice.less">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-25">
-              <caret line="26" column="29" lean-forward="true" selection-start-line="26" selection-start-column="29" selection-end-line="26" selection-end-column="29" />
+            <state relative-caret-position="25">
+              <caret line="26" column="29" selection-start-line="26" selection-start-column="29" selection-end-line="26" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -87,8 +84,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/infoManagement/farmersInfo.less">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2914">
-              <caret line="357" column="12" selection-start-line="357" selection-start-column="12" selection-end-line="366" selection-end-column="13" />
+            <state relative-caret-position="10025">
+              <caret line="401" column="12" selection-start-line="401" selection-start-column="12" selection-end-line="401" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -96,8 +93,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/waterRate/groupAccount.less">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
-              <caret line="190" column="38" selection-start-line="190" selection-start-column="38" selection-end-line="190" selection-end-column="38" />
+            <state relative-caret-position="5575">
+              <caret line="223" column="38" selection-start-line="223" selection-start-column="38" selection-end-line="223" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -273,7 +270,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../农业水价改革平台文档/psd/背景图" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="D:\daliy\nongyeshuijia\node_modules\eslint" />
@@ -316,11 +313,12 @@
       <workItem from="1543829157722" duration="193000" />
       <workItem from="1543973865112" duration="6099000" />
       <workItem from="1544060159877" duration="37156000" />
+      <workItem from="1544517945517" duration="28000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="54911000" />
+    <option name="totallyTimeSpent" value="54939000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -333,9 +331,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49919224" visible="true" weight="0.19494204" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49919224" visible="true" weight="0.19494204" />
       <window_info id="Structure" order="1" sideWeight="0.50080776" side_tool="true" weight="0.19494204" />
       <window_info id="npm" order="2" sideWeight="0.50080776" side_tool="true" weight="0.19494204" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -349,7 +346,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.4256243" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.3061889" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -394,9 +391,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="682">
           <caret line="76" column="25" lean-forward="true" selection-start-line="76" selection-start-column="25" selection-end-line="76" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -418,9 +412,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret selection-end-line="1" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -428,9 +419,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
           <caret line="138" column="49" selection-start-line="138" selection-start-column="49" selection-end-line="138" selection-end-column="49" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -438,9 +426,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
           <caret line="36" column="23" lean-forward="true" selection-start-line="36" selection-start-column="23" selection-end-line="36" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -448,9 +433,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1142">
           <caret line="227" column="5" lean-forward="true" selection-start-line="187" selection-start-column="4" selection-end-line="227" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -458,9 +440,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="650">
           <caret line="26" column="16" lean-forward="true" selection-start-line="26" selection-start-column="16" selection-end-line="26" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -468,9 +447,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1575">
           <caret line="117" column="39" selection-start-line="117" selection-start-column="39" selection-end-line="117" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -478,9 +454,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="700">
           <caret line="28" column="39" selection-start-line="28" selection-start-column="39" selection-end-line="28" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#40#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -488,9 +461,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#51#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -519,9 +489,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5750">
           <caret line="389" column="6" selection-start-line="389" selection-start-column="6" selection-end-line="394" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -529,9 +496,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
           <caret line="251" column="69" lean-forward="true" selection-start-line="251" selection-start-column="69" selection-end-line="251" selection-end-column="73" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -539,9 +503,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="475">
           <caret line="19" column="4" selection-start-line="19" selection-start-column="4" selection-end-line="21" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -549,9 +510,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
           <caret line="218" column="20" selection-start-line="218" selection-start-column="20" selection-end-line="218" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -559,9 +517,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-24">
           <caret line="87" column="11" lean-forward="true" selection-start-line="87" selection-start-column="11" selection-end-line="87" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -569,9 +524,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1248">
           <caret line="522" column="61" selection-start-line="522" selection-start-column="61" selection-end-line="522" selection-end-column="61" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -579,9 +531,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-8675">
           <caret line="7" column="8" lean-forward="true" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -610,23 +559,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
           <caret line="8" selection-start-line="8" selection-end-line="9" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/infoManagement/farmersInfo.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2914">
-          <caret line="357" column="12" selection-start-line="357" selection-start-column="12" selection-end-line="366" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/waterRate/groupAccount.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="190" column="38" selection-start-line="190" selection-start-column="38" selection-end-line="190" selection-end-column="38" />
         </state>
       </provider>
     </entry>
@@ -639,8 +571,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/waterRate/chargingDevice.less">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-25">
-          <caret line="26" column="29" lean-forward="true" selection-start-line="26" selection-start-column="29" selection-end-line="26" selection-end-column="29" />
+        <state relative-caret-position="25">
+          <caret line="26" column="29" selection-start-line="26" selection-start-column="29" selection-end-line="26" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/infoManagement/farmersInfo.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="10025">
+          <caret line="401" column="12" selection-start-line="401" selection-start-column="12" selection-end-line="401" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/waterRate/groupAccount.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5575">
+          <caret line="223" column="38" selection-start-line="223" selection-start-column="38" selection-end-line="223" selection-end-column="38" />
         </state>
       </provider>
     </entry>
