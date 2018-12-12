@@ -24,21 +24,66 @@
         background: #13162F;
         width: 226px;
         height: 168px;
-        padding:18px;
+        padding:18px ;
+        font-family: 'HelveticaNeue';
         .valveOpen{
             text-align: center;
             width:95px;
             border-right:2px solid #1E2445;
             color:#3177EC;
-            font-size:16px;
+            .openIcon{
+                display: block;
+                width:48px;
+                margin:0 auto;
+                height: 62px;
+                background: url(../../assets/ssWValve.png) no-repeat;
+                background-size:48px 62px; 
+                margin-bottom: 12px;
+            }
+            .openTitle{
+                height: 16px;
+                line-height: 16px;
+                overflow: hidden;
+                font-size:16px;
+                margin-bottom: 12px;
+                span{
+                    display: inline-block;
+                    width:4px;
+                    background: #3177EC;
+                    height: 4px;
+                    line-height: 16px;
+                    border-radius: 50%;
+                    position: relative;
+                    top:-3px;
+                    left:-6px;
+                }
+            }
         } 
         .valveClose{
             text-align: center;
             width:95px;
             color:#fff;
-            font-size:16px;
+            .closeIcon{
+                display: block;
+                margin:0 auto;
+                width:48px;
+                height: 62px;
+                background: url(../../assets/normalWValve.png) no-repeat;
+                background-size:48px 62px; 
+                margin-bottom: 12px;
+            }
+            .closeTitle{
+                height: 16px;
+                line-height: 16px;
+                overflow: hidden;
+                font-size:16px;
+                margin-bottom: 12px;
+            }
         }
         .count{
+            height: 22px;
+            line-height: 22px;
+            overflow: hidden;
             font-size: 28px !important;
         }
     }

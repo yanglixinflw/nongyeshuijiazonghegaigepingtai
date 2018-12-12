@@ -212,8 +212,8 @@ export default class extends Component {
             statusValue,
             cmdList,
             openCount,
-            closeCount
-            // name
+            closeCount,
+            name
         } = this.state;
         // console.log(statusValue)
         return (
@@ -221,11 +221,13 @@ export default class extends Component {
                 {/* 统计信息面板 */}
                 <div className={styles.statisticsPanel}>
                     <div className={styles.valveOpen}>
-                        运行
+                        <i className={styles.openIcon}></i>
+                        <div className={styles.openTitle}><span></span>运行</div>
                         <div className={styles.count}>{openCount}</div>
                     </div>
                     <div className={styles.valveClose}>
-                        关闭
+                        <i className={styles.closeIcon}></i>
+                        <div className={styles.closeTitle}>关闭</div>
                         <div className={styles.count}>{closeCount}</div>
                     </div>
                 </div>
@@ -252,7 +254,7 @@ export default class extends Component {
                     centered={true}
                     visible={modalVisible}
                     // title={name}
-                    title='球阀开关'
+                    title={'球阀开关 '+name}
                     onCancel={() => this._onCancel()}
                     onOk={() => this._onOk()}
                 >
