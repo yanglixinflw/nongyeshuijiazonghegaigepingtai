@@ -182,16 +182,16 @@ export default class extends Component {
                     onOk={() => this._showSetOkHandler()}
                 />
                 <div className={styles.deviceInfo}>
-                    <div className={styles.info} title={deviceInfo.deviceId}>
-                        <i className={classnames('dyhsicon', 'dyhs-shebeiID', `${styles.deviceId}`)}></i>
+                    <div className={styles.info} title='设备id'>
+                        <i className={classnames('dyhsicon', 'dyhs-shebeiID1', `${styles.deviceId}`)}></i>
                         {deviceInfo.deviceId}
                     </div>
-                    <div className={styles.info} title={deviceInfo.name}>
-                        <i className={classnames('dyhsicon', 'dyhs-shebeimingcheng', `${styles.name}`)}></i>
+                    <div className={styles.info} title='设备名称'>
+                        <i className={classnames('dyhsicon', 'dyhs-shebeimingcheng1', `${styles.name}`)}></i>
                         {deviceInfo.name}
                     </div>
-                    <div className={styles.info} title={deviceInfo.installAddr}>
-                        <i className={classnames('dyhsicon', 'dyhs-shebeianzhuangdi', `${styles.installAddr}`)}></i>
+                    <div className={styles.info} title='设备安装地'>
+                        <i className={classnames('dyhsicon', 'dyhs-shebeianzhuangdi1', `${styles.installAddr}`)}></i>
                         {deviceInfo.installAddr}
                     </div>
                     <Button

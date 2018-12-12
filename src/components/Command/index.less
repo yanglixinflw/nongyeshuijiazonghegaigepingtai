@@ -20,8 +20,7 @@
 .allBody {
     // min-width: 1230px;
     // white-space: nowrap;
-    overflow-x: auto;
-    // overflow-y: auto;
+    overflow-x: auto; // overflow-y: auto;
     &::-webkit-scrollbar {
         height: 10px;
     }
@@ -46,8 +45,7 @@
     margin: 0 auto;
     display: flex;
     .playArea {
-        width: 75%; 
-        // 开发使用
+        width: 75%; // 开发使用
         // width: 30%;
         height: calc(~"100% - 28px"); // margin: 14px;
         position: relative;
@@ -80,8 +78,8 @@
         background: #29305E;
         width: 25%;
         height: calc(~"100% - 29px");
-        margin: 14px 16px; 
-        .operateTop{
+        margin: 14px 16px;
+        .operateTop {
             padding: 0 35px;
             margin-top: 20px;
             display: flex;
@@ -110,8 +108,7 @@
                 left: -28px;
                 top: -6px;
             }
-        }
-        // 操作区域
+        } // 操作区域
         .picOperate {
             display: flex;
             padding: 0 35px;
@@ -139,45 +136,41 @@
                 height: 150px;
                 justify-content: space-between;
                 display: flex;
-                flex-wrap: wrap;
-                // background: red;
-                .operateAdd{
-                    width: 36px;
-                    // background: red;
-                    color:white;
+                flex-wrap: wrap; // background: red;
+                .operateAdd {
+                    width: 36px; // background: red;
+                    color: white;
                     text-align: center;
                     justify-content: space-between;
                     display: flex;
-                    flex-direction:column;
-                    .plus{
+                    flex-direction: column;
+                    .plus {
                         cursor: pointer;
                         color: #439FB9;
                         position: relative;
-                        top:-10px;
-                        i{
+                        top: -10px;
+                        i {
                             font-size: 36px;
                         }
                     }
-                    .minus{
+                    .minus {
                         cursor: pointer;
                         color: #439FB9;
                         position: relative;
-                        top:10px;
-                        i{
+                        top: 10px;
+                        i {
                             font-size: 36px;
                         }
                     }
                 }
             }
-        }
-        // 监控队列区域
-        .videoArea{
-            padding:0 35px;
-            :global{
-                .ant-select{
+        } // 监控队列区域
+        .videoArea {
+            padding: 0 35px;
+            :global {
+                .ant-select {
                     width: 100%;
-                    margin-top:22px;
-                    
+                    margin-top: 22px;
                 }
                 .ant-select-selection--single {
                     background: #3B4585;
@@ -185,16 +178,16 @@
                     color: white;
                     outline: none;
                 }
-                .ant-select-arrow{
-                    color:white
+                .ant-select-arrow {
+                    color: white
                 }
-                .ant-select-selection-selected-value{
+                .ant-select-selection-selected-value {
                     width: 100%;
                     text-align: center;
                     padding-left: 20px;
                 }
             }
-            .videoList{
+            .videoList {
                 overflow-y: scroll;
                 height: 366px;
                 &::-webkit-scrollbar {
@@ -215,37 +208,37 @@
         }
     }
 }
+
 // 视频列表选择
-.dropdown{
+.dropdown {
     text-align: center;
     background: #3B4585;
-    color:white;
-    :global{
-        .ant-select-dropdown-menu-item{
+    color: white;
+    :global {
+        .ant-select-dropdown-menu-item {
             background: #3B4585;
-            color:white;
-            &:hover{
+            color: white;
+            &:hover {
                 background: #327DF4
             }
         }
     }
-    
 }
 
-.speedList{
+.speedList {
     background: #3B4585;
-    div{
+    div {
         height: 26px;
         text-align: center;
-        color:white;
+        color: white;
         cursor: pointer;
         line-height: 26px;
     }
 }
-.videoCover{
+
+.videoCover {
     width: 310px;
-    height: 170px;
-    // 测试使用
+    height: 170px; // 测试使用
     // width: 388px;
     // height: 200px;
     background: #313A75;
@@ -253,48 +246,47 @@
     border-radius: 4px;
     position: relative;
     cursor: pointer;
-    .mask{
-        background: rgba(0,0,0,0.4);
+    .mask {
+        background: rgba(0, 0, 0, 0.4);
         height: 100%;
         width: 100%;
-        
     }
-    .playButton{
-        color:white;
+    .playButton {
+        color: white;
         position: absolute;
-        left:50%;
-        top:50%;
-        transform: translate(-50%,-50%);
-        font-size:42px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 42px;
     }
-    .videoTitle{
-        color:white;
+    .videoTitle {
+        color: white;
         position: absolute;
-        bottom:0;
+        bottom: 0;
         width: 100%;
-        background: rgba(0,0,0,0.5);
+        background: rgba(0, 0, 0, 0.5);
         text-align: center;
         height: 32px;
         line-height: 32px;
     }
 }
+
 // 视频
-.video{
+.video {
     cursor: pointer;
-    // border:2px red solid;
-    // padding:2px;
-    // &:hover{
-    //     .closeButton{
+    overflow: hidden;
+    // &:hover {
+    //     .closeButton {
     //         position: absolute;
     //         right: 0;
     //         display: block
     //     }
     // }
-    // .closeButton{
+    // .closeButton {
     //     display: none;
     // }
 }
-.video :focus{
-    border:2px rgb(20,125,224) solid;
-}
 
+.videofocus {
+    border: 2px rgb(20, 125, 224) solid;
+}

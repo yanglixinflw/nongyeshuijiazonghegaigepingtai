@@ -3,6 +3,7 @@ import styles from './autoRules.less';
 import { Input, Button, Form, Select,Icon,Radio,message,InputNumber} from 'antd';
 import {getAutoRules} from '../../services/api'
 import {Link} from 'dva/router';
+import { timeOut } from '../../utils/timeOut';
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 import {ENVNet,postOption} from '../../services/netCofig'
@@ -89,6 +90,8 @@ export default class extends Component {
                     }).then(res=>{
                         Promise.resolve(res.json())
                         .then(v=>{
+                            //超时判断
+                            timeOut(v.ret);
                             if(v.ret==1){
                                 //重新获取页面
                                 fetch(ruleUrl,{
@@ -99,6 +102,8 @@ export default class extends Component {
                                 }).then(res=>{
                                     Promise.resolve(res.json())
                                     .then(v=>{
+                                        //超时判断
+                                        timeOut(v.ret);
                                         if(v.ret==1){
                                             message.success(`${values.name}保存成功`, 2);
                                             this.setState({
@@ -109,15 +114,63 @@ export default class extends Component {
                                             })
                                         }
                                     })    
+                                }).catch((err)=>{
+                                    console.log(err)
                                 })
                             }
                         })
                     })
                 }else{
-                    if(typeof(values.conditionDeviceId) =='undefined'){
+                    if(typeof(values.conditionDeviceId) =='undefined' && typeof(values.actionDeviceId) !=='undefined'){
                         message.error('您还未添加条件栏',2)
-                    }else if(typeof(values.actionDeviceId) =='undefined'){
+                    }else if(typeof(values.conditionDeviceId) !=='undefined' && typeof(values.actionDeviceId) =='undefined'){
                         message.error('您还未添加执行栏',2)
+                    }else{
+                        let conditions = [] ;
+                        let actions = [] ;
+                        //保存
+                        fetch(saveUrl,{
+                            ...postOption,
+                            body:JSON.stringify({
+                                "ruleId":this.state.ruleId,
+                                'anyConditionFireAction':values.anyConditionFireAction,
+                                'name':values.name,
+                                conditions,
+                                actions
+                            })
+                        }).then(res=>{
+                            Promise.resolve(res.json())
+                            .then(v=>{
+                                //超时判断
+                                timeOut(v.ret);
+                                if(v.ret==1){
+                                    //重新获取页面
+                                    fetch(ruleUrl,{
+                                        ...postOption,
+                                        body:JSON.stringify({
+                                            "ruleId":this.state.ruleId,
+                                        })
+                                    }).then(res=>{
+                                        Promise.resolve(res.json())
+                                        .then(v=>{
+                                            //超时判断
+                                            timeOut(v.ret);
+                                            if(v.ret==1){
+                                                message.success(`${values.name}保存成功`, 2);
+                                                this.setState({
+                                                    anyConditionFireAction:v.data.anyConditionFireAction,
+                                                    name:v.data.name,
+                                                    conditions:v.data.conditions,
+                                                    actions:v.data.actions
+                                                })
+                                            }
+                                        })    
+                                    }).catch((err)=>{
+                                        console.log(err)
+                                    })
+                                }
+                            })
+                        })
                     }
                 }
             }
@@ -130,6 +183,8 @@ export default class extends Component {
         const {ruleId} = this.state;
         Promise.resolve(getAutoRules({ruleId}))
         .then((v)=>{
+            //超时判断
+            timeOut(v.data.ret);
             if(v.data.ret==1){
                 // console.log(v.data)
                 let actions = v.data.data.actions;
@@ -211,7 +266,70 @@ const RuleForm = Form.create()(
             actions:this.props.actions,
         }
         // console.log(this.state.conditionArr)
-    
+        componentDidMount(){
+            // console.log(this.state.conditions)
+            if(this.state.conditions.length != 0){
+                //获取参数的信息
+                return  fetch(deviceUrl, {
+                    ...postOption,
+                    body: JSON.stringify({
+                        "deviceId":this.state.conditions[0].deviceId,
+                        "pageIndex": 0,
+                        "pageSize": 1
+                    })
+                }).then(res => {
+                    Promise.resolve(res.json())
+                        .then(v => {
+                            //超时判断
+                            timeOut(v.ret);
+                            if (v.ret == 1) {
+                                // 设置页面显示的元素
+                                let deviceTypeId = v.data.items[0].deviceTypeId
+                                //获取参数的信息
+                                fetch(paramUrl,{
+                                    ...postOption,
+                                    body:JSON.stringify({
+                                        deviceTypeId
+                                    })
+                                }).then(res=>{
+                                    Promise.resolve(res.json())
+                                    .then(v=>{
+                                        //超时判断
+                                        timeOut(v.ret);
+                                        if(v.ret==1){
+                                            let parameterIdList=v.data
+                                            this.setState({
+                                                parameterIdList
+                                            })
+                                        }
+                                    })
+                                }),
+                                //获取开关的信息
+                                fetch(switchUrl,{
+                                    ...postOption,
+                                    body:JSON.stringify({
+                                        deviceTypeId
+                                    })
+                                }).then(res=>{
+                                    Promise.resolve(res.json())
+                                    .then(v=>{
+                                        //超时判断
+                                        timeOut(v.ret);
+                                        if(v.ret==1){
+                                            let switchList=v.data
+                                            this.setState({
+                                                switchList
+                                            })
+                                        }
+                                    })
+                                })
+                            }
+                        })
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        }
          //下拉搜索框搜索功能
          handleSearch = (value) => {
             // this.setState({
@@ -235,6 +353,8 @@ const RuleForm = Form.create()(
             }).then(res => {
                 Promise.resolve(res.json())
                     .then(v => {
+                        //超时判断
+                        timeOut(v.ret);
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             let deviceList = v.data.items
@@ -263,12 +383,14 @@ const RuleForm = Form.create()(
             }).then(res => {
                 Promise.resolve(res.json())
                     .then(v => {
+                        //超时判断
+                        timeOut(v.ret);
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             let deviceTypeId = v.data.items[0].deviceTypeId
-                            this.setState({
-                                value
-                            })
+                            // this.setState({
+                            //     value
+                            // })
                             //获取参数的信息
                             fetch(paramUrl,{
                                 ...postOption,
@@ -278,6 +400,8 @@ const RuleForm = Form.create()(
                             }).then(res=>{
                                 Promise.resolve(res.json())
                                 .then(v=>{
+                                    //超时判断
+                                    timeOut(v.ret);
                                     if(v.ret==1){
                                         let parameterIdList=v.data
                                         this.setState({
@@ -295,6 +419,8 @@ const RuleForm = Form.create()(
                             }).then(res=>{
                                 Promise.resolve(res.json())
                                 .then(v=>{
+                                    //超时判断
+                                    timeOut(v.ret);
                                     if(v.ret==1){
                                         let switchList=v.data
                                         this.setState({
@@ -382,8 +508,11 @@ const RuleForm = Form.create()(
             const { getFieldDecorator, getFieldValue } = this.props.form;
             const{ anyConditionFireAction,name }=this.props
             const {deviceList,parameterIdList,switchList,actions,conditions}=this.state
+            // console.log(conditions)
+            // // console.log(deviceList);
+            // console.log(switchList)
             //条件列表渲染
-            getFieldDecorator('condition', { initialValue: conditions });
+            getFieldDecorator('condition', { initialValue: conditions});
             const condition = getFieldValue('condition');
             const conditionForm = condition.map((v,i) => {
                 return (
@@ -391,7 +520,7 @@ const RuleForm = Form.create()(
                         <Form.Item className={styles.search}>
                             {getFieldDecorator(`conditionDeviceId[${i}]`, 
                                 {   
-                                    initialValue: v.deviceName || [] ,
+                                    initialValue: v.deviceId || [] ,
                                     rules: [{ required: true, message: '设备名称不能为空' }]
                                 }
                                 )
@@ -409,7 +538,7 @@ const RuleForm = Form.create()(
                                     {
                                         deviceList.map((v,i)=>{
                                             return(
-                                                <Option value={v.deviceId} key={i}>{v.name}</Option> 
+                                                <Option key={v.deviceId} >{v.deviceId}</Option> 
                                             )
                                         })
                                     }
@@ -420,7 +549,7 @@ const RuleForm = Form.create()(
                         <Form.Item className={styles.search}>
                             {getFieldDecorator(`parameterId[${i}]`, 
                                 {
-                                    initialValue: v.parameterId || [],
+                                    initialValue: `${v.parameterId}` !=='undefined'?`${v.parameterId}`:[],
                                     rules: [{ required: true, message: '请选择参数' }]
                                 }
                                 )
@@ -430,7 +559,7 @@ const RuleForm = Form.create()(
                                     {
                                         parameterIdList.map((v,i)=>{
                                             return(
-                                                <Option value={v.parameterId} key={i}>{v.name}</Option> 
+                                                <Option key={v.parameterId}>{v.name}{v.unit}</Option> 
                                             )
                                         })
                                     }
@@ -440,7 +569,7 @@ const RuleForm = Form.create()(
                         <Form.Item className={styles.end}>
                             {getFieldDecorator(`operator[${i}]`, 
                                 {   
-                                    initialValue: v.operator ||[],
+                                    initialValue: v.operator || [],
                                     rules: [{ required: true, message: '请选择判断符号' }]
                                 }
                                 )
@@ -495,7 +624,7 @@ const RuleForm = Form.create()(
                         <Form.Item className={styles.search}>
                             {getFieldDecorator(`actionDeviceId[${i}]`, 
                                 {
-                                    initialValue: v.deviceName,
+                                    initialValue: v.deviceId || [],
                                     rules: [{ required: true, message: '设备名称不能为空' }]
                                 }
                             )
@@ -513,7 +642,7 @@ const RuleForm = Form.create()(
                                     {
                                         deviceList.map((v,i)=>{
                                             return(
-                                                <Option value={v.deviceId} key={i}>{v.name}</Option> 
+                                                <Option key={v.deviceId}>{v.deviceId}</Option> 
                                             )
                                         })
                                     }
@@ -534,7 +663,7 @@ const RuleForm = Form.create()(
                                     {
                                         switchList.map((v,i)=>{
                                             return(
-                                                <Option value={v.cmd} key={i}>{v.displayName}</Option> 
+                                                <Option key={v.cmd}>{v.displayName}</Option> 
                                             )
                                         })
                                     }

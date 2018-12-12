@@ -12,7 +12,7 @@ export default class extends Component {
             type: 'mapGis/fetchWaterValve',
             payload: {
               deviceTypeId: 1,
-              pageSize: 100
+              pageSize: 200
             }
         })
     }

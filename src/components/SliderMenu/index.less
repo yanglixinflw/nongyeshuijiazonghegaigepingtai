@@ -44,9 +44,44 @@
         }
     }
     :global{
+        .ant-menu-submenu > .ant-menu{
+            font-size: 16px !important;
+        }
         .ant-menu-dark .ant-menu-submenu-selected{
             color:#1890ff !important;
         }
+        .ant-menu-vertical .ant-menu-item{
+            font-size: 16px !important;
+        }
+        .drawer .drawer-content {
+            background: #466d92;
+          }
+          .ant-menu-inline-collapsed {
+            & > .ant-menu-item .sider-menu-item-img + span,
+            &
+              > .ant-menu-item-group
+              > .ant-menu-item-group-list
+              > .ant-menu-item
+              .sider-menu-item-img
+              + span,
+            & > .ant-menu-submenu > .ant-menu-submenu-title .sider-menu-item-img + span {
+              max-width: 0;
+              display: inline-block;
+              opacity: 0;
+            }
+          }
+          .ant-menu-item .sider-menu-item-img + span,
+          .ant-menu-submenu-title .sider-menu-item-img + span {
+            transition: opacity 0.3s @ease-in-out, width 0.3s @ease-in-out;
+            opacity: 1;
+          }
+        //   .ant-menu-submenu-title{
+        //       font-size: 16px;
+        //   }
+        //   .ant-menu-vertical .ant-menu-item, .ant-menu-vertical-left .ant-menu-item, .ant-menu-vertical-right .ant-menu-item, .ant-menu-inline .ant-menu-item, .ant-menu-vertical .ant-menu-submenu-title, .ant-menu-vertical-left .ant-menu-submenu-title, .ant-menu-vertical-right .ant-menu-submenu-title, .ant-menu-inline .ant-menu-submenu-title{
+        //     font-size: 16px;
+        //   }
+          
     }
     .siderFoot{
         position: absolute;
@@ -59,38 +94,14 @@
         .ant-menu {
             .ant-menu-item-selected {
                 background-color: #1ABC9C;
-            } // & > .ant-menu-dark .ant-menu-inline .ant-menu-sub{
-            //   background: red;
-            // }
+            }
         }
          .ant-menu-dark,.ant-menu-sub{
            background: #232C3C
          }
     }
 }
-
-:global {
-  .drawer .drawer-content {
-    background: #466d92;
-  }
-  .ant-menu-inline-collapsed {
-    & > .ant-menu-item .sider-menu-item-img + span,
-    &
-      > .ant-menu-item-group
-      > .ant-menu-item-group-list
-      > .ant-menu-item
-      .sider-menu-item-img
-      + span,
-    & > .ant-menu-submenu > .ant-menu-submenu-title .sider-menu-item-img + span {
-      max-width: 0;
-      display: inline-block;
-      opacity: 0;
-    }
-  }
-  .ant-menu-item .sider-menu-item-img + span,
-  .ant-menu-submenu-title .sider-menu-item-img + span {
-    transition: opacity 0.3s @ease-in-out, width 0.3s @ease-in-out;
-    opacity: 1;
-  }
-  
+.iconClass{
+    // font-size: 24px !important;
+    margin-right: 24px;
 }

@@ -12,7 +12,9 @@ export default class extends Component{
           }
         // console.log(map);
         this.state = {
-            map
+            map,
+            //平面地图或卫星影像 1为平面地图 2 为卫星影像
+            flatOrSatellite:2
         }
     }
     //地图切换成平面2D
@@ -25,6 +27,9 @@ export default class extends Component{
             });
             map.addControl(type);
         });
+        this.setState({
+            flatOrSatellite:1
+        })
     }
     //地图切换成卫星
     _satelliteMap(){
@@ -36,6 +41,9 @@ export default class extends Component{
             });
             map.addControl(type);
         });
+        this.setState({
+            flatOrSatellite:2
+        })
     }
     //地图放大
     _zoomIn(){
@@ -48,14 +56,15 @@ export default class extends Component{
         map.zoomOut();
     }
     render(){
+        const {flatOrSatellite} = this.state;
         return (
             <div>
                 <div className={styles.btnMapType}>
                     <Button 
-                        className={styles.btnsatellite}
+                        className={flatOrSatellite == 2?styles.btnsatellite1:styles.btnsatellite2}
                         onClick={()=>this._satelliteMap()}>卫星</Button>
                     <Button 
-                        className={styles.btnflat}
+                        className={flatOrSatellite == 1?styles.btnflat1:styles.btnflat2}
                         onClick={()=>this._flatMap()}>地图</Button>
                     
                 </div>

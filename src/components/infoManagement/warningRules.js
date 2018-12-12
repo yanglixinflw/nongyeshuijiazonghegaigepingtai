@@ -67,8 +67,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
-                     //超时判断
-                    timeOut(v.data.ret)
+                    //判断超时
+                    timeOut(v.ret);
                     if (v.ret == 1) {
                         fetch(dataUrl,{
                             ...postOption,
@@ -79,8 +79,8 @@ export default class extends Component {
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
-                                 //超时判断
-                                timeOut(v.data.ret)
+                                //判断超时
+                                timeOut(v.ret);
                                 if(v.ret==1){
                                     let data=v.data.items;
                                     let itemCount = v.data.itemCount;
@@ -223,8 +223,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
-                     //超时判断
-                    timeOut(v.data.ret)
+                    //判断超时
+                    timeOut(v.ret);
                     if (v.ret == 1) {
                         // console.log(v);
                         // 设置页面显示的元素
