@@ -246,11 +246,11 @@ const RuleForm = Form.create()(
             actions: this.props.actions,
         }
         componentDidMount() {
-            const {conditions,actions} = this.state;
+            const { conditions, actions } = this.state;
             //  console.log(conditions)
             if (conditions.length != 0) {
                 //获取参数的信息
-                conditions.map((v,i)=> {
+                conditions.map((v, i) => {
                     return fetch(deviceUrl, {
                         ...postOption,
                         body: JSON.stringify({
@@ -283,7 +283,7 @@ const RuleForm = Form.create()(
                                                     this.setState({
                                                         conditions
                                                     })
-                                                }else{
+                                                } else {
                                                     conditions[i].parameterIdList = [];
                                                     this.setState({
                                                         conditions
@@ -298,48 +298,48 @@ const RuleForm = Form.create()(
                     })
                 })
             }
-            if(actions.length !==0){
-                actions.map((v,i)=>{
-                    return fetch(deviceUrl,{
+            if (actions.length !== 0) {
+                actions.map((v, i) => {
+                    return fetch(deviceUrl, {
                         ...postOption,
-                        body:JSON.stringify({
+                        body: JSON.stringify({
                             "deviceId": actions[i].deviceId,
                             "pageIndex": 0,
                             "pageSize": 1
                         })
-                    }).then((res)=>{
+                    }).then((res) => {
                         Promise.resolve(res.json())
-                        .then((v)=>{
-                            //超时判断
-                            timeOut(v.ret)
-                            if(v.ret == 1){
-                                let deviceTypeId = v.data.items[0].deviceTypeId;
-                                return fetch(switchUrl,{
-                                    ...postOption,
-                                    body:JSON.stringify({
-                                        deviceTypeId
-                                    })
-                                }).then((res)=>{
-                                    Promise.resolve(res.json())
-                                    .then((v)=>{
-                                        //判断超时
-                                        timeOut(v.ret);
-                                        if(v.ret == 1){
-                                            let switchList = v.data
-                                            actions[i].switchList = switchList
-                                            this.setState({
-                                                actions
+                            .then((v) => {
+                                //超时判断
+                                timeOut(v.ret)
+                                if (v.ret == 1) {
+                                    let deviceTypeId = v.data.items[0].deviceTypeId;
+                                    return fetch(switchUrl, {
+                                        ...postOption,
+                                        body: JSON.stringify({
+                                            deviceTypeId
+                                        })
+                                    }).then((res) => {
+                                        Promise.resolve(res.json())
+                                            .then((v) => {
+                                                //判断超时
+                                                timeOut(v.ret);
+                                                if (v.ret == 1) {
+                                                    let switchList = v.data
+                                                    actions[i].switchList = switchList
+                                                    this.setState({
+                                                        actions
+                                                    })
+                                                } else {
+                                                    actions[i].switchList = []
+                                                    this.setState({
+                                                        actions
+                                                    })
+                                                }
                                             })
-                                        }else{
-                                            actions[i].switchList = []
-                                            this.setState({
-                                                actions
-                                            })
-                                        }
                                     })
-                                })
-                            }
-                        })
+                                }
+                            })
                     })
                 })
             }
@@ -378,9 +378,9 @@ const RuleForm = Form.create()(
             })
         }
         //option的value值就是设备ID
-        handleChange = (value,i) => {
+        handleChange = (value, i) => {
             // console.log(value)
-            const {conditions,actions} = this.state;
+            const { conditions, actions } = this.state;
             this.setState({
                 deviceList: []
             })
@@ -436,7 +436,7 @@ const RuleForm = Form.create()(
                                                 this.setState({
                                                     actions
                                                 })
-                                            }else{
+                                            } else {
                                                 actions[i].switchList = []
                                                 this.setState({
                                                     actions
@@ -472,7 +472,7 @@ const RuleForm = Form.create()(
             // console.log(condition)
             //得到添加数量的数组
             const nextCondition = condition.concat({});
-            nextCondition.map((v,i)=>{
+            nextCondition.map((v, i) => {
                 v.parameterIdList = []
             })
             // console.log(nextCondition)
@@ -506,7 +506,7 @@ const RuleForm = Form.create()(
             actionArr.push(actionArr.length)
             //得到添加数量的数组
             const nextAction = action.concat({});
-            nextAction.map((v,i)=>{
+            nextAction.map((v, i) => {
                 v.switchList = [];
             })
             // 可以使用数据绑定来设置
@@ -528,10 +528,11 @@ const RuleForm = Form.create()(
             getFieldDecorator('condition', { initialValue: conditions });
             const condition = getFieldValue('condition');
             const conditionForm = condition.map((v, i) => {
-                if(v.parameterIdList)
+                if (v.parameterIdList)
                     return (
                         <div className={styles.line} key={i}>
                             <Form.Item className={styles.search}>
+
                                 {getFieldDecorator(`conditionDeviceId[${i}]`,
                                     {
                                         initialValue: v.deviceId || [],
@@ -539,25 +540,29 @@ const RuleForm = Form.create()(
                                     }
                                 )
                                     (
+
                                     <Select
                                         showSearch
                                         defaultActiveFirstOption={false}
                                         showArrow={false}
-                                        onSearch={_.debounce((value)=>this.handleSearch(value), 300)}
-                                        onChange={(value)=>this.handleChange(value,i)}
+                                        onSearch={_.debounce((value) => this.handleSearch(value), 300)}
+                                        onChange={(value) => this.handleChange(value, i)}
                                         notFoundContent={null}
                                         placeholder='设备名称/ID'
+
                                     >
                                         {
                                             deviceList.map((v, i) => {
                                                 return (
-                                                    <Option title='设备名称/ID' key={v.deviceId}>{v.deviceId}</Option>
+                                                    <Option key={v.deviceId}>{v.deviceId}</Option>
                                                 )
                                             })
                                         }
                                     </Select>
+
                                     )
                                 }
+
                             </Form.Item>
                             <Form.Item className={styles.search}>
                                 {getFieldDecorator(`parameterId[${i}]`,
@@ -634,7 +639,7 @@ const RuleForm = Form.create()(
             const action = getFieldValue('action');
             const actionForm = action.map((v, i) => {
                 // console.log(actions)
-                if(v.switchList)
+                if (v.switchList)
                     return (
                         <div className={styles.line} key={i}>
                             <Form.Item className={styles.search}>
@@ -651,8 +656,8 @@ const RuleForm = Form.create()(
                                         defaultActiveFirstOption={false}
                                         showArrow={false}
                                         filterOption={false}
-                                        onSearch={_.debounce((value)=>this.handleSearch(value), 300)}
-                                        onChange={(value)=>this.handleChange(value,i)}
+                                        onSearch={_.debounce((value) => this.handleSearch(value), 300)}
+                                        onChange={(value) => this.handleChange(value, i)}
                                         notFoundContent={null}
                                     >
                                         {
@@ -705,7 +710,7 @@ const RuleForm = Form.create()(
                                 )}
                         </div>
                     );
-                });
+            });
             return (
                 <Form className={styles.form}>
                     <div className={styles.Rules}>
@@ -730,28 +735,28 @@ const RuleForm = Form.create()(
                         </Form.Item>
                         {/* 条件的添加 */}
                         {conditionForm}
-                        {conditionArr.length == 0 && condition.length == 0 ? 
+                        {conditionArr.length == 0 && condition.length == 0 ?
                             (
                                 <Form.Item>
                                     <Button className={styles.btnCondition} onClick={() => this.conditionAdd()}>点此添加条件栏</Button>
                                 </Form.Item>
-                            ) 
-                            : 
+                            )
+                            :
                             null
                         }
-                        
+
                         <div className={styles.do}>执行</div>
                         {/* 执行的添加 */}
                         {actionForm}
-                        {   
-                            actionArr.length == 0 && action.length == 0 ? 
-                            (
-                                <Form.Item>
-                                    <Button className={styles.btnAction} onClick={() => this.actionAdd()}>点此添加执行栏</Button>
-                                </Form.Item>
-                            ) 
-                            : 
-                            null
+                        {
+                            actionArr.length == 0 && action.length == 0 ?
+                                (
+                                    <Form.Item>
+                                        <Button className={styles.btnAction} onClick={() => this.actionAdd()}>点此添加执行栏</Button>
+                                    </Form.Item>
+                                )
+                                :
+                                null
                         }
                     </div>
                 </Form>
