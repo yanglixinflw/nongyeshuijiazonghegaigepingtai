@@ -3,6 +3,7 @@ import styles from './warningRecords.less';
 import { Input, Button, Form, Row, Col, Table, Modal, Select, Checkbox,Switch,message } from 'antd';
 import { Link } from 'dva/router';
 import _ from 'lodash';
+import { timeOut } from '../../utils/timeOut';
 import classnames from 'classnames'
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
