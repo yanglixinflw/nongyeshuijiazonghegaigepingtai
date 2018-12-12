@@ -3,6 +3,7 @@ import styles from './autoRules.less';
 import { Input, Button, Form, Select,Icon,Radio,message,InputNumber} from 'antd';
 import {getAutoRules} from '../../services/api'
 import {Link} from 'dva/router';
+import _ from 'lodash'
 import { timeOut } from '../../utils/timeOut';
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
@@ -47,15 +48,7 @@ export default class extends Component {
     _save () {
         this.ruleForm.props.form.validateFields((err, values) => {
             if (!err) {
-                // console.log('Received values of form: ', values);
-                //针对compareValue出现的问题，先将其转换为字符串型，再转换回数组,并将数组元素的双引号去掉  
-                // console.log(values)
-                // let valueArr=values.compareValue
-                // let valueString=valueArr.join("-")
-                // valueArr=valueString.split('-')
-                // for(var i=0;i<valueArr.length;i++){
-                //     valueArr[i]=parseInt(valueArr[i])
-                // }
+                console.log(values)
                 //拼接数组conditions
                 if(typeof(values.actionDeviceId) !=='undefined' && typeof(values.conditionDeviceId) !=='undefined'){
                     var conditions=[];
@@ -208,20 +201,6 @@ export default class extends Component {
         return (
             <React.Fragment>
                 <div className={styles.headers}>
-                    {/* <div className={styles.left}>
-                        <Link to={`/dcs/automation`}>
-                            <div className={styles.arrowLeft}>
-                                <Icon type="arrow-left" theme="outlined" style={{marginTop:'22px',fontSize:'18px'}}/>
-                                <div>自动化控制</div>
-                            </div>
-                        </Link>
-                        <Link to={`/automation/autoRules`}>
-                            <div className={styles.autoControl}>
-                                <div>/</div>
-                                <div className={styles.autoRules}>设置自动化规则</div>
-                            </div>
-                        </Link>
-                    </div> */}
                     <div className={styles.btnGroup}>
                         <Button
                             icon='reload'
@@ -265,7 +244,6 @@ const RuleForm = Form.create()(
             //执行数组
             actions:this.props.actions,
         }
-        // console.log(this.state.conditionArr)
         componentDidMount(){
             // console.log(this.state.conditions)
             if(this.state.conditions.length != 0){
@@ -277,13 +255,12 @@ const RuleForm = Form.create()(
                         "pageIndex": 0,
                         "pageSize": 1
                     })
-                }).then(res => {
+                }).then((res) => {
                     Promise.resolve(res.json())
-                        .then(v => {
+                        .then((v) => {
                             //超时判断
                             timeOut(v.ret);
                             if (v.ret == 1) {
-                                // 设置页面显示的元素
                                 let deviceTypeId = v.data.items[0].deviceTypeId
                                 //获取参数的信息
                                 fetch(paramUrl,{
@@ -441,9 +418,6 @@ const RuleForm = Form.create()(
             // const {conditionArr}=this.state
             conditionArr.pop(v)
             const condition = form.getFieldValue('condition');
-            // if (condition.length === 1) {
-            //   return;
-            // }
             //可以使用数据绑定来设置
             form.setFieldsValue({
                 condition: condition.filter(key => key !== v),
@@ -472,12 +446,8 @@ const RuleForm = Form.create()(
 //执行的++--
         actionRemove = (v) => {
             const { form,actionArr } = this.props;
-            // const {actionArr}=this.state
             actionArr.pop(v)
             const action = form.getFieldValue('action');
-            // if (action.length === 1) {
-            // return;
-            // }
             //可以使用数据绑定来设置
             form.setFieldsValue({
                 action: action.filter(key => key !== v),
@@ -508,8 +478,8 @@ const RuleForm = Form.create()(
             const { getFieldDecorator, getFieldValue } = this.props.form;
             const{ anyConditionFireAction,name }=this.props
             const {deviceList,parameterIdList,switchList,actions,conditions}=this.state
-            // console.log(conditions)
-            // // console.log(deviceList);
+            // console.log(actions)
+            // console.log(deviceList);
             // console.log(switchList)
             //条件列表渲染
             getFieldDecorator('condition', { initialValue: conditions});
@@ -529,8 +499,8 @@ const RuleForm = Form.create()(
                                     showSearch
                                     defaultActiveFirstOption={false}
                                     showArrow={false}
-                                    filterOption={false}
-                                    onSearch={this.handleSearch}
+                                    // filterOption={false}
+                                    onSearch={_.debounce(this.handleSearch,300)}
                                     onChange={this.handleChange}
                                     notFoundContent={null}
                                     placeholder='设备名称/ID'

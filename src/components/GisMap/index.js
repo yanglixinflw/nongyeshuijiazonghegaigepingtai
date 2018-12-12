@@ -190,7 +190,7 @@ export default class extends Component {
                 // console.log(allCameraMarkers)
             },
             click: (MapsOption, marker) => {
-                console.log(marker)
+                // console.log(marker)
                 this.setState({
                     infoPositionCamera: marker.getExtData().position,
                     infoVisible: true,
