@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from "./autoControl.less"
-import { Input, Button, Form, Table,Modal } from 'antd';
+import { Input, Button, Form, Table,Modal,message } from 'antd';
 import { Link } from 'dva/router';
 import classnames from 'classnames';
 import {ENVNet,postOption} from '../../services/netCofig'
@@ -235,7 +235,6 @@ export default class extends Component{
                     // 设置页面显示的元素
                 //   console.log(v)
                     let data = v.data.items;
-                    console.log(data)
                     //添加key
                     data.map((v, i) => {
                         v.key = i
@@ -338,7 +337,7 @@ export default class extends Component{
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
-                                let data=v.items;
+                                let data=v.data.items;
                                 this._getTableDatas(title, data);
                                 this.setState({
                                     addvisible:false,

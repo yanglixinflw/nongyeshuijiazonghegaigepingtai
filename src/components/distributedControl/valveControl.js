@@ -3,6 +3,7 @@ import styles from "./valveControl.less"
 import { Input,Button, Form,Table,Select,Modal,Radio,message} from 'antd';
 import { Link } from 'dva/router';
 import classnames from 'classnames';
+import { timeOut } from '../../utils/timeOut';
 import _ from 'lodash';
 import {ENVNet,postOption} from '../../services/netCofig'
 //设备安装地列表
@@ -71,6 +72,8 @@ export default class extends Component{
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         let installAddrList = v.data
                         this.setState({
@@ -90,6 +93,8 @@ export default class extends Component{
         }).then(res=>{
             Promise.resolve(res.json())
                 .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
                     if(v.ret==1){
                         let deviceTypeList=v.data
                         this.setState({
@@ -132,7 +137,7 @@ export default class extends Component{
             title: '操作',
             key: 'action',
             align: 'center',
-            // fixed: 'right',
+            fixed: 'right',
             className: `${styles.action}`,
             width: 100,
             render: (record) => {
@@ -189,6 +194,8 @@ export default class extends Component{
             }).then(res => {
                 Promise.resolve(res.json())
                     .then(v => {
+                        //超时判断
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             let itemCount = v.data.itemCount
@@ -229,6 +236,8 @@ export default class extends Component{
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         // console.log(v)
                         let data = v.data.items;
@@ -253,7 +262,7 @@ export default class extends Component{
     }
     //换页
     _pageChange(page){
-        const { title,searchValue } = this.state;
+        const { searchValue } = this.state;
         searchValue.pageIndex = page - 1;
         searchValue.deviceTypeId=this.state.deviceTypeId;
         searchValue.pageSize=10
@@ -265,6 +274,8 @@ export default class extends Component{
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
+                //超时判断
+                timeOut(v.ret)
                 if(v.ret==1){
                     // 设置页面显示的元素
                     let data = v.data.items;
@@ -298,6 +309,8 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                     .then(v=>{
+                        //超时判断
+                        timeOut(v.ret)
                         if(v.ret==1){
                             let cmd=v.data
                             // console.log(cmd)
@@ -327,6 +340,8 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                     .then(v=>{
+                        //超时判断
+                        timeOut(v.ret)
                         if(v.ret==1){
                             this.setState({
                                 switchvisible: false,
@@ -408,7 +423,7 @@ export default class extends Component{
                         className={styles.table}
                         pagination={paginationProps}
                         dataSource={tableDatas}
-                        // scroll={{ x: 1300 }}
+                        scroll={{ x: 1000 }}
                     />
                      {/* 开关阀弹窗 */}
                      <SwitchForm
@@ -442,6 +457,8 @@ const SearchForm = Form.create()(
             }).then(res => {
                 Promise.resolve(res.json())
                     .then(v => {
+                        //超时判断
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             // console.log(v.data)

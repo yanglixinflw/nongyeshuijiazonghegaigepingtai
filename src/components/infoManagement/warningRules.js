@@ -3,6 +3,7 @@ import styles from "./warningRules.less"
 import { Button, Select, Table, Modal, message } from 'antd';
 import { routerRedux } from 'dva/router';
 import { Link } from 'dva/router';
+import { timeOut } from '../../utils/timeOut';
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl = `${ENVNet}/api/DeviceWaringRule/ruleList`;
@@ -66,6 +67,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //判断超时
+                    timeOut(v.ret);
                     if (v.ret == 1) {
                         fetch(dataUrl,{
                             ...postOption,
@@ -76,6 +79,8 @@ export default class extends Component {
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
+                                //判断超时
+                                timeOut(v.ret);
                                 if(v.ret==1){
                                     let data=v.data.items;
                                     let itemCount = v.data.itemCount;
@@ -218,6 +223,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //判断超时
+                    timeOut(v.ret);
                     if (v.ret == 1) {
                         // console.log(v);
                         // 设置页面显示的元素

@@ -3,6 +3,7 @@ import styles from "./groupAccount.less"
 import { Input, Button, Form, Table,Select,Modal,message} from 'antd';
 import { Link } from 'dva/router';
 import classnames from 'classnames';
+import { timeOut } from '../../utils/timeOut';
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl=`${ENVNet}/fee/groupAccount/list`;
@@ -14,13 +15,13 @@ const clearUrl=`${ENVNet}/fee/groupAccount/clearCurrentWaterUse`;
 const assignUrl=`${ENVNet}/fee/groupAccount/assignWaterPower`;
 //表头
 const tableTitle=[
-    {index:"deviceId",item:"设备ID"},
-    {index:"deviceName",item:"设备名称"},
-    {index:"accountName",item:"小组"},
+    {index:"accountName",item:"小组名称"},
     {index:"memberNames",item:"小组成员"},
     {index:"balance",item:"账户余额"},
     {index:"currentWaterUse",item:"当前用量"},
     {index:"waterPower",item:"剩余水权"},
+    {index:"deviceId",item:"设备ID"},
+    {index:"deviceName",item:"设备名称"},
     {index:"updateTime",item:"更新时间"},
 ]
 const { Option }=Select
@@ -103,7 +104,7 @@ export default class extends Component{
                             icon='delete'
                             onClick={()=>this.clear(record.userId)}
                         >
-                            清空当前用量
+                            清空用量
                         </Button>
                         <Button
                             className={styles.assignment}
@@ -117,14 +118,14 @@ export default class extends Component{
                             icon='edit'
                             onClick={()=>this.edit(record.accountName,record.userId)}
                         >
-                            修改
+                            小组更名
                         </Button>
                         <Link to={`/groupAccount/groupManage:${record.userId}`}>
                             <Button
                                 className={styles.management}
                                 icon='team'
                             >
-                                管理小组成员
+                                组员管理
                             </Button>
                         </Link>
                     </span>
@@ -159,6 +160,8 @@ export default class extends Component{
             }).then(res => {
                 Promise.resolve(res.json())
                     .then(v => {
+                        //超时判断
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             let itemCount = v.data.itemCount
@@ -190,6 +193,8 @@ export default class extends Component{
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         // console.log(v)
                         let data = v.data.items;
@@ -233,6 +238,8 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
                     if(v.ret==1){
                         fetch(dataUrl,{
                             ...postOption,
@@ -243,6 +250,8 @@ export default class extends Component{
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
+                                //超时判断
+                                timeOut(v.ret)
                                 if(v.ret==1){
                                     let data=v.data.items
                                     let itemCount=v.data.itemCount
@@ -269,6 +278,7 @@ export default class extends Component{
     }
     //点击清空当前用量
     clear(userId){
+        console.log(userId)
         this.setState({
             clearVisible:true,
             userId
@@ -284,6 +294,8 @@ export default class extends Component{
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
+                //超时判断
+                timeOut(v.ret)
                 if(v.ret==1){
                     fetch(dataUrl,{
                         ...postOption,
@@ -294,6 +306,8 @@ export default class extends Component{
                     }).then(res=>{
                         Promise.resolve(res.json())
                         .then(v=>{
+                            //超时判断
+                            timeOut(v.ret)
                             if(v.ret==1){
                                 let data=v.data.items;
                                 let itemCount=v.data.itemCount
@@ -341,6 +355,8 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
                     if(v.ret==1){
                         fetch(dataUrl,{
                             ...postOption,
@@ -351,6 +367,8 @@ export default class extends Component{
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
+                                //超时判断
+                                timeOut(v.ret)
                                 if(v.ret==1){
                                     let data=v.data.items;
                                     let itemCount=v.data.itemCount
@@ -470,26 +488,7 @@ const SearchForm = Form.create()(
                         flexWrap:"wrap",
                         marginRight:"10px"
                     }}>
-                    <Form.Item>
-                        {getFieldDecorator('deviceId', {initialValue: ''})
-                            (
-                            <Input
-                                placeholder='设备ID'
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        {getFieldDecorator('deviceName', {})
-                            (
-                            <Input
-                                placeholder='设备名称'
-                                type='text'
-                            />
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
+                     <Form.Item>
                         {getFieldDecorator('groupName', {})
                             (
                             <Input
@@ -518,6 +517,25 @@ const SearchForm = Form.create()(
                                 <Option value="0">所有</Option>
                                 <Option value="1">欠费</Option>
                             </Select>
+                            )
+                        }
+                    </Form.Item>
+                    <Form.Item>
+                        {getFieldDecorator('deviceId', {initialValue: ''})
+                            (
+                            <Input
+                                placeholder='设备ID'
+                            />
+                            )
+                        }
+                    </Form.Item>
+                    <Form.Item>
+                        {getFieldDecorator('deviceName', {})
+                            (
+                            <Input
+                                placeholder='设备名称'
+                                type='text'
+                            />
                             )
                         }
                     </Form.Item>

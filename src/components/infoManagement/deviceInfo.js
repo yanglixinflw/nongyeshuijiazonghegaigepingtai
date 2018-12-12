@@ -17,6 +17,7 @@ import {
 } from 'antd'
 import moment from 'moment'
 import { Link } from 'dva/router';
+import { timeOut } from '../../utils/timeOut';
 import _ from 'lodash'
 const Item = Form.Item
 const Option = Select.Option
@@ -266,6 +267,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //判断超时
+                    timeOut(v.ret);
                     if (v.ret == 1) {
                         message.success('删除成功', 2)
                         // 重置数据
@@ -291,6 +294,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //判断超时
+                    timeOut(v.ret);
                     if (v.ret == 1) {
                         // console.log(v);
                         // 设置页面显示的元素
@@ -340,6 +345,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //判断超时
+                    timeOut(v.ret);
                     // console.log(v)
                     if (v.ret == 1) {
                         let { items, itemCount } = v.data
@@ -383,6 +390,8 @@ export default class extends Component {
                 Promise.resolve(res.json())
                     .then((v) => {
                         // console.log(v)
+                         //判断超时
+                        timeOut(v.ret);
                         if (v.ret == 1) {
                             let { items, itemCount } = v.data
                             this.setState({
@@ -476,6 +485,8 @@ export default class extends Component {
                 }).then((res) => {
                     Promise.resolve(res.json())
                         .then((v) => {
+                            //判断超时
+                            timeOut(v.ret);
                             if (v.ret == 1) {
                                 message.success('添加成功', 2)
                                 this._resetForm()
@@ -525,6 +536,8 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //判断超时
+                    timeOut(v.ret);
                     if (v.ret == 1) {
                         // 初始化管理人员列表
                         fetch(`${getManagerUserUrl}?orgId=${v.data.managedCompanyId}`, {
@@ -573,6 +586,8 @@ export default class extends Component {
                 }).then((res) => {
                     Promise.resolve(res.json())
                         .then((v) => {
+                            //判断超时
+                            timeOut(v.ret);
                             if (v.ret == 1) {
                                 message.success('修改成功', 2)
                                 this._resetForm()
@@ -605,6 +620,8 @@ export default class extends Component {
         }).then(res => {
             Promise.resolve(res.json())
                 .then(v => {
+                     //判断超时
+                     timeOut(v.ret);
                     if (v.ret == 1) {
                         // 设置页面显示的元素
                         // console.log(v.data)
@@ -982,6 +999,8 @@ const AddForm = Form.create()(
                     Promise.resolve(res.json())
                         .then((v) => {
                             if (v.ret == 1) {
+                                 //判断超时
+                    timeOut(v.ret);
                                 // console.log(v);
                                 this.setState({
                                     selectCompany: true,
@@ -1282,6 +1301,8 @@ const ModifyForm = Form.create()(
                 }).then((res) => {
                     Promise.resolve(res.json())
                         .then((v) => {
+                             //判断超时
+                    timeOut(v.ret);
                             if (v.ret == 1) {
                                 // console.log(v);
                                 callBack(v)

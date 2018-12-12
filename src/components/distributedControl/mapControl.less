@@ -14,6 +14,79 @@
             }
         }
     }
+    //统计信息面板
+    .statisticsPanel{
+        display: flex;
+        position: absolute;
+        right:36px;
+        top:111px;
+        z-index: 2;
+        background: #13162F;
+        width: 226px;
+        height: 168px;
+        padding:18px ;
+        font-family: 'HelveticaNeue';
+        .valveOpen{
+            text-align: center;
+            width:95px;
+            border-right:2px solid #1E2445;
+            color:#3177EC;
+            .openIcon{
+                display: block;
+                width:48px;
+                margin:0 auto;
+                height: 62px;
+                background: url(../../assets/ssWValve.png) no-repeat;
+                background-size:48px 62px; 
+                margin-bottom: 12px;
+            }
+            .openTitle{
+                height: 16px;
+                line-height: 16px;
+                overflow: hidden;
+                font-size:16px;
+                margin-bottom: 12px;
+                span{
+                    display: inline-block;
+                    width:4px;
+                    background: #3177EC;
+                    height: 4px;
+                    line-height: 16px;
+                    border-radius: 50%;
+                    position: relative;
+                    top:-3px;
+                    left:-6px;
+                }
+            }
+        } 
+        .valveClose{
+            text-align: center;
+            width:95px;
+            color:#fff;
+            .closeIcon{
+                display: block;
+                margin:0 auto;
+                width:48px;
+                height: 62px;
+                background: url(../../assets/normalWValve.png) no-repeat;
+                background-size:48px 62px; 
+                margin-bottom: 12px;
+            }
+            .closeTitle{
+                height: 16px;
+                line-height: 16px;
+                overflow: hidden;
+                font-size:16px;
+                margin-bottom: 12px;
+            }
+        }
+        .count{
+            height: 22px;
+            line-height: 22px;
+            overflow: hidden;
+            font-size: 28px !important;
+        }
+    }
     
 }
 .controlModal{
@@ -74,8 +147,8 @@
 //切换地图类型 卫星|地图
 .btnMapType {
     position: absolute;
-    top: 27px;
-    right: 35px;
+    top: 28px;
+    right: 36px;
     z-index: 199;
     :global {
         .ant-btn {
@@ -97,11 +170,21 @@
             }
         }
     }
-    .btnsatellite {
+    .btnsatellite1 {
+        background: #327DF4 !important;
         border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;
     }
-    .btnflat {
+    .btnsatellite2 {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+    .btnflat1 {
+        background: #327DF4 !important;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+    .btnflat2 {
         border-top-left-radius: 0px;
         border-bottom-left-radius: 0px;
     }
@@ -142,5 +225,50 @@
     .btnLess {
         top: 80px;
         left: -64px;
+    }
+}
+.markerCamera {
+    //普通显示摄像头
+    .normal {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/normalCamera.png) no-repeat;
+    }
+}
+
+.markerWaterM {
+    //普通显示水表
+    .normal {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/normalWMeter.png) no-repeat;
+    }
+}
+
+.markerEleMeter {
+    //普通显示电表
+    .normal {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/normalEMeter.png) no-repeat;
+    }
+}
+
+.markerWaterV {
+    //普通显示水阀
+    .valveClose {
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/normalWValve.png) no-repeat;
+    }
+    .valveOpen{
+        display: block;
+        width: 44px;
+        height: 56px;
+        background: url(../../assets/ssWValve.png) no-repeat;
     }
 }
