@@ -1,8 +1,9 @@
 import React,{Component} from 'react';
 import styles from "./autoControl.less"
-import { Input, Button, Form, Table,Modal } from 'antd';
+import { Input, Button, Form, Table,Modal,message } from 'antd';
 import { Link } from 'dva/router';
 import classnames from 'classnames';
+import { timeOut } from '../../utils/timeOut';
 import {ENVNet,postOption} from '../../services/netCofig'
 //生产环境
 // const ENVNet='';
@@ -169,6 +170,8 @@ export default class extends Component{
         }).then(res => {
             Promise.resolve(res.json())
                 .then(v => {
+                    //超时判断
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         // 设置页面显示的元素
                         let itemCount = v.data.itemCount
@@ -200,6 +203,8 @@ export default class extends Component{
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         // console.log(v)
                         let data = v.data.items;
@@ -231,11 +236,12 @@ export default class extends Component{
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
+                //超时判断
+                timeOut(v.ret)
                 if(v.ret==1){
                     // 设置页面显示的元素
                 //   console.log(v)
                     let data = v.data.items;
-                    console.log(data)
                     //添加key
                     data.map((v, i) => {
                         v.key = i
@@ -268,6 +274,8 @@ export default class extends Component{
    //点击 停/启用 确定
     changeStatusOk(){
         const {title}=this.state
+        console.log(this.state.isEnabled)
+        console.log(!this.state.isEnabled)
         return fetch(changeUrl,{
             ...postOption,
             body:JSON.stringify({
@@ -277,6 +285,8 @@ export default class extends Component{
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
+                //超时判断
+                timeOut(v.ret)
                 if(v.ret==1){
                     return fetch(dataUrl,{
                         ...postOption,
@@ -287,12 +297,21 @@ export default class extends Component{
                     }).then(res=>{
                         Promise.resolve(res.json())
                         .then(v=>{
-                            let data=v.items;
-                            this._getTableDatas(title, data);
-                            this.setState({
-                                changeStatusVisible:false,
-                                data
-                            })
+                            //超时判断
+                            timeOut(v.ret)
+                            if(v.ret==1){
+                                let data=v.data.items;
+                                this._getTableDatas(title, data);
+                                this.setState({
+                                    changeStatusVisible:false,
+                                    data
+                                })
+                                if(this.state.isEnabled==false){
+                                    message.success("启用成功",2)
+                                }else{
+                                    message.success("停用成功",2)
+                                }    
+                            }
                         })
                     })
                 }
@@ -328,6 +347,8 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
                     if(v.ret==1){
                         fetch(dataUrl,{
                             ...postOption,
@@ -338,12 +359,17 @@ export default class extends Component{
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
-                                let data=v.data.items;
-                                this._getTableDatas(title, data);
-                                this.setState({
-                                    addvisible:false,
-                                    data
-                                })
+                                //超时判断
+                                timeOut(v.ret)
+                                if(v.ret==1){
+                                    let data=v.data.items;
+                                    this._getTableDatas(title, data);
+                                    this.setState({
+                                        addvisible:false,
+                                        data
+                                    })
+                                    message.success("添加成功",2)
+                                } 
                             })
                         })
                     }
@@ -384,6 +410,8 @@ export default class extends Component{
                 Promise.resolve(res.json())
                 .then(v=>{
                     if(v.ret==1){
+                        //超时判断
+                        timeOut(v.ret)
                         fetch(dataUrl,{
                             ...postOption,
                             body:JSON.stringify({
@@ -393,12 +421,17 @@ export default class extends Component{
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
-                                let data=v.items;
-                                this._getTableDatas(title, data);
-                                this.setState({
-                                    editvisible:false,
-                                    data
-                                })
+                                //超时判断
+                                timeOut(v.ret)
+                                if(v.ret==1){
+                                    let data=v.data.items;
+                                    this._getTableDatas(title, data);
+                                    this.setState({
+                                        editvisible:false,
+                                        data
+                                    })
+                                    message.success("修改成功",2)
+                                }
                             })
                         })
                     }
@@ -430,6 +463,8 @@ export default class extends Component{
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
+                //超时判断
+                timeOut(v.ret)
                 if(v.ret==1){
                     fetch(dataUrl,{
                         ...postOption,
@@ -440,12 +475,17 @@ export default class extends Component{
                     }).then(res=>{
                         Promise.resolve(res.json())
                         .then(v=>{
-                            let data=v.items;
-                            this._getTableDatas(title, data);
-                            this.setState({
-                                delVisible:false,
-                                data
-                            })
+                            //超时判断
+                            timeOut(v.ret)
+                            if(v.ret==1){
+                                let data=v.data.items;
+                                this._getTableDatas(title, data);
+                                this.setState({
+                                    delVisible:false,
+                                    data
+                                })
+                                message.success('删除成功',2)
+                            }
                         })
                     })
                 }
