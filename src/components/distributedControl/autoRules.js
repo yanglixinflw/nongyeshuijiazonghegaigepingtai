@@ -23,6 +23,11 @@ export default class extends Component {
         super(props)
         const { autoRules } = props;
         // console.log(props)
+        // let conditions = autoRules.data.data.conditions
+        // conditions.map((v,i)=>{
+        //     v.parameterIdList = []; 
+        // })
+        // console.log(conditions)
         this.state = {
             //规则id
             ruleId: props.ruleId,
@@ -241,8 +246,8 @@ const RuleForm = Form.create()(
             actions: this.props.actions,
         }
         componentDidMount() {
-            // console.log(1)
             const {conditions,actions} = this.state;
+            //  console.log(conditions)
             if (conditions.length != 0) {
                 //获取参数的信息
                 conditions.map((v,i)=> {
@@ -373,8 +378,9 @@ const RuleForm = Form.create()(
             })
         }
         //option的value值就是设备ID
-        handleChange = (value) => {
+        handleChange = (value,i) => {
             // console.log(value)
+            const {conditions,actions} = this.state;
             this.setState({
                 deviceList: []
             })
@@ -393,9 +399,6 @@ const RuleForm = Form.create()(
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             let deviceTypeId = v.data.items[0].deviceTypeId
-                            // this.setState({
-                            //     value
-                            // })
                             //获取参数的信息
                             fetch(paramUrl, {
                                 ...postOption,
@@ -464,11 +467,15 @@ const RuleForm = Form.create()(
         conditionAdd = () => {
             const { form, conditionArr } = this.props;
             //conditionArr不存在的时候就让“点此添加一行”显现
-            // const {conditionArr}=this.state
             conditionArr.push(conditionArr.length)
             const condition = form.getFieldValue('condition');
+            // console.log(condition)
             //得到添加数量的数组
             const nextCondition = condition.concat({});
+            nextCondition.map((v,i)=>{
+                v.parameterIdList = []
+            })
+            // console.log(nextCondition)
             // 可以使用数据绑定来设置
             // 重要!通知表单以检测更改
             form.setFieldsValue({
@@ -499,6 +506,9 @@ const RuleForm = Form.create()(
             actionArr.push(actionArr.length)
             //得到添加数量的数组
             const nextAction = action.concat({});
+            nextAction.map((v,i)=>{
+                v.switchList = [];
+            })
             // 可以使用数据绑定来设置
             // 重要!通知表单以检测更改
             form.setFieldsValue({
@@ -513,7 +523,7 @@ const RuleForm = Form.create()(
             const { getFieldDecorator, getFieldValue } = this.props.form;
             const { anyConditionFireAction, name } = this.props
             const { deviceList, actions, conditions } = this.state;
-            // console.log(actions)
+            // console.log(conditions)
             //条件列表渲染
             getFieldDecorator('condition', { initialValue: conditions });
             const condition = getFieldValue('condition');
@@ -533,15 +543,15 @@ const RuleForm = Form.create()(
                                         showSearch
                                         defaultActiveFirstOption={false}
                                         showArrow={false}
-                                        onSearch={_.debounce(this.handleSearch, 300)}
-                                        onChange={this.handleChange}
+                                        onSearch={_.debounce((value)=>this.handleSearch(value), 300)}
+                                        onChange={(value)=>this.handleChange(value,i)}
                                         notFoundContent={null}
                                         placeholder='设备名称/ID'
                                     >
                                         {
                                             deviceList.map((v, i) => {
                                                 return (
-                                                    <Option key={v.deviceId} >{v.deviceId}</Option>
+                                                    <Option key={v.deviceId}>{v.deviceId}</Option>
                                                 )
                                             })
                                         }
@@ -561,7 +571,7 @@ const RuleForm = Form.create()(
                                     >
                                         {
                                             // console.log(v)
-                                            v.parameterIdList.map((v, i) => {
+                                            v.parameterIdList.map((v, index) => {
                                                 return (
                                                     <Option key={v.parameterId}>{v.name}{v.unit}</Option>
                                                 )
@@ -641,8 +651,8 @@ const RuleForm = Form.create()(
                                         defaultActiveFirstOption={false}
                                         showArrow={false}
                                         filterOption={false}
-                                        onSearch={_.debounce(this.handleSearch, 300)}
-                                        onChange={this.handleChange}
+                                        onSearch={_.debounce((value)=>this.handleSearch(value), 300)}
+                                        onChange={(value)=>this.handleChange(value,i)}
                                         notFoundContent={null}
                                     >
                                         {
@@ -720,15 +730,29 @@ const RuleForm = Form.create()(
                         </Form.Item>
                         {/* 条件的添加 */}
                         {conditionForm}
-                        <Form.Item>
-                            {conditionArr.length == 0 && condition.length == 0 ? (<Button style={{ color: "rgba(187,197,210,1)", width: "200px", height: "36px", fontSize: '16px', textAlign: 'center', lineHeight: '36px', background: 'rgba(20,24,49,1)' }} onClick={() => this.conditionAdd()}>点此添加条件栏</Button>) : null}
-                        </Form.Item>
+                        {conditionArr.length == 0 && condition.length == 0 ? 
+                            (
+                                <Form.Item>
+                                    <Button className={styles.btnCondition} onClick={() => this.conditionAdd()}>点此添加条件栏</Button>
+                                </Form.Item>
+                            ) 
+                            : 
+                            null
+                        }
+                        
                         <div className={styles.do}>执行</div>
                         {/* 执行的添加 */}
                         {actionForm}
-                        <Form.Item>
-                            {actionArr.length == 0 && action.length == 0 ? (<Button style={{ color: "rgba(187,197,210,1)", width: "200px", height: "36px", fontSize: '16px', textAlign: 'center', lineHeight: '36px', background: 'rgba(20,24,49,1)' }} onClick={() => this.actionAdd()}>点此添加执行栏</Button>) : null}
-                        </Form.Item>
+                        {   
+                            actionArr.length == 0 && action.length == 0 ? 
+                            (
+                                <Form.Item>
+                                    <Button className={styles.btnAction} onClick={() => this.actionAdd()}>点此添加执行栏</Button>
+                                </Form.Item>
+                            ) 
+                            : 
+                            null
+                        }
                     </div>
                 </Form>
             )
