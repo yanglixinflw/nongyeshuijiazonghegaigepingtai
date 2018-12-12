@@ -81,7 +81,6 @@
     .option{
         display: flex;
         justify-content: space-around;
-        // flex-wrap: wrap;
         div{
             display: flex;
             justify-content: space-around;
@@ -188,6 +187,7 @@
                             color: #0084FF;
                         }
                         td {
+                            // white-space: nowrap;
                             padding: 0 16px !important;
                             min-width: 90px;
                             font-size: 12px;
@@ -248,6 +248,11 @@
     }
     .action{
         padding:0 16px !important;
+    }
+}
+@media(max-width:1112px) {
+    .option{
+        flex-wrap: wrap;
     }
 }
 .changeStatusModal{

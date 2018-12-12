@@ -45,7 +45,128 @@
             }
         }
     }
-    .headerIcon{
+    .headerIcon {
         font-size: 24px;
+    }
+}
+
+.confirmLogout {
+    margin-top: 250px;
+    :global {
+        .ant-modal-content {
+            background: #171A39
+        }
+        .ant-modal-body {
+            background: #171A39;
+        }
+        .ant-modal-confirm-body .ant-modal-confirm-title {
+            color: white !important;
+        }
+        .anticon {
+            color: #327DF4 !important;
+        }
+        .ant-modal-confirm-btns {
+            .ant-btn {
+                color: #327DF4;
+                background: none;
+                border: none;
+                &:hover {
+                    background-color: #327DF4;
+                    border-color: #327DF4;
+                    color: white;
+                }
+            }
+            .ant-btn-primary {
+                background-color: #327DF4;
+                border-color: #327DF4;
+                color: white;
+            }
+        }
+    }
+}
+.editPwdModal {
+    width: 400px !important;
+    :global {
+        .ant-modal-close {
+            .ant-modal-close-x {
+                .anticon,
+                .anticon-close,
+                .ant-modal-close-icon {
+                    color: #e7e7ec;
+                }
+            }
+        }
+        .ant-modal-header {
+            background: #171a39;
+            border-bottom: 1px solid #363a69 !important;
+            .ant-modal-title {
+                width: 400px;
+                padding: 0 22px;
+                margin-left: -23px;
+                color: #e7e7ec;
+                border-left: 4px solid #327df4;
+            }
+        }
+        .ant-modal-body {
+            background: #171a39;
+            .ant-form,
+            .ant-form-horizontal {
+                padding-top: 14px;
+                .ant-row,
+                .ant-form-item {
+                    width: 350px;
+                    margin: 0 auto 20px !important;
+                    .ant-col-4,
+                    .ant-form-item-label {
+                        width: 80px;
+                        margin-right: 12px;
+                        label {
+                            color: #e7e7ec;
+                        }
+                    }
+                    .ant-col-16,
+                    .ant-form-item-control-wrapper {
+                        .ant-input {
+                            width: 250px;
+                            height: 36px;
+                            padding: 0 14px;
+                            background: #272d52;
+                            border: none;
+                            font-size: 12px;
+                            color: #a4afbc;
+                            &:focus {
+                                border: 1px solid #327DF4;
+                            }
+                        }
+                        .ant-select{
+                            font-size: 12px
+                        }
+                    }
+                }
+            }
+        }
+        .ant-modal-footer {
+            border-top: 1px solid #363A69;
+            text-align: center;
+            background: #171A39;
+            .ant-btn {
+                color: #327DF4;
+                background: none;
+                border: none;
+                &:hover {
+                    background-color: #327DF4;
+                    border-color: #327DF4;
+                    color: white;
+                }
+            }
+            .ant-btn-primary {
+                background-color: #327DF4;
+                border-color: #327DF4;
+                color: white;
+            }
+        }
+        .ant-form-item-label label:after {
+            content: ''
+        }
     }
 }

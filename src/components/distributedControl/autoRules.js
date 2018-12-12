@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import styles from './autoRules.less';
-import { Input, Button, Form, Select,Icon,Radio,message,InputNumber} from 'antd';
-import {getAutoRules} from '../../services/api'
-import {Link} from 'dva/router';
+import { Input, Button, Form, Select, Icon, Radio, message, InputNumber } from 'antd';
+import { getAutoRules } from '../../services/api'
+import { Link } from 'dva/router';
 import _ from 'lodash'
 import { timeOut } from '../../utils/timeOut';
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
-import {ENVNet,postOption} from '../../services/netCofig'
+import { ENVNet, postOption } from '../../services/netCofig'
 //搜索设备调用
 const deviceUrl = `${ENVNet}/api/device/list`;
 //获取设备参数列表
@@ -21,183 +21,178 @@ const ruleUrl = `${ENVNet}/api/Automatic/getRuleSettings`
 export default class extends Component {
     constructor(props) {
         super(props)
-        const{autoRules}=props;
+        const { autoRules } = props;
         // console.log(props)
-        this.state={
+        this.state = {
             //规则id
-            ruleId:props.ruleId,
+            ruleId: props.ruleId,
             //全部/部分
-            anyConditionFireAction:autoRules.data.data.anyConditionFireAction,
+            anyConditionFireAction: autoRules.data.data.anyConditionFireAction,
             //规则名称
-            name:autoRules.data.data.name,
+            name: autoRules.data.data.name,
             //条件数组
-            conditions:autoRules.data.data.conditions,
-            //条件数组的长度
-            clength:autoRules.data.data.conditions.length,
+            conditions: autoRules.data.data.conditions,
             //执行数组
-            actions:autoRules.data.data.actions,
-            //执行数组的长度
-            alength:autoRules.data.data.actions.length,
-            //条件初始数组
-            conditionArr:[],
-            //执行初始数组
-            actionArr:[],
+            actions: autoRules.data.data.actions,
         }
     }
     //保存
-    _save () {
+    _save() {
         this.ruleForm.props.form.validateFields((err, values) => {
             if (!err) {
-                console.log(values)
+                // console.log(values)
                 //拼接数组conditions
-                if(typeof(values.actionDeviceId) !=='undefined' && typeof(values.conditionDeviceId) !=='undefined'){
-                    var conditions=[];
-                    values.conditionDeviceId.map((v,i)=>{
-                        let obj={
-                            deviceId:v,
-                            parameterId:values.parameterId[i],
-                            operator:values.operator[i],
-                            compareValue:values.compareValue[i]
+                if (typeof (values.actionDeviceId) !== 'undefined' && typeof (values.conditionDeviceId) !== 'undefined') {
+                    var conditions = [];
+                    values.conditionDeviceId.map((v, i) => {
+                        let obj = {
+                            deviceId: v,
+                            parameterId: values.parameterId[i],
+                            operator: values.operator[i],
+                            compareValue: values.compareValue[i]
                         }
                         conditions.push(obj)
                     })
                     //拼接数组actions
-                    var actions=[];
-                    values.actionDeviceId.map((v,i)=>{
-                        let obj={
-                            deviceId:v,
-                            execCmd:values.execCmd[i]
+                    var actions = [];
+                    values.actionDeviceId.map((v, i) => {
+                        let obj = {
+                            deviceId: v,
+                            execCmd: values.execCmd[i]
                         }
                         actions.push(obj)
                     })
                     //保存
-                    fetch(saveUrl,{
+                    fetch(saveUrl, {
                         ...postOption,
-                        body:JSON.stringify({
-                            "ruleId":this.state.ruleId,
-                            'anyConditionFireAction':values.anyConditionFireAction,
-                            'name':values.name,
+                        body: JSON.stringify({
+                            "ruleId": this.state.ruleId,
+                            'anyConditionFireAction': values.anyConditionFireAction,
+                            'name': values.name,
                             conditions,
                             actions
                         })
-                    }).then(res=>{
+                    }).then(res => {
                         Promise.resolve(res.json())
-                        .then(v=>{
-                            //超时判断
-                            timeOut(v.ret);
-                            if(v.ret==1){
-                                //重新获取页面
-                                fetch(ruleUrl,{
-                                    ...postOption,
-                                    body:JSON.stringify({
-                                        "ruleId":this.state.ruleId,
-                                    })
-                                }).then(res=>{
-                                    Promise.resolve(res.json())
-                                    .then(v=>{
-                                        //超时判断
-                                        timeOut(v.ret);
-                                        if(v.ret==1){
-                                            message.success(`${values.name}保存成功`, 2);
-                                            this.setState({
-                                                anyConditionFireAction:v.data.anyConditionFireAction,
-                                                name:v.data.name,
-                                                conditions:v.data.conditions,
-                                                actions:v.data.actions
-                                            })
-                                        }
-                                    })    
-                                }).catch((err)=>{
-                                    console.log(err)
-                                })
-                            }
-                        })
-                    })
-                }else{
-                    if(typeof(values.conditionDeviceId) =='undefined' && typeof(values.actionDeviceId) !=='undefined'){
-                        message.error('您还未添加条件栏',2)
-                    }else if(typeof(values.conditionDeviceId) !=='undefined' && typeof(values.actionDeviceId) =='undefined'){
-                        message.error('您还未添加执行栏',2)
-                    }else{
-                        let conditions = [] ;
-                        let actions = [] ;
-                        //保存
-                        fetch(saveUrl,{
-                            ...postOption,
-                            body:JSON.stringify({
-                                "ruleId":this.state.ruleId,
-                                'anyConditionFireAction':values.anyConditionFireAction,
-                                'name':values.name,
-                                conditions,
-                                actions
-                            })
-                        }).then(res=>{
-                            Promise.resolve(res.json())
-                            .then(v=>{
+                            .then(v => {
                                 //超时判断
                                 timeOut(v.ret);
-                                if(v.ret==1){
+                                if (v.ret == 1) {
                                     //重新获取页面
-                                    fetch(ruleUrl,{
+                                    fetch(ruleUrl, {
                                         ...postOption,
-                                        body:JSON.stringify({
-                                            "ruleId":this.state.ruleId,
+                                        body: JSON.stringify({
+                                            "ruleId": this.state.ruleId,
                                         })
-                                    }).then(res=>{
+                                    }).then(res => {
                                         Promise.resolve(res.json())
-                                        .then(v=>{
-                                            //超时判断
-                                            timeOut(v.ret);
-                                            if(v.ret==1){
-                                                message.success(`${values.name}保存成功`, 2);
-                                                this.setState({
-                                                    anyConditionFireAction:v.data.anyConditionFireAction,
-                                                    name:v.data.name,
-                                                    conditions:v.data.conditions,
-                                                    actions:v.data.actions
-                                                })
-                                            }
-                                        })    
-                                    }).catch((err)=>{
+                                            .then(v => {
+                                                //超时判断
+                                                timeOut(v.ret);
+                                                if (v.ret == 1) {
+                                                    message.success(`${values.name}保存成功`, 2);
+                                                    this.setState({
+                                                        anyConditionFireAction: v.data.anyConditionFireAction,
+                                                        name: v.data.name,
+                                                        conditions: v.data.conditions,
+                                                        actions: v.data.actions
+                                                    })
+                                                }
+                                            })
+                                    }).catch((err) => {
                                         console.log(err)
                                     })
                                 }
                             })
+                    })
+                } else {
+                    if (typeof (values.conditionDeviceId) == 'undefined' && typeof (values.actionDeviceId) !== 'undefined') {
+                        message.error('您还未添加条件栏', 2)
+                    } else if (typeof (values.conditionDeviceId) !== 'undefined' && typeof (values.actionDeviceId) == 'undefined') {
+                        message.error('您还未添加执行栏', 2)
+                    } else {
+                        let conditions = [];
+                        let actions = [];
+                        //保存
+                        fetch(saveUrl, {
+                            ...postOption,
+                            body: JSON.stringify({
+                                "ruleId": this.state.ruleId,
+                                'anyConditionFireAction': values.anyConditionFireAction,
+                                'name': values.name,
+                                conditions,
+                                actions
+                            })
+                        }).then(res => {
+                            Promise.resolve(res.json())
+                                .then(v => {
+                                    //超时判断
+                                    timeOut(v.ret);
+                                    if (v.ret == 1) {
+                                        //重新获取页面
+                                        fetch(ruleUrl, {
+                                            ...postOption,
+                                            body: JSON.stringify({
+                                                "ruleId": this.state.ruleId,
+                                            })
+                                        }).then(res => {
+                                            Promise.resolve(res.json())
+                                                .then(v => {
+                                                    //超时判断
+                                                    timeOut(v.ret);
+                                                    if (v.ret == 1) {
+                                                        message.success(`${values.name}保存成功`, 2);
+                                                        this.setState({
+                                                            anyConditionFireAction: v.data.anyConditionFireAction,
+                                                            name: v.data.name,
+                                                            conditions: v.data.conditions,
+                                                            actions: v.data.actions
+                                                        })
+                                                    }
+                                                })
+                                        }).catch((err) => {
+                                            console.log(err)
+                                        })
+                                    }
+                                })
                         })
                     }
                 }
             }
-                
+
         });
     }
     //重置
     _resetForm() {
-        this.ruleForm.props.form.resetFields();
-        const {ruleId} = this.state;
-        Promise.resolve(getAutoRules({ruleId}))
-        .then((v)=>{
-            //超时判断
-            timeOut(v.data.ret);
-            if(v.data.ret==1){
-                // console.log(v.data)
-                let actions = v.data.data.actions;
-                let anyConditionFireAction = v.data.data.anyConditionFireAction;
-                let conditions = v.data.data.conditions;
-                let name = v.data.data.name;
-                this.setState({
-                    actions,
-                    anyConditionFireAction,
-                    conditions,
-                    name,
-                    conditionArr:[],
-                    actionArr:[]
-                })
-            }
-        })
-         
+        // this.ruleForm.props.form.resetFields();
+        const { ruleId } = this.state;
+        Promise.resolve(getAutoRules({ ruleId }))
+            .then((v) => {
+                //超时判断
+                timeOut(v.data.ret);
+                if (v.data.ret == 1) {
+                    let actions = v.data.data.actions;
+                    let anyConditionFireAction = v.data.data.anyConditionFireAction;
+                    let conditions = v.data.data.conditions;
+                    let name = v.data.data.name;
+                    // console.log(actions)
+                    this.setState({
+                        actions,
+                        anyConditionFireAction,
+                        conditions,
+                        name,
+                    })
+                }
+            })
+        // this.setState({
+        //     actions:[],
+        //     anyConditionFireAction:false,
+        //     conditions:[],
+        // })
+
     }
     render() {
-        const { anyConditionFireAction,name,conditions,actions,conditionArr,actionArr } = this.state;
+        const { anyConditionFireAction, name, conditions, actions, } = this.state;
         return (
             <React.Fragment>
                 <div className={styles.headers}>
@@ -221,7 +216,7 @@ export default class extends Component {
                 <div className={styles.mbody}>
                     <RuleForm
                         wrappedComponentRef={(ruleForm) => this.ruleForm = ruleForm}
-                        {...{anyConditionFireAction,name,conditions,actions,conditionArr,actionArr}}
+                        {...{ anyConditionFireAction, name, conditions, actions }}
                     />
                 </div>
             </React.Fragment>
@@ -232,98 +227,138 @@ export default class extends Component {
 //规则表单
 const RuleForm = Form.create()(
     class extends React.Component {
-        state={
-            //设备列表
-            deviceList:[],
-            //参数id列表
-            parameterIdList:[],
-            //开关阀列表
-            switchList:[],
-            //条件数组
-            conditions:this.props.conditions,
-            //执行数组
-            actions:this.props.actions,
-        }
-        componentDidMount(){
-            // console.log(this.state.conditions)
-            if(this.state.conditions.length != 0){
-                //获取参数的信息
-                return  fetch(deviceUrl, {
-                    ...postOption,
-                    body: JSON.stringify({
-                        "deviceId":this.state.conditions[0].deviceId,
-                        "pageIndex": 0,
-                        "pageSize": 1
-                    })
-                }).then((res) => {
-                    Promise.resolve(res.json())
-                        .then((v) => {
-                            //超时判断
-                            timeOut(v.ret);
-                            if (v.ret == 1) {
-                                let deviceTypeId = v.data.items[0].deviceTypeId
-                                //获取参数的信息
-                                fetch(paramUrl,{
-                                    ...postOption,
-                                    body:JSON.stringify({
-                                        deviceTypeId
-                                    })
-                                }).then(res=>{
-                                    Promise.resolve(res.json())
-                                    .then(v=>{
-                                        //超时判断
-                                        timeOut(v.ret);
-                                        if(v.ret==1){
-                                            let parameterIdList=v.data
-                                            this.setState({
-                                                parameterIdList
-                                            })
-                                        }
-                                    })
-                                }),
-                                //获取开关的信息
-                                fetch(switchUrl,{
-                                    ...postOption,
-                                    body:JSON.stringify({
-                                        deviceTypeId
-                                    })
-                                }).then(res=>{
-                                    Promise.resolve(res.json())
-                                    .then(v=>{
-                                        //超时判断
-                                        timeOut(v.ret);
-                                        if(v.ret==1){
-                                            let switchList=v.data
-                                            this.setState({
-                                                switchList
-                                            })
-                                        }
-                                    })
-                                })
-                            }
-                        })
-                }).catch(err => {
-                    console.log(err)
-                })
+        constructor(props) {
+            super(props)
+            this.state = {
+                //设备列表
+                deviceList: [],
+                //条件数组
+                conditions: props.conditions,
+                //执行数组
+                actions: props.actions,
             }
         }
-         //下拉搜索框搜索功能
-         handleSearch = (value) => {
-            // this.setState({
-            //     deviceList:[]
-            // })
-            // console.log(this.state.deviceList)
+        componentWillReceiveProps() {
+            //统一数据源
+            const { conditions, actions } = this.props
+            this.setState({
+                conditions,
+                actions
+            })
+            // this.handleChange()
+            // console.log(actions)
+            // const { conditions, actions } = this.state;
+            //  console.log(conditions)
+            if (conditions.length != 0) {
+                //获取参数的信息
+                conditions.map((v, i) => {
+                    return fetch(deviceUrl, {
+                        ...postOption,
+                        body: JSON.stringify({
+                            "deviceId": conditions[i].deviceId,
+                            "pageIndex": 0,
+                            "pageSize": 1
+                        })
+                    }).then((res) => {
+                        Promise.resolve(res.json())
+                            .then((v) => {
+                                //超时判断
+                                timeOut(v.ret);
+                                if (v.ret == 1) {
+                                    let deviceTypeId = v.data.items[0].deviceTypeId
+                                    //获取参数的信息
+                                    fetch(paramUrl, {
+                                        ...postOption,
+                                        body: JSON.stringify({
+                                            deviceTypeId
+                                        })
+                                    }).then((res) => {
+                                        Promise.resolve(res.json())
+                                            .then((v) => {
+                                                //超时判断
+                                                timeOut(v.ret);
+                                                if (v.ret == 1) {
+                                                    let parameterIdList = v.data;
+                                                    // console.log(parameterIdList)
+                                                    conditions[i].parameterIdList = parameterIdList;
+                                                    this.setState({
+                                                        conditions
+                                                    })
+                                                } else {
+                                                    conditions[i].parameterIdList = [];
+                                                    this.setState({
+                                                        conditions
+                                                    })
+                                                }
+                                            })
+                                    })
+                                }
+                            })
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                })
+            }
+            if (actions.length !== 0) {
+                actions.map((v, i) => {
+                    return fetch(deviceUrl, {
+                        ...postOption,
+                        body: JSON.stringify({
+                            "deviceId": actions[i].deviceId,
+                            "pageIndex": 0,
+                            "pageSize": 1
+                        })
+                    }).then((res) => {
+                        Promise.resolve(res.json())
+                            .then((v) => {
+                                //超时判断
+                                timeOut(v.ret)
+                                if (v.ret == 1) {
+                                    let deviceTypeId = v.data.items[0].deviceTypeId;
+                                    return fetch(switchUrl, {
+                                        ...postOption,
+                                        body: JSON.stringify({
+                                            deviceTypeId
+                                        })
+                                    }).then((res) => {
+                                        Promise.resolve(res.json())
+                                            .then((v) => {
+                                                //判断超时
+                                                timeOut(v.ret);
+                                                if (v.ret == 1) {
+                                                    let switchList = v.data
+                                                    actions[i].switchList = switchList
+                                                    this.setState({
+                                                        actions
+                                                    })
+                                                } else {
+                                                    actions[i].switchList = []
+                                                    this.setState({
+                                                        actions
+                                                    })
+                                                }
+                                            })
+                                    })
+                                }
+                            })
+                    })
+                })
+            }
+
+        }
+        //下拉搜索框搜索功能
+        handleSearch = (value) => {
             // console.log(value)
-            if(value==''){
+            if (value == '') {
                 this.setState({
-                    deviceList:[]
+                    deviceList: []
                 })
                 return
             }
             fetch(deviceUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "name":value,
+                    "name": value,
                     "pageIndex": 0,
                     "pageSize": 10
                 })
@@ -345,15 +380,16 @@ const RuleForm = Form.create()(
             })
         }
         //option的value值就是设备ID
-        handleChange = (value) => {
+        handleChange = (value, i) => {
             // console.log(value)
+            const { conditions, actions } = this.state;
             this.setState({
-                deviceList:[]
+                deviceList: []
             })
             fetch(deviceUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "deviceId":value,
+                    "deviceId": value,
                     "pageIndex": 0,
                     "pageSize": 1
                 })
@@ -365,307 +401,325 @@ const RuleForm = Form.create()(
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             let deviceTypeId = v.data.items[0].deviceTypeId
-                            // this.setState({
-                            //     value
-                            // })
                             //获取参数的信息
-                            fetch(paramUrl,{
+                            fetch(paramUrl, {
                                 ...postOption,
-                                body:JSON.stringify({
+                                body: JSON.stringify({
                                     deviceTypeId
                                 })
-                            }).then(res=>{
+                            }).then(res => {
                                 Promise.resolve(res.json())
-                                .then(v=>{
-                                    //超时判断
-                                    timeOut(v.ret);
-                                    if(v.ret==1){
-                                        let parameterIdList=v.data
-                                        this.setState({
-                                            parameterIdList
-                                        })
-                                    }
-                                })
+                                    .then(v => {
+                                        //超时判断
+                                        timeOut(v.ret);
+                                        if (v.ret == 1) {
+                                            // console.log(1)
+                                            let parameterIdList = v.data;
+                                            if (parameterIdList.length == 0) {
+                                                form.setFieldsValue({
+                                                    [`parameterId[${i}]`]: []
+                                                });
+                                            }
+                                            conditions[i].parameterIdList = parameterIdList
+                                            this.setState({
+                                                conditions
+                                            })
+                                        } else {
+                                            conditions[i].parameterIdList = [];
+                                            form.setFieldsValue({
+                                                [`parameterId[${i}]`]: []
+                                            });
+                                            this.setState({
+                                                conditions
+                                            })
+                                        }
+                                    })
                             }),
-                            //获取开关的信息
-                            fetch(switchUrl,{
-                                ...postOption,
-                                body:JSON.stringify({
-                                    deviceTypeId
-                                })
-                            }).then(res=>{
-                                Promise.resolve(res.json())
-                                .then(v=>{
-                                    //超时判断
-                                    timeOut(v.ret);
-                                    if(v.ret==1){
-                                        let switchList=v.data
-                                        this.setState({
-                                            switchList
+                                //获取开关的信息
+                                fetch(switchUrl, {
+                                    ...postOption,
+                                    body: JSON.stringify({
+                                        deviceTypeId
+                                    })
+                                }).then(res => {
+                                    Promise.resolve(res.json())
+                                        .then(v => {
+                                            //超时判断
+                                            timeOut(v.ret);
+                                            if (v.ret == 1) {
+                                                let switchList = v.data
+                                                if (switchList.length == 0) {
+                                                    form.setFieldsValue({
+                                                        [`execCmd[${i}]`]: []
+                                                    });
+                                                }
+                                                actions[i].switchList = switchList
+                                                this.setState({
+                                                    actions
+                                                })
+                                            } else {
+                                                actions[i].switchList = [];
+                                                form.setFieldsValue({
+                                                    [`execCmd[${i}]`]: []
+                                                });
+                                                this.setState({
+                                                    actions
+                                                })
+                                            }
                                         })
-                                    }
                                 })
-                            })
                         }
                     })
             }).catch(err => {
                 console.log(err)
             })
         }
-//条件的++ --
-        conditionRemove = (v) => {
-            const { form,conditionArr } = this.props;
-            // const {conditionArr}=this.state
-            conditionArr.pop(v)
-            const condition = form.getFieldValue('condition');
-            //可以使用数据绑定来设置
-            form.setFieldsValue({
-                condition: condition.filter(key => key !== v),
-            });
+        //减少条件--
+        conditionRemove = (index) => {
+            const { conditions } = this.state
+            // console.log(conditions)
+            let newCodition = _.cloneDeep(conditions)
+            let arr = newCodition.filter((key, i) => i != index)
             this.setState({
-                conditionArr
+                conditions: arr
             })
-          }
-          conditionAdd = () => {
-            const { form,conditionArr} = this.props;
-            //conditionArr不存在的时候就让“点此添加一行”显现
-            // const {conditionArr}=this.state
-            conditionArr.push(conditionArr.length)
-            const condition = form.getFieldValue('condition');
+        }
+        // 添加条件++
+        conditionAdd = () => {
+            const { conditions } = this.state
+            // console.log(condition)
             //得到添加数量的数组
-            const nextCondition = condition.concat({});
-            // 可以使用数据绑定来设置
-            // 重要!通知表单以检测更改
-            form.setFieldsValue({
-                condition: nextCondition,
-            });
+            const nextCondition = conditions.concat({});
+            nextCondition.map((v, i) => {
+                v.parameterIdList = []
+            })
             this.setState({
-                conditionArr
+                conditions: nextCondition
             })
         }
-//执行的++--
-        actionRemove = (v) => {
-            const { form,actionArr } = this.props;
-            actionArr.pop(v)
-            const action = form.getFieldValue('action');
-            //可以使用数据绑定来设置
-            form.setFieldsValue({
-                action: action.filter(key => key !== v),
-            });
+        //减少执行--
+        actionRemove = (index) => {
+            const { actions } = this.state;
+            let newActions = _.cloneDeep(actions)
+            let arr = newActions.filter((key, i) => i != index)
             this.setState({
-                actionArr
+                actions: arr
             })
         }
+        //添加执行++
         actionAdd = () => {
-            const { form,actionArr } = this.props;
-            const action = form.getFieldValue('action');
-            //actionArr不存在的时候就让“点此添加一行”显现
-            // const {actionArr}=this.state;
-            actionArr.push(actionArr.length)
+            const { actions } = this.state;
             //得到添加数量的数组
-            const nextAction = action.concat({});
-            // 可以使用数据绑定来设置
-            // 重要!通知表单以检测更改
-            form.setFieldsValue({
-                action: nextAction,
-            });
+            const nextAction = actions.concat({});
+            nextAction.map((v, i) => {
+                v.switchList = [];
+            })
             this.setState({
-                actionArr
+                actions: nextAction
             })
         }
         render() {
-            const {conditionArr,actionArr}=this.props;
             const { getFieldDecorator, getFieldValue } = this.props.form;
-            const{ anyConditionFireAction,name }=this.props
-            const {deviceList,parameterIdList,switchList,actions,conditions}=this.state
-            // console.log(actions)
-            // console.log(deviceList);
-            // console.log(switchList)
+            const { anyConditionFireAction, name } = this.props
+            const { deviceList, actions, conditions } = this.state;
+            // console.log(actions.length)
             //条件列表渲染
-            getFieldDecorator('condition', { initialValue: conditions});
-            const condition = getFieldValue('condition');
-            const conditionForm = condition.map((v,i) => {
-                return (
-                    <div className={styles.line} key={i}>
-                        <Form.Item className={styles.search}>
-                            {getFieldDecorator(`conditionDeviceId[${i}]`, 
-                                {   
-                                    initialValue: v.deviceId || [] ,
-                                    rules: [{ required: true, message: '设备名称不能为空' }]
-                                }
-                                )
-                                (
-                                <Select
-                                    showSearch
-                                    defaultActiveFirstOption={false}
-                                    showArrow={false}
-                                    // filterOption={false}
-                                    onSearch={_.debounce(this.handleSearch,300)}
-                                    onChange={this.handleChange}
-                                    notFoundContent={null}
-                                    placeholder='设备名称/ID'
-                                > 
+            // getFieldDecorator('condition', { initialValue: conditions });
+            // const condition = getFieldValue('condition');
+            // console.log(condition)
+            const conditionForm = conditions.map((v, i) => {
+                if (v.parameterIdList)
+                    return (
+                        <div className={styles.line} key={i}>
+                            <Form.Item className={styles.search}>
+
+                                {getFieldDecorator(`conditionDeviceId[${i}]`,
                                     {
-                                        deviceList.map((v,i)=>{
-                                            return(
-                                                <Option key={v.deviceId} >{v.deviceId}</Option> 
-                                            )
-                                        })
+                                        initialValue: v.deviceId || [],
+                                        rules: [{ required: true, message: '设备名称不能为空' }]
                                     }
-                                </Select>
                                 )
-                            }
-                        </Form.Item>
-                        <Form.Item className={styles.search}>
-                            {getFieldDecorator(`parameterId[${i}]`, 
-                                {
-                                    initialValue: `${v.parameterId}` !=='undefined'?`${v.parameterId}`:[],
-                                    rules: [{ required: true, message: '请选择参数' }]
+                                    (
+
+                                    <Select
+                                        showSearch
+                                        defaultActiveFirstOption={false}
+                                        showArrow={false}
+                                        onSearch={_.debounce((value) => this.handleSearch(value), 300)}
+                                        onChange={(value) => this.handleChange(value, i)}
+                                        notFoundContent={null}
+                                        placeholder='设备名称/ID'
+
+                                    >
+                                        {
+                                            deviceList.map((v, i) => {
+                                                return (
+                                                    <Option key={v.deviceId}>{v.deviceId}</Option>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+
+                                    )
                                 }
-                                )
-                                (<Select
-                                    placeholder='参数'
-                                > 
+
+                            </Form.Item>
+                            <Form.Item className={styles.search}>
+                                {getFieldDecorator(`parameterId[${i}]`,
                                     {
-                                        parameterIdList.map((v,i)=>{
-                                            return(
-                                                <Option key={v.parameterId}>{v.name}{v.unit}</Option> 
-                                            )
-                                        })
+                                        initialValue: `${v.parameterId}` !== 'undefined' ? `${v.parameterId}` : [],
+                                        rules: [{ required: true, message: '请选择参数' }]
                                     }
-                                </Select>)
-                            }
-                        </Form.Item>
-                        <Form.Item className={styles.end}>
-                            {getFieldDecorator(`operator[${i}]`, 
-                                {   
-                                    initialValue: v.operator || [],
-                                    rules: [{ required: true, message: '请选择判断符号' }]
-                                }
                                 )
-                                (<Select
-                                    placeholder='判断'
-                                >
-                                    <Option value=">">&gt;</Option>
-                                    <Option value="<">&lt;</Option>
-                                    <Option value="=">=</Option>
-                                    <Option value=">=">&gt;=</Option>
-                                    <Option value="<=">&lt;=</Option>
-                                    <Option value="≠">≠</Option>
-                                </Select>)
-                            }
-                        </Form.Item>
-                        <Form.Item className={styles.end}>
-                            {getFieldDecorator(`compareValue[${i}]`, 
-                                {
-                                    initialValue: v.compareValue || '',
-                                    rules: [{ required: true, message: '判断值不能为空' }]
+                                    (<Select
+                                        placeholder='参数'
+                                    >
+                                        {
+                                            // console.log(v)
+                                            v.parameterIdList.length !== 0 ?
+                                                v.parameterIdList.map((v, index) => {
+                                                    return (
+                                                        <Option key={v.parameterId}>{v.name}{v.unit}</Option>
+                                                    )
+                                                })
+                                                :
+                                                null
+                                        }
+                                    </Select>)
                                 }
+                            </Form.Item>
+                            <Form.Item className={styles.end}>
+                                {getFieldDecorator(`operator[${i}]`,
+                                    {
+                                        initialValue: v.operator || [],
+                                        rules: [{ required: true, message: '请选择判断符号' }]
+                                    }
                                 )
-                                (<InputNumber  placeholder='值'/>)
-                            }
-                        </Form.Item>
-                        {i==0 ? (
-                            <div className={styles.addLess}>
-                                <Icon 
-                                    type="plus" 
-                                    onClick={() => this.conditionAdd(v)}
-                                />
-                                <Icon 
-                                    type="minus" 
-                                    onClick={() => this.conditionRemove(v)}
-                                />
-                            </div>
-                        ) : (
-                            <Icon 
-                                type="minus" 
-                                onClick={() => this.conditionRemove(v)}
-                            />
-                        )}
-                    </div>
-                );
+                                    (<Select
+                                        placeholder='判断'
+                                    >
+                                        <Option value=">">&gt;</Option>
+                                        <Option value="<">&lt;</Option>
+                                        <Option value="=">=</Option>
+                                        <Option value=">=">&gt;=</Option>
+                                        <Option value="<=">&lt;=</Option>
+                                        <Option value="≠">≠</Option>
+                                    </Select>)
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.end}>
+                                {getFieldDecorator(`compareValue[${i}]`,
+                                    {
+                                        initialValue: v.compareValue || '',
+                                        rules: [{ required: true, message: '判断值不能为空' }]
+                                    }
+                                )
+                                    (<InputNumber placeholder='值' />)
+                                }
+                            </Form.Item>
+                            {i == 0 ? (
+                                <div className={styles.addLess}>
+                                    <Icon
+                                        type="plus"
+                                        onClick={() => this.conditionAdd()}
+                                    />
+                                    <Icon
+                                        type="minus"
+                                        onClick={() => this.conditionRemove(i)}
+                                    />
+                                </div>
+                            ) : (
+                                    <Icon
+                                        type="minus"
+                                        onClick={() => this.conditionRemove(i)}
+                                    />
+                                )}
+                        </div>
+                    );
             });
             //执行列表渲染
-            getFieldDecorator('action', { initialValue: actions});
-            const action = getFieldValue('action');
-            const actionForm = action.map((v,i) => {
-                return (
-                    <div className={styles.line} key={i}>
-                        <Form.Item className={styles.search}>
-                            {getFieldDecorator(`actionDeviceId[${i}]`, 
-                                {
-                                    initialValue: v.deviceId || [],
-                                    rules: [{ required: true, message: '设备名称不能为空' }]
-                                }
-                            )
-                                (
-                                <Select
-                                    placeholder='设备名称/ID'
-                                    showSearch
-                                    defaultActiveFirstOption={false}
-                                    showArrow={false}
-                                    filterOption={false}
-                                    onSearch={this.handleSearch}
-                                    onChange={this.handleChange}
-                                    notFoundContent={null}
-                                >
+            // getFieldDecorator('action', { initialValue: actions });
+            // const action = getFieldValue('action');
+            const actionForm = actions.map((v, i) => {
+                // console.log(v)
+                if (v.switchList)
+                    return (
+                        <div className={styles.line} key={i}>
+                            <Form.Item className={styles.search}>
+                                {getFieldDecorator(`actionDeviceId[${i}]`,
                                     {
-                                        deviceList.map((v,i)=>{
-                                            return(
-                                                <Option key={v.deviceId}>{v.deviceId}</Option> 
-                                            )
-                                        })
+                                        initialValue: v.deviceId || [],
+                                        rules: [{ required: true, message: '设备名称不能为空' }]
                                     }
-                                </Select>
                                 )
-                            }
-                        </Form.Item>
-                        <Form.Item className={styles.search}>
-                        {getFieldDecorator(`execCmd[${i}]`, 
-                            {
-                                initialValue: v.execCmd,
-                                rules: [{ required: true, message: '请选择指令' }]
-                            }
-                            )
-                                (<Select
-                                    placeholder='开关阀'
-                                >
+                                    (
+                                    <Select
+                                        placeholder='设备名称/ID'
+                                        showSearch
+                                        defaultActiveFirstOption={false}
+                                        showArrow={false}
+                                        filterOption={false}
+                                        onSearch={_.debounce((value) => this.handleSearch(value), 300)}
+                                        onChange={(value) => this.handleChange(value, i)}
+                                        notFoundContent={null}
+                                    >
+                                        {
+                                            deviceList.map((v, i) => {
+                                                return (
+                                                    <Option title='设备名称/ID' key={v.deviceId}>{v.deviceId}</Option>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                    )
+                                }
+                            </Form.Item>
+                            <Form.Item className={styles.search}>
+                                {getFieldDecorator(`execCmd[${i}]`,
                                     {
-                                        switchList.map((v,i)=>{
-                                            return(
-                                                <Option key={v.cmd}>{v.displayName}</Option> 
-                                            )
-                                        })
+                                        initialValue: v.execCmd,
+                                        rules: [{ required: true, message: '请选择指令' }]
                                     }
-                                </Select>)
-                            }
-                        </Form.Item>
-                        {i==0 ? (
-                            <div className={styles.addLess}>
-                                <Icon 
-                                    type="plus" 
-                                    onClick={() => this.actionAdd(v)}
-                                />
-                                <Icon 
-                                    type="minus" 
-                                    onClick={() => this.actionRemove(v)}
-                                />
-                            </div>
-                        ) : (
-                            <Icon 
-                                type="minus" 
-                                onClick={() => this.actionRemove(v)}
-                            />
-                        )}
-                    </div>
-                );
-            }); 
+                                )
+                                    (<Select
+                                        placeholder='开关阀'
+                                    >
+                                        {
+                                            v.switchList.map((v, i) => {
+                                                return (
+                                                    <Option key={v.cmd}>{v.displayName}</Option>
+                                                )
+                                            })
+                                        }
+                                    </Select>)
+                                }
+                            </Form.Item>
+                            {i == 0 ? (
+                                <div className={styles.addLess}>
+                                    <Icon
+                                        type="plus"
+                                        onClick={() => this.actionAdd()}
+                                    />
+                                    <Icon
+                                        type="minus"
+                                        onClick={() => this.actionRemove(i)}
+                                    />
+                                </div>
+                            ) : (
+                                    <Icon
+                                        type="minus"
+                                        onClick={() => this.actionRemove(i)}
+                                    />
+                                )}
+                        </div>
+                    );
+            });
             return (
                 <Form className={styles.form}>
                     <div className={styles.Rules}>
                         <Form.Item className={styles.rulesName}>
-                            {getFieldDecorator('name', {initialValue:`${name}`})
-                                (<Input type='text'/>)
+                            {getFieldDecorator('name', { initialValue: `${name}` })
+                                (<Input type='text' />)
                             }
                         </Form.Item>
                         <div className={styles.border}></div>
@@ -673,7 +727,7 @@ const RuleForm = Form.create()(
                     <div className={styles.inner}>
                         <div className={styles.if}>条件</div>
                         <Form.Item className={styles.all}>
-                            {getFieldDecorator('anyConditionFireAction', {initialValue:`${anyConditionFireAction}`})
+                            {getFieldDecorator('anyConditionFireAction', { initialValue: `${anyConditionFireAction}` })
                                 (
                                 <RadioGroup>
                                     <Radio value="false">全部条件</Radio>
@@ -683,16 +737,31 @@ const RuleForm = Form.create()(
                             }
                         </Form.Item>
                         {/* 条件的添加 */}
-                        {conditionForm}
-                        <Form.Item>
-                            {conditionArr.length==0&&condition.length==0?(<Button style={{color:"rgba(187,197,210,1)",width:"200px",height:"36px",fontSize:'16px',textAlign:'center',lineHeight:'36px',background:'rgba(20,24,49,1)'}} onClick={() => this.conditionAdd()}>点此添加条件栏</Button>):null}
-                        </Form.Item> 
+                        {/* {conditionForm} */}
+                        {
+                            conditions.length == 0 ?
+                                (
+                                    <Form.Item>
+                                        <Button className={styles.btnCondition} onClick={() => this.conditionAdd()}>点此添加条件栏</Button>
+                                    </Form.Item>
+                                )
+                                :
+                                conditionForm
+                        }
+
                         <div className={styles.do}>执行</div>
                         {/* 执行的添加 */}
-                        {actionForm}
-                        <Form.Item>
-                            {actionArr.length==0&&action.length==0?(<Button style={{color:"rgba(187,197,210,1)",width:"200px",height:"36px",fontSize:'16px',textAlign:'center',lineHeight:'36px',background:'rgba(20,24,49,1)'}} onClick={() => this.actionAdd()}>点此添加执行栏</Button>):null}
-                        </Form.Item>
+
+                        {
+                            actions.length == 0 ?
+                                (
+                                    <Form.Item>
+                                        <Button className={styles.btnAction} onClick={() => this.actionAdd()}>点此添加执行栏</Button>
+                                    </Form.Item>
+                                )
+                                :
+                                actionForm
+                        }
                     </div>
                 </Form>
             )

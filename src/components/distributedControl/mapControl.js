@@ -55,13 +55,13 @@ export default class extends Component {
             //设备ID
             deviceId: '',
             //设备名称
-            name: ''
+            name: '',
+            openCount:0,
+            closeCount:0
         }
     }
     componentDidMount() {
-        let ballPosition = [];
-        let openCount = 0;
-        let closeCount = 0;
+        let {ballPosition,openCount,closeCount} = this.state;
         //将拿到的数据做处理
         const ballData = this.props.mapGis.waterValve.data.data.items;
         // console.log(ballData)
@@ -105,10 +105,6 @@ export default class extends Component {
                 })
             }
         }
-    }
-    //统计信息
-    _countHandler() {
-
     }
     //点击标记时获取指令  //获取当前设备状态
     _getCmdList(deviceTypeId, deviceId) {

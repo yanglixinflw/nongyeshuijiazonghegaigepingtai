@@ -1,18 +1,22 @@
 import React from 'react';
 import styles from './index.less'
 import { routerRedux } from 'dva/router';
-import { Button, Menu, Dropdown, Icon, Modal, Badge } from 'antd'
+import { Button, Menu, Dropdown, Icon, Modal, Badge, Form, Input, message } from 'antd'
 import { Link } from 'dva/router';
 import { ENVNet, postOption } from '../../services/netCofig'
 import classnames from 'classnames';
+import { timeOut } from '../../utils/timeOut';
 // 预警事件列表
 const dataUrl = `${ENVNet}/api/DeviceWaringRule/eventList`;
+// 修改用户密码
+const changePassWordUrl = `${ENVNet}/api/Account/changePwd`
 // 确认退出className
 const confirmLogout = styles.confirmLogout
 const confirm = Modal.confirm;
 export default class extends React.Component {
     constructor(props) {
         super(props)
+
         const downData = (
             <Menu>
                 <Menu.Item
@@ -38,6 +42,9 @@ export default class extends React.Component {
             warningDatas: [],
             //预警事件的个数
             count: 0,
+            // 修改密码弹窗
+            modifyPasswordVisble: false
+            // modifyPasswordVisble: true
         }
     }
     componentDidMount() {
@@ -89,25 +96,20 @@ export default class extends React.Component {
     }
     // 修改密码
     changePsw() {
-        console.log(123)
-    }
-    //减少气泡
-    minus(){
-        const {count}=this.state
-        count=count-1
         this.setState({
-            count
-        })
+            modifyPasswordVisble: true,
+        });
     }
     // 退出登录
     _showConfirm() {
         const { dispatch } = this.props
         confirm({
             className: confirmLogout,
-            iconType: 'none',
+            // iconType: 'none',
             title: '确认退出？',
             okText: '确认',
             cancelText: '取消',
+            // centered,
             onOk() {
                 // console.log(1)
                 return fetch(`${ENVNet}/api/Account/logout`, {
@@ -139,7 +141,7 @@ export default class extends React.Component {
         });
     }
     render() {
-        const { downData, menu, warningDatas } = this.state
+        const { downData, menu, modifyPasswordVisble } = this.state
         // 获取用户名
         let userName = {
             get value() {
@@ -165,7 +167,89 @@ export default class extends React.Component {
                         </Button>
                     </div>
                 </Dropdown>
+                <ChangePwdForm
+                    wrappedComponentRef={(ChangePwdForm) => this.ChangePwdForm = ChangePwdForm}
+                    visible={modifyPasswordVisble}
+                    onCancel={() => this.changePwdCancelHandler()}
+                    onOk={() => this.changePwdOkHandler()}
+                />
             </div>
         )
     }
 }
+const formItemLayout = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 16 },
+};
+const ChangePwdForm = Form.create()(
+    class extends React.Component {
+        state = {
+            confirmDirty: false,
+        };
+        compareToFirstPassword = (rule, value, callback) => {
+            const form = this.props.form;
+            if (value && value == form.getFieldValue('oldPwd')) {
+                callback('两次输入密码不能相同!');
+            } else {
+                callback();
+            }
+        }
+
+        validateToNextPassword = (rule, value, callback) => {
+            const form = this.props.form;
+            if (value && this.state.confirmDirty) {
+                form.validateFields(['newPwd'], { force: true });
+            }
+            callback();
+        }
+        render() {
+            const { visible, onCancel, onOk, form } = this.props;
+            const { getFieldDecorator } = form;
+            return (
+                <Modal
+                    centered={true}
+                    className={styles.editPwdModal}
+                    visible={visible}
+                    title="修改密码"
+                    onCancel={onCancel}
+                    onOk={onOk}
+                    cancelText='取消'
+                    okText='确定'
+                >
+                    <Form>
+                        <Form.Item
+                            {...formItemLayout}
+                            label="旧密码"
+                        >
+                            {getFieldDecorator('oldPwd', {
+                                rules: [{
+                                    required: true, pattern: '^[0-9a-zA-Z]{6,20}$', message: '请输入旧密码'
+                                },
+                                { validator: this.validateToNextPassword }
+                                ],
+                            })(
+                                <Input placeholder='请输入旧密码' type="password" />
+                            )}
+                        </Form.Item>
+                        <Form.Item
+                            {...formItemLayout}
+                            label="新密码"
+                        >
+                            {getFieldDecorator('newPwd', {
+                                rules: [
+                                    { required: true, pattern: '^[0-9a-zA-Z]{6,20}$', message: '输入新密码', },
+                                    { min: 6, message: '不要小于6个字符' },
+                                    { max: 20, message: '不要超过20个字符' },
+                                    { validator: this.compareToFirstPassword }
+                                ],
+                            })(
+                                <Input type="password" placeholder='密码由6~20位字母和数字组成' onBlur={this.onBlur} />
+                            )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )
+        }
+
+    }
+)
