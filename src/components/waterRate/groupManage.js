@@ -2,7 +2,9 @@ import React,{Component} from 'react';
 import styles from "./groupManage.less"
 import { Input, Button, Form, Table,Select,message,Icon,Checkbox, Row, Col} from 'antd';
 import { Link } from 'dva/router';
+import classnames from 'classnames'
 import { parse } from 'qs';
+import { timeOut } from '../../utils/timeOut';
 import {ENVNet,postOption} from '../../services/netCofig'
 //头信息
 const tableTitle=[
@@ -17,6 +19,8 @@ const dataUrl=`${ENVNet}/fee/groupAccount/getGroupMembers`;
 const areaUrl=`${ENVNet}/api/Area/list`;
 //保存数据接口
 const saveUrl=`${ENVNet}/fee/groupAccount/SaveMembers`;
+//农户信息接口
+const farmerUrl=`${ENVNet}/api/PeasantMgr/list`;
 export default class extends Component{
     constructor(props) {
         super(props)
@@ -53,6 +57,8 @@ export default class extends Component{
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
+                         //超时判断
+                        timeOut(v.data.ret)
                         if (v.ret == 1) {
                             let areaList = v.data
                             this.setState({
@@ -118,13 +124,25 @@ export default class extends Component{
     //将右边的选中项移到左边
     push(){
         const{groupMember,selectedRows}=this.state
-        // console.log(this.state.groupMember)
+        console.log(this.state.groupMember)
         // console.log(this.state.selectedRows)
+        if(selectedRows==''){
+            return
+        }
         selectedRows.map((v,i)=>{
-            groupMember.push({memberUserId:v.userId,mobilePhone:v.mobilePhone,realName:v.realName,idCard:v.idCard,areaName:v.areaName})
+            groupMember.push({memberUserId:v.userId,mobilePhone:v.mobilePhone,realName:v.realName,idCard:v.idCard,areaName:v.areaName,key:i})
         })
+        var newArr = [];//新数组(定义一个新数组用于去重)
+        var obj = {};
+        //对象数组去重
+        for(var i =0; i<groupMember.length; i++){
+            if(!obj[groupMember[i].idCard]){
+                newArr.push(groupMember[i]);
+                obj[groupMember[i].idCard] = true;
+            }
+        }
         this.setState({
-            groupMember
+            groupMember:newArr
         })
     }
     //将左边的选中项移除
@@ -165,6 +183,8 @@ export default class extends Component{
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
+                 //超时判断
+                timeOut(v.data.ret)
                 if(v.ret==1){
                     fetch(dataUrl,{
                         ...postOption,
@@ -174,6 +194,8 @@ export default class extends Component{
                     }).then(res=>{
                         Promise.resolve(res.json())
                         .then(v=>{
+                            //超时判断
+                            timeOut(v.data.ret)
                             if(v.ret==1){
                                 let groupMember=v.data
                                 this.setState({
@@ -185,6 +207,83 @@ export default class extends Component{
                     })
                 }
             })
+        })
+    }
+    // 搜索功能
+    _searchTableData() {
+        const { title } = this.state;
+        const form = this.searchForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            console.log(values)
+            return fetch(farmerUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "name": values.realName,
+                    "mobile": values.mobilePhone,
+                    "idCard": values.idCard,
+                    "areaId": values.areaId,
+                    "pageIndex": 0,
+                    "pageSize": 10
+                })
+            }).then(res => {
+                Promise.resolve(res.json())
+                    .then(v => {
+                         //超时判断
+                        timeOut(v.data.ret)
+                        if (v.ret == 1) {
+                            // 设置页面显示的元素
+                            // console.log(v)
+                            let itemCount = v.data.itemCount
+                            let data = v.data.items
+                            this.setState({
+                                itemCount,
+                                data
+                            })
+                            this._getTableDatas(title,data);
+                        }
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
+        })
+    }
+    //重置
+    _resetForm() {
+        const { title } = this.state;
+        const form = this.searchForm.props.form;
+        // 重置表单
+        form.resetFields();
+        return fetch(farmerUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                "pageIndex": 0,
+                "pageSize": 10
+            })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                     //超时判断
+                    timeOut(v.data.ret)
+                    if (v.ret == 1) {
+                        // console.log(v)
+                        let data = v.data.items;
+                        let itemCount = v.data.itemCount;
+                        // 给每一条数据添加key
+                        data.map((v, i) => {
+                            v.key = i
+                        })
+                        this.setState({
+                            data,
+                            itemCount,
+                            searchValue:{}
+                        })
+                        this._getTableDatas(title, data);
+                    }
+                })
         })
     }
     render(){
@@ -232,12 +331,12 @@ export default class extends Component{
                                                     <Checkbox value={v.memberUserId}>
                                                         <div>
                                                             <ul>
-                                                                <li title={v.realName}>姓名：{v.realName}</li>
-                                                                <li title={v.idCard}>身份证：{v.idCard}</li>
+                                                                <li title={v.realName}><i className={classnames('dyhsicon', 'dyhs-xingming', `${styles.AccountIcon}`)}></i> {v.realName}</li>
+                                                                <li title={v.mobilePhone}><i className={classnames('dyhsicon', 'dyhs-dianhua', `${styles.AccountIcon}`)}></i> {v.mobilePhone}</li>
                                                             </ul>
                                                             <ul>
-                                                                <li title={v.mobilePhone}>电话：{v.mobilePhone}</li>
-                                                                <li title={v.areaName}>所属片区：{v.areaName}</li>
+                                                                <li title={v.idCard}><i className={classnames('dyhsicon', 'dyhs-shenfenzheng', `${styles.AccountIcon}`)}></i> {v.idCard}</li>
+                                                                <li title={v.areaName}><i className={classnames('dyhsicon', 'dyhs-anzhuangdi', `${styles.AccountIcon}`)}></i> {v.areaName}</li>
                                                             </ul>
                                                         </div>
                                                     </Checkbox>
@@ -267,17 +366,17 @@ export default class extends Component{
                                     <div className={styles.buttonGroup}>
                                         <Button
                                             className={styles.fnButton}
-                                            icon="search"
                                             onClick={() => this._searchTableData()}
                                         >
-                                            搜索
+                                            <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
+                                            <div>搜索</div>  
                                         </Button>
                                         <Button
-                                            icon='reload'
                                             className={styles.fnButton}
                                             onClick={() => this._resetForm()}
                                         >
-                                            重置
+                                            <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.searchIcon}`)}></i>
+                                            <div>重置</div>
                                         </Button>
                                     </div> 
                                 </div>

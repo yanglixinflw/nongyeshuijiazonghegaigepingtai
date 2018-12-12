@@ -1,3 +1,5 @@
+//引入线上图标
+@import 'http://at.alicdn.com/t/font_869092_rrg2tok12s.css';
 .headers {
     height: 60px;
     line-height: 60px;
@@ -12,6 +14,9 @@
     cursor: pointer;
     .left {
         display: flex;
+        div{
+            color: #fff;
+        }
         .arrowLeft {
             width: 97px;
             display: flex;
@@ -27,12 +32,15 @@
             display: flex;
             justify-content: space-around;
             .autoRules {
-                color: #327df4;
+                color: #fff;
+                &:hover {
+                    color: #327df4
+                }
             }
         }
     }
     .right {
-        width: 100px;
+        width: 54px;
         display: flex;
         justify-content: space-between;
         margin-right: 64px;
@@ -82,7 +90,7 @@
                 display: none;
             }
             &::-webkit-scrollbar-thumb {
-                background: #3164BF;
+                background: #4d5cab;
                 border-radius: 2px;
             }
             &::-webkit-scrollbar-track {
@@ -118,6 +126,7 @@
                                     margin-bottom: 14px;
                                     justify-content: space-between;
                                         ul {
+                                            width: 420px;
                                             display: flex;
                                             justify-content: space-between;
                                             flex-wrap: wrap;
@@ -125,6 +134,7 @@
                                             margin-bottom: 0;
                                             color: #dadade;
                                             li {
+                                              width:180px;
                                               overflow: hidden;
                                               text-overflow: ellipsis;
                                               white-space:nowrap !important;
@@ -154,6 +164,7 @@
           .ant-btn,.ant-btn-primary{
               cursor: pointer;
               width: 54px;
+              color:#b8c1d0;
               height: 48px;
               background: #2e3459;
               display: block;
@@ -162,7 +173,9 @@
               font-size: 42px;
               line-height: 0px;
               border-radius: 4px;
-
+              &:hover{
+                color:#b8c1d0;
+              }
           span{
             margin-left: -3px;
             margin-bottom: 8px;
@@ -197,6 +210,7 @@
             .searchForm {
                 padding: 16px 10px;
                 height: 67px;
+                border-radius: 4px;
                 background: #2e3459;
                 display: flex;
                 :global {
@@ -209,6 +223,7 @@
                         background: #141831;
                         outline: none;
                         border: none;
+                        border-radius: 4px;
                         color: #fff; // margin-right: 8x;
                         float: left;
                     }
@@ -229,11 +244,21 @@
                         border-radius: 30px; // margin-left: 16px;
                         background: #2e3459;
                         outline: none;
+                        display: flex;
                         border: 1px solid #327df4;
                         color: #327df4;
                         i{
                             font-size: 16px;
                             color: #327df4
+                        }
+                        .searchIcon{
+                            font-size: 16px;
+                            margin-right: 6px;
+                            line-height: 36px;
+                        }
+                        div{
+                            margin-top: -4px;
+                            line-height: 44px;
                         }
                     }
                     .fnButton:nth-child(2) {
@@ -249,6 +274,22 @@
                 }
             }
             :global {
+                .ant-btn{
+                    font-size: 14px;
+                }
+                .ant-input{font-size: 12px;}
+                .ant-select-selection__placeholder{
+                    font-size: 12px;
+                }
+                .ant-table-fixed-header > .ant-table-content > .ant-table-scroll > .ant-table-header{
+                    background: #2e3459!important;
+                }
+                .ant-table-fixed-header > .ant-table-content > .ant-table-scroll > .ant-table-body{
+                    background: #2e3459!important;
+                }
+                .ant-checkbox-inner{
+                    background: #2e3459;
+                }
                 .ant-cascader-picker-arrow {
                     color: #4A5A72;
                 }
@@ -348,6 +389,32 @@
         }
     }
 }
+@media(max-width:1526px) {
+    .body{
+        .mleft{
+            .content{
+                :global {
+                    .ant-checkbox-group {
+                        .ant-row{
+                            div{
+                                .ant-checkbox-wrapper{
+                                    div{
+                                        ul{
+                                            width: 360px;
+                                            li{
+                                                width: 150px;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 @media(max-width:1432px) {
     .body{
       .mleft{
@@ -373,6 +440,28 @@
 }
 @media(max-width:1280px) {
     .body{
+        .mleft{
+            .content{
+                :global {
+                    .ant-checkbox-group {
+                        .ant-row{
+                            div{
+                                .ant-checkbox-wrapper{
+                                    div{
+                                        ul{
+                                            width: 300px;
+                                            li{
+                                                width: 200px;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         .mright{
             .tables{
                 .searchForm{

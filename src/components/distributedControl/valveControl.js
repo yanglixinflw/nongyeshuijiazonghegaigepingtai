@@ -132,7 +132,7 @@ export default class extends Component{
             title: '操作',
             key: 'action',
             align: 'center',
-            // fixed: 'right',
+            fixed: 'right',
             className: `${styles.action}`,
             width: 100,
             render: (record) => {
@@ -253,7 +253,7 @@ export default class extends Component{
     }
     //换页
     _pageChange(page){
-        const { title,searchValue } = this.state;
+        const { searchValue } = this.state;
         searchValue.pageIndex = page - 1;
         searchValue.deviceTypeId=this.state.deviceTypeId;
         searchValue.pageSize=10
@@ -408,7 +408,7 @@ export default class extends Component{
                         className={styles.table}
                         pagination={paginationProps}
                         dataSource={tableDatas}
-                        // scroll={{ x: 1300 }}
+                        scroll={{ x: 1000 }}
                     />
                      {/* 开关阀弹窗 */}
                      <SwitchForm

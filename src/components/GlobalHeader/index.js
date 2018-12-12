@@ -91,6 +91,12 @@ export default class extends React.Component {
     changePsw(){
         console.log(123)
     }
+    //点击预警消息清空气泡
+    clear(){
+        this.setState({
+            count:0
+        })
+    }
      // 退出登录
   _showConfirm(){
     const {dispatch}=this.props
@@ -139,7 +145,7 @@ export default class extends React.Component {
             <div className={styles.header}>
                 <Dropdown overlay={menu} trigger={['click']}>
                     <Badge count={this.state.count}>
-                        <Button icon='bell' className={styles.news}>预警消息</Button>
+                        <Button icon='bell' className={styles.news} onClick={()=>this.clear()}>预警消息</Button>
                     </Badge>
                 </Dropdown>
                 <Dropdown overlay={downData}>
