@@ -551,7 +551,7 @@ const RuleForm = Form.create()(
                                         {
                                             deviceList.map((v, i) => {
                                                 return (
-                                                    <Option key={v.deviceId}>{v.deviceId}</Option>
+                                                    <Option title='设备名称/ID' key={v.deviceId}>{v.deviceId}</Option>
                                                 )
                                             })
                                         }
@@ -658,7 +658,7 @@ const RuleForm = Form.create()(
                                         {
                                             deviceList.map((v, i) => {
                                                 return (
-                                                    <Option key={v.deviceId}>{v.deviceId}</Option>
+                                                    <Option title='设备名称/ID' key={v.deviceId}>{v.deviceId}</Option>
                                                 )
                                             })
                                         }
