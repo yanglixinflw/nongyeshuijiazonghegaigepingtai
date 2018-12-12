@@ -1,8 +1,9 @@
 import React,{Component} from 'react';
 import styles from "./dealRecord.less"
-import { Input, Button, Form, Table,Select,message,Icon } from 'antd';
+import { Input, Button, Form, Table,Select,Icon } from 'antd';
 import classnames from 'classnames'
 import { Link } from 'dva/router';
+import { timeOut } from '../../utils/timeOut';
 import { parse } from 'qs';
 //头信息
 const tableTitle=[
@@ -85,6 +86,8 @@ export default class extends Component{
       }).then(res => {
         Promise.resolve(res.json())
           .then(v => {
+            //超时判断
+            timeOut(v.ret)
             if (v.ret == 1) {
               // 设置页面显示的元素
               let itemCount = v.data.itemCount

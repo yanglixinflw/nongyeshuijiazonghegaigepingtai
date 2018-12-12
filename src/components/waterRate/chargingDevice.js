@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import styles from "./chargingDevice.less"
 import { Input, Button, Form, Table, Modal, Select,message } from 'antd';
 import classnames from 'classnames'
+import { timeOut } from '../../utils/timeOut';
 import _ from 'lodash'
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
@@ -78,10 +79,14 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
-                    let plantType=v.data
-                    this.setState({
-                        plantType
-                    })
+                     //超时判断
+                    timeOut(v.ret)
+                    if(v.ret==1){
+                        let plantType=v.data
+                        this.setState({
+                            plantType
+                        })
+                    }
                 })
             }),
             //获取灌区类型
@@ -90,10 +95,14 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
-                    let wateringType=v.data
-                    this.setState({
-                        wateringType
-                    })
+                    //超时判断
+                    timeOut(v.ret)
+                    if(v.ret==1){
+                        let wateringType=v.data
+                        this.setState({
+                            wateringType
+                        })
+                    }
                 })
             }),
             //设备安装地
@@ -104,6 +113,8 @@ export default class extends Component{
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
+                        //超时判断
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             let installAddrList = v.data
                             this.setState({
@@ -201,6 +212,8 @@ export default class extends Component{
             }).then(res => {
                 Promise.resolve(res.json())
                     .then(v => {
+                        //超时判断
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             let itemCount = v.data.itemCount
@@ -232,6 +245,8 @@ export default class extends Component{
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         // console.log(v)
                         let data = v.data.items;
@@ -269,6 +284,8 @@ export default class extends Component{
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
+                //超时判断
+                timeOut(v.ret)
                 if(v.ret==1){
                     fetch(dataUrl,{
                         ...postOption,
@@ -279,6 +296,8 @@ export default class extends Component{
                     }).then(res=>{
                         Promise.resolve(res.json())
                         .then(v=>{
+                            //超时判断
+                            timeOut(v.ret)
                             if(v.ret==1){
                                 let data=v.data.items;
                                 let itemCount = v.data.itemCount;
@@ -317,6 +336,8 @@ export default class extends Component{
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
+                //超时判断
+                timeOut(v.ret)
                 if(v.ret==1){
                     var water=v.data.items[0].wateringTypeName;
                     var plant=v.data.items[0].plantTypeName
@@ -350,6 +371,8 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
                     if(v.ret==1){
                         let name=v.data.items.name
                         //访问修改接口
@@ -365,6 +388,8 @@ export default class extends Component{
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
+                                //超时判断
+                                timeOut(v.ret)
                                 if(v.ret==1){
                                     fetch(dataUrl,{
                                         ...postOption,
@@ -375,6 +400,8 @@ export default class extends Component{
                                     }).then(res=>{
                                         Promise.resolve(res.json())
                                         .then(v=>{
+                                            //超时判断
+                                            timeOut(v.ret)
                                             if(v.ret==1){
                                                 let data=v.data.items
                                                 this.setState({
@@ -425,6 +452,8 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
                     if(v.ret==1){
                         let name=v.data.items.name
                         //请求添加接口
@@ -439,6 +468,8 @@ export default class extends Component{
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
+                                //超时判断
+                                timeOut(v.ret)
                                 if(v.ret==1){
                                     //重新请求接口渲染页面
                                     fetch(dataUrl,{
@@ -450,6 +481,8 @@ export default class extends Component{
                                     }).then(res=>{
                                         Promise.resolve(res.json())
                                         .then(v=>{
+                                            //超时判断
+                                            timeOut(v.ret)
                                             if(v.ret==1){
                                                 let data=v.data.items
                                                 let itemCount = v.data.itemCount;
@@ -495,6 +528,8 @@ export default class extends Component{
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
+                //超时判断
+                timeOut(v.ret)
                 if(v.ret==1){
                     // 设置页面显示的元素
                     let data = v.data.items;
@@ -627,6 +662,8 @@ const SearchForm = Form.create()(
             }).then(res => {
                 Promise.resolve(res.json())
                     .then(v => {
+                        //超时判断
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             // console.log(v.data)
@@ -836,6 +873,8 @@ const AddForm = Form.create()(
             }).then(res => {
                 Promise.resolve(res.json())
                     .then(v => {
+                        //超时判断
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             let deviceList = v.data.items

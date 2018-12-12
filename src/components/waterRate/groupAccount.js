@@ -3,6 +3,7 @@ import styles from "./groupAccount.less"
 import { Input, Button, Form, Table,Select,Modal,message} from 'antd';
 import { Link } from 'dva/router';
 import classnames from 'classnames';
+import { timeOut } from '../../utils/timeOut';
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl=`${ENVNet}/fee/groupAccount/list`;
@@ -159,6 +160,8 @@ export default class extends Component{
             }).then(res => {
                 Promise.resolve(res.json())
                     .then(v => {
+                        //超时判断
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             let itemCount = v.data.itemCount
@@ -190,6 +193,8 @@ export default class extends Component{
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    //超时判断
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         // console.log(v)
                         let data = v.data.items;
@@ -233,6 +238,8 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
                     if(v.ret==1){
                         fetch(dataUrl,{
                             ...postOption,
@@ -243,6 +250,8 @@ export default class extends Component{
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
+                                //超时判断
+                                timeOut(v.ret)
                                 if(v.ret==1){
                                     let data=v.data.items
                                     let itemCount=v.data.itemCount
@@ -285,6 +294,8 @@ export default class extends Component{
         }).then(res=>{
             Promise.resolve(res.json())
             .then(v=>{
+                //超时判断
+                timeOut(v.ret)
                 if(v.ret==1){
                     fetch(dataUrl,{
                         ...postOption,
@@ -295,6 +306,8 @@ export default class extends Component{
                     }).then(res=>{
                         Promise.resolve(res.json())
                         .then(v=>{
+                            //超时判断
+                            timeOut(v.ret)
                             if(v.ret==1){
                                 let data=v.data.items;
                                 let itemCount=v.data.itemCount
@@ -342,6 +355,8 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
                     if(v.ret==1){
                         fetch(dataUrl,{
                             ...postOption,
@@ -352,6 +367,8 @@ export default class extends Component{
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
+                                //超时判断
+                                timeOut(v.ret)
                                 if(v.ret==1){
                                     let data=v.data.items;
                                     let itemCount=v.data.itemCount

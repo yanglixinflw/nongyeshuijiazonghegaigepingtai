@@ -58,7 +58,7 @@ export default class extends Component{
                 Promise.resolve(res.json())
                     .then((v) => {
                          //超时判断
-                        timeOut(v.data.ret)
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             let areaList = v.data
                             this.setState({
@@ -184,7 +184,7 @@ export default class extends Component{
             Promise.resolve(res.json())
             .then(v=>{
                  //超时判断
-                timeOut(v.data.ret)
+                timeOut(v.ret)
                 if(v.ret==1){
                     fetch(dataUrl,{
                         ...postOption,
@@ -195,7 +195,7 @@ export default class extends Component{
                         Promise.resolve(res.json())
                         .then(v=>{
                             //超时判断
-                            timeOut(v.data.ret)
+                            timeOut(v.ret)
                             if(v.ret==1){
                                 let groupMember=v.data
                                 this.setState({
@@ -233,7 +233,7 @@ export default class extends Component{
                 Promise.resolve(res.json())
                     .then(v => {
                          //超时判断
-                        timeOut(v.data.ret)
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
                             // console.log(v)
@@ -267,7 +267,7 @@ export default class extends Component{
             Promise.resolve(res.json())
                 .then((v) => {
                      //超时判断
-                    timeOut(v.data.ret)
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         // console.log(v)
                         let data = v.data.items;

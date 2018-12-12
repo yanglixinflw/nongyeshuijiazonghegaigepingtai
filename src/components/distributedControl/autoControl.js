@@ -338,7 +338,7 @@ export default class extends Component{
                         }).then(res=>{
                             Promise.resolve(res.json())
                             .then(v=>{
-                                let data=v.items;
+                                let data=v.data.items;
                                 this._getTableDatas(title, data);
                                 this.setState({
                                     addvisible:false,
