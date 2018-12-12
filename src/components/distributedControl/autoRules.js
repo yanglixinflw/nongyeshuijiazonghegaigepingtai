@@ -346,105 +346,6 @@ const RuleForm = Form.create()(
             }
 
         }
-        componentDidMount() {
-            const { conditions, actions } = this.state;
-            //  console.log(conditions)
-            if (conditions.length != 0) {
-                //获取参数的信息
-                conditions.map((v, i) => {
-                    return fetch(deviceUrl, {
-                        ...postOption,
-                        body: JSON.stringify({
-                            "deviceId": conditions[i].deviceId,
-                            "pageIndex": 0,
-                            "pageSize": 1
-                        })
-                    }).then((res) => {
-                        Promise.resolve(res.json())
-                            .then((v) => {
-                                //超时判断
-                                timeOut(v.ret);
-                                if (v.ret == 1) {
-                                    let deviceTypeId = v.data.items[0].deviceTypeId
-                                    //获取参数的信息
-                                    fetch(paramUrl, {
-                                        ...postOption,
-                                        body: JSON.stringify({
-                                            deviceTypeId
-                                        })
-                                    }).then((res) => {
-                                        Promise.resolve(res.json())
-                                            .then((v) => {
-                                                //超时判断
-                                                timeOut(v.ret);
-                                                if (v.ret == 1) {
-                                                    let parameterIdList = v.data;
-                                                    // console.log(parameterIdList)
-                                                    conditions[i].parameterIdList = parameterIdList;
-                                                    this.setState({
-                                                        conditions
-                                                    })
-                                                } else {
-                                                    conditions[i].parameterIdList = [];
-                                                    this.setState({
-                                                        conditions
-                                                    })
-                                                }
-                                            })
-                                    })
-                                }
-                            })
-                    }).catch(err => {
-                        console.log(err)
-                    })
-                })
-            }
-            if (actions.length !== 0) {
-                actions.map((v, i) => {
-                    return fetch(deviceUrl, {
-                        ...postOption,
-                        body: JSON.stringify({
-                            "deviceId": actions[i].deviceId,
-                            "pageIndex": 0,
-                            "pageSize": 1
-                        })
-                    }).then((res) => {
-                        Promise.resolve(res.json())
-                            .then((v) => {
-                                //超时判断
-                                timeOut(v.ret)
-                                if (v.ret == 1) {
-                                    let deviceTypeId = v.data.items[0].deviceTypeId;
-                                    return fetch(switchUrl, {
-                                        ...postOption,
-                                        body: JSON.stringify({
-                                            deviceTypeId
-                                        })
-                                    }).then((res) => {
-                                        Promise.resolve(res.json())
-                                            .then((v) => {
-                                                //判断超时
-                                                timeOut(v.ret);
-                                                if (v.ret == 1) {
-                                                    let switchList = v.data
-                                                    actions[i].switchList = switchList
-                                                    this.setState({
-                                                        actions
-                                                    })
-                                                } else {
-                                                    actions[i].switchList = []
-                                                    this.setState({
-                                                        actions
-                                                    })
-                                                }
-                                            })
-                                    })
-                                }
-                            })
-                    })
-                })
-            }
-        }
         //下拉搜索框搜索功能
         handleSearch = (value) => {
             // console.log(value)
@@ -481,8 +382,6 @@ const RuleForm = Form.create()(
         //option的value值就是设备ID
         handleChange = (value, i) => {
             // console.log(value)
-            const { form } = this.props;
-            // console.log(form)
             const { conditions, actions } = this.state;
             this.setState({
                 deviceList: []
@@ -633,6 +532,7 @@ const RuleForm = Form.create()(
                     return (
                         <div className={styles.line} key={i}>
                             <Form.Item className={styles.search}>
+
                                 {getFieldDecorator(`conditionDeviceId[${i}]`,
                                     {
                                         initialValue: v.deviceId || [],
@@ -640,6 +540,7 @@ const RuleForm = Form.create()(
                                     }
                                 )
                                     (
+
                                     <Select
                                         showSearch
                                         defaultActiveFirstOption={false}
@@ -648,17 +549,20 @@ const RuleForm = Form.create()(
                                         onChange={(value) => this.handleChange(value, i)}
                                         notFoundContent={null}
                                         placeholder='设备名称/ID'
+
                                     >
                                         {
                                             deviceList.map((v, i) => {
                                                 return (
-                                                    <Option title='设备名称/ID' key={v.deviceId}>{v.deviceId}</Option>
+                                                    <Option key={v.deviceId}>{v.deviceId}</Option>
                                                 )
                                             })
                                         }
                                     </Select>
+
                                     )
                                 }
+
                             </Form.Item>
                             <Form.Item className={styles.search}>
                                 {getFieldDecorator(`parameterId[${i}]`,

@@ -13,7 +13,8 @@ import {
     Row,
     Col,
     DatePicker,
-    message
+    message,
+    Divider 
 } from 'antd'
 import moment from 'moment'
 import { Link } from 'dva/router';
@@ -1198,6 +1199,7 @@ const AddForm = Form.create()(
                                 )
                             }
                         </Item>
+                        <Divider></Divider> 
                         <Item label="运维公司">
                             {getFieldDecorator('managedCompanyId', {
                                 // rules: [{ required: true, message: '运维公司不能为空' }]
@@ -1255,6 +1257,7 @@ const AddForm = Form.create()(
                                 </Item>
                                 : null
                         }
+                        <Divider></Divider> 
                         <Item label='网关ID'>
                             {getFieldDecorator('gatewayAddr',
                                 {
@@ -1540,6 +1543,8 @@ const ModifyForm = Form.create()(
                                 )
                             }
                         </Item>
+                        {/* 分割线 */}
+                        <Divider></Divider> 
                         <Item label="运维公司">
                             {getFieldDecorator('managedCompanyId', {
                                 // rules: [{ required: true, message: '运维公司不能为空' }],
@@ -1598,6 +1603,7 @@ const ModifyForm = Form.create()(
                                 )
                             }
                         </Item>
+                        <Divider></Divider> 
                         <Item label='网关ID'>
                             {getFieldDecorator('gatewayAddr',
                                 {
