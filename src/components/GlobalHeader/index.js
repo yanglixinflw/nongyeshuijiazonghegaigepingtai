@@ -26,7 +26,7 @@ export default class extends React.Component {
                     退出登录
                 </Menu.Item>
             </Menu>
-        );
+        ); 
         const menu = (
             <Menu style={{ width: 0, height: 0 }}>
             </Menu>
@@ -45,13 +45,13 @@ export default class extends React.Component {
             ...postOption,
             body: JSON.stringify({
                 "pageIndex": 0,
+                //只判断了一页
                 "pageSize": 10
             })
         }).then(res => {
             Promise.resolve(res.json())
                 .then(v => {
                     if (v.ret == 1) {
-                        // console.log(v.data.items)
                         let data = v.data.items;
                         let warningDatas = [];
                         data.map((v, i) => {
@@ -66,10 +66,9 @@ export default class extends React.Component {
                                     {
                                         warningDatas.map(function (v, i) {
                                             return <Menu.Item key={i}>
-                                                <Link to={`/manage/warning`}>{'【设备异常】' + " " + v.eventContent + " " + v.time}</Link>
+                                                <Link to={{pathname:`/manage/warning`}}><Button>{'【设备异常】' + " " + v.eventContent + " " + v.time}</Button></Link>
                                             </Menu.Item>
                                         })
-
                                     }
                                 </Menu>
                             )
@@ -92,10 +91,12 @@ export default class extends React.Component {
     changePsw() {
         console.log(123)
     }
-    //点击预警消息清空气泡
-       clear(){
+    //减少气泡
+    minus(){
+        const {count}=this.state
+        count=count-1
         this.setState({
-            count:0
+            count
         })
     }
     // 退出登录
@@ -138,7 +139,7 @@ export default class extends React.Component {
         });
     }
     render() {
-        const { downData, menu } = this.state
+        const { downData, menu, warningDatas } = this.state
         // 获取用户名
         let userName = {
             get value() {
@@ -152,7 +153,7 @@ export default class extends React.Component {
                     <Badge count={this.state.count}>
                         <div className={styles.news}>
                             <i className={classnames('dyhsicon', 'dyhs-yujingshijian', `${styles.headerIcon}`)}></i>
-                            <Button onClick={()=>this.clear()}>预警消息</Button>
+                            <Button>预警消息</Button>
                         </div>
                     </Badge>
                 </Dropdown>

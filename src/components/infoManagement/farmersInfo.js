@@ -331,6 +331,9 @@ export default class extends Component{
     }
     //修改用户信息的弹出框点击取消
     editCancelHandler(){
+        const form = this.editForm.props.form;
+        // 重置表单
+        form.resetFields();
         this.setState({
             editvisible: false,
         });
@@ -401,6 +404,9 @@ export default class extends Component{
     }
     //修改密码点击取消
     editPwdCancelHandler(){
+        const form = this.editPwdForm.props.form;
+        // 重置表单
+        form.resetFields();
         this.setState({
             editPwdvisible: false,
         });
@@ -471,6 +477,9 @@ export default class extends Component{
     }
     //添加用户信息取消
     addhandleCancel () {
+        const form = this.addForm.props.form;
+        // 重置表单
+        form.resetFields();
         this.setState({
             addvisible: false,
         });

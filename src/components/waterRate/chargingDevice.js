@@ -422,6 +422,9 @@ export default class extends Component{
     }
     //点击取消修改
     edithandleCancel(){
+        const form = this.editForm.props.form;
+        // 重置表单
+        form.resetFields();
         this.setState({
             editvisible:false
         })
@@ -510,6 +513,9 @@ export default class extends Component{
     }
     //点击取消添加
     addhandleCancel(){
+        const form = this.addForm.props.form;
+        // 重置表单
+        form.resetFields();
         this.setState({
             addvisible:false
         })
