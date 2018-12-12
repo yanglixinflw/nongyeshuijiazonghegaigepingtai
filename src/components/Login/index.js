@@ -123,7 +123,7 @@ const LoginForm = Form.create()(
             } else {
                 passWordMargin = null
             }
-            console.log(showYzm)
+            // console.log(showYzm)
             return (
                     <Form
                         autoComplete="off"
