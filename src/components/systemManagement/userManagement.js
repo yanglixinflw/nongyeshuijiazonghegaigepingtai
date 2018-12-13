@@ -3,7 +3,7 @@ import styles from './index.less'
 import { Button, Table, Form, Input, Select, Modal, message } from 'antd';
 import { timeOut } from '../../utils/timeOut';
 import classnames from 'classnames'
-import {ENVNet,postOption} from '../../services/netCofig'
+import { ENVNet, postOption } from '../../services/netCofig'
 ////获取用户角色列表url
 const roleUrl = `${ENVNet}/api/UserMgr/roleList`;
 //获取部门列表url
@@ -20,11 +20,11 @@ const deleteUrl = `${ENVNet}/api/UserMgr/delete`;
 const detailUrl = `${ENVNet}/api/UserMgr/details`;
 // 全部title
 const tableTitle = [
-    '账号', 
-    '姓名', 
-    '角色', 
-    '手机号', 
-    '部门', 
+    '账号',
+    '姓名',
+    '角色',
+    '手机号',
+    '部门',
     '添加日期'
 ];
 // 全局提示样式
@@ -65,9 +65,9 @@ export default class extends Component {
             //部门列表
             deptList: [],
             //搜索框默认值、
-            searchValue:{
-
-            }
+            searchValue: {},
+            //当前页
+            current:1
         }
     }
     componentDidMount() {
@@ -249,7 +249,8 @@ export default class extends Component {
                         this.setState({
                             items,
                             itemCount,
-                            searchValue:{}
+                            searchValue: {},
+                            current: 1
                         })
                         this._getTableData(title, items);
                     }
@@ -289,13 +290,13 @@ export default class extends Component {
                         timeOut(v.ret)
                         if (v.ret == 1) {
                             // console.log(v)
-                            this._searchTableData();
+                            this._resetForm();
                             message.success('添加成功', 2);
                             form.resetFields();
                             this.setState({
                                 addVisible: false
                             })
-                            
+
                         } else {
                             message.error(v.msg, 2);
                         }
@@ -361,7 +362,7 @@ export default class extends Component {
             return fetch(updateUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    roleIds:values.roleName,
+                    roleIds: values.roleName,
                     "departmentId": values.department,
                     userId,
                     "loginName": values.loginName,
@@ -375,7 +376,7 @@ export default class extends Component {
                         // 判断是否超时
                         timeOut(v.ret)
                         if (v.ret == 1) {
-                            this._searchTableData();
+                            this._resetForm();
                             this.setState({
                                 modifyVisible: false
                             });
@@ -445,7 +446,7 @@ export default class extends Component {
     }
     //翻页
     _pageChange(page) {
-        const { title,searchValue } = this.state;
+        const { title, searchValue } = this.state;
         searchValue.pageIndex = page - 1;
         return fetch(dataUrl, {
             ...postOption,
@@ -466,7 +467,8 @@ export default class extends Component {
                         });
                         this.setState({
                             items,
-                            itemCount
+                            itemCount,
+                            current: page
                         })
                         this._getTableData(title, items)
                     }
@@ -487,9 +489,12 @@ export default class extends Component {
             //角色列表
             roleList,
             //部门列表
-            deptList
+            deptList,
+            //当前页
+            current
         } = this.state;
         const paginationProps = {
+            current: current,
             showQuickJumper: true,
             total: itemCount,
             // 传递页码
@@ -717,7 +722,7 @@ const AddForm = Form.create()(
                         <Form.Item {...formItemLayout} label='部门'>
                             {getFieldDecorator('department', {
                                 initialValue: deptList[0].id,
-                                rules:[
+                                rules: [
                                     { required: true, message: '请先选择部门' }
                                 ]
                             })
@@ -737,7 +742,7 @@ const AddForm = Form.create()(
                         <Form.Item {...formItemLayout} label='角色'>
                             {getFieldDecorator('roleName', {
                                 initialValue: [roleList[0].id],
-                                rules:[
+                                rules: [
                                     { required: true, message: '请先创建角色' }
                                 ]
                             })
@@ -757,7 +762,7 @@ const AddForm = Form.create()(
                         <Form.Item {...formItemLayout} label="手机号">
                             {getFieldDecorator('mobilePhone', {
                                 initialValue: '',
-                                rules: [{pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
+                                rules: [{ pattern: '^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$', message: '请输入正确的手机号码' }],
                             })(
                                 <Input
                                     placeholder='请输入手机号码'
@@ -778,7 +783,7 @@ const ModifyForm = Form.create()(
             const { visible, onCancel, onOk, form, modifyData, roleList, deptList } = this.props;
             const { getFieldDecorator } = form;
             const Option = Select.Option;
-            
+
             if (!modifyData) {
                 return null
             }
@@ -844,7 +849,7 @@ const ModifyForm = Form.create()(
                         <Form.Item {...formItemLayout} label='部门'>
                             {getFieldDecorator('department', {
                                 initialValue: modifyData.departmentId,
-                                rules:[
+                                rules: [
                                     { required: true, message: '请先选择部门' }
                                 ]
                             })
@@ -862,7 +867,7 @@ const ModifyForm = Form.create()(
                         <Form.Item {...formItemLayout} label='角色'>
                             {getFieldDecorator('roleName', {
                                 initialValue: modifyData.roleIds,
-                                rules:[
+                                rules: [
                                     { required: true, message: '请先创建角色' }
                                 ]
                             })
