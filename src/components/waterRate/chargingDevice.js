@@ -67,7 +67,9 @@ export default class extends Component{
             //当前种植类型
             plant:'',
             //当前灌区类型
-            water:''
+            water:'',
+            //初始页
+            current:1
         }
     }
     componentDidMount() {
@@ -201,7 +203,7 @@ export default class extends Component{
                 ...postOption,
                 body: JSON.stringify({
                     "deviceId": values.deviceId,
-                    "deviceName": values.deviceName,
+                    "deviceName": values.name,
                     "installAddrId": values.installAddr,
                     "relatedBuilding": values.relatedBuilding,
                     "wateringType": values.wateringType,
@@ -236,6 +238,7 @@ export default class extends Component{
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
+        this._pageChange(1)
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -258,7 +261,8 @@ export default class extends Component{
                         this.setState({
                             data,
                             itemCount,
-                            searchValue:{}
+                            searchValue:{},
+                            current:1
                         })
                         this._getTableDatas(title, data);
                     }
@@ -287,33 +291,13 @@ export default class extends Component{
                 //超时判断
                 timeOut(v.ret)
                 if(v.ret==1){
-                    fetch(dataUrl,{
-                        ...postOption,
-                        body:JSON.stringify({
-                            "pageIndex": 0,
-                            "pageSize": 10
-                        })
-                    }).then(res=>{
-                        Promise.resolve(res.json())
-                        .then(v=>{
-                            //超时判断
-                            timeOut(v.ret)
-                            if(v.ret==1){
-                                let data=v.data.items;
-                                let itemCount = v.data.itemCount;
-                                // 给每一条数据添加key
-                                data.map((v, i) => {
-                                    v.key = i
-                                })
-                                this.setState({
-                                    data,
-                                    itemCount,
-                                    delVisible:false
-                                })
-                                this._getTableDatas(this.state.title, data);
-                            }
-                        })
+                    this._resetForm()
+                    this.setState({
+                        delVisible:false
                     })
+                    message.success('删除成功', 2);
+                } else {
+                    message.error(v.msg, 2);
                 }
             })
         })
@@ -391,27 +375,14 @@ export default class extends Component{
                                 //超时判断
                                 timeOut(v.ret)
                                 if(v.ret==1){
-                                    fetch(dataUrl,{
-                                        ...postOption,
-                                        body:JSON.stringify({
-                                            "pageIndex": 0,
-                                            "pageSize": 10
-                                        })
-                                    }).then(res=>{
-                                        Promise.resolve(res.json())
-                                        .then(v=>{
-                                            //超时判断
-                                            timeOut(v.ret)
-                                            if(v.ret==1){
-                                                let data=v.data.items
-                                                this.setState({
-                                                    data,
-                                                    editvisible:false
-                                                })
-                                                this._getTableDatas(this.state.title,data)
-                                            }
-                                        })
-                                    })
+                                    this._resetForm();
+                                    this.setState({
+                                        editvisible: false
+                                    });
+                                    form.resetFields();
+                                    message.success('修改成功', 2);
+                                } else {
+                                    message.error(v.msg, 2);
                                 }
                             })
                         })
@@ -474,36 +445,15 @@ export default class extends Component{
                                 //超时判断
                                 timeOut(v.ret)
                                 if(v.ret==1){
-                                    //重新请求接口渲染页面
-                                    fetch(dataUrl,{
-                                        ...postOption,
-                                        body:JSON.stringify({
-                                            "pageIndex": 0,
-                                            "pageSize": 10
-                                        })
-                                    }).then(res=>{
-                                        Promise.resolve(res.json())
-                                        .then(v=>{
-                                            //超时判断
-                                            timeOut(v.ret)
-                                            if(v.ret==1){
-                                                let data=v.data.items
-                                                let itemCount = v.data.itemCount;
-                                                // 给每一条数据添加key
-                                                data.map((v, i) => {
-                                                    v.key = i
-                                                })
-                                                this.setState({
-                                                    data,
-                                                    itemCount,
-                                                    addvisible:false
-                                                })
-                                                this._getTableDatas(title,data)
-                                                message.success("添加成功",2)
-                                            }
-                                        })
+                                    this._resetForm();
+                                    message.success('添加成功', 2);
+                                    form.resetFields();
+                                    this.setState({
+                                        addvisible: false
                                     })
-                                }
+                                } else {
+                                    message.error(v.msg, 2);
+                                } 
                             })
                         })
                     }
@@ -545,7 +495,8 @@ export default class extends Component{
                     })
                     this.setState({
                         itemCount:v.data.itemCount,
-                        data
+                        data,
+                        current:page
                     })
                     this._getTableDatas(title,data);
                 }
@@ -556,8 +507,9 @@ export default class extends Component{
         })
     }
     render(){
-        const { columns, tableDatas,delVisible,editvisible,deviceId,addvisible,itemCount,wateringType,plantType,installAddrList,plant,water } = this.state;
+        const { columns,current,tableDatas,delVisible,editvisible,deviceId,addvisible,itemCount,wateringType,plantType,installAddrList,plant,water } = this.state;
         const paginationProps = {
+            current:current,
             showQuickJumper: true,
             total: itemCount,
             // 传递页码

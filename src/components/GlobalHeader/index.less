@@ -3,6 +3,9 @@
 .header {
     float: right;
     color: white;
+    .warningInfo,.ant-dropdown-placement-bottomRight{
+       color:#ff5400; 
+    }
     :global {
         .ant-scroll-number,
         .ant-badge-count {
@@ -48,6 +51,59 @@
     .headerIcon {
         font-size: 24px;
     }
+}
+:global{
+    .index__warningInfo___31bdr{
+        position: absolute;
+        top:72px!important;
+        overflow-y: auto;
+        border-radius: 4px;
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+        &::-webkit-scrollbar-button {
+            display: none;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: #4d5cab;
+            border-radius: 2px;
+        }
+        &::-webkit-scrollbar-track {
+            background: #2E3459;
+        }
+        .ant-dropdown-menu,.ant-dropdown-menu-light,.ant-dropdown-menu-root,.ant-dropdown-menu-vertical{
+            width: 300px;
+            height: auto;
+            display: flex;
+            flex-wrap: wrap;
+            background: #171A39;
+            border-radius: 4px;
+            .ant-dropdown-menu-item{
+                width: 298px;
+                height: 60px;
+                margin: auto;
+                white-space: normal;
+                overflow-x: visible;
+                border-left: 1px solid transparent;
+                border-right: 1px solid transparent;
+                border-top: 1px solid transparent;
+                border-bottom:1px solid #363a69;
+                border-radius: 4px;
+                &:hover{
+                    background: #327df4;
+                }
+                a{
+                    border-radius: 4px;
+                    display: block;
+                    width: 298px;
+                    color:#a4afbc; 
+                    &:hover{
+                        color: #fff;
+                    }
+                }
+            }
+        }
+     }
 }
 
 .confirmLogout {

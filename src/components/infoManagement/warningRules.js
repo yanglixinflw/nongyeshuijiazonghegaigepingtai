@@ -37,7 +37,9 @@ export default class extends Component {
             // deleteModalVisible:false,
             deleteModalVisible: false,
             // 删除Id
-            deleteId: ''
+            deleteId: '',
+            //初始页
+            current:1
         };
     }
     componentDidMount() {
@@ -93,6 +95,7 @@ export default class extends Component {
                                         data,
                                         itemCount,
                                         deleteModalVisible: false,
+                                        current:1,
                                     })
                                     this._getTableDatas(this.state.title, data);
                                 }
@@ -235,7 +238,8 @@ export default class extends Component {
                         })
                         this.setState({
                             itemCount: v.data.itemCount,
-                            data
+                            data,
+                            current:page
                         })
                         this._getTableDatas(this.state.title, data);
                     }
@@ -246,15 +250,9 @@ export default class extends Component {
         })
     }
     render() {
-        const {
-            columns,
-            tableDatas,
-            itemCount,
-            addVisible,
-            deviceTypeList,
-            deleteModalVisible
-        } = this.state;
+        const {columns,tableDatas,current,itemCount,addVisible,deviceTypeList,deleteModalVisible} = this.state;
         const paginationProps = {
+            current:current,
             showQuickJumper: true,
             total: itemCount,
             // 传递页码

@@ -50,7 +50,9 @@ export default class extends Component{
             //是否显示删除弹窗
             delVisible:false,
             //搜索默认值
-            searchValue:{}
+            searchValue:{},
+            //初始页
+            current:1
         }
     }
     componentDidMount() {
@@ -216,7 +218,8 @@ export default class extends Component{
                         this.setState({
                             data,
                             itemCount,
-                            searchValue:{}
+                            searchValue:{},
+                            current:1
                         })
                         this._getTableDatas(title, data);
                     }
@@ -248,7 +251,8 @@ export default class extends Component{
                     })
                     this.setState({
                         itemCount:v.data.itemCount,
-                        data
+                        data,
+                        current:page
                     })
                     this._getTableDatas(title,data);
                 }
@@ -302,7 +306,8 @@ export default class extends Component{
                                 this._getTableDatas(title, data);
                                 this.setState({
                                     changeStatusVisible:false,
-                                    data
+                                    data,
+                                    current:1
                                 })
                                 if(this.state.isEnabled==false){
                                     message.success("启用成功",2)
@@ -348,28 +353,14 @@ export default class extends Component{
                     //超时判断
                     timeOut(v.ret)
                     if(v.ret==1){
-                        fetch(dataUrl,{
-                            ...postOption,
-                            body:JSON.stringify({
-                                "pageIndex": 0,
-                                "pageSize": 10
-                            })
-                        }).then(res=>{
-                            Promise.resolve(res.json())
-                            .then(v=>{
-                                //超时判断
-                                timeOut(v.ret)
-                                if(v.ret==1){
-                                    let data=v.data.items;
-                                    this._getTableDatas(title, data);
-                                    this.setState({
-                                        addvisible:false,
-                                        data
-                                    })
-                                    message.success("添加成功",2)
-                                } 
-                            })
-                        })
+                        this._resetForm();
+                        this.setState({
+                            addvisible: false
+                        });
+                        form.resetFields();
+                        message.success('添加成功', 2);
+                    } else {
+                        message.error(v.msg, 2);
                     }
                 })
             })
@@ -394,7 +385,6 @@ export default class extends Component{
     }
     //点击修改确定
     edithandleOk(){
-        const{title}=this.state
         const form = this.editForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
@@ -410,31 +400,17 @@ export default class extends Component{
             }).then(res=>{
                 Promise.resolve(res.json())
                 .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
                     if(v.ret==1){
-                        //超时判断
-                        timeOut(v.ret)
-                        fetch(dataUrl,{
-                            ...postOption,
-                            body:JSON.stringify({
-                                "pageIndex": 0,
-                                "pageSize": 10
-                            })
-                        }).then(res=>{
-                            Promise.resolve(res.json())
-                            .then(v=>{
-                                //超时判断
-                                timeOut(v.ret)
-                                if(v.ret==1){
-                                    let data=v.data.items;
-                                    this._getTableDatas(title, data);
-                                    this.setState({
-                                        editvisible:false,
-                                        data
-                                    })
-                                    message.success("修改成功",2)
-                                }
-                            })
-                        })
+                        this._resetForm();
+                        this.setState({
+                            editvisible: false
+                        });
+                        form.resetFields();
+                        message.success('修改成功', 2);
+                    } else {
+                        message.error(v.msg, 2);
                     }
                 })
             })
@@ -455,7 +431,6 @@ export default class extends Component{
     }
     //点击确认删除
     delOk(){
-        const{title}=this.state
         fetch(delUrl,{
             ...postOption,
             body:JSON.stringify({
@@ -467,28 +442,14 @@ export default class extends Component{
                 //超时判断
                 timeOut(v.ret)
                 if(v.ret==1){
-                    fetch(dataUrl,{
-                        ...postOption,
-                        body:JSON.stringify({
-                            "pageIndex": 0,
-                            "pageSize": 10
-                        })
-                    }).then(res=>{
-                        Promise.resolve(res.json())
-                        .then(v=>{
-                            //超时判断
-                            timeOut(v.ret)
-                            if(v.ret==1){
-                                let data=v.data.items;
-                                this._getTableDatas(title, data);
-                                this.setState({
-                                    delVisible:false,
-                                    data
-                                })
-                                message.success('删除成功',2)
-                            }
-                        })
-                    })
+                    this._resetForm();
+                    this.setState({
+                        delVisible: false
+                    });
+                    form.resetFields();
+                    message.success('删除成功', 2);
+                } else {
+                    message.error(v.msg, 2);
                 }
             })
         })
@@ -500,12 +461,13 @@ export default class extends Component{
         })
     }
     render(){
-        const { columns,itemCount, tableDatas,changeStatusVisible,addvisible,editvisible,name,ruleId,delVisible,isEnabled } = this.state;
+        const { columns,itemCount,current,tableDatas,changeStatusVisible,addvisible,editvisible,name,ruleId,delVisible,isEnabled } = this.state;
         const paginationProps = {
-        showQuickJumper: true,
-        total: itemCount,
-        // 传递页码
-        onChange: (page) => this._pageChange(page)
+            current,current,
+            showQuickJumper: true,
+            total: itemCount,
+            // 传递页码
+            onChange: (page) => this._pageChange(page)
       };
         return(
             <React.Fragment>

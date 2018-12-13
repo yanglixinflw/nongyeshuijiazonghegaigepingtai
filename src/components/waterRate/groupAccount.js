@@ -47,7 +47,9 @@ export default class extends Component{
             //是否显示清除弹窗
             clearVisible:false,
             //是否显示分配水权弹窗
-            assignvisible:false
+            assignvisible:false,
+            //初始页
+            current:1
         }
     }
     componentDidMount() {
@@ -206,7 +208,8 @@ export default class extends Component{
                         this.setState({
                             data,
                             itemCount,
-                            searchValue:{}
+                            searchValue:{},
+                            current:1
                         })
                         this._getTableDatas(title, data);
                     }
@@ -241,30 +244,14 @@ export default class extends Component{
                     //超时判断
                     timeOut(v.ret)
                     if(v.ret==1){
-                        fetch(dataUrl,{
-                            ...postOption,
-                            body:JSON.stringify({
-                                "pageIndex": 0,
-                                "pageSize": 10
-                            })
-                        }).then(res=>{
-                            Promise.resolve(res.json())
-                            .then(v=>{
-                                //超时判断
-                                timeOut(v.ret)
-                                if(v.ret==1){
-                                    let data=v.data.items
-                                    let itemCount=v.data.itemCount
-                                    this.setState({
-                                        data,
-                                        itemCount,
-                                        editvisible:false
-                                    })
-                                    this._getTableDatas(this.state.title,data)
-                                    message.success("修改成功",2)
-                                }
-                            })
-                        })
+                        this._resetForm();
+                        this.setState({
+                            editvisible: false
+                        });
+                        form.resetFields();
+                        message.success('修改成功', 2);
+                    } else {
+                        message.error(v.msg, 2);
                     }
                 })
             })
@@ -299,30 +286,14 @@ export default class extends Component{
                 //超时判断
                 timeOut(v.ret)
                 if(v.ret==1){
-                    fetch(dataUrl,{
-                        ...postOption,
-                        body:JSON.stringify({
-                            "pageIndex": 0,
-                            "pageSize": 10
-                        })
-                    }).then(res=>{
-                        Promise.resolve(res.json())
-                        .then(v=>{
-                            //超时判断
-                            timeOut(v.ret)
-                            if(v.ret==1){
-                                let data=v.data.items;
-                                let itemCount=v.data.itemCount
-                                this.setState({
-                                    data,
-                                    itemCount,
-                                    clearVisible:false
-                                })
-                                this._getTableDatas(this.state.title,data)
-                                message.success("已清空",2)
-                            }
-                        })
-                    })
+                    this._resetForm();
+                    this.setState({
+                        clearVisible: false
+                    });
+                    form.resetFields();
+                    message.success('已清空', 2);
+                } else {
+                    message.error(v.msg, 2);
                 }
             })
         })
@@ -360,30 +331,14 @@ export default class extends Component{
                     //超时判断
                     timeOut(v.ret)
                     if(v.ret==1){
-                        fetch(dataUrl,{
-                            ...postOption,
-                            body:JSON.stringify({
-                                "pageIndex": 0,
-                                "pageSize": 10
-                            })
-                        }).then(res=>{
-                            Promise.resolve(res.json())
-                            .then(v=>{
-                                //超时判断
-                                timeOut(v.ret)
-                                if(v.ret==1){
-                                    let data=v.data.items;
-                                    let itemCount=v.data.itemCount
-                                    this.setState({
-                                        data,
-                                        itemCount,
-                                        assignvisible:false
-                                    })
-                                    this._getTableDatas(this.state.title,data)
-                                    message.success("已重新分配",2)
-                                }
-                            })
-                        })
+                        this._resetForm();
+                        this.setState({
+                            assignvisible: false
+                        });
+                        form.resetFields();
+                        message.success('已重新分配', 2);
+                    } else {
+                        message.error(v.msg, 2);
                     }
                 })
             })
@@ -398,10 +353,50 @@ export default class extends Component{
             assignvisible:false
         })
     }
+    //换页
+    _pageChange(page){
+        const { title,searchValue } = this.state;
+        searchValue.pageIndex = page - 1;
+        searchValue.deviceTypeId=this.state.deviceTypeId;
+        searchValue.pageSize=10
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                ...searchValue
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                //超时判断
+                timeOut(v.ret)
+                if(v.ret==1){
+                    // 设置页面显示的元素
+                    let data = v.data.items;
+                    //添加key
+                    data.map((v, i) => {
+                        v.key = i
+                    })
+                    this.setState({
+                        itemCount:v.data.itemCount,
+                        data,
+                        current:page
+                    })
+                    this._getTableDatas(title,data);
+                }
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+        })
+    }
     render(){
-        const { columns, tableDatas,editvisible,name,clearVisible,assignvisible } = this.state;
+        const { columns,current,itemCount,tableDatas,editvisible,name,clearVisible,assignvisible } = this.state;
         const paginationProps = {
+            current:current,
             showQuickJumper: true,
+            total: itemCount,
+            // 传递页码
+            onChange: (page) => this._pageChange(page)
         };
         return(
             <React.Fragment>
