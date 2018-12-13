@@ -72,6 +72,9 @@ export default class extends Component{
         )
     }
     _getTableDatas(title, data) {
+        const {groupMember} = this.state
+        //移除农户数组中的与小组账户相同的项
+        var datas = data.filter(item => !groupMember.some(v => v.idCard === item.idCard))
         let columns = [];
         title.map(v => {
             columns.push({
@@ -84,7 +87,7 @@ export default class extends Component{
         })
         let tableDatas = [];
         //表单数据
-        data.map((v, i) => {
+        datas.map((v, i) => {
             tableDatas.push({
                 realName:v.realName,
                 mobilePhone:v.mobilePhone,
@@ -109,6 +112,7 @@ export default class extends Component{
             // },
         };
         this.setState({
+            data:datas,
             columns,
             tableDatas,
             rowSelection
@@ -123,31 +127,35 @@ export default class extends Component{
     }
     //将右边的选中项移到左边
     push(){
-        const{groupMember,selectedRows}=this.state
-        console.log(this.state.groupMember)
-        // console.log(this.state.selectedRows)
+        const{groupMember,selectedRows,data}=this.state
         if(selectedRows==''){
             return
         }
+        //将选中的行push到小组成员数组中
         selectedRows.map((v,i)=>{
-            groupMember.push({memberUserId:v.userId,mobilePhone:v.mobilePhone,realName:v.realName,idCard:v.idCard,areaName:v.areaName,key:i})
+            groupMember.push({memberUserId:v.userId,mobilePhone:v.mobilePhone,realName:v.realName,idCard:v.idCard,areaName:v.areaName})
         })
-        var newArr = [];//新数组(定义一个新数组用于去重)
-        var obj = {};
-        //对象数组去重
+        var groupArr = [];//新数组(定义一个新数组用于去重)
+        var groupObj = {};
+        //小组成员（对象）数组去重
         for(var i =0; i<groupMember.length; i++){
-            if(!obj[groupMember[i].idCard]){
-                newArr.push(groupMember[i]);
-                obj[groupMember[i].idCard] = true;
+            if(!groupObj[groupMember[i].idCard]){
+                groupArr.push(groupMember[i]);
+                groupObj[groupMember[i].idCard] = true;
             }
         }
+        //移除农户数组中的与小组账户相同的项
+        var datas = data.filter(item => !groupMember.some(v => v.idCard === item.idCard))
         this.setState({
-            groupMember:newArr
+            groupMember,
+            data:datas
         })
+        this._getTableDatas(this.state.title,data)
     }
     //将左边的选中项移除
     remove(){
         const{checkedValue,groupMember}=this.state
+        console.log(checkedValue)
         //如果什么都没选
         if(checkedValue==''){
             return
@@ -161,9 +169,30 @@ export default class extends Component{
         })
         //得到移除选中项后的数组
         var arr=array[array.length-1]
+        console.log(arr)
         this.setState({
             groupMember:arr
+        }),
+        fetch(farmerUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                "pageIndex": 0,
+                "pageSize": 100
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                timeOut(v.ret)
+                if(v.ret==1){
+                    let data=v.data.items
+                    this.setState({
+                        data
+                    })
+                    this._getTableDatas(this.state.title,data)
+                }
+            })
         })
+      
     }
     //保存
     _save(){
@@ -348,8 +377,8 @@ export default class extends Component{
                             </div>
                         </div>
                         <div className={styles.middle}>
-                            <Button type="primary" className={styles.btnL} onClick={()=>this.push()}>&lt;</Button>
-                            <Button type="primary" className={styles.btnR} onClick={()=>this.remove()}>&gt;</Button>
+                            <Button type="primary" className={styles.btnL} onClick={()=>this.push()}><i className={classnames('dyhsicon', 'dyhs-xiangyou1', `${styles.btnRIcon}`)}></i></Button>
+                            <Button type="primary" className={styles.btnR} onClick={()=>this.remove()}><i className={classnames('dyhsicon', 'dyhs-xiangyou1', `${styles.btnLIcon}`)}></i></Button>
                         </div>
                         <div className={styles.mright}>
                             <div className={styles.title}>

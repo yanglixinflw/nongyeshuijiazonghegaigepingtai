@@ -23,11 +23,6 @@ export default class extends Component {
         super(props)
         const { autoRules } = props;
         // console.log(props)
-        // let conditions = autoRules.data.data.conditions
-        // conditions.map((v,i)=>{
-        //     v.parameterIdList = []; 
-        // })
-        // console.log(conditions)
         this.state = {
             //规则id
             ruleId: props.ruleId,
@@ -37,16 +32,8 @@ export default class extends Component {
             name: autoRules.data.data.name,
             //条件数组
             conditions: autoRules.data.data.conditions,
-            //条件数组的长度
-            clength: autoRules.data.data.conditions.length,
             //执行数组
             actions: autoRules.data.data.actions,
-            //执行数组的长度
-            alength: autoRules.data.data.actions.length,
-            //条件初始数组
-            conditionArr: [],
-            //执行初始数组
-            actionArr: [],
         }
     }
     //保存
@@ -177,32 +164,35 @@ export default class extends Component {
     }
     //重置
     _resetForm() {
-        this.ruleForm.props.form.resetFields();
+        // this.ruleForm.props.form.resetFields();
         const { ruleId } = this.state;
         Promise.resolve(getAutoRules({ ruleId }))
             .then((v) => {
                 //超时判断
                 timeOut(v.data.ret);
                 if (v.data.ret == 1) {
-                    // console.log(v.data)
                     let actions = v.data.data.actions;
                     let anyConditionFireAction = v.data.data.anyConditionFireAction;
                     let conditions = v.data.data.conditions;
                     let name = v.data.data.name;
+                    // console.log(actions)
                     this.setState({
                         actions,
                         anyConditionFireAction,
                         conditions,
                         name,
-                        conditionArr: [],
-                        actionArr: []
                     })
                 }
             })
+        // this.setState({
+        //     actions:[],
+        //     anyConditionFireAction:false,
+        //     conditions:[],
+        // })
 
     }
     render() {
-        const { anyConditionFireAction, name, conditions, actions, conditionArr, actionArr } = this.state;
+        const { anyConditionFireAction, name, conditions, actions, } = this.state;
         return (
             <React.Fragment>
                 <div className={styles.headers}>
@@ -226,7 +216,7 @@ export default class extends Component {
                 <div className={styles.mbody}>
                     <RuleForm
                         wrappedComponentRef={(ruleForm) => this.ruleForm = ruleForm}
-                        {...{ anyConditionFireAction, name, conditions, actions, conditionArr, actionArr }}
+                        {...{ anyConditionFireAction, name, conditions, actions }}
                     />
                 </div>
             </React.Fragment>
@@ -237,16 +227,27 @@ export default class extends Component {
 //规则表单
 const RuleForm = Form.create()(
     class extends React.Component {
-        state = {
-            //设备列表
-            deviceList: [],
-            //条件数组
-            conditions: this.props.conditions,
-            //执行数组
-            actions: this.props.actions,
+        constructor(props) {
+            super(props)
+            this.state = {
+                //设备列表
+                deviceList: [],
+                //条件数组
+                conditions: props.conditions,
+                //执行数组
+                actions: props.actions,
+            }
         }
-        componentDidMount() {
-            const { conditions, actions } = this.state;
+        componentWillReceiveProps() {
+            //统一数据源
+            const { conditions, actions } = this.props
+            this.setState({
+                conditions,
+                actions
+            })
+            // this.handleChange()
+            // console.log(actions)
+            // const { conditions, actions } = this.state;
             //  console.log(conditions)
             if (conditions.length != 0) {
                 //获取参数的信息
@@ -343,6 +344,7 @@ const RuleForm = Form.create()(
                     })
                 })
             }
+
         }
         //下拉搜索框搜索功能
         handleSearch = (value) => {
@@ -411,8 +413,22 @@ const RuleForm = Form.create()(
                                         //超时判断
                                         timeOut(v.ret);
                                         if (v.ret == 1) {
-                                            let parameterIdList = v.data
+                                            // console.log(1)
+                                            let parameterIdList = v.data;
+                                            if (parameterIdList.length == 0) {
+                                                form.setFieldsValue({
+                                                    [`parameterId[${i}]`]: []
+                                                });
+                                            }
                                             conditions[i].parameterIdList = parameterIdList
+                                            this.setState({
+                                                conditions
+                                            })
+                                        } else {
+                                            conditions[i].parameterIdList = [];
+                                            form.setFieldsValue({
+                                                [`parameterId[${i}]`]: []
+                                            });
                                             this.setState({
                                                 conditions
                                             })
@@ -432,12 +448,20 @@ const RuleForm = Form.create()(
                                             timeOut(v.ret);
                                             if (v.ret == 1) {
                                                 let switchList = v.data
+                                                if (switchList.length == 0) {
+                                                    form.setFieldsValue({
+                                                        [`execCmd[${i}]`]: []
+                                                    });
+                                                }
                                                 actions[i].switchList = switchList
                                                 this.setState({
                                                     actions
                                                 })
                                             } else {
-                                                actions[i].switchList = []
+                                                actions[i].switchList = [];
+                                                form.setFieldsValue({
+                                                    [`execCmd[${i}]`]: []
+                                                });
                                                 this.setState({
                                                     actions
                                                 })
@@ -450,84 +474,60 @@ const RuleForm = Form.create()(
                 console.log(err)
             })
         }
-        //条件的++ --
-        conditionRemove = (v) => {
-            const { form, conditionArr } = this.props;
-            // const {conditionArr}=this.state
-            conditionArr.pop(v)
-            const condition = form.getFieldValue('condition');
-            //可以使用数据绑定来设置
-            form.setFieldsValue({
-                condition: condition.filter(key => key !== v),
-            });
+        //减少条件--
+        conditionRemove = (index) => {
+            const { conditions } = this.state
+            // console.log(conditions)
+            let newCodition = _.cloneDeep(conditions)
+            let arr = newCodition.filter((key, i) => i != index)
             this.setState({
-                conditionArr
+                conditions: arr
             })
         }
+        // 添加条件++
         conditionAdd = () => {
-            const { form, conditionArr } = this.props;
-            //conditionArr不存在的时候就让“点此添加一行”显现
-            conditionArr.push(conditionArr.length)
-            const condition = form.getFieldValue('condition');
+            const { conditions } = this.state
             // console.log(condition)
             //得到添加数量的数组
-            const nextCondition = condition.concat({});
+            const nextCondition = conditions.concat({});
             nextCondition.map((v, i) => {
                 v.parameterIdList = []
             })
-            // console.log(nextCondition)
-            // 可以使用数据绑定来设置
-            // 重要!通知表单以检测更改
-            form.setFieldsValue({
-                condition: nextCondition,
-            });
             this.setState({
-                conditionArr
+                conditions: nextCondition
             })
         }
-        //执行的++--
-        actionRemove = (v) => {
-            const { form, actionArr } = this.props;
-            actionArr.pop(v)
-            const action = form.getFieldValue('action');
-            //可以使用数据绑定来设置
-            form.setFieldsValue({
-                action: action.filter(key => key !== v),
-            });
+        //减少执行--
+        actionRemove = (index) => {
+            const { actions } = this.state;
+            let newActions = _.cloneDeep(actions)
+            let arr = newActions.filter((key, i) => i != index)
             this.setState({
-                actionArr
+                actions: arr
             })
         }
+        //添加执行++
         actionAdd = () => {
-            const { form, actionArr } = this.props;
-            const action = form.getFieldValue('action');
-            //actionArr不存在的时候就让“点此添加一行”显现
-            // const {actionArr}=this.state;
-            actionArr.push(actionArr.length)
+            const { actions } = this.state;
             //得到添加数量的数组
-            const nextAction = action.concat({});
+            const nextAction = actions.concat({});
             nextAction.map((v, i) => {
                 v.switchList = [];
             })
-            // 可以使用数据绑定来设置
-            // 重要!通知表单以检测更改
-            form.setFieldsValue({
-                action: nextAction,
-            });
             this.setState({
-                actionArr
+                actions: nextAction
             })
         }
         render() {
-            const { conditionArr, actionArr } = this.props;
             const { getFieldDecorator, getFieldValue } = this.props.form;
             const { anyConditionFireAction, name } = this.props
             const { deviceList, actions, conditions } = this.state;
-            // console.log(conditions)
+            // console.log(actions.length)
             //条件列表渲染
-            getFieldDecorator('condition', { initialValue: conditions });
-            const condition = getFieldValue('condition');
-            const conditionForm = condition.map((v, i) => {
+            // getFieldDecorator('condition', { initialValue: conditions });
+            // const condition = getFieldValue('condition');
+            // console.log(condition)
+            const conditionForm = conditions.map((v, i) => {
                 if (v.parameterIdList)
                     return (
                         <div className={styles.line} key={i}>
@@ -575,11 +575,14 @@ const RuleForm = Form.create()(
                                     >
                                         {
                                             // console.log(v)
-                                            v.parameterIdList.map((v, index) => {
-                                                return (
-                                                    <Option key={v.parameterId}>{v.name}{v.unit}</Option>
-                                                )
-                                            })
+                                            v.parameterIdList.length !== 0 ?
+                                                v.parameterIdList.map((v, index) => {
+                                                    return (
+                                                        <Option key={v.parameterId}>{v.name}{v.unit}</Option>
+                                                    )
+                                                })
+                                                :
+                                                null
                                         }
                                     </Select>)
                                 }
@@ -617,27 +620,27 @@ const RuleForm = Form.create()(
                                 <div className={styles.addLess}>
                                     <Icon
                                         type="plus"
-                                        onClick={() => this.conditionAdd(v)}
+                                        onClick={() => this.conditionAdd()}
                                     />
                                     <Icon
                                         type="minus"
-                                        onClick={() => this.conditionRemove(v)}
+                                        onClick={() => this.conditionRemove(i)}
                                     />
                                 </div>
                             ) : (
                                     <Icon
                                         type="minus"
-                                        onClick={() => this.conditionRemove(v)}
+                                        onClick={() => this.conditionRemove(i)}
                                     />
                                 )}
                         </div>
                     );
             });
             //执行列表渲染
-            getFieldDecorator('action', { initialValue: actions });
-            const action = getFieldValue('action');
-            const actionForm = action.map((v, i) => {
-                // console.log(actions)
+            // getFieldDecorator('action', { initialValue: actions });
+            // const action = getFieldValue('action');
+            const actionForm = actions.map((v, i) => {
+                // console.log(v)
                 if (v.switchList)
                     return (
                         <div className={styles.line} key={i}>
@@ -694,17 +697,17 @@ const RuleForm = Form.create()(
                                 <div className={styles.addLess}>
                                     <Icon
                                         type="plus"
-                                        onClick={() => this.actionAdd(v)}
+                                        onClick={() => this.actionAdd()}
                                     />
                                     <Icon
                                         type="minus"
-                                        onClick={() => this.actionRemove(v)}
+                                        onClick={() => this.actionRemove(i)}
                                     />
                                 </div>
                             ) : (
                                     <Icon
                                         type="minus"
-                                        onClick={() => this.actionRemove(v)}
+                                        onClick={() => this.actionRemove(i)}
                                     />
                                 )}
                         </div>
@@ -733,29 +736,30 @@ const RuleForm = Form.create()(
                             }
                         </Form.Item>
                         {/* 条件的添加 */}
-                        {conditionForm}
-                        {conditionArr.length == 0 && condition.length == 0 ?
-                            (
-                                <Form.Item>
-                                    <Button className={styles.btnCondition} onClick={() => this.conditionAdd()}>点此添加条件栏</Button>
-                                </Form.Item>
-                            )
-                            :
-                            null
+                        {/* {conditionForm} */}
+                        {
+                            conditions.length == 0 ?
+                                (
+                                    <Form.Item>
+                                        <Button className={styles.btnCondition} onClick={() => this.conditionAdd()}>点此添加条件栏</Button>
+                                    </Form.Item>
+                                )
+                                :
+                                conditionForm
                         }
 
                         <div className={styles.do}>执行</div>
                         {/* 执行的添加 */}
-                        {actionForm}
+
                         {
-                            actionArr.length == 0 && action.length == 0 ?
+                            actions.length == 0 ?
                                 (
                                     <Form.Item>
                                         <Button className={styles.btnAction} onClick={() => this.actionAdd()}>点此添加执行栏</Button>
                                     </Form.Item>
                                 )
                                 :
-                                null
+                                actionForm
                         }
                     </div>
                 </Form>

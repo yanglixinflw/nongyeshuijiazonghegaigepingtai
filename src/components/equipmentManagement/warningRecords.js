@@ -30,6 +30,10 @@ const tableTitle = [
     { index: "buildingName", item: "关联建筑物" },
     { index: "installAddress", item: "设备安装地" }
 ]
+// 按顺序给定序号
+tableTitle.map((v, i) => {
+    v.number = i
+})
 const { Option } = Select
 export default class extends Component {
     constructor(props) {
@@ -121,7 +125,7 @@ export default class extends Component {
             render: (record) => {
                 return (
                     <span className={styles.option}>
-                        {record.warningStatus=='3'?<Button
+                        {record.warningStatus=="关闭"?<Button
                             className={styles.closeDis}
                             onClick={() => this.closeWarning(record.logId)}
                             disabled
@@ -150,21 +154,75 @@ export default class extends Component {
         let tableDatas = [];
         //表单数据
         data.map((v, i) => {
-            tableDatas.push({
-                time: v.time,
-                waringType: v.waringType,
-                name: v.name,
-                eventContent: v.eventContent,
-                deviceId: v.deviceId,
-                buildingName: v.buildingName,
-                warningStatus: v.warningStatus,
-                dealWithOpinion: v.dealWithOpinion,
-                dealWithUser: v.dealWithUser,
-                dealWithTime: v.dealWithTime,
-                installAddress: v.installAddress,
-                logId:v.logId,
-                key: i,
-            });
+            if(v.waringType==1){
+                if(v.warningStatus==1){
+                    tableDatas.push({
+                        time: v.time,
+                        waringType: "功能预警",
+                        name: v.name,
+                        eventContent: v.eventContent,
+                        deviceId: v.deviceId,
+                        buildingName: v.buildingName,
+                        warningStatus: "预警",
+                        dealWithOpinion: v.dealWithOpinion,
+                        dealWithUser: v.dealWithUser,
+                        dealWithTime: v.dealWithTime,
+                        installAddress: v.installAddress,
+                        logId:v.logId,
+                        key: i,
+                    });
+                }else{
+                    tableDatas.push({
+                        time: v.time,
+                        waringType: "功能预警",
+                        name: v.name,
+                        eventContent: v.eventContent,
+                        deviceId: v.deviceId,
+                        buildingName: v.buildingName,
+                        warningStatus: "关闭",
+                        dealWithOpinion: v.dealWithOpinion,
+                        dealWithUser: v.dealWithUser,
+                        dealWithTime: v.dealWithTime,
+                        installAddress: v.installAddress,
+                        logId:v.logId,
+                        key: i,
+                    });
+                }
+            }else{
+                if(v.warningStatus==1){
+                    tableDatas.push({
+                        time: v.time,
+                        waringType: "运营预警",
+                        name: v.name,
+                        eventContent: v.eventContent,
+                        deviceId: v.deviceId,
+                        buildingName: v.buildingName,
+                        warningStatus: "预警",
+                        dealWithOpinion: v.dealWithOpinion,
+                        dealWithUser: v.dealWithUser,
+                        dealWithTime: v.dealWithTime,
+                        installAddress: v.installAddress,
+                        logId:v.logId,
+                        key: i,
+                    });
+                }else{
+                    tableDatas.push({
+                        time: v.time,
+                        waringType: "运营预警",
+                        name: v.name,
+                        eventContent: v.eventContent,
+                        deviceId: v.deviceId,
+                        buildingName: v.buildingName,
+                        warningStatus: "关闭",
+                        dealWithOpinion: v.dealWithOpinion,
+                        dealWithUser: v.dealWithUser,
+                        dealWithTime: v.dealWithTime,
+                        installAddress: v.installAddress,
+                        logId:v.logId,
+                        key: i,
+                    });
+                }
+            }
         })
         this.setState({
             columns,
@@ -564,9 +622,8 @@ const SearchForm = Form.create()(
                                 placeholder="状态"
                             >
                                 <Option value=''>全部</Option>
-                                <Option value='1'>正常</Option>
-                                <Option value='2'>预警</Option>
-                                <Option value='3'>关闭</Option>
+                                <Option value='1'>预警</Option>
+                                <Option value='2'>关闭</Option>
                             </Select>
                             )
                         }

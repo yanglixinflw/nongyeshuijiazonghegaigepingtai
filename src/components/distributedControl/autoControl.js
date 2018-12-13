@@ -274,8 +274,6 @@ export default class extends Component{
    //点击 停/启用 确定
     changeStatusOk(){
         const {title}=this.state
-        console.log(this.state.isEnabled)
-        console.log(!this.state.isEnabled)
         return fetch(changeUrl,{
             ...postOption,
             body:JSON.stringify({
@@ -379,6 +377,9 @@ export default class extends Component{
     }
     //点击添加取消
     addhandleCancel(){
+        const form = this.addForm.props.form;
+        // 重置表单
+        form.resetFields();
         this.setState({
             addvisible:false
         })

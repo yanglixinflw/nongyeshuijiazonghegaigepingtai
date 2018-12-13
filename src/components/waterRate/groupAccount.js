@@ -272,13 +272,15 @@ export default class extends Component{
     }
     //点击取消修改
     edithandleCancel(){
+        const form = this.editForm.props.form;
+        // 重置表单
+        form.resetFields();
         this.setState({
             editvisible:false
         })
     }
     //点击清空当前用量
     clear(userId){
-        console.log(userId)
         this.setState({
             clearVisible:true,
             userId
@@ -389,6 +391,9 @@ export default class extends Component{
     }
     //点击取消分配水权
     assignhandleCancel(){
+        const form = this.assignWaterForm.props.form;
+        // 重置表单
+        form.resetFields();
         this.setState({
             assignvisible:false
         })
