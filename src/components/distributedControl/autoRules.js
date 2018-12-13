@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './autoRules.less';
-import { Input, Button, Form, Select, Icon, Radio, message, InputNumber } from 'antd';
+import { Input, Button, Form, Select, Icon, Radio, message, InputNumber,Tooltip } from 'antd';
 import { getAutoRules } from '../../services/api'
 import { Link } from 'dva/router';
 import _ from 'lodash'
@@ -531,8 +531,9 @@ const RuleForm = Form.create()(
                 if (v.parameterIdList)
                     return (
                         <div className={styles.line} key={i}>
+                            
                             <Form.Item className={styles.search}>
-
+                                <Tooltip title="设备名称/ID">
                                 {getFieldDecorator(`conditionDeviceId[${i}]`,
                                     {
                                         initialValue: v.deviceId || [],
@@ -540,29 +541,29 @@ const RuleForm = Form.create()(
                                     }
                                 )
                                     (
+                                    
+                                        <Select
+                                            showSearch
+                                            defaultActiveFirstOption={false}
+                                            showArrow={false}
+                                            onSearch={_.debounce((value) => this.handleSearch(value), 300)}
+                                            onChange={(value) => this.handleChange(value, i)}
+                                            notFoundContent={null}
+                                            placeholder='设备名称/ID'
 
-                                    <Select
-                                        showSearch
-                                        defaultActiveFirstOption={false}
-                                        showArrow={false}
-                                        onSearch={_.debounce((value) => this.handleSearch(value), 300)}
-                                        onChange={(value) => this.handleChange(value, i)}
-                                        notFoundContent={null}
-                                        placeholder='设备名称/ID'
-
-                                    >
-                                        {
-                                            deviceList.map((v, i) => {
-                                                return (
-                                                    <Option key={v.deviceId}>{v.deviceId}</Option>
-                                                )
-                                            })
-                                        }
-                                    </Select>
-
+                                        >
+                                            {
+                                                deviceList.map((v, i) => {
+                                                    return (
+                                                        <Option key={v.deviceId}>{v.deviceId}</Option>
+                                                    )
+                                                })
+                                            }
+                                        </Select>
+                                    
                                     )
                                 }
-
+                                </Tooltip>
                             </Form.Item>
                             <Form.Item className={styles.search}>
                                 {getFieldDecorator(`parameterId[${i}]`,
@@ -646,6 +647,7 @@ const RuleForm = Form.create()(
                     return (
                         <div className={styles.line} key={i}>
                             <Form.Item className={styles.search}>
+                                <Tooltip title="设备名称/ID">
                                 {getFieldDecorator(`actionDeviceId[${i}]`,
                                     {
                                         initialValue: v.deviceId || [],
@@ -673,6 +675,7 @@ const RuleForm = Form.create()(
                                     </Select>
                                     )
                                 }
+                                </Tooltip>
                             </Form.Item>
                             <Form.Item className={styles.search}>
                                 {getFieldDecorator(`execCmd[${i}]`,
