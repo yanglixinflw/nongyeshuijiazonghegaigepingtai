@@ -30,7 +30,7 @@ export default class extends React.Component {
                     退出登录
                 </Menu.Item>
             </Menu>
-        );
+        ); 
         const menu = (
             <Menu style={{ width: 0, height: 0 }}>
             </Menu>
@@ -52,13 +52,13 @@ export default class extends React.Component {
             ...postOption,
             body: JSON.stringify({
                 "pageIndex": 0,
+                //只判断了一页
                 "pageSize": 10
             })
         }).then(res => {
             Promise.resolve(res.json())
                 .then(v => {
                     if (v.ret == 1) {
-                        // console.log(v.data.items)
                         let data = v.data.items;
                         let warningDatas = [];
                         data.map((v, i) => {
@@ -73,10 +73,9 @@ export default class extends React.Component {
                                     {
                                         warningDatas.map(function (v, i) {
                                             return <Menu.Item key={i}>
-                                                <Link to={`/manage/warning`}>{'【设备异常】' + " " + v.eventContent + " " + v.time}</Link>
+                                                <Link to={{pathname:`/manage/warning`}}><Button>{'【设备异常】' + " " + v.eventContent + " " + v.time}</Button></Link>
                                             </Menu.Item>
                                         })
-
                                     }
                                 </Menu>
                             )
@@ -100,52 +99,6 @@ export default class extends React.Component {
         this.setState({
             modifyPasswordVisble: true,
         });
-    }
-    //点击预警消息清空气泡
-    clear() {
-        this.setState({
-            count: 0
-        })
-    }
-    //修改密码点击取消
-    changePwdCancelHandler() {
-        const form = this.ChangePwdForm.props.form;
-        // 重置表单
-        form.resetFields();
-        this.setState({
-            modifyPasswordVisble: false,
-        });
-    }
-    // 确认修改密码
-    changePwdOkHandler() {
-        const form = this.ChangePwdForm.props.form;
-        form.validateFields((err, values) => {
-            if (!err) {
-                fetch(changePassWordUrl, {
-                    ...postOption,
-                    body: JSON.stringify({
-                        oldPwd: values.oldPwd,
-                        newPwd: values.newPwd
-                    })
-                }).then(res => {
-                    Promise.resolve(res.json())
-                        .then(v => {
-                            //超时判断
-                            timeOut(v.ret)
-                            if (v.ret == 1) {
-                                message.success('修改成功', 2)
-                                this.setState({
-                                    modifyPasswordVisble: false
-                                })
-                                // 重置表单
-                                form.resetFields();
-                            } else {
-                                message.error(v.msg, 1)
-                            }
-                        })
-                })
-            }
-        })
     }
     // 退出登录
     _showConfirm() {
@@ -202,7 +155,7 @@ export default class extends React.Component {
                     <Badge count={this.state.count}>
                         <div className={styles.news}>
                             <i className={classnames('dyhsicon', 'dyhs-yujingshijian', `${styles.headerIcon}`)}></i>
-                            <Button onClick={() => this.clear()}>预警消息</Button>
+                            <Button>预警消息</Button>
                         </div>
                     </Badge>
                 </Dropdown>
