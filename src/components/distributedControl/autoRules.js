@@ -113,6 +113,7 @@ export default class extends Component {
                             timeOut(v.ret)
                             if (v.ret == 1) {
                                 let deviceTypeId = v.data.items[0].deviceTypeId;
+                                // console.log(deviceTypeId)
                                 return fetch(switchUrl, {
                                     ...postOption,
                                     body: JSON.stringify({
@@ -125,6 +126,7 @@ export default class extends Component {
                                             timeOut(v.ret);
                                             if (v.ret == 1) {
                                                 let switchList = v.data
+                                                // console.log(switchList)
                                                 switchListArr.push(switchList)
                                                 // actions[i].switchList = switchList
                                                 this.setState({
@@ -285,14 +287,22 @@ export default class extends Component {
                     let anyConditionFireAction = v.data.data.anyConditionFireAction;
                     let conditions = v.data.data.conditions;
                     let name = v.data.data.name;
-                    // console.log(actions)
+                    // console.log(v.data.data)
+                    let parameterIdListArr = [];
+                    let switchListArr = [] ;
+                    conditions.map((v,i)=>{
+                        parameterIdListArr.push([])
+                    })
+                    actions.map((v,i)=>{
+                        switchListArr.push([])
+                    })
                     this.setState({
                         actions,
                         anyConditionFireAction,
                         conditions,
                         name,
-                        parameterIdListArr: [],
-                        switchListArr: []
+                        parameterIdListArr,
+                        switchListArr
                     })
                 }
             })
@@ -304,10 +314,11 @@ export default class extends Component {
 
     }
     //option的value值就是设备ID
-    handleChange(value, i) {
+    handleChangeCondition(value, i) {
         // console.log(value)
+        // console.log(i)
         const form = this.ruleForm.props.form;
-        const { conditions, actions,parameterIdListArr,switchListArr } = this.state;
+        const { conditions,parameterIdListArr} = this.state;
         // console.log(conditions)
         this.setState({
             deviceList: []
@@ -368,58 +379,68 @@ export default class extends Component {
             })
         }
 
-        //获取开关的信息
-        if (actions.length !== 0) {
-            actions.map((v, i) => {
-                return fetch(deviceUrl, {
-                    ...postOption,
-                    body: JSON.stringify({
-                        "deviceId": actions[i].deviceId,
-                        "pageIndex": 0,
-                        "pageSize": 1
-                    })
-                }).then((res) => {
-                    Promise.resolve(res.json())
-                        .then((v) => {
-                            //超时判断
-                            timeOut(v.ret)
-                            if (v.ret == 1) {
-                                let deviceTypeId = v.data.items[0].deviceTypeId;
-                                return fetch(switchUrl, {
-                                    ...postOption,
-                                    body: JSON.stringify({
-                                        deviceTypeId
-                                    })
-                                }).then((res) => {
-                                    Promise.resolve(res.json())
-                                        .then((v) => {
-                                            //判断超时
-                                            timeOut(v.ret);
-                                            if (v.ret == 1) {
-                                                let switchList = v.data;
-                                                // console.log(switchList)
-                                                if (switchList.length == 0) {
-                                                    form.setFieldsValue({
-                                                        [`execCmd[${i}]`]: []
-                                                    });
-                                                }
-                                                switchListArr[i] = switchList
-                                                this.setState({
-                                                    switchListArr
-                                                })
-                                            } else {
-                                                switchListArr[i]= []
-                                                this.setState({
-                                                    switchListArr
-                                                })
-                                            }
-                                        })
-                                })
-                            }
-                        })
+       
+    }
+    handleChangeAction(value,i){
+        const form = this.ruleForm.props.form;
+        const {  actions,switchListArr } = this.state;
+        // console.log(conditions)
+        this.setState({
+            deviceList: []
+        })
+         //获取开关的信息
+         if (actions.length !== 0) {
+            //  console.log(actions)
+            return fetch(deviceUrl, {
+                ...postOption,
+                body: JSON.stringify({
+                    "deviceId":value,
+                    "pageIndex": 0,
+                    "pageSize": 1
                 })
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        //超时判断
+                        timeOut(v.ret)
+                        if (v.ret == 1) {
+                            // console.log(v)
+                            let deviceTypeId = v.data.items[0].deviceTypeId;
+                            return fetch(switchUrl, {
+                                ...postOption,
+                                body: JSON.stringify({
+                                    deviceTypeId
+                                })
+                            }).then((res) => {
+                                Promise.resolve(res.json())
+                                    .then((v) => {
+                                        //判断超时
+                                        timeOut(v.ret);
+                                        if (v.ret == 1) {
+                                            let switchList = v.data;
+                                            // console.log(switchList)
+                                            if (switchList.length == 0) {
+                                                form.setFieldsValue({
+                                                    [`execCmd[${i}]`]: []
+                                                });
+                                            }
+                                            switchListArr[i] = switchList
+                                            this.setState({
+                                                switchListArr
+                                            })
+                                        } else {
+                                            switchListArr[i]= []
+                                            this.setState({
+                                                switchListArr
+                                            })
+                                        }
+                                    })
+                            })
+                        }
+                    })
             })
-        }
+        
+    }
     }
     //下拉搜索框搜索功能
     handleSearch(value) {
@@ -454,6 +475,7 @@ export default class extends Component {
             console.log(err)
         })
     }
+
     // 添加条件++
     conditionAdd() {
         const { conditions,parameterIdListArr } = this.state
@@ -531,7 +553,8 @@ export default class extends Component {
                     <RuleForm
                         wrappedComponentRef={(ruleForm) => this.ruleForm = ruleForm}
                         {...{ anyConditionFireAction, name, conditions, actions, deviceList, parameterIdListArr, switchListArr }}
-                        onChange={(value, i) => this.handleChange(value, i)}
+                        onChangeCondition={(value, i) => this.handleChangeCondition(value, i)}
+                        onChangeAction={(value, i) => this.handleChangeAction(value, i)}
                         onSearch={(value) => this.handleSearch(value)}
                         conditionAdd={() => this.conditionAdd()}
                         conditionLess={(index) => this.conditionLess(index)}
@@ -551,7 +574,7 @@ const RuleForm = Form.create()(
         }
         render() {
             const { getFieldDecorator, getFieldValue } = this.props.form;
-            const { anyConditionFireAction, name, onChange, onSearch, conditionAdd, conditionLess, actionAdd, actionLess, parameterIdListArr, switchListArr } = this.props
+            const { anyConditionFireAction, name, onChangeCondition,onChangeAction, onSearch, conditionAdd, conditionLess, actionAdd, actionLess, parameterIdListArr, switchListArr } = this.props
             const { deviceList, actions, conditions } = this.props;
             // console.log(parameterIdListArr)
             //条件列表渲染
@@ -577,7 +600,7 @@ const RuleForm = Form.create()(
                                             defaultActiveFirstOption={false}
                                             showArrow={false}
                                             onSearch={_.debounce((value) => onSearch(value), 300)}
-                                            onChange={(value) => onChange(value, index)}
+                                            onChange={(value) => onChangeCondition(value, index)}
                                             notFoundContent={null}
                                             placeholder='设备名称/ID'
 
@@ -689,7 +712,7 @@ const RuleForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             onSearch={_.debounce((value) => onSearch(value), 300)}
-                                            onChange={(value) => onChange(value, index)}
+                                            onChange={(value) => onChangeAction(value, index)}
                                             notFoundContent={null}
                                         >
                                             {
@@ -714,8 +737,10 @@ const RuleForm = Form.create()(
                                     (<Select
                                         placeholder='开关阀'
                                     >
-                                        {
+                                        {   
+                                            // console.log(switchListArr)
                                             switchListArr[index].map((v, i) => {
+                                                
                                                 return (
                                                     <Option key={v.cmd}>{v.displayName}</Option>
                                                 )
