@@ -99,6 +99,46 @@ export default class extends React.Component {
             modifyPasswordVisble: true,
         });
     }
+    //修改密码点击取消
+    changePwdCancelHandler() {
+        const form = this.ChangePwdForm.props.form;
+        // 重置表单
+        form.resetFields();
+        this.setState({
+            modifyPasswordVisble: false,
+        });
+    }
+    // 确认修改密码
+    changePwdOkHandler() {
+        const form = this.ChangePwdForm.props.form;
+        form.validateFields((err, values) => {
+            if (!err) {
+                fetch(changePassWordUrl, {
+                    ...postOption,
+                    body: JSON.stringify({
+                        oldPwd: values.oldPwd,
+                        newPwd: values.newPwd
+                    })
+                }).then(res => {
+                    Promise.resolve(res.json())
+                        .then(v => {
+                            //超时判断
+                            timeOut(v.ret)
+                            if (v.ret == 1) {
+                                message.success('修改成功', 2)
+                                this.setState({
+                                    modifyPasswordVisble: false
+                                })
+                                // 重置表单
+                                form.resetFields();
+                            } else {
+                                message.error(v.msg, 1)
+                            }
+                        })
+                })
+            }
+        })
+    }
     // 退出登录
     _showConfirm() {
         const { dispatch } = this.props
