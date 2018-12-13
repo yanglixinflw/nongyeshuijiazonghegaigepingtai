@@ -559,7 +559,6 @@ const RuleForm = Form.create()(
                                             })
                                         }
                                     </Select>
-
                                     )
                                 }
 
