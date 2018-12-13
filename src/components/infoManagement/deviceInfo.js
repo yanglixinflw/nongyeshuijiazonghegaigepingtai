@@ -41,7 +41,7 @@ const sourceColumns = [
     { title: "设备名称", dataIndex: "name" },
     { title: "设备安装地", dataIndex: "installAddr" },
     { title: "关联建筑物", dataIndex: "relatedBuilding" },
-    { title: "地理坐标", dataIndex: "IP" },
+    { title: "地理坐标(纬，经)", dataIndex: "IP" },
     { title: "启用日期", dataIndex: "enableTime" },
     { title: "运维公司", dataIndex: "managedCompony" },
     { title: "管护人员", dataIndex: "managerName" },
