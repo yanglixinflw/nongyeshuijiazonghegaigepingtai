@@ -111,12 +111,13 @@
                             margin-top: 13px;
                             // overflow: hidden;
                             .ant-checkbox-wrapper {
-                                border:1px solid transparent;
+                                border:2px solid transparent;
+                                border-radius: 4px;
                                 box-sizing: border-box;
                                 height: auto;
                                 display: flex;
                                 &:hover{
-                                    border:1px solid #0084FF
+                                    border:2px solid #0084FF
                                 }
                                 .ant-checkbox {
                                     height: 16px;
@@ -458,7 +459,7 @@
                                         ul{
                                             width: 360px;
                                             li{
-                                                width: 150px;
+                                                width: 140px;
                                             }
                                         }
                                     }
@@ -477,6 +478,24 @@
         height: 716px;
         .content{
           height: 678px !important;
+            :global {
+                .ant-checkbox-group {
+                    .ant-row{
+                        div{
+                            .ant-checkbox-wrapper{
+                                div{
+                                    ul{
+                                        width: 300px;
+                                        li{
+                                            width: 120px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
       }
       .mright{
