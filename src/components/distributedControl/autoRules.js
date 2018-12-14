@@ -22,7 +22,7 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { autoRules } = props;
-        // console.log(props)
+        console.log(props)
         this.state = {
             //规则id
             ruleId: props.ruleId,
@@ -363,126 +363,25 @@ export default class extends Component {
     }
     //重置
     _resetForm() {
-        // this.ruleForm.props.form.resetFields();
-        // console.log(1)
-        // const { ruleId } = this.state;
-        // Promise.resolve(getAutoRules({ ruleId }))
-        //     .then((v) => {
-        //         //超时判断
-        //         timeOut(v.data.ret);
-        //         if (v.data.ret == 1) {
-        //             let actions = v.data.data.actions;
-        //             let anyConditionFireAction = v.data.data.anyConditionFireAction;
-        //             let conditions = v.data.data.conditions;
-        //             let name = v.data.data.name;
-        //             // console.log(v.data.data)
-        //             if(conditions.length!==0){
-        //                 conditions.map((val,i)=>{
-        //                     return fetch(deviceUrl,{
-        //                         ...postOption,
-        //                         body:JSON.stringify({
-        //                             "deviceId": val.deviceId,
-        //                             "pageIndex": 0,
-        //                             "pageSize": 1
-        //                         })
-        //                     }).then((res)=>{
-        //                         Promise.resolve(res.json())
-        //                         .then((v)=>{
-        //                             //超时判断
-        //                             timeOut(v.ret)
-        //                             if(v.ret == 1){
-        //                                 let deviceTypeId = v.data.items[0].deviceTypeId;
-        //                                 // console.log(deviceTypeId)
-        //                                 return fetch(paramUrl,{
-        //                                     ...postOption,
-        //                                     body:JSON.stringify({
-        //                                         deviceTypeId
-        //                                     })
-        //                                 }).then((res)=>{
-        //                                     Promise.resolve(res.json())
-        //                                     .then((v)=>{
-        //                                         //超时判断
-        //                                         timeOut(v.ret);
-        //                                         if(v.ret == 1){
-        //                                             let parameterIdList = v.data;
-        //                                             if (parameterIdList.length == 0) {
-        //                                                 form.setFieldsValue({
-        //                                                     [`parameterId[${i}]`]: []
-        //                                                 });
-        //                                             }
-        //                                             val.parameterIdList=parameterIdList;
-        //                                             this.setState({
-        //                                                 conditions
-        //                                             })
-        //                                         }
-        //                                     })
-        //                                 })
-        //                             }
-        //                         })
-        //                     })
-        //                 })
-        //             }
-        //             if(actions.length !==0){
-        //                 actions.map((val,i)=>{
-        //                     return fetch(deviceUrl,{
-        //                         ...postOption,
-        //                         body:JSON.stringify({
-        //                             "deviceId": val.deviceId,
-        //                             "pageIndex": 0,
-        //                             "pageSize": 1
-        //                         })
-        //                     }).then((res)=>{
-        //                         Promise.resolve(res.json())
-        //                         .then((v)=>{
-        //                             //超时判断
-        //                             timeOut(v.ret)
-        //                             if(v.ret == 1){
-        //                                 let deviceTypeId = v.data.items[0].deviceTypeId;
-        //                                 // console.log(deviceTypeId)
-        //                                 return fetch(switchUrl,{
-        //                                     ...postOption,
-        //                                     body:JSON.stringify({
-        //                                         deviceTypeId
-        //                                     })
-        //                                 }).then((res)=>{
-        //                                     Promise.resolve(res.json())
-        //                                     .then((v)=>{
-        //                                         //超时判断
-        //                                         timeOut(v.ret);
-        //                                         if(v.ret == 1){
-        //                                             let switchList = v.data;
-        //                                             if (switchList.length == 0) {
-        //                                                 form.setFieldsValue({
-        //                                                     [`execCmd[${i}]`]: []
-        //                                                 });
-        //                                             }
-        //                                             val.switchList=switchList;
-        //                                             this.setState({
-        //                                                 actions
-        //                                             })
-        //                                         }
-        //                                     })
-        //                                 })
-        //                             }
-        //                         })
-        //                     })
-        //                 })
-        //             }
-        //             this.setState({
-        //                 anyConditionFireAction,
-        //                 name,
-        //             })
-        //         }
-        //     })
+        const form = this.ruleForm.props.form;
         this.setState({
             actions:[],
             anyConditionFireAction:false,
             conditions:[],
         })
+        form.setFieldsValue({
+            ['anyConditionFireAction']: false
+        });
 
     }
+    handlerRadioChange(e){
+        console.log(e.target.value)
+        this.setState({
+            anyConditionFireAction:e.target.value
+        })
+    }
     //option的value值就是设备ID
-    handleChangeCondition(value, i) {
+    handlerChangeCondition(value, i) {
         // console.log(value)
         // console.log(i)
         const form = this.ruleForm.props.form;
@@ -543,7 +442,7 @@ export default class extends Component {
             })
         }
     }
-    handleChangeAction(value,i){
+    handlerChangeAction(value,i){
         const form = this.ruleForm.props.form;
         const {  actions } = this.state;
         // console.log(conditions)
@@ -605,7 +504,7 @@ export default class extends Component {
         }
     }
     //下拉搜索框搜索功能
-    handleSearch(value) {
+    handlerSearch(value) {
         // console.log(value)
         if (value == '') {
             this.setState({
@@ -704,9 +603,10 @@ export default class extends Component {
                     <RuleForm
                         wrappedComponentRef={(ruleForm) => this.ruleForm = ruleForm}
                         {...{ anyConditionFireAction, name, conditions, actions, deviceList }}
-                        onChangeCondition={(value, i) => this.handleChangeCondition(value, i)}
-                        onChangeAction={(value, i) => this.handleChangeAction(value, i)}
-                        onSearch={(value) => this.handleSearch(value)}
+                        radioChange={(e)=>this.handlerRadioChange(e)}
+                        onChangeCondition={(value, i) => this.handlerChangeCondition(value, i)}
+                        onChangeAction={(value, i) => this.handlerChangeAction(value, i)}
+                        onSearch={(value) => this.handlerSearch(value)}
                         conditionAdd={() => this.conditionAdd()}
                         conditionLess={(index) => this.conditionLess(index)}
                         actionAdd={() => this.actionAdd()}
@@ -725,12 +625,22 @@ const RuleForm = Form.create()(
         }
         render() {
             const { getFieldDecorator, getFieldValue } = this.props.form;
-            const { anyConditionFireAction, name, onChangeCondition,onChangeAction, onSearch, conditionAdd, conditionLess, actionAdd, actionLess } = this.props
-            const { deviceList, actions, conditions } = this.props;
+            const { 
+                anyConditionFireAction,
+                name, 
+                radioChange,
+                onChangeCondition,
+                onChangeAction, 
+                onSearch, 
+                conditionAdd, 
+                conditionLess, 
+                actionAdd, 
+                actionLess,
+                deviceList,
+                actions,
+                conditions } = this.props
             //条件列表渲染
-            // getFieldDecorator('condition', { initialValue: conditions });
-            // const condition = getFieldValue('condition');
-            // console.log(conditions)
+            console.log(anyConditionFireAction)
             const conditionForm = conditions.map((v, index) => {
                 // console.log(v)
                 if (v.parameterIdList){
@@ -930,11 +840,14 @@ const RuleForm = Form.create()(
                     <div className={styles.inner}>
                         <div className={styles.if}>条件</div>
                         <Form.Item className={styles.all}>
-                            {getFieldDecorator('anyConditionFireAction', { initialValue: `${anyConditionFireAction}` })
+                            {
+                                getFieldDecorator('anyConditionFireAction', { 
+                                    initialValue: anyConditionFireAction ,
+                                })
                                 (
-                                <RadioGroup>
-                                    <Radio value="false">全部条件</Radio>
-                                    <Radio value="true">部分条件</Radio>
+                                <RadioGroup onChange={(e)=>radioChange(e)}>
+                                    <Radio value={false}>全部条件</Radio>
+                                    <Radio value={true}>部分条件</Radio>
                                 </RadioGroup>
                                 )
                             }
