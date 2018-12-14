@@ -197,11 +197,104 @@ export default class extends Component {
                                                 timeOut(v.ret);
                                                 if (v.ret == 1) {
                                                     message.success(`${values.name}保存成功`, 2);
+                                                    let conditions = v.data.conditions;
+                                                    if(conditions.length !==0){
+                                                        conditions.map((val,i)=>{
+                                                            return fetch(deviceUrl,{
+                                                                ...postOption,
+                                                                body: JSON.stringify({
+                                                                    "deviceId": val.deviceId,
+                                                                    "pageIndex": 0,
+                                                                    "pageSize": 1
+                                                                })
+                                                            }).then((res) => {
+                                                                Promise.resolve(res.json())
+                                                                    .then((v) => {
+                                                                        //超时判断
+                                                                        timeOut(v.ret)
+                                                                        if (v.ret == 1) {
+                                                                            let deviceTypeId = v.data.items[0].deviceTypeId;
+                                                                            // console.log(deviceTypeId)
+                                                                            return fetch(paramUrl, {
+                                                                                ...postOption,
+                                                                                body: JSON.stringify({
+                                                                                    deviceTypeId
+                                                                                })
+                                                                            }).then((res) => {
+                                                                                Promise.resolve(res.json())
+                                                                                    .then((v) => {
+                                                                                        //超时判断
+                                                                                        timeOut(v.ret);
+                                                                                        if (v.ret == 1) {
+                                                                                            let parameterIdList = v.data;
+                                                                                            if (parameterIdList.length == 0) {
+                                                                                                form.setFieldsValue({
+                                                                                                    [`parameterId[${i}]`]: []
+                                                                                                });
+                                                                                            }
+                                                                                            val.parameterIdList = parameterIdList;
+                                                                                            this.setState({
+                                                                                                conditions
+                                                                                            })
+                                                                                        }
+                                                                                    })
+                                                                            })
+                                                                        }
+                                                                    })
+                                                            })
+                                                        })
+                                                    }
+                                                    if(actions.length !==0){
+                                                        actions.map((val, i) => {
+                                                            return fetch(deviceUrl, {
+                                                                ...postOption,
+                                                                body: JSON.stringify({
+                                                                    "deviceId": val.deviceId,
+                                                                    "pageIndex": 0,
+                                                                    "pageSize": 1
+                                                                })
+                                                            }).then((res) => {
+                                                                Promise.resolve(res.json())
+                                                                    .then((v) => {
+                                                                        //超时判断
+                                                                        timeOut(v.ret)
+                                                                        if (v.ret == 1) {
+                                                                            let deviceTypeId = v.data.items[0].deviceTypeId;
+                                                                            // console.log(deviceTypeId)
+                                                                            return fetch(switchUrl, {
+                                                                                ...postOption,
+                                                                                body: JSON.stringify({
+                                                                                    deviceTypeId
+                                                                                })
+                                                                            }).then((res) => {
+                                                                                Promise.resolve(res.json())
+                                                                                    .then((v) => {
+                                                                                        //超时判断
+                                                                                        timeOut(v.ret);
+                                                                                        if (v.ret == 1) {
+                                                                                            let switchList = v.data;
+                                                                                            if (switchList.length == 0) {
+                                                                                                form.setFieldsValue({
+                                                                                                    [`execCmd[${i}]`]: []
+                                                                                                });
+                                                                                            }
+                                                                                            val.switchList = switchList;
+                                                                                            this.setState({
+                                                                                                actions
+                                                                                            })
+                                                                                        }
+                                                                                    })
+                                                                            })
+                                                                        }
+                                                                    })
+                                                            })
+                                                        })
+                                                    }
                                                     this.setState({
                                                         anyConditionFireAction: v.data.anyConditionFireAction,
                                                         name: v.data.name,
-                                                        conditions: v.data.conditions,
-                                                        actions: v.data.actions
+                                                        // conditions: v.data.conditions,
+                                                        // actions: v.data.actions
                                                     })
                                                 }
                                             })
@@ -272,120 +365,120 @@ export default class extends Component {
     _resetForm() {
         // this.ruleForm.props.form.resetFields();
         // console.log(1)
-        const { ruleId } = this.state;
-        Promise.resolve(getAutoRules({ ruleId }))
-            .then((v) => {
-                //超时判断
-                timeOut(v.data.ret);
-                if (v.data.ret == 1) {
-                    let actions = v.data.data.actions;
-                    let anyConditionFireAction = v.data.data.anyConditionFireAction;
-                    let conditions = v.data.data.conditions;
-                    let name = v.data.data.name;
-                    // console.log(v.data.data)
-                    if(conditions.length!==0){
-                        conditions.map((val,i)=>{
-                            return fetch(deviceUrl,{
-                                ...postOption,
-                                body:JSON.stringify({
-                                    "deviceId": val.deviceId,
-                                    "pageIndex": 0,
-                                    "pageSize": 1
-                                })
-                            }).then((res)=>{
-                                Promise.resolve(res.json())
-                                .then((v)=>{
-                                    //超时判断
-                                    timeOut(v.ret)
-                                    if(v.ret == 1){
-                                        let deviceTypeId = v.data.items[0].deviceTypeId;
-                                        // console.log(deviceTypeId)
-                                        return fetch(paramUrl,{
-                                            ...postOption,
-                                            body:JSON.stringify({
-                                                deviceTypeId
-                                            })
-                                        }).then((res)=>{
-                                            Promise.resolve(res.json())
-                                            .then((v)=>{
-                                                //超时判断
-                                                timeOut(v.ret);
-                                                if(v.ret == 1){
-                                                    let parameterIdList = v.data;
-                                                    if (parameterIdList.length == 0) {
-                                                        form.setFieldsValue({
-                                                            [`parameterId[${i}]`]: []
-                                                        });
-                                                    }
-                                                    val.parameterIdList=parameterIdList;
-                                                    this.setState({
-                                                        conditions
-                                                    })
-                                                }
-                                            })
-                                        })
-                                    }
-                                })
-                            })
-                        })
-                    }
-                    if(actions.length !==0){
-                        actions.map((val,i)=>{
-                            return fetch(deviceUrl,{
-                                ...postOption,
-                                body:JSON.stringify({
-                                    "deviceId": val.deviceId,
-                                    "pageIndex": 0,
-                                    "pageSize": 1
-                                })
-                            }).then((res)=>{
-                                Promise.resolve(res.json())
-                                .then((v)=>{
-                                    //超时判断
-                                    timeOut(v.ret)
-                                    if(v.ret == 1){
-                                        let deviceTypeId = v.data.items[0].deviceTypeId;
-                                        // console.log(deviceTypeId)
-                                        return fetch(switchUrl,{
-                                            ...postOption,
-                                            body:JSON.stringify({
-                                                deviceTypeId
-                                            })
-                                        }).then((res)=>{
-                                            Promise.resolve(res.json())
-                                            .then((v)=>{
-                                                //超时判断
-                                                timeOut(v.ret);
-                                                if(v.ret == 1){
-                                                    let switchList = v.data;
-                                                    if (switchList.length == 0) {
-                                                        form.setFieldsValue({
-                                                            [`execCmd[${i}]`]: []
-                                                        });
-                                                    }
-                                                    val.switchList=switchList;
-                                                    this.setState({
-                                                        actions
-                                                    })
-                                                }
-                                            })
-                                        })
-                                    }
-                                })
-                            })
-                        })
-                    }
-                    this.setState({
-                        anyConditionFireAction,
-                        name,
-                    })
-                }
-            })
-        // this.setState({
-        //     actions:[],
-        //     anyConditionFireAction:false,
-        //     conditions:[],
-        // })
+        // const { ruleId } = this.state;
+        // Promise.resolve(getAutoRules({ ruleId }))
+        //     .then((v) => {
+        //         //超时判断
+        //         timeOut(v.data.ret);
+        //         if (v.data.ret == 1) {
+        //             let actions = v.data.data.actions;
+        //             let anyConditionFireAction = v.data.data.anyConditionFireAction;
+        //             let conditions = v.data.data.conditions;
+        //             let name = v.data.data.name;
+        //             // console.log(v.data.data)
+        //             if(conditions.length!==0){
+        //                 conditions.map((val,i)=>{
+        //                     return fetch(deviceUrl,{
+        //                         ...postOption,
+        //                         body:JSON.stringify({
+        //                             "deviceId": val.deviceId,
+        //                             "pageIndex": 0,
+        //                             "pageSize": 1
+        //                         })
+        //                     }).then((res)=>{
+        //                         Promise.resolve(res.json())
+        //                         .then((v)=>{
+        //                             //超时判断
+        //                             timeOut(v.ret)
+        //                             if(v.ret == 1){
+        //                                 let deviceTypeId = v.data.items[0].deviceTypeId;
+        //                                 // console.log(deviceTypeId)
+        //                                 return fetch(paramUrl,{
+        //                                     ...postOption,
+        //                                     body:JSON.stringify({
+        //                                         deviceTypeId
+        //                                     })
+        //                                 }).then((res)=>{
+        //                                     Promise.resolve(res.json())
+        //                                     .then((v)=>{
+        //                                         //超时判断
+        //                                         timeOut(v.ret);
+        //                                         if(v.ret == 1){
+        //                                             let parameterIdList = v.data;
+        //                                             if (parameterIdList.length == 0) {
+        //                                                 form.setFieldsValue({
+        //                                                     [`parameterId[${i}]`]: []
+        //                                                 });
+        //                                             }
+        //                                             val.parameterIdList=parameterIdList;
+        //                                             this.setState({
+        //                                                 conditions
+        //                                             })
+        //                                         }
+        //                                     })
+        //                                 })
+        //                             }
+        //                         })
+        //                     })
+        //                 })
+        //             }
+        //             if(actions.length !==0){
+        //                 actions.map((val,i)=>{
+        //                     return fetch(deviceUrl,{
+        //                         ...postOption,
+        //                         body:JSON.stringify({
+        //                             "deviceId": val.deviceId,
+        //                             "pageIndex": 0,
+        //                             "pageSize": 1
+        //                         })
+        //                     }).then((res)=>{
+        //                         Promise.resolve(res.json())
+        //                         .then((v)=>{
+        //                             //超时判断
+        //                             timeOut(v.ret)
+        //                             if(v.ret == 1){
+        //                                 let deviceTypeId = v.data.items[0].deviceTypeId;
+        //                                 // console.log(deviceTypeId)
+        //                                 return fetch(switchUrl,{
+        //                                     ...postOption,
+        //                                     body:JSON.stringify({
+        //                                         deviceTypeId
+        //                                     })
+        //                                 }).then((res)=>{
+        //                                     Promise.resolve(res.json())
+        //                                     .then((v)=>{
+        //                                         //超时判断
+        //                                         timeOut(v.ret);
+        //                                         if(v.ret == 1){
+        //                                             let switchList = v.data;
+        //                                             if (switchList.length == 0) {
+        //                                                 form.setFieldsValue({
+        //                                                     [`execCmd[${i}]`]: []
+        //                                                 });
+        //                                             }
+        //                                             val.switchList=switchList;
+        //                                             this.setState({
+        //                                                 actions
+        //                                             })
+        //                                         }
+        //                                     })
+        //                                 })
+        //                             }
+        //                         })
+        //                     })
+        //                 })
+        //             }
+        //             this.setState({
+        //                 anyConditionFireAction,
+        //                 name,
+        //             })
+        //         }
+        //     })
+        this.setState({
+            actions:[],
+            anyConditionFireAction:false,
+            conditions:[],
+        })
 
     }
     //option的value值就是设备ID
