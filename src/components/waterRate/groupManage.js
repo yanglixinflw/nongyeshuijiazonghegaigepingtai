@@ -120,7 +120,7 @@ export default class extends Component{
     }
     //多选框选中项
     onChange(checkedValues){
-        // console.log(checkedValues);
+        console.log(checkedValues);
         this.setState({
             checkedValue:checkedValues
         })
