@@ -2,12 +2,12 @@ import React, { Component, Fragment } from 'react';
 import styles from './index.less'
 import ysj from '../../assets/ysj.png'
 import up from '../../assets/up.png'
-import close from '../../assets/close.png'
+// import close from '../../assets/close.png'
 import EZUIPlayer from '../../assets/ezuikit'
 import classnames from 'classnames'
 import { Dropdown, Select, message } from 'antd'
 import _ from 'lodash'
-import {ENVNet,postOption} from '../../services/netCofig'
+import { ENVNet, postOption } from '../../services/netCofig'
 const Option = Select.Option
 // 控制提示信息配置
 message.config({
@@ -18,7 +18,7 @@ message.config({
 // 控制接口
 const contorlUrl = `${ENVNet}/api/CamerasMonitor/ptz/start`
 // 获取视频列表
-const getMonitorUrl = `${ENVNet}/api/CamerasMonitor/cameras`
+const getMonitorUrl = `${ENVNet}/api/CamerasMonitor/cameraList`
 export default class extends Component {
     constructor(props) {
         super(props)
@@ -50,11 +50,41 @@ export default class extends Component {
     componentDidMount() {
         // 渲染初始化格子
         this.setScreenNum(this.state.monitorNum)
+
+        let type ='newWindow'
+        if (type == 'newWindow') {
+            this.setState({
+                monitorArr: [
+                    {
+                        order: 1, 
+                        video: [{
+                            deviceId: "CAM00001",
+                            playList: {
+                                hls: "http://hls.open.ys7.com/openlive/026b684674b84dd9ae48d4c05b29f673.m3u8",
+                                hls_hd: "http://hls.open.ys7.com/openlive/026b684674b84dd9ae48d4c05b29f673.hd.m3u8",
+                                rtmp: "rtmp://rtmp.open.ys7.com/openlive/026b684674b84dd9ae48d4c05b29f673",
+                                rtpm_hd: "rtmp://rtmp.open.ys7.com/openlive/026b684674b84dd9ae48d4c05b29f673.hd",
+                                ws: null
+                            }
+                        }]
+                    },
+                    { order: 2 },
+                    { order: 3 },
+                    { order: 4 },
+                    { order: 5 },
+                    { order: 6 },
+                    { order: 7 },
+                    { order: 8 },
+                    { order: 9 }
+                ]
+            })
+        }
+
+        // console.log(this.state.monitorArr)
     }
     componentDidUpdate() {
         const { monitorArr } = this.state
         let newArr = _.cloneDeep(monitorArr)
-        // console.log(monitorArr)
         // 实例化监控
         let newPlayer = []
         newArr.map((v, i) => {
@@ -64,6 +94,7 @@ export default class extends Component {
                 newPlayer.push(new EZUIPlayer(v.video[0].deviceId))
             }
         })
+        // console.log(monitorArr)
     }
     // 设置画面数量
     setScreenNum(monitorNum) {
@@ -171,7 +202,8 @@ export default class extends Component {
         fetch(getMonitorUrl, {
             ...postOption,
             body: JSON.stringify({
-                buildingId
+                isBuilding:true,
+                id:buildingId
             })
         }).then((res) => {
             Promise.resolve(res.json())
@@ -234,10 +266,10 @@ export default class extends Component {
                 }
             }
             // 判断当前屏幕数量是否已满
-            
+
 
         })
-        if(playOrder.length==0){
+        if (playOrder.length == 0) {
             alert('画面数量已满')
             // console.log('画面数量已满')
             // 设置最后一个画面的视频源
@@ -382,15 +414,15 @@ export default class extends Component {
                                     // console.log(v.video[0].deviceId)
                                     return (
                                         <div
-                                            className={classnames(`${playBoxStyle}`, 
-                                            `${styles.video}`,
-                                            v.video[0].deviceId==controlVideoId?`${styles.videofocus}`:null)}
+                                            className={classnames(`${playBoxStyle}`,
+                                                `${styles.video}`,
+                                                v.video[0].deviceId == controlVideoId ? `${styles.videofocus}` : null)}
                                             key={i}
                                             onFocus={() => this.getFocousVideo(v.video[0].deviceId)}
                                             tabIndex='0'
-                                            // onBlur={() => {
-                                            //     console.log('失去焦点')
-                                            // }}
+                                        // onBlur={() => {
+                                        //     console.log('失去焦点')
+                                        // }}
 
                                         >
                                             {/* <div className={styles.closeButton}
@@ -409,7 +441,7 @@ export default class extends Component {
                                                 style={{
                                                     width: '100%',
                                                     height: '100%',
-                                                    border:`1px red solid`
+                                                    // border:`1px red solid`
                                                 }}
                                             >
                                                 <source src={v.video[0].playList.rtmp} type="rtmp/flv" />

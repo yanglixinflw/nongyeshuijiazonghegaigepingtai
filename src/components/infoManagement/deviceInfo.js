@@ -497,7 +497,7 @@ export default class extends Component {
                             }
                         })
                 }).catch((err) => {
-                    console.log(err)
+                    message.error('服务器出错',2)
                 })
             }
         })
@@ -535,6 +535,7 @@ export default class extends Component {
                 deviceId
             })
         }).then((res) => {
+            console.log(res)
             Promise.resolve(res.json())
                 .then((v) => {
                     //判断超时
@@ -553,16 +554,20 @@ export default class extends Component {
                                         this.setState({
                                             modifyAdminList: v.data
                                         })
+
                                     }
                                 })
                         }).catch((err) => {
-                            console.log(err)
+                            // console.log(err)
+                            message.error('服务器出错',2)
                         })
                         this.setState({
                             modifyModalVisible: true,
                             modifyDeviceId: deviceId,
                             modifyData: v.data,
                         })
+                    }else{
+                        
                     }
                 })
         })

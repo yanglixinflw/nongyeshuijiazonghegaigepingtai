@@ -203,11 +203,12 @@ export function getMonitorSelectList(){
   })
 }
 export function getMonitorList(){
-  return request(`${ENVNet}/api/CamerasMonitor/cameras`,{
+  return request(`${ENVNet}/api/CamerasMonitor/cameraList`,{
     ...postOption,
     body:JSON.stringify(
       {
-        buildingId:0
+        isBuilding:true,
+        id:0
       }
     )
   })
