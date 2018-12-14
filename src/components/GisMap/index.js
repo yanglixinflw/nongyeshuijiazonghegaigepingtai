@@ -120,7 +120,8 @@ export default class extends Component {
                 position,
                 deviceTypeId: v.deviceTypeId,
                 name: v.name,
-                deviceId: v.deviceId
+                deviceId: v.deviceId,
+                photoUrl:v.photoUrl,
             })
         })
         waterMeter.map((v, i) => {
