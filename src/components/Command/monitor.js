@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import styles from './index.less'
 import ysj from '../../assets/ysj.png'
 import up from '../../assets/up.png'
+import { parse } from 'qs';
 // import close from '../../assets/close.png'
 import EZUIPlayer from '../../assets/ezuikit'
 import classnames from 'classnames'
@@ -50,37 +51,40 @@ export default class extends Component {
     componentDidMount() {
         // 渲染初始化格子
         this.setScreenNum(this.state.monitorNum)
-
-        let type ='newWindow'
-        if (type == 'newWindow') {
-            this.setState({
-                monitorArr: [
-                    {
-                        order: 1, 
-                        video: [{
-                            deviceId: "CAM00001",
-                            playList: {
-                                hls: "http://hls.open.ys7.com/openlive/026b684674b84dd9ae48d4c05b29f673.m3u8",
-                                hls_hd: "http://hls.open.ys7.com/openlive/026b684674b84dd9ae48d4c05b29f673.hd.m3u8",
-                                rtmp: "rtmp://rtmp.open.ys7.com/openlive/026b684674b84dd9ae48d4c05b29f673",
-                                rtpm_hd: "rtmp://rtmp.open.ys7.com/openlive/026b684674b84dd9ae48d4c05b29f673.hd",
-                                ws: null
-                            }
-                        }]
-                    },
-                    { order: 2 },
-                    { order: 3 },
-                    { order: 4 },
-                    { order: 5 },
-                    { order: 6 },
-                    { order: 7 },
-                    { order: 8 },
-                    { order: 9 }
-                ]
+        // 获取url参数
+        let urlParse =parse(window.location.href.split(':'))
+        // 跳转进入
+        if (urlParse[3]){
+            fetch(getMonitorUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                isBuilding:false,
+                id:urlParse[3]
             })
+        }).then((res) => {
+            Promise.resolve(res.json())
+                .then((v) => {
+                    if (v.ret == 1) {
+                        this.setState({
+                            monitorArr: [
+                                {
+                                    order: 1, 
+                                    video: [v.data]
+                                },
+                                { order: 2 },
+                                { order: 3 },
+                                { order: 4 },
+                                { order: 5 },
+                                { order: 6 },
+                                { order: 7 },
+                                { order: 8 },
+                                { order: 9 }
+                            ]
+                        })
+                    }
+                })
+        })
         }
-
-        // console.log(this.state.monitorArr)
     }
     componentDidUpdate() {
         const { monitorArr } = this.state
