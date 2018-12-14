@@ -22,7 +22,7 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { autoRules } = props;
-        // console.log(props)
+        console.log(props)
         this.state = {
             //规则id
             ruleId: props.ruleId,
@@ -36,21 +36,17 @@ export default class extends Component {
             actions: autoRules.data.data.actions,
             //设备搜索列表
             deviceList: [],
-            parameterIdListArr: [],
-            switchListArr: []
         }
     }
     componentDidMount() {
-        // //统一数据源
         const { conditions, actions } = this.state;
         if (conditions.length != 0) {
-            let { parameterIdListArr } = this.state
             //获取参数的信息
-            conditions.map((v, i) => {
+            conditions.map((val, i) => {
                 return fetch(deviceUrl, {
                     ...postOption,
                     body: JSON.stringify({
-                        "deviceId": conditions[i].deviceId,
+                        "deviceId": val.deviceId,
                         "pageIndex": 0,
                         "pageSize": 1
                     })
@@ -60,7 +56,8 @@ export default class extends Component {
                             //超时判断
                             timeOut(v.ret);
                             if (v.ret == 1) {
-                                let deviceTypeId = v.data.items[0].deviceTypeId
+                                let deviceTypeId = v.data.items[0].deviceTypeId;
+                                // console.log(deviceTypeId)
                                 //获取参数的信息
                                 fetch(paramUrl, {
                                     ...postOption,
@@ -75,16 +72,15 @@ export default class extends Component {
                                             if (v.ret == 1) {
                                                 let parameterIdList = v.data;
                                                 // console.log(parameterIdList)
-                                                parameterIdListArr.push(parameterIdList)
-                                                // conditions[i].parameterIdList = parameterIdList;
+                                                val.parameterIdList=parameterIdList;
                                                 this.setState({
-                                                    parameterIdListArr
+                                                    conditions
                                                 })
                                             } else {
                                                 let parameterIdList = [];
-                                                parameterIdListArr.push(parameterIdList)
+                                                val.parameterIdList=parameterIdList;
                                                 this.setState({
-                                                    parameterIdListArr
+                                                    conditions
                                                 })
                                             }
                                         })
@@ -95,14 +91,14 @@ export default class extends Component {
                     console.log(err)
                 })
             })
+            
         }
         if (actions.length !== 0) {
-            let { switchListArr } = this.state;
-            actions.map((v, i) => {
+            actions.map((val, i) => {
                 return fetch(deviceUrl, {
                     ...postOption,
                     body: JSON.stringify({
-                        "deviceId": actions[i].deviceId,
+                        "deviceId": val.deviceId,
                         "pageIndex": 0,
                         "pageSize": 1
                     })
@@ -127,16 +123,15 @@ export default class extends Component {
                                             if (v.ret == 1) {
                                                 let switchList = v.data
                                                 // console.log(switchList)
-                                                switchListArr.push(switchList)
-                                                // actions[i].switchList = switchList
+                                                val.switchList=switchList;
                                                 this.setState({
-                                                    switchListArr
+                                                    actions
                                                 })
                                             } else {
-                                                let switchList = []
-                                                switchListArr.push(switchList)
+                                                let switchList = [];
+                                                val.switchList=switchList;
                                                 this.setState({
-                                                    switchListArr
+                                                    actions
                                                 })
                                             }
                                         })
@@ -202,11 +197,104 @@ export default class extends Component {
                                                 timeOut(v.ret);
                                                 if (v.ret == 1) {
                                                     message.success(`${values.name}保存成功`, 2);
+                                                    let conditions = v.data.conditions;
+                                                    if(conditions.length !==0){
+                                                        conditions.map((val,i)=>{
+                                                            return fetch(deviceUrl,{
+                                                                ...postOption,
+                                                                body: JSON.stringify({
+                                                                    "deviceId": val.deviceId,
+                                                                    "pageIndex": 0,
+                                                                    "pageSize": 1
+                                                                })
+                                                            }).then((res) => {
+                                                                Promise.resolve(res.json())
+                                                                    .then((v) => {
+                                                                        //超时判断
+                                                                        timeOut(v.ret)
+                                                                        if (v.ret == 1) {
+                                                                            let deviceTypeId = v.data.items[0].deviceTypeId;
+                                                                            // console.log(deviceTypeId)
+                                                                            return fetch(paramUrl, {
+                                                                                ...postOption,
+                                                                                body: JSON.stringify({
+                                                                                    deviceTypeId
+                                                                                })
+                                                                            }).then((res) => {
+                                                                                Promise.resolve(res.json())
+                                                                                    .then((v) => {
+                                                                                        //超时判断
+                                                                                        timeOut(v.ret);
+                                                                                        if (v.ret == 1) {
+                                                                                            let parameterIdList = v.data;
+                                                                                            if (parameterIdList.length == 0) {
+                                                                                                form.setFieldsValue({
+                                                                                                    [`parameterId[${i}]`]: []
+                                                                                                });
+                                                                                            }
+                                                                                            val.parameterIdList = parameterIdList;
+                                                                                            this.setState({
+                                                                                                conditions
+                                                                                            })
+                                                                                        }
+                                                                                    })
+                                                                            })
+                                                                        }
+                                                                    })
+                                                            })
+                                                        })
+                                                    }
+                                                    if(actions.length !==0){
+                                                        actions.map((val, i) => {
+                                                            return fetch(deviceUrl, {
+                                                                ...postOption,
+                                                                body: JSON.stringify({
+                                                                    "deviceId": val.deviceId,
+                                                                    "pageIndex": 0,
+                                                                    "pageSize": 1
+                                                                })
+                                                            }).then((res) => {
+                                                                Promise.resolve(res.json())
+                                                                    .then((v) => {
+                                                                        //超时判断
+                                                                        timeOut(v.ret)
+                                                                        if (v.ret == 1) {
+                                                                            let deviceTypeId = v.data.items[0].deviceTypeId;
+                                                                            // console.log(deviceTypeId)
+                                                                            return fetch(switchUrl, {
+                                                                                ...postOption,
+                                                                                body: JSON.stringify({
+                                                                                    deviceTypeId
+                                                                                })
+                                                                            }).then((res) => {
+                                                                                Promise.resolve(res.json())
+                                                                                    .then((v) => {
+                                                                                        //超时判断
+                                                                                        timeOut(v.ret);
+                                                                                        if (v.ret == 1) {
+                                                                                            let switchList = v.data;
+                                                                                            if (switchList.length == 0) {
+                                                                                                form.setFieldsValue({
+                                                                                                    [`execCmd[${i}]`]: []
+                                                                                                });
+                                                                                            }
+                                                                                            val.switchList = switchList;
+                                                                                            this.setState({
+                                                                                                actions
+                                                                                            })
+                                                                                        }
+                                                                                    })
+                                                                            })
+                                                                        }
+                                                                    })
+                                                            })
+                                                        })
+                                                    }
                                                     this.setState({
                                                         anyConditionFireAction: v.data.anyConditionFireAction,
                                                         name: v.data.name,
-                                                        conditions: v.data.conditions,
-                                                        actions: v.data.actions
+                                                        // conditions: v.data.conditions,
+                                                        // actions: v.data.actions
                                                     })
                                                 }
                                             })
@@ -275,50 +363,29 @@ export default class extends Component {
     }
     //重置
     _resetForm() {
-        // this.ruleForm.props.form.resetFields();
-        // console.log(1)
-        const { ruleId } = this.state;
-        Promise.resolve(getAutoRules({ ruleId }))
-            .then((v) => {
-                //超时判断
-                timeOut(v.data.ret);
-                if (v.data.ret == 1) {
-                    let actions = v.data.data.actions;
-                    let anyConditionFireAction = v.data.data.anyConditionFireAction;
-                    let conditions = v.data.data.conditions;
-                    let name = v.data.data.name;
-                    // console.log(v.data.data)
-                    let parameterIdListArr = [];
-                    let switchListArr = [] ;
-                    conditions.map((v,i)=>{
-                        parameterIdListArr.push([])
-                    })
-                    actions.map((v,i)=>{
-                        switchListArr.push([])
-                    })
-                    this.setState({
-                        actions,
-                        anyConditionFireAction,
-                        conditions,
-                        name,
-                        parameterIdListArr,
-                        switchListArr
-                    })
-                }
-            })
-        // this.setState({
-        //     actions:[],
-        //     anyConditionFireAction:false,
-        //     conditions:[],
-        // })
+        const form = this.ruleForm.props.form;
+        this.setState({
+            actions:[],
+            anyConditionFireAction:false,
+            conditions:[],
+        })
+        form.setFieldsValue({
+            ['anyConditionFireAction']: false
+        });
 
     }
+    handlerRadioChange(e){
+        console.log(e.target.value)
+        this.setState({
+            anyConditionFireAction:e.target.value
+        })
+    }
     //option的value值就是设备ID
-    handleChangeCondition(value, i) {
+    handlerChangeCondition(value, i) {
         // console.log(value)
         // console.log(i)
         const form = this.ruleForm.props.form;
-        const { conditions,parameterIdListArr} = this.state;
+        const { conditions} = this.state;
         // console.log(conditions)
         this.setState({
             deviceList: []
@@ -337,7 +404,6 @@ export default class extends Component {
                         //超时判断
                         timeOut(v.ret);
                         if (v.ret == 1) {
-                            // 设置页面显示的元素
                             let deviceTypeId = v.data.items[0].deviceTypeId
                             //获取参数的信息
                             fetch(paramUrl, {
@@ -358,18 +424,15 @@ export default class extends Component {
                                                     [`parameterId[${i}]`]: []
                                                 });
                                             }
-                                            parameterIdListArr[i]= parameterIdList;
-                                            // console.log(parameterIdListArr)
+                                            conditions[i].parameterIdList=parameterIdList
                                             this.setState({
-                                                parameterIdListArr
+                                                conditions,
                                             })
                                         } else {
-                                            parameterIdListArr[i]= [];
-                                            // form.setFieldsValue({
-                                            //     [`parameterId[${i}]`]: []
-                                            // });
+                                            let parameterIdList = [];
+                                            conditions[i].parameterIdList=parameterIdList
                                             this.setState({
-                                                parameterIdListArr
+                                                conditions,
                                             })
                                         }
                                     })
@@ -378,12 +441,10 @@ export default class extends Component {
                     })
             })
         }
-
-       
     }
-    handleChangeAction(value,i){
+    handlerChangeAction(value,i){
         const form = this.ruleForm.props.form;
-        const {  actions,switchListArr } = this.state;
+        const {  actions } = this.state;
         // console.log(conditions)
         this.setState({
             deviceList: []
@@ -424,14 +485,15 @@ export default class extends Component {
                                                     [`execCmd[${i}]`]: []
                                                 });
                                             }
-                                            switchListArr[i] = switchList
+                                            actions[i].switchList = switchList;
                                             this.setState({
-                                                switchListArr
+                                                actions,
                                             })
                                         } else {
-                                            switchListArr[i]= []
+                                            let switchList = [];
+                                            actions[i].switchList = switchList;
                                             this.setState({
-                                                switchListArr
+                                                actions,
                                             })
                                         }
                                     })
@@ -439,11 +501,10 @@ export default class extends Component {
                         }
                     })
             })
-        
-    }
+        }
     }
     //下拉搜索框搜索功能
-    handleSearch(value) {
+    handlerSearch(value) {
         // console.log(value)
         if (value == '') {
             this.setState({
@@ -478,57 +539,46 @@ export default class extends Component {
 
     // 添加条件++
     conditionAdd() {
-        const { conditions,parameterIdListArr } = this.state
-        // console.log(condition)
-        //得到添加数量的数组
-        const nextCondition = conditions.concat({});
-        let parameterIdList = [];
-        parameterIdListArr.push(parameterIdList)
+        const { conditions } = this.state
+        let newCodition = {};
+        newCodition.parameterIdList=[]
+        conditions.push(newCodition);
         this.setState({
-            conditions: nextCondition,
-            parameterIdListArr
+            conditions,
         })
     }
     //减少条件--
     conditionLess = (index) => {
         // console.log(index)
-        const { conditions,parameterIdListArr } = this.state
+        const { conditions } = this.state
         // console.log(conditions)
         let newCodition = _.cloneDeep(conditions);
-        let newParameterIdListArr =  _.cloneDeep(parameterIdListArr);
         let arr = newCodition.filter((key, i) => i != index);
-        let brr = newParameterIdListArr.filter((key,i) => i!=index );
         this.setState({
             conditions: arr,
-            parameterIdListArr:brr
         })
     }
     //添加执行++
     actionAdd() {
-        const { actions,switchListArr } = this.state;
-        //得到添加数量的数组
-        const nextAction = actions.concat({});
-        let switchList = [];
-        switchListArr.push(switchList)
+        const { actions } = this.state;
+        let newAction = {};
+        newAction.switchList = []
+        actions.push(newAction);
         this.setState({
-            actions: nextAction,
-            switchListArr
+            actions,
         })
     }
     //减少执行--
     actionLess = (index) => {
-        const { actions,switchListArr } = this.state;
+        const { actions } = this.state;
         let newActions = _.cloneDeep(actions);
-        let newSwitchListArr = _.cloneDeep(switchListArr);
         let arr = newActions.filter((key, i) => i != index);
-        let brr = newSwitchListArr.filter((key, i) => i != index);
         this.setState({
             actions: arr,
-            switchListArr:brr
         })
     }
     render() {
-        const { anyConditionFireAction, name, conditions, actions, deviceList, parameterIdListArr, switchListArr } = this.state;
+        const { anyConditionFireAction, name, conditions, actions, deviceList} = this.state;
         return (
             <React.Fragment>
                 <div className={styles.headers}>
@@ -552,10 +602,11 @@ export default class extends Component {
                 <div className={styles.mbody}>
                     <RuleForm
                         wrappedComponentRef={(ruleForm) => this.ruleForm = ruleForm}
-                        {...{ anyConditionFireAction, name, conditions, actions, deviceList, parameterIdListArr, switchListArr }}
-                        onChangeCondition={(value, i) => this.handleChangeCondition(value, i)}
-                        onChangeAction={(value, i) => this.handleChangeAction(value, i)}
-                        onSearch={(value) => this.handleSearch(value)}
+                        {...{ anyConditionFireAction, name, conditions, actions, deviceList }}
+                        radioChange={(e)=>this.handlerRadioChange(e)}
+                        onChangeCondition={(value, i) => this.handlerChangeCondition(value, i)}
+                        onChangeAction={(value, i) => this.handlerChangeAction(value, i)}
+                        onSearch={(value) => this.handlerSearch(value)}
                         conditionAdd={() => this.conditionAdd()}
                         conditionLess={(index) => this.conditionLess(index)}
                         actionAdd={() => this.actionAdd()}
@@ -574,15 +625,25 @@ const RuleForm = Form.create()(
         }
         render() {
             const { getFieldDecorator, getFieldValue } = this.props.form;
-            const { anyConditionFireAction, name, onChangeCondition,onChangeAction, onSearch, conditionAdd, conditionLess, actionAdd, actionLess, parameterIdListArr, switchListArr } = this.props
-            const { deviceList, actions, conditions } = this.props;
-            // console.log(parameterIdListArr)
+            const { 
+                anyConditionFireAction,
+                name, 
+                radioChange,
+                onChangeCondition,
+                onChangeAction, 
+                onSearch, 
+                conditionAdd, 
+                conditionLess, 
+                actionAdd, 
+                actionLess,
+                deviceList,
+                actions,
+                conditions } = this.props
             //条件列表渲染
-            // getFieldDecorator('condition', { initialValue: conditions });
-            // const condition = getFieldValue('condition');
-            // console.log(condition)
+            console.log(anyConditionFireAction)
             const conditionForm = conditions.map((v, index) => {
-                if (parameterIdListArr.length == conditions.length)
+                // console.log(v)
+                if (v.parameterIdList){
                     return (
                         <div className={styles.line} key={index}>
                             <Form.Item className={styles.search}>
@@ -628,7 +689,7 @@ const RuleForm = Form.create()(
                                         placeholder='参数'
                                     >
                                         {
-                                            parameterIdListArr[index].map((v, i) => {
+                                            v.parameterIdList.map((v, i) => {
                                                 return (
                                                     <Option key={v.parameterId}>{v.name}{v.unit}</Option>
                                                 )
@@ -685,15 +746,14 @@ const RuleForm = Form.create()(
                                 )}
                         </div>
                     )
-
-                        ;
+                }
             });
             //执行列表渲染
             // getFieldDecorator('action', { initialValue: actions });
             // const action = getFieldValue('action');
             const actionForm = actions.map((v, index) => {
                 // console.log(v)
-                if (switchListArr.length == actions.length)
+                if (v.switchList)
                     return (
                         <div className={styles.line} key={index}>
                             <Form.Item className={styles.search}>
@@ -738,9 +798,7 @@ const RuleForm = Form.create()(
                                         placeholder='开关阀'
                                     >
                                         {   
-                                            // console.log(switchListArr)
-                                            switchListArr[index].map((v, i) => {
-                                                
+                                            v.switchList.map((v, i) => {   
                                                 return (
                                                     <Option key={v.cmd}>{v.displayName}</Option>
                                                 )
@@ -782,11 +840,14 @@ const RuleForm = Form.create()(
                     <div className={styles.inner}>
                         <div className={styles.if}>条件</div>
                         <Form.Item className={styles.all}>
-                            {getFieldDecorator('anyConditionFireAction', { initialValue: `${anyConditionFireAction}` })
+                            {
+                                getFieldDecorator('anyConditionFireAction', { 
+                                    initialValue: anyConditionFireAction ,
+                                })
                                 (
-                                <RadioGroup>
-                                    <Radio value="false">全部条件</Radio>
-                                    <Radio value="true">部分条件</Radio>
+                                <RadioGroup onChange={(e)=>radioChange(e)}>
+                                    <Radio value={false}>全部条件</Radio>
+                                    <Radio value={true}>部分条件</Radio>
                                 </RadioGroup>
                                 )
                             }
