@@ -57,7 +57,9 @@ export default class extends Component {
             //日志记录Id
             logId:'',
             //通知人列表
-            roleList:[]
+            roleList:[],
+            //初始页
+            current:1,
         };
         // console.log(this.state.data)
     }
@@ -253,7 +255,8 @@ export default class extends Component {
                         })
                         this.setState({
                             itemCount: v.data.itemCount,
-                            data
+                            data,
+                            current:page
                         })
                         this._getTableDatas(title, data);
                     }
@@ -331,7 +334,8 @@ export default class extends Component {
                         this.setState({
                             data,
                             itemCount,
-                            searchValue: {}
+                            searchValue: {},
+                            current:1
                         })
                         this._getTableDatas(title, data);
                     }
@@ -347,7 +351,6 @@ export default class extends Component {
     }
     //确定关闭预警
     closeOk(){
-        const { title } = this.state;
         const form = this.closeWarningForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
@@ -369,34 +372,14 @@ export default class extends Component {
                     //超时判断
                     timeOut(v.ret)
                     if(v.ret==1){
-                        fetch(dataUrl,{
-                            ...postOption,
-                            body:JSON.stringify({
-                                "pageIndex": 0,
-                                "pageSize": 10
-                            })
-                        }).then(res=>{
-                            Promise.resolve(res.json())
-                            .then(v=>{
-                                //超时判断
-                                timeOut(v.ret)
-                                if(v.ret==1){
-                                    let data=v.data.items
-                                    let itemCount = v.data.itemCount;
-                                    // 给每一条数据添加key
-                                    data.map((v, i) => {
-                                        v.key = i
-                                    })
-                                    this.setState({
-                                        data,
-                                        itemCount,
-                                        closeShowvisible:false
-                                    })
-                                    message.success("关闭成功",2)
-                                    this._getTableDatas(title, data);
-                                }
-                            })
-                        })
+                        this._resetForm();
+                        this.setState({
+                            closeShowvisible: false
+                        });
+                        form.resetFields();
+                        message.success('关闭成功', 2);
+                    } else {
+                        message.error(v.msg, 2);
                     }
                 })
             }).catch((err) => {
@@ -465,9 +448,24 @@ export default class extends Component {
             showvisible: false
         })
     }
+    // onChange() {
+    //     const form = this.closeWarningForm.props.form;
+    //     form.validateFields((err, values) => {
+    //         // 未定义时给空值
+    //         if (err) {
+    //             return
+    //         }
+    //         console.log(values.print)
+    //         this.setState({
+    //             print:values.print
+    //         })
+    //     })
+        
+    // }
     render() {
-        const { columns, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible,roleList} = this.state;
+        const { columns, current, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible,roleList} = this.state;
         const paginationProps = {
+            current:current,
             showQuickJumper: true,
             total: itemCount,
             // 传递页码
@@ -530,6 +528,7 @@ export default class extends Component {
                     <CloseWarningForm
                         wrappedComponentRef={(closeWarningForm) => this.closeWarningForm = closeWarningForm}
                         visible={closeShowvisible}
+                        // onChange={()=>this.onChange()}
                         onCancel={() => this.closeCancel()}
                         onOk={() => this.closeOk()}
                         {...{roleList}}
@@ -727,10 +726,19 @@ const ShowSetForm = Form.create()(
 )
 //关闭预警弹窗
 const CloseWarningForm = Form.create()(
-    class extends React.Component {
+    class extends React.Component {       
+            state = {
+                print:false
+            }
+        onChange(checked){
+            this.setState({
+                print:checked
+            })
+        }
         render() {
-            const { visible, form, onOk, onCancel,roleList } = this.props
+            const { visible, form, onOk, onCancel,roleList,onChange } = this.props
             const { getFieldDecorator } = form;
+            const {print}=this.state
             return (
                 <Modal
                     className={styles.closeWarningModal}
@@ -739,6 +747,7 @@ const CloseWarningForm = Form.create()(
                     cancelText='取消'
                     okText='确定'
                     onOk={onOk}
+                    onChange={onChange}
                     onCancel={onCancel}
                     centered={true}
                 >
@@ -753,11 +762,12 @@ const CloseWarningForm = Form.create()(
                                 )
                             }
                         </Form.Item >
-                        <div style={{display:'flex'}} className={styles.inline}>
+                        {
+                            print==true?<div style={{display:'flex'}} className={styles.inline}>
                             <Form.Item label='报修订单' className={styles.print}>
                                 {getFieldDecorator('print', {initialValue:''})
                                 (
-                                    <Switch/>
+                                    <Switch onChange={(checked)=>this.onChange(checked)}/>
                                 )}
                             </Form.Item>
                             <Form.Item label='指派给' className={styles.people}>
@@ -773,7 +783,15 @@ const CloseWarningForm = Form.create()(
                                     )
                                 }
                             </Form.Item>
+                        </div>:<div style={{display:'flex'}} className={styles.inline}>
+                            <Form.Item label='报修订单' className={styles.print}>
+                                {getFieldDecorator('print', {initialValue:''})
+                                (
+                                    <Switch onChange={(checked)=>this.onChange(checked)}/>
+                                )}
+                            </Form.Item>
                         </div>
+                        }
                     </Form>
                 </Modal>
             )

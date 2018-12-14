@@ -16,7 +16,6 @@ const confirm = Modal.confirm;
 export default class extends React.Component {
     constructor(props) {
         super(props)
-
         const downData = (
             <Menu>
                 <Menu.Item
@@ -53,7 +52,7 @@ export default class extends React.Component {
             body: JSON.stringify({
                 "pageIndex": 0,
                 //只判断了一页
-                "pageSize": 10
+                "pageSize": 1000
             })
         }).then(res => {
             Promise.resolve(res.json())
@@ -73,7 +72,7 @@ export default class extends React.Component {
                                     {
                                         warningDatas.map(function (v, i) {
                                             return <Menu.Item key={i}>
-                                                <Link to={{pathname:`/manage/warning`}}><Button>{'【设备异常】' + " " + v.eventContent + " " + v.time}</Button></Link>
+                                                <Link to={{pathname:`/manage/warning`}}>{'【设备异常】' + " " + v.time + ' ' +v.eventContent}</Link>
                                             </Menu.Item>
                                         })
                                     }
@@ -151,7 +150,6 @@ export default class extends React.Component {
             cancelText: '取消',
             // centered,
             onOk() {
-                // console.log(1)
                 return fetch(`${ENVNet}/api/Account/logout`, {
                     method: 'POST',
                     credentials: "include",
@@ -191,7 +189,9 @@ export default class extends React.Component {
         }
         return (
             <div className={styles.header}>
-                <Dropdown overlay={menu} trigger={['click']}>
+                <Dropdown overlay={menu} trigger={['click']}
+                overlayClassName={styles.warningInfo} overlayStyle={{height:"304px",width:"300px"}}
+                >
                     <Badge count={this.state.count}>
                         <div className={styles.news}>
                             <i className={classnames('dyhsicon', 'dyhs-yujingshijian', `${styles.headerIcon}`)}></i>
