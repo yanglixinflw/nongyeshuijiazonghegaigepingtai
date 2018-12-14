@@ -109,15 +109,24 @@
                             background: #2e3459;
                             border-radius: 4px;
                             margin-top: 13px;
-                            overflow: hidden;
+                            // overflow: hidden;
                             .ant-checkbox-wrapper {
+                                border:2px solid transparent;
+                                border-radius: 4px;
+                                box-sizing: border-box;
                                 height: auto;
                                 display: flex;
+                                &:hover{
+                                    border:2px solid #0084FF
+                                }
                                 .ant-checkbox {
                                     height: 16px;
                                     margin: 21px 0 0 15px;
                                     .ant-checkbox-inner {
                                         background: #2e3459;
+                                        &:hover{
+                                            background: #0084FF !important;
+                                        }
                                     }
                                 }
                                 div{
@@ -134,6 +143,7 @@
                                             margin-bottom: 0;
                                             color: #dadade;
                                             li {
+                                                i{margin-right: 10px;}
                                               width:180px;
                                               overflow: hidden;
                                               text-overflow: ellipsis;
@@ -333,6 +343,9 @@
                 }
                 .ant-checkbox-inner{
                     background: #2e3459;
+                    &:hover{
+                        background: #0084FF !important;
+                    }
                 }
                 .ant-cascader-picker-arrow {
                     color: #4A5A72;
@@ -446,7 +459,7 @@
                                         ul{
                                             width: 360px;
                                             li{
-                                                width: 150px;
+                                                width: 140px;
                                             }
                                         }
                                     }
@@ -465,6 +478,24 @@
         height: 716px;
         .content{
           height: 678px !important;
+            :global {
+                .ant-checkbox-group {
+                    .ant-row{
+                        div{
+                            .ant-checkbox-wrapper{
+                                div{
+                                    ul{
+                                        width: 300px;
+                                        li{
+                                            width: 120px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
       }
       .mright{
