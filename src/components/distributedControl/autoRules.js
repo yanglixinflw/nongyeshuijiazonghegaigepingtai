@@ -22,7 +22,7 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { autoRules } = props;
-        console.log(props)
+        // console.log(props)
         this.state = {
             //规则id
             ruleId: props.ruleId,
@@ -375,7 +375,7 @@ export default class extends Component {
 
     }
     handlerRadioChange(e){
-        console.log(e.target.value)
+        // console.log(e.target.value)
         this.setState({
             anyConditionFireAction:e.target.value
         })
@@ -640,7 +640,7 @@ const RuleForm = Form.create()(
                 actions,
                 conditions } = this.props
             //条件列表渲染
-            console.log(anyConditionFireAction)
+            // console.log(anyConditionFireAction)
             const conditionForm = conditions.map((v, index) => {
                 // console.log(v)
                 if (v.parameterIdList){
