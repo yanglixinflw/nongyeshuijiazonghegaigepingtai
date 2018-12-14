@@ -621,6 +621,7 @@ export default class extends Component {
                         //判断是否超时
                         timeOut(v.ret)
                         if (v.ret == 1) {
+                            console.log(v)
                             let dataList = v.data.items;
                             this._getDataList(dataList, keyword)
                             this.setState({
