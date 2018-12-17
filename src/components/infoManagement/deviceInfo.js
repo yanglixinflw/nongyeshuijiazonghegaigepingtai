@@ -1346,7 +1346,8 @@ const ModifyForm = Form.create()(
             });
         }
         render() {
-            const { visible,
+            const { 
+                visible,
                 onOk,
                 onCancel,
                 modifyData,
