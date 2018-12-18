@@ -280,6 +280,9 @@
                     .ant-input::-webkit-input-placeholder{
                         color:#4a5a72
                     }
+                    .ant-select-selection__placeholder{
+                        color:#4a5a72
+                    }
                     .ant-select-selection__rendered {
                         margin-top: 8px;
                     }
@@ -326,99 +329,97 @@
                     }
                 }
             }
-            :global {
-                .ant-btn{
-                    font-size: 14px;
-                }
-                .ant-input{font-size: 12px;}
-                .ant-select-selection__placeholder{
-                    font-size: 12px;
-                    color:#4a5a72
-                }
-                .ant-table-fixed-header > .ant-table-content > .ant-table-scroll > .ant-table-header{
-                    background: #2e3459!important;
-                }
-                .ant-table-fixed-header > .ant-table-content > .ant-table-scroll > .ant-table-body{
-                    background: #2e3459!important;
-                }
-                .ant-checkbox-inner{
-                    background: #2e3459;
-                    &:hover{
-                        background: #0084FF !important;
+            .listHead{
+                width: 100%;
+                :global{
+                    .ant-checkbox-wrapper{
+                        width: 100%;
+                        height: 45px;
+                        background: #2e386c;
+                        display: flex;
+                        justify-content: space-between;
+                        color:#fff;
+                        span:first-child{
+                            width: 16px;
+                            margin:15px 20px;
+                            opacity: 0;
+                        }
+                        span:nth-child(2){
+                            width: 96%;
+                            line-height: 45px;
+                            display: flex;
+                            justify-content: space-around;
+                        }
                     }
+                } 
+            }
+            .list{
+                width: 100%;
+                background: #2e3459;
+                &::-webkit-scrollbar {
+                    width: 6px;
                 }
-                .ant-cascader-picker-arrow {
-                    color: #4A5A72;
+                &::-webkit-scrollbar-button {
+                    display: none;
                 }
-                .ant-table-wrapper {
-                    .ant-table {
-                        background: #2E3459;
-                        .ant-table-content {
-                            .ant-table-header{
-                                height: 70px;
-                                &::-webkit-scrollbar {
-                                    display: none;
-                                }
-                                &::-webkit-scrollbar-button {
-                                    display: none;
-                                }
-                            }
-                            .ant-table-body {
-                                &::-webkit-scrollbar {
-                                    width: 6px;
-                                }
-                                &::-webkit-scrollbar-button {
-                                    display: none;
-                                }
-                                &::-webkit-scrollbar-thumb {
-                                    background: #4d5cab;
-                                    border-radius: 2px;
-                                }
-                                &::-webkit-scrollbar-track {
-                                    background: #2E3459;
+                &::-webkit-scrollbar-thumb {
+                    background: #4d5cab;
+                    border-radius: 2px;
+                }
+                &::-webkit-scrollbar-track {
+                    background: #2E3459;
+                }
+                div{
+                    :global{
+                        .ant-checkbox-group{
+                            width: 100%;
+                            .ant-row{
+                                width: 100%;
+                                .ant-checkbox-wrapper{
+                                    border-bottom: 1px solid #3b4375;
+                                    width: 100%;
+                                    display: flex;
+                                    color: #fff;
+                                    justify-content: space-between;
+                                    span:first-child{
+                                        width: 16px;
+                                        margin:20px 20px; 
+                                        .ant-checkbox-inner{
+                                            background: #2e3459;
+                                        }
+                                    }
+                                    span:nth-child(2){
+                                        width: 100%;
+                                        div{
+                                            width: 100%;
+                                            ul{
+                                                width: 100%;
+                                                display: flex;
+                                                justify-content: space-around;
+                                                // align-items: center;
+                                                list-style: none;
+                                                white-space: normal;
+                                                margin: 0;
+                                                li{
+                                                    margin-top: 20px;
+                                                    width: 168px;
+                                                    text-align:center
+                                                }
+                                                li:nth-child(1){
+                                                    width: 90px;
+                                                }
+                                                li:nth-child(2){
+                                                    width: 240px;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                    .ant-table-thead {
-                       
-                        tr {
-                            th {
-                                min-width: 90px;
-                                height: 50px;
-                                font-weight: 600; // height: 45px;
-                                background: #2e386c;
-                                color: #DEDEE4;
-                               
-                            }
-                        }
-                    }
-                    .ant-table-tbody {
-                        tr {
-                            &:hover td {
-                                color: #0084FF;
-                            }
-                            &:focus td {
-                                color: #0084FF;
-                            }
-                            td {
-                                // height: 50px !important;
-                                min-width: 90px;
-                                font-size: 12px;
-                                background: #2e3459;
-                                color: #BBC5D2;
-                                border-bottom: 2px solid #2e386c;
-                                .ant-btn {
-                                    background: #1C2241;
-                                }
-                            }
-                        }
-                    }
-                    .ant-pagination.ant-table-pagination {
-                        display: none;
-                    }
                 }
-            } 
+            }
             .tbw{
                 width: 175px;
                 min-width: 90px;
@@ -442,6 +443,34 @@
                         }
                     }
                 }
+                .list{
+                    div{
+                        :global{
+                            .ant-checkbox-group{
+                                .ant-row{
+                                    .ant-checkbox-wrapper{
+                                        span:nth-child(2){
+                                            div{
+                                                ul{
+                                                    li{
+                                                        width: 148px;
+                                                        text-align:center
+                                                    }
+                                                    li:nth-child(1){
+                                                        width: 90px;
+                                                    }
+                                                    li:nth-child(2){
+                                                        width: 208px;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -457,9 +486,50 @@
                                 .ant-checkbox-wrapper{
                                     div{
                                         ul{
-                                            width: 360px;
+                                            width: 340px;
                                             li{
                                                 width: 140px;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .mright{
+            .tables{
+                .searchForm{
+                    :global {
+                        .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
+                            min-width: 100px;
+                            width: 100px;
+                        }
+                    }
+                }
+                .list{
+                    div{
+                        :global{
+                            .ant-checkbox-group{
+                                .ant-row{
+                                    .ant-checkbox-wrapper{
+                                        span:nth-child(2){
+                                            div{
+                                                ul{
+                                                    li{
+                                                        width: 128px;
+                                                        text-align:center
+                                                    }
+                                                    li:nth-child(1){
+                                                        width: 70px;
+                                                        margin-left: -20px;
+                                                    }
+                                                    li:nth-child(2){
+                                                        width: 160px;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -509,6 +579,36 @@
               }
             }
           }
+          .list{
+            div{
+                :global{
+                    .ant-checkbox-group{
+                        .ant-row{
+                            .ant-checkbox-wrapper{
+                                span:nth-child(2){
+                                    div{
+                                        ul{
+                                            justify-content: space-between;
+                                            li{
+                                                width: 100px;
+                                                text-align:center
+                                            }
+                                            li:nth-child(1){
+                                                width: 50px;
+                                                margin-left: -10px;
+                                            }
+                                            li:nth-child(2){
+                                                width: 80px;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         }
       }
     }
@@ -524,7 +624,7 @@
                                 .ant-checkbox-wrapper{
                                     div{
                                         ul{
-                                            width: 300px;
+                                            width: 240px;
                                             li{
                                                 width: 200px;
                                             }
@@ -545,6 +645,36 @@
                         .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
                             min-width: 100px;
                             width: 100px;
+                        }
+                    }
+                }
+                .list{
+                    div{
+                        :global{
+                            .ant-checkbox-group{
+                                .ant-row{
+                                    .ant-checkbox-wrapper{
+                                        span:nth-child(2){
+                                            div{
+                                                ul{
+                                                    justify-content: space-between;
+                                                    li{
+                                                        width: 88px;
+                                                        text-align:center
+                                                    }
+                                                    li:nth-child(1){
+                                                        width: 50px;
+                                                        margin-left: -30px;
+                                                    }
+                                                    li:nth-child(2){
+                                                        width: 80px;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

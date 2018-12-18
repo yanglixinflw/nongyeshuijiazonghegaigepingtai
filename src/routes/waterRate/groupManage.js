@@ -21,7 +21,7 @@ export default class extends React.Component{
             type: 'groupManage/fetchFarmer',
             payload:{
                 "pageIndex": 0,
-                "pageSize": 5000
+                "pageSize": 10
             }
         });
     }
