@@ -60,6 +60,8 @@ export default class extends Component{
             searchValue:{},
             //默认选中行
             selectedRowKeys: [],
+            //当前页
+            current:1
         }
     }
     componentDidMount() {
@@ -161,7 +163,7 @@ export default class extends Component{
         });
     }
     onSelectChange =(selectedRowKeys,selectedRows)=>{
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        // console.log('selectedRowKeys changed: ', selectedRowKeys);
         var deviceIds=[];
         selectedRows.map((v,i)=>{
             deviceIds.push(v.deviceId)
@@ -250,6 +252,7 @@ export default class extends Component{
                             data,
                             itemCount,
                             searchValue:{},
+                            current:1
                         })
                         this._getTableDatas(title, data);
                     }
@@ -285,7 +288,8 @@ export default class extends Component{
                     })
                     this.setState({
                         itemCount:v.data.itemCount,
-                        tableDatas:data
+                        tableDatas:data,
+                        current:page
                     })
                     // this._getTableDatas(title,data);
                 }
@@ -360,10 +364,11 @@ export default class extends Component{
         });
     }
     render(){
-        const { columns,itemCount, tableDatas, installAddrList,deviceTypeList,switchvisible,cmd,selectedRowKeys} = this.state;
+        const { columns,itemCount, current, tableDatas, installAddrList,deviceTypeList,switchvisible,cmd,selectedRowKeys} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
+            current,current,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
