@@ -16,7 +16,7 @@ const deviceStatusUrl = `${ENVNet}/api/device/getDeviceStatus`
 export default class extends Component {
     constructor(props) {
         super(props)
-        console.log(props)
+        // console.log(props)
         const plugins = [
             // 比例尺
             'Scale',

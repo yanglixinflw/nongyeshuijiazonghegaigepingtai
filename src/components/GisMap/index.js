@@ -120,7 +120,8 @@ export default class extends Component {
                 position,
                 deviceTypeId: v.deviceTypeId,
                 name: v.name,
-                deviceId: v.deviceId
+                deviceId: v.deviceId,
+                photoUrl:v.photoUrl,
             })
         })
         waterMeter.map((v, i) => {
@@ -621,6 +622,7 @@ export default class extends Component {
                         //判断是否超时
                         timeOut(v.ret)
                         if (v.ret == 1) {
+                            console.log(v)
                             let dataList = v.data.items;
                             this._getDataList(dataList, keyword)
                             this.setState({

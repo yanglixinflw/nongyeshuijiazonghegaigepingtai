@@ -10,6 +10,7 @@ export default class extends Component {
     }
     render() {
         const { deviceInfo } = this.props
+        // console.log(deviceInfo)
         if (deviceInfo.length == 0) {
             return null
         }
@@ -23,9 +24,17 @@ export default class extends Component {
                             <div className={styles.mask}>{deviceInfo[0].name}</div>
                         </div>
                         :
-                        <div className={styles.cameraWindow}>
-                            <i className={classnames('dyhsicon', 'dyhs-bofang', `${styles.playIcon}`)}></i>
+                        <div 
+                            className={styles.cameraWindow}
+                            
+                        >
+                            <div style={{ background: `url(${deviceInfo[0].photoUrl})`, backgroundSize: 'cover',width:'285px',height:'169px' }}>
+                            <a href={`/#/command/videoMonitoring:${deviceInfo[0].deviceId}`} target='_blank'>
+                                <i className={classnames('dyhsicon', 'dyhs-bofang', `${styles.playIcon}`)}></i>
+                            </a>
+                           
                             <div className={styles.mask}>{deviceInfo[0].name}</div>
+                            </div>
                         </div>
                     }
                 </div>

@@ -129,6 +129,10 @@ export const getRouterData = app => {
     '/automation/autoRules:id':{
       component: dynamicWrapper(app, ["autoRules"], () => import('../routes/distributedControl/autoRules')),
     },
+    // 可调用式视频播放页面
+    '/command/videoMonitoring:id':{
+      component: dynamicWrapper(app, ['monitor'], () => import('../routes/command/monitor')),
+    },
     '/command/videoMonitoring':{
       component: dynamicWrapper(app, ['monitor'], () => import('../routes/command/monitor')),
     },
