@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import styles from './autoRules.less';
 import { Input, Button, Form, Select, Icon, Radio, message, InputNumber, Tooltip } from 'antd';
-import { getAutoRules } from '../../services/api'
-import { Link } from 'dva/router';
 import _ from 'lodash'
 import { timeOut } from '../../utils/timeOut';
 const Option = Select.Option;

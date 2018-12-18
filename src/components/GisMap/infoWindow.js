@@ -26,7 +26,6 @@ export default class extends Component {
                         :
                         <div 
                             className={styles.cameraWindow}
-                            
                         >
                             <div style={{ background: `url(${deviceInfo[0].photoUrl})`, backgroundSize: 'cover',width:'285px',height:'169px' }}>
                             <a href={`/#/command/videoMonitoring:${deviceInfo[0].deviceId}`} target='_blank'>
