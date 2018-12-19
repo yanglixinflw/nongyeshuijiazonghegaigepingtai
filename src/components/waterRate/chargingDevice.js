@@ -551,12 +551,12 @@ export default class extends Component{
                             >
                                 添加
                             </Button>
-                            <Button
+                            {/* <Button
                                 className={styles.fnButton}
                             >
                                 <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.searchIcon}`)}></i>
                                 <div>导出数据</div>
-                            </Button>
+                            </Button> */}
                         </div> 
                     </div>
                     <Table

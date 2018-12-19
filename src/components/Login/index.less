@@ -18,8 +18,10 @@
         }
     }
     footer {
-        height: 220px;
-        background: red;
+        height: 220px; // background: red;
+        background: url('../../assets/loginFoot.png') no-repeat;
+        background-position: center;
+        background-size: contain;
     }
     .content {
         display: flex;
@@ -31,7 +33,10 @@
             display: inline-block;
         }
         section {
-            background: blue;
+            // background: blue;
+            background: url('../../assets/loginCenter.png') no-repeat;
+            background-position: center;
+            background-size: contain;
             width: 57vw;
             min-width: calc(~"900px * 0.57");
         }
@@ -73,10 +78,10 @@
                         }
                         .yzmwindow {
                             display: inline-block;
-                            img{
+                            img {
                                 width: 102px;
                                 border: 1px #79B3F2 solid;
-                                height: 38px; 
+                                height: 38px;
                                 position: relative;
                                 top: -3px;
                                 cursor: pointer;
@@ -93,38 +98,37 @@
                         position: relative;
                         left: -4px;
                     }
-                    .remberBox{
+                    .remberBox {
                         width: 300px;
-                        display:flex;
+                        display: flex;
                         justify-content: space-between;
                         margin-left: 50px;
                         height: 40px;
-                        div{
+                        div {
                             display: inline-block;
                         }
-                        span{
-                            color:#79B3F2;
+                        span {
+                            color: #79B3F2;
                         }
-                        :global{
-                            .ant-checkbox-checked .ant-checkbox-inner{
-                                background-color:#39CEF7;
+                        :global {
+                            .ant-checkbox-checked .ant-checkbox-inner {
+                                background-color: #39CEF7;
                             }
                         }
                     }
-                    .loginButton{
-                       margin-bottom:0;
-                       text-align:center;
-                       :global{
-                           .ant-btn{
-                            width: 300px;
-                            height: 50px;
-                            background: #39CEF7;
-                            color:white;
-                            border: none;
-                           }
-                       }
+                    .loginButton {
+                        margin-bottom: 0;
+                        text-align: center;
+                        :global {
+                            .ant-btn {
+                                width: 300px;
+                                height: 50px;
+                                background: #39CEF7;
+                                color: white;
+                                border: none;
+                            }
+                        }
                     }
-
                     :global {
                         .ant-input-affix-wrapper .ant-input:not(:first-child) {
                             padding-left: 48px;
@@ -140,8 +144,7 @@
                             121,
                             215,
                             0.4);
-                        }
-                        // .ant-form-item{
+                        } // .ant-form-item{
                         //     margin-bottom:0;
                         // }
                     }
@@ -171,28 +174,27 @@
 }
 
 @keyframes toast {
-    8%{
-        transform:translate(20px);
+    8% {
+        transform: translate(20px);
     }
-    16%{
-        transform:translate(-20px);
+    16% {
+        transform: translate(-20px);
     }
-    24%{
-        transform:translate(20px);
+    24% {
+        transform: translate(20px);
     }
-    32%{
-        transform:translate(-20px);
+    32% {
+        transform: translate(-20px);
     }
-    82.5%{
-        transform:translate(20px);
+    82.5% {
+        transform: translate(20px);
     }
-    100%{
-        transform:translate(-20px);
+    100% {
+        transform: translate(-20px);
     }
 }
 
 .shake {
     display: inline-block;
-    animation: toast 2s;
-    // transform:translate(-20px);
+    animation: toast 2s; // transform:translate(-20px);
 }

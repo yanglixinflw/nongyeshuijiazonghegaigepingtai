@@ -17,7 +17,7 @@ export default class extends React.Component {
     constructor(props) {
         super(props)
         const downData = (
-            <Menu>
+            <Menu className={styles.changePassWordMenu}>
                 <Menu.Item
                     onClick={() => this.changePsw()}
                 >
@@ -277,7 +277,7 @@ const ChangePwdForm = Form.create()(
                                     { validator: this.compareToFirstPassword }
                                 ],
                             })(
-                                <Input type="password" placeholder='密码由6~20位字母和数字组成' onBlur={this.onBlur} />
+                                <Input type="password" placeholder='密码由6~20位字母和数字组成' />
                             )}
                         </Form.Item>
                     </Form>
