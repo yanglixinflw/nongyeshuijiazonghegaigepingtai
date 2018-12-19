@@ -1,11 +1,12 @@
 import React,{Component} from 'react';
 import styles from "./groupManage.less"
-import { Input, Button, Form, Table,Select,message,Icon,Checkbox, Row, Col} from 'antd';
+import { Input, Button, Form,Select,message,Icon,Checkbox, Row, Col,} from 'antd';
 import { Link } from 'dva/router';
 import classnames from 'classnames'
 import { parse } from 'qs';
 import { timeOut } from '../../utils/timeOut';
 import {ENVNet,postOption} from '../../services/netCofig'
+import InfiniteScroll from 'react-infinite-scroller';
 //头信息
 const tableTitle=[
     {index:"realName",item:"姓名"},
@@ -21,13 +22,13 @@ const areaUrl=`${ENVNet}/api/Area/list`;
 const saveUrl=`${ENVNet}/fee/groupAccount/SaveMembers`;
 //农户信息接口
 const farmerUrl=`${ENVNet}/api/PeasantMgr/list`;
+
 export default class extends Component{
     constructor(props) {
         super(props)
         let groupId = parse(window.location.href.split(':'))[3];
         const{groupManage}=props.groupManage;
         const{farmersInfo}=props.groupManage
-        // console.log(groupManage)
         this.state={
             //小组id
             groupId,
@@ -37,8 +38,6 @@ export default class extends Component{
             title:tableTitle,
             itemCount:farmersInfo.data.data.itemCount,//总数据数
             data:farmersInfo.data.data.items,//表格数据源
-            //表的每一列
-            columns: [],
             //归属地去列表
             areaList:[],
             //选中的表格行
@@ -46,11 +45,23 @@ export default class extends Component{
             //选中行的数组
             selectedRows:[],
             //选中的多选数组（其值为groupMember的id）
-            checkedValue:[]
-        }
+            checkedValue:[],
+            //搜索初始值
+            searchValue:{},
+            hasMore: true,// 判断接口是否还有数据，通过接口设置
+            //当前页
+            pageIndex:0,
+            //样式控制
+            indeterminate: true,
+            //选中农户的数组
+            checkedList: [],
+            // //所有农户成员数组
+            // plainOptions
+
+        }  
     }
-    componentDidMount() {
-        this._getTableDatas(this.state.title, this.state.data);
+    componentDidMount() {       
+        this.handleScroll();
         return (
             fetch(areaUrl, {
                 ...postOption,
@@ -71,69 +82,69 @@ export default class extends Component{
             })
         )
     }
-    _getTableDatas(title, data) {
-        const {groupMember} = this.state
-        //移除农户数组中的与小组账户相同的项
-        var datas = data.filter(item => !groupMember.some(v => v.idCard === item.idCard))
-        let columns = [];
-        title.map(v => {
-            columns.push({
-                title: v.item,
-                // 给表头添加字段名 必须一一对应
-                dataIndex: v.index,
-                align: 'center',
-                className: `${styles.tbw}`
+    // 处理滚动监听
+    handleScroll(){
+        const {itemCount,data} = this.state;
+        let pageIndex=this.state.pageIndex;
+        pageIndex=++pageIndex
+        if (data.length > itemCount) {
+            message.warning('已加载完全');
+            this.setState({
+            hasMore: false,
+            });
+            return;
+        }
+        fetch(farmerUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                pageIndex:pageIndex,
+                pageSize:10
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                if(v.ret==1){
+                    let data=this.state.data.concat(v.data.items)
+                    this.setState({
+                        data,
+                        pageIndex
+                    })
+                }
             })
         })
-        let tableDatas = [];
-        //表单数据
-        datas.map((v, i) => {
-            tableDatas.push({
-                realName:v.realName,
-                mobilePhone:v.mobilePhone,
-                idCard:v.idCard,
-                areaName:v.areaName,
-                userId:v.userId,
-                key: i,
-            });
-        })
-        const rowSelection = {
-            onChange: (selectedRowKeys, selectedRows) => {
-            //   console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-              this.setState({
-                selectedRows
-              })
-            },
-            // onSelect: (record, selected, selectedRows) => {
-            //   console.log(record, selected, selectedRows);
-            // },
-            // onSelectAll: (selected, selectedRows, changeRows) => {
-            //   console.log(selected, selectedRows, changeRows);
-            // },
-        };
+        this._getTableDatas()
+    }
+    _getTableDatas() {
+        const {groupMember} = this.state
+        //移除农户数组中的与小组账户相同的项
+        var datas = this.state.data.filter(item => !groupMember.some(v => v.idCard === item.idCard))
         this.setState({
             data:datas,
-            columns,
-            tableDatas,
-            rowSelection
         });
     }
-    //多选框选中项
-    onChange(checkedValues){
-        console.log(checkedValues);
+
+    //右边选中项
+    onChecked(val) {
         this.setState({
-            checkedValue:checkedValues
+          checkedList:val
+        });
+      }
+    //左边多选框选中项
+    onChange(value){
+        this.setState({
+            checkedValue:value
         })
     }
     //将右边的选中项移到左边
     push(){
-        const{groupMember,selectedRows,data}=this.state
-        if(selectedRows==''){
+        const{groupMember,data}=this.state
+        var checkedList=this.state.checkedList
+        if(checkedList==''){
             return
         }
         //将选中的行push到小组成员数组中
-        selectedRows.map((v,i)=>{
-            groupMember.push({memberUserId:v.userId,mobilePhone:v.mobilePhone,realName:v.realName,idCard:v.idCard,areaName:v.areaName})
+        checkedList.map((v,i)=>{
+            groupMember.push({memberUserId:v.userId,mobilePhone:v.mobilePhone,realName:v.realName,idCard:v.idCard,areaName:v.areaName,key:i})
         })
         var groupArr = [];//新数组(定义一个新数组用于去重)
         var groupObj = {};
@@ -144,18 +155,17 @@ export default class extends Component{
                 groupObj[groupMember[i].idCard] = true;
             }
         }
-        //移除农户数组中的与小组账户相同的项
+        // //移除农户数组中的与小组账户相同的项
         var datas = data.filter(item => !groupMember.some(v => v.idCard === item.idCard))
         this.setState({
-            groupMember,
-            data:datas
+            groupMember:groupArr,
+            data:datas,
+            checkedList:[]
         })
-        this._getTableDatas(this.state.title,data)
     }
     //将左边的选中项移除
     remove(){
         const{checkedValue,groupMember}=this.state
-        console.log(checkedValue)
         //如果什么都没选
         if(checkedValue==''){
             return
@@ -169,15 +179,17 @@ export default class extends Component{
         })
         //得到移除选中项后的数组
         var arr=array[array.length-1]
-        console.log(arr)
+        // console.log(arr)
         this.setState({
-            groupMember:arr
-        }),
+            groupMember:arr,
+            checkedValue:[]
+        })
+        let pageIndex=0
         fetch(farmerUrl,{
             ...postOption,
             body:JSON.stringify({
-                "pageIndex": 0,
-                "pageSize": 100
+                "pageIndex": pageIndex,
+                "pageSize": 10
             })
         }).then(res=>{
             Promise.resolve(res.json())
@@ -186,9 +198,11 @@ export default class extends Component{
                 if(v.ret==1){
                     let data=v.data.items
                     this.setState({
-                        data
+                        data,
+                        pageIndex
                     })
-                    this._getTableDatas(this.state.title,data)
+                    this._getTableDatas()
+                    this.handleScroll()
                 }
             })
         })
@@ -240,14 +254,12 @@ export default class extends Component{
     }
     // 搜索功能
     _searchTableData() {
-        const { title } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
             if (err) {
                 return
             }
-            console.log(values)
             return fetch(farmerUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -255,7 +267,6 @@ export default class extends Component{
                     "mobile": values.mobilePhone,
                     "idCard": values.idCard,
                     "areaId": values.areaId,
-                    "pageIndex": 0,
                     "pageSize": 10
                 })
             }).then(res => {
@@ -265,14 +276,11 @@ export default class extends Component{
                         timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
-                            // console.log(v)
-                            let itemCount = v.data.itemCount
                             let data = v.data.items
                             this.setState({
-                                itemCount,
                                 data
                             })
-                            this._getTableDatas(title,data);
+                            this._getTableDatas(data);
                         }
                     })
             }).catch(err => {
@@ -282,14 +290,14 @@ export default class extends Component{
     }
     //重置
     _resetForm() {
-        const { title } = this.state;
         const form = this.searchForm.props.form;
+        let pageIndex=0
         // 重置表单
         form.resetFields();
         return fetch(farmerUrl, {
             ...postOption,
             body: JSON.stringify({
-                "pageIndex": 0,
+                "pageIndex":pageIndex,
                 "pageSize": 10
             })
         }).then((res) => {
@@ -298,25 +306,19 @@ export default class extends Component{
                      //超时判断
                     timeOut(v.ret)
                     if (v.ret == 1) {
-                        // console.log(v)
                         let data = v.data.items;
-                        let itemCount = v.data.itemCount;
-                        // 给每一条数据添加key
-                        data.map((v, i) => {
-                            v.key = i
-                        })
                         this.setState({
                             data,
-                            itemCount,
-                            searchValue:{}
+                            pageIndex
                         })
-                        this._getTableDatas(title, data);
+                        this._getTableDatas();
+                        this.handleScroll()
                     }
                 })
         })
     }
     render(){
-        const{groupMember,areaList,columns,tableDatas,rowSelection,groupId}=this.state
+        const{groupMember,areaList,groupId,data,title,checkedList,checkedValue}=this.state    
         return(
             <React.Fragment>
                 <div className={styles.groupManage}>
@@ -352,7 +354,7 @@ export default class extends Component{
                                 <div className={styles.mleftName}>小组成员</div>
                             </div>
                             <div className={styles.content}>
-                                <Checkbox.Group onChange={(checkedValues)=>this.onChange(checkedValues)}>
+                                <Checkbox.Group value={checkedValue} onChange={(value)=>this.onChange(value)}>
                                     <Row>
                                         {groupMember.map((v,i)=>{
                                             return(
@@ -409,13 +411,51 @@ export default class extends Component{
                                         </Button>
                                     </div> 
                                 </div>
-                                <Table
-                                    columns={columns}
-                                    className={styles.table}
-                                    rowSelection={rowSelection}
-                                    dataSource={tableDatas}
-                                    scroll={{y: 490}}
-                                />
+                                <div className={styles.listHead}>
+                                    <Checkbox
+                                        // indeterminate={this.state.indeterminate}
+                                        // onChange={(e)=>this.onCheckAllChange(e)}
+                                        // checked={checkAll}
+                                    >
+                                        {   
+                                            title.map((v,i)=>{
+                                                return(
+                                                    <div key={i}>{v.item}</div>
+                                                )
+                                            })
+                                        }
+                                    </Checkbox>
+                                </div>
+                                <div className={styles.list} style={{height:"500px",overflow:"auto"}}>  
+                                    <InfiniteScroll
+                                        initialLoad={false}
+                                        pageStart={0}
+                                        loadMore={()=>this.handleScroll()}
+                                        hasMore={true || false}
+                                        useWindow={false}
+                                    >
+                                        <Checkbox.Group value={checkedList} onChange={(val)=>this.onChecked(val)}>
+                                            <Row>
+                                                {data.map((v,i)=>{
+                                                    return(
+                                                        <Col key={i}>
+                                                            <Checkbox value={v}>
+                                                                <div>
+                                                                    <ul>
+                                                                        <li title={v.realName}>{v.realName}</li>
+                                                                        <li title={v.mobilePhone}>{v.mobilePhone}</li>
+                                                                        <li title={v.idCard}>{v.idCard}</li>
+                                                                        <li title={v.areaName}>{v.areaName}</li>
+                                                                    </ul>
+                                                                </div>
+                                                            </Checkbox>
+                                                        </Col>
+                                                    )}    
+                                                )} 
+                                        </Row>
+                                        </Checkbox.Group> 
+                                    </InfiniteScroll>
+                                </div>
                             </div>
                         </div>
                     </div>

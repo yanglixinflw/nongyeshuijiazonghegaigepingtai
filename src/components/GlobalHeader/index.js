@@ -7,7 +7,7 @@ import { ENVNet, postOption } from '../../services/netCofig'
 import classnames from 'classnames';
 import { timeOut } from '../../utils/timeOut';
 // 预警事件列表
-const dataUrl = `${ENVNet}/api/DeviceWaringRule/eventList`;
+const dataUrl = `${ENVNet}/api/notification/list`;
 // 修改用户密码
 const changePassWordUrl = `${ENVNet}/api/Account/changePwd`
 // 确认退出className
@@ -38,7 +38,7 @@ export default class extends React.Component {
             menu,
             downData,
             //数据源
-            warningDatas: [],
+            data: [],
             //预警事件的个数
             count: 0,
             // 修改密码弹窗
@@ -52,27 +52,21 @@ export default class extends React.Component {
             body: JSON.stringify({
                 "pageIndex": 0,
                 //只判断了一页
-                "pageSize": 1000
+                "pageSize":5
             })
         }).then(res => {
             Promise.resolve(res.json())
                 .then(v => {
                     if (v.ret == 1) {
                         let data = v.data.items;
-                        let warningDatas = [];
-                        data.map((v, i) => {
-                            if (v.warningStatus == 1) {
-                                warningDatas.push(v);
-                            };
-                            v.key = i;
-                        })
-                        if (warningDatas.length > 0) {
+                        let itemCount=v.data.itemCount
+                        if (data.length > 0) {
                             var menu = (
                                 <Menu>
                                     {
-                                        warningDatas.map(function (v, i) {
+                                        data.map(function (v, i) {
                                             return <Menu.Item key={i}>
-                                                <Link to={{pathname:`/manage/warning`}}>{'【设备异常】' + " " + v.time + ' ' +v.eventContent}</Link>
+                                                <Link to={{pathname:`/manage/warning`}}>{'【设备异常】' + " " + v.createTime + ' ' +v.message}</Link>
                                             </Menu.Item>
                                         })
                                     }
@@ -85,8 +79,8 @@ export default class extends React.Component {
                             );
                         }
                         this.setState({
-                            warningDatas,
-                            count: warningDatas.length,
+                            data,
+                            count: itemCount,
                             menu
                         })
                     }
@@ -190,7 +184,7 @@ export default class extends React.Component {
         return (
             <div className={styles.header}>
                 <Dropdown overlay={menu} trigger={['click']}
-                overlayClassName={styles.warningInfo} overlayStyle={{height:"304px",width:"300px"}}
+                overlayClassName={styles.warningInfo} overlayStyle={{width:"300px"}}
                 >
                     <Badge count={this.state.count}>
                         <div className={styles.news}>
