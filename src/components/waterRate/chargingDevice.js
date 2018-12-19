@@ -21,8 +21,6 @@ const deviceUrl = `${ENVNet}/api/device/list`;
 const plantTypeUrl = `${ENVNet}/fee/chargeFacility/plantTypeList`;
 //灌区类型
 const wateringTypeUrl = `${ENVNet}/fee/chargeFacility/wateringTypeList`;
-//设备安装地列表
-const installAddrUrl=`${ENVNet}/api/BaseInfo/installAddrList`;
 //表头
 const tableTitle=[
     {index:"deviceId",item:"设备ID"},
@@ -38,7 +36,8 @@ const { Option }=Select
 export default class extends Component{
     constructor(props) {
         super(props)
-        const {chargingDevice}=props;
+        const installAddr=props.chargingDevice.InstallAddr;
+        const chargingDevice=props.chargingDevice.ChargingDevice
         this.state={
             //表格的列
             columns: [],
@@ -63,7 +62,7 @@ export default class extends Component{
             //灌区类型
             wateringType:[],
             //设备安装地
-            installAddrList:[],
+            installAddrList:installAddr.data.data,
             //当前种植类型
             plant:'',
             //当前灌区类型
@@ -106,26 +105,6 @@ export default class extends Component{
                         })
                     }
                 })
-            }),
-            //设备安装地
-            fetch(installAddrUrl, {
-                method: 'GET',
-                mode: 'cors',
-                credentials: "include",
-            }).then((res) => {
-                Promise.resolve(res.json())
-                    .then((v) => {
-                        //超时判断
-                        timeOut(v.ret)
-                        if (v.ret == 1) {
-                            let installAddrList = v.data
-                            this.setState({
-                                installAddrList
-                            })
-                        }
-                    })
-            }).catch((err) => {
-                console.log(err)
             })
         )
     }

@@ -16,13 +16,17 @@ export default class extends React.Component{
                 "pageIndex": 0,
                 "pageSize": 10
             }
-        });//type来选择请求的接口，payload为传给后台的参数
+        });
+        dispatch({
+            type: 'valveControl/fetchInstallAddr',
+            payload:{}
+        });
     }
     render(){
         let { valveControl, loading } = this.props;
         // console.log(valveControl)
         let arr = Object.keys(valveControl);
-        if (arr.length <=0) return valveControl = null;
+        if (arr.length <=1) return valveControl = null;
         return (
             <React.Fragment>
                 <Spin size='large' spinning={loading}>

@@ -19,7 +19,7 @@ export default {
         },
         fetchFarmerOk (state, { payload }) {
           state.farmersInfo = payload
-          return { ...state, }
+          return { ...state }
         },
     }
 }
