@@ -446,7 +446,6 @@ export default class extends Component{
                     this.setState({
                         delVisible: false
                     });
-                    form.resetFields();
                     message.success('删除成功', 2);
                 } else {
                     message.error(v.msg, 2);
