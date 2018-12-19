@@ -271,7 +271,11 @@ export default class extends Component {
             if (err) {
                 return;
             }
-            // console.log(values)
+           
+            if(values.mobilePhone == ''){
+                values.mobilePhone = null
+            }
+            //  console.log(values)
             return fetch(addUrl, {
                 ...postOption,
                 body: JSON.stringify({
