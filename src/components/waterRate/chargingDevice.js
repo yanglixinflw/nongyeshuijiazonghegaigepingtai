@@ -358,7 +358,7 @@ export default class extends Component{
                     //超时判断
                     timeOut(v.ret)
                     if(v.ret==1){
-                        let name=v.data.items.name
+                        let name=v.data.items[0].name
                         //访问修改接口
                         fetch(editUrl,{
                             ...postOption,
@@ -375,6 +375,7 @@ export default class extends Component{
                                 //超时判断
                                 timeOut(v.ret)
                                 if(v.ret==1){
+                                    console.log(v)
                                     this._resetForm();
                                     this.setState({
                                         editvisible: false
@@ -766,7 +767,7 @@ const EditForm = Form.create()(
                     centered
                 >
                     <Form>
-                        <Form.Item label="设备型号">
+                        <Form.Item label="设备">
                             {getFieldDecorator('id', {initialValue: `${deviceId}`})
                             (
                                 <Input
@@ -861,7 +862,7 @@ const AddForm = Form.create()(
                     centered
                 >
                     <Form>
-                        <Form.Item label="设备名称">
+                        <Form.Item label="设备">
                             {getFieldDecorator('deviceId', {rules: [{required:true,message:"请填选设备名称"}]})
                             (
                                 <Select
