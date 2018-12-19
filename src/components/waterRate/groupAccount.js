@@ -290,7 +290,6 @@ export default class extends Component{
                     this.setState({
                         clearVisible: false
                     });
-                    form.resetFields();
                     message.success('已清空', 2);
                 } else {
                     message.error(v.msg, 2);
