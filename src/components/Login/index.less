@@ -1,7 +1,8 @@
 // 引入线上图标
 @import 'http://at.alicdn.com/t/font_869092_w6tanf4eeh9.css';
 .basic {
-    background: url('../../assets/bg.png') no-repeat;
+    // background: url('../../assets/bg.png') no-repeat;
+    background: url('../../assets/bgzip.jpg') no-repeat;
     height: 100vh;
     background-position: center;
     background-size: cover;
@@ -20,7 +21,7 @@
     footer {
         height: 220px; // background: red;
         background: url('../../assets/loginFoot.png') no-repeat;
-        background-position: center;
+        background-position: bottom;
         background-size: contain;
     }
     .content {
@@ -197,4 +198,29 @@
 .shake {
     display: inline-block;
     animation: toast 2s; // transform:translate(-20px);
+}
+
+@media(max-width:1250px) {
+    .loginBox {
+        padding-left: 7vw !important;
+    }
+}
+@media(max-width:1150px) {
+    .loginBox {
+        padding-left: 6vw !important;
+    }
+}
+@media(max-width:1100px) {
+    .loginBox {
+        padding-left: 5vw !important;
+    }
+}
+@media(max-width:1000px) {
+    .loginBox {
+        padding-left: 1vw !important;
+        zoom: 0.9;
+    }
+    // .boxContent{
+    //     width: auto !important;
+    // }
 }
