@@ -90,7 +90,7 @@ export default class extends Component {
             key: 'action',
             align: 'center',
             fixed: 'right',
-            // width: 100,
+            width: 113,
             className: `${styles.action}`,
             render: (record) => {
                 return (
@@ -343,14 +343,14 @@ export default class extends Component {
                         <i className={classnames('dyhsicon', 'dyhs-xianshi', `${styles.showIcon}`)}></i>
                         显示设置
                     </Button>
-                    <Button
+                    {/* <Button
                         // icon='upload'
                         className={styles.showSet}
                         onClick={() => this._exportDataHandler()}
                     >
                         <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.exportIcon}`)}></i>
                         导出数据
-                    </Button>
+                    </Button> */}
                 </div>
                 <Table
                     columns={columns}

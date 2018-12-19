@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import styles from './autoRules.less';
 import { Input, Button, Form, Select, Icon, Radio, message, InputNumber, Tooltip } from 'antd';
-import { getAutoRules } from '../../services/api'
-import { Link } from 'dva/router';
 import _ from 'lodash'
 import { timeOut } from '../../utils/timeOut';
 const Option = Select.Option;
@@ -669,7 +667,7 @@ const RuleForm = Form.create()(
                                             {
                                                 deviceList.map((v, i) => {
                                                     return (
-                                                        <Option key={v.deviceId}>{v.deviceId}</Option>
+                                                        <Option title={'设备名称:'+v.name} key={v.deviceId}>{v.deviceId}</Option>
                                                     )
                                                 })
                                             }
@@ -778,7 +776,7 @@ const RuleForm = Form.create()(
                                             {
                                                 deviceList.map((v, i) => {
                                                     return (
-                                                        <Option title='设备名称/ID' key={v.deviceId}>{v.deviceId}</Option>
+                                                        <Option title={'设备名称:'+v.name} key={v.deviceId}>{v.deviceId}</Option>
                                                     )
                                                 })
                                             }
@@ -847,7 +845,7 @@ const RuleForm = Form.create()(
                                 (
                                 <RadioGroup onChange={(e)=>radioChange(e)}>
                                     <Radio value={false}>全部条件</Radio>
-                                    <Radio value={true}>部分条件</Radio>
+                                    <Radio value={true}>任一条件</Radio>
                                 </RadioGroup>
                                 )
                             }

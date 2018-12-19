@@ -553,14 +553,14 @@ export default class extends Component{
                             >
                                 添加
                             </Button>
-                            <Button
+                            {/* <Button
                                 // icon='upload'
                                 className={styles.fnButton2}
                                 onClick={() => this._exportDataHandler()}
                             >
                                 <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.exportIcon}`)}></i>
                                 导出数据
-                            </Button>
+                            </Button> */}
                         </div> 
                     </div>
                     <Table

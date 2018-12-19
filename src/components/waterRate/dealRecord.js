@@ -138,13 +138,13 @@ export default class extends Component{
                             <i className={classnames('dyhsicon', 'dyhs-sousuo', `${styles.searchIcon}`)}></i>
                                 <div>搜索</div>
                             </Button>
-                            <Button
+                            {/* <Button
                                 className={styles.fnButton}
                                 // onClick={() => this.upload()}
                             >
                             <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.searchIcon}`)}></i>
-                               <div>数据导出</div>
-                            </Button>
+                               <div>导出数据</div>
+                            </Button> */}
                         </div> 
                     </div>
                     <Table

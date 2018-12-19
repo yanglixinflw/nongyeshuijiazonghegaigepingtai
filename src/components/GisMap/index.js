@@ -191,7 +191,15 @@ export default class extends Component {
                 // console.log(allCameraMarkers)
             },
             click: (MapsOption, marker) => {
-                // console.log(marker)
+                const {allCameraMarkers} = this.state;
+                allCameraMarkers.map((v,i)=>{
+                    if(v.getExtData().deviceId == marker.getExtData().deviceId ){
+                        // console.log(1)
+                        v.render(this.renderMarkerChosen)
+                    }else{
+                        v.render(this.renderMarker)
+                    }
+                })
                 this.setState({
                     infoPositionCamera: marker.getExtData().position,
                     infoVisible: true,
@@ -244,7 +252,15 @@ export default class extends Component {
                 })
             },
             click: (MapsOption, marker) => {
-                // console.log(marker)
+                const {allWaterValveMarkers} = this.state;
+                allWaterValveMarkers.map((v,i)=>{
+                    if(v.getExtData().deviceId == marker.getExtData().deviceId ){
+                        // console.log(1)
+                        v.render(this.renderMarkerChosen)
+                    }else{
+                        v.render(this.renderMarker)
+                    }
+                })
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
                     infoVisible: true,
@@ -283,6 +299,15 @@ export default class extends Component {
                 })
             },
             click: (MapsOption, marker) => {
+                const {allWaterMeterMarkers} = this.state;
+                allWaterMeterMarkers.map((v,i)=>{
+                    if(v.getExtData().deviceId == marker.getExtData().deviceId ){
+                        // console.log(1)
+                        v.render(this.renderMarkerChosen)
+                    }else{
+                        v.render(this.renderMarker)
+                    }
+                })
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
                     infoVisible: true,
@@ -320,6 +345,15 @@ export default class extends Component {
                 })
             },
             click: (MapsOption, marker) => {
+                const {allEleMeterMarkers} = this.state;
+                allEleMeterMarkers.map((v,i)=>{
+                    if(v.getExtData().deviceId == marker.getExtData().deviceId ){
+                        // console.log(1)
+                        v.render(this.renderMarkerChosen)
+                    }else{
+                        v.render(this.renderMarker)
+                    }
+                })
                 this.setState({
                     infoPositionWaterValve: marker.getExtData().position,
                     infoVisible: true,
@@ -364,11 +398,6 @@ export default class extends Component {
                     timeOut(v.ret)
                     if (v.ret == 1) {
                         let infoData = v.data;
-                        // console.log(v)
-                        // infoData.map((v,i)=>{
-                        //     console.log(i,v)
-                        // })
-
                         this.setState({
                             infoData,
                         })
@@ -559,48 +588,7 @@ export default class extends Component {
         allEleMeterMarkers.map((v, i) => {
             v.hide()
         })
-
-
-        // console.log(this.state.deviceTypeId)
     }
-    //搜索
-    // _searchHandler(e) {
-    //     // console.log(e)
-    //     const { deviceTypeId } = this.state;
-    //     let keyword = e.target.value;
-    //     //console.log(keyword)
-    //     if (keyword !== '') {
-    //         return fetch(searchUrl, {
-    //             ...postOption,
-    //             body: JSON.stringify({
-    //                 keyword,
-    //                 deviceTypeId,
-    //                 pageSize: '10'
-    //             })
-    //         }).then((res) => {
-    //             Promise.resolve(res.json())
-    //                 .then((v) => {
-    //                     //判断是否超时
-    //                     timeOut(v.ret)
-    //                     if (v.ret == 1) {
-    //                         let dataList = v.data.items;
-    //                         this._getDataList(dataList, keyword)
-    //                         this.setState({
-    //                             dataList
-    //                         })
-    //                     } else {
-    //                         this.setState({
-    //                             dataList: []
-    //                         })
-    //                     }
-    //                 })
-    //         })
-    //     } else {
-    //         this.setState({
-    //             dataList: []
-    //         })
-    //     }
-    // }
     //搜索
     _changeHandler() {
         // console.log(this.refs.searchInput.input.value)
@@ -622,7 +610,7 @@ export default class extends Component {
                         //判断是否超时
                         timeOut(v.ret)
                         if (v.ret == 1) {
-                            console.log(v)
+                            // console.log(v)
                             let dataList = v.data.items;
                             this._getDataList(dataList, keyword)
                             this.setState({

@@ -512,13 +512,13 @@ export default class extends Component {
                                 <i className={classnames('dyhsicon', 'dyhs-xianshi', `${styles.searchIcon}`)}></i>
                                 显示设置
                             </Button>
-                            <Button
+                            {/* <Button
                                 // icon='upload'
                                 className={styles.fnButton2}
                             >
                                 <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.searchIcon}`)}></i>
-                                数据导出
-                            </Button>
+                                导出数据
+                            </Button> */}
                         </div>
                     </div>
                     {/* 显示设置 */}

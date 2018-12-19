@@ -423,12 +423,12 @@ export default class extends Component{
                                 <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.searchIcon}`)}></i>
                                 <div>重置</div>
                             </Button>
-                            <Button
+                            {/* <Button
                                 className={styles.fnButton}
                             >
                                 <i className={classnames('dyhsicon', 'dyhs-daochu', `${styles.searchIcon}`)}></i>
                                 <div>导出数据</div>
-                            </Button>
+                            </Button> */}
                         </div> 
                     </div>
                     <Table
