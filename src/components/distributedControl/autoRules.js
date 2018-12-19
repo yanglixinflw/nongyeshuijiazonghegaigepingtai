@@ -667,7 +667,7 @@ const RuleForm = Form.create()(
                                             {
                                                 deviceList.map((v, i) => {
                                                     return (
-                                                        <Option key={v.deviceId}>{v.deviceId}</Option>
+                                                        <Option title={'设备名称:'+v.name} key={v.deviceId}>{v.deviceId}</Option>
                                                     )
                                                 })
                                             }
@@ -776,7 +776,7 @@ const RuleForm = Form.create()(
                                             {
                                                 deviceList.map((v, i) => {
                                                     return (
-                                                        <Option title='设备名称/ID' key={v.deviceId}>{v.deviceId}</Option>
+                                                        <Option title={'设备名称:'+v.name} key={v.deviceId}>{v.deviceId}</Option>
                                                     )
                                                 })
                                             }
@@ -845,7 +845,7 @@ const RuleForm = Form.create()(
                                 (
                                 <RadioGroup onChange={(e)=>radioChange(e)}>
                                     <Radio value={false}>全部条件</Radio>
-                                    <Radio value={true}>部分条件</Radio>
+                                    <Radio value={true}>任一条件</Radio>
                                 </RadioGroup>
                                 )
                             }
