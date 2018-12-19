@@ -3,6 +3,7 @@ import logo from '../../assets/logo.png'
 import logoT from '../../assets/logoTitle.png'
 import loginBox from '../../assets/loginBox.png'
 import loginCenter from '../../assets/loginCenter.png'
+import loginFoot from '../../assets/loginFoot.png'
 import classnames from 'classnames'
 import styles from './index.less'
 import { Form, Button, Input, Checkbox } from 'antd'
@@ -66,7 +67,9 @@ export default class extends React.Component {
                         </div>
                     </aside>
                 </div>
-                <footer></footer>
+                <footer>
+                    {/* <img className={styles.foot} src={loginFoot}></img> */}
+                </footer>
             </div>
         )
     }
@@ -117,7 +120,7 @@ const LoginForm = Form.create()(
         }
         render() {
             const { showYzm, isLoading } = this.state
-            const { form, submitHandler, errorMessage, url, reloadCAPTCHA, errorCount } = this.props
+            const { form, submitHandler, errorMessage, url, reloadCAPTCHA } = this.props
             const { getFieldDecorator } = form;
             // 设置输入密码的外边距
             let passWordMargin
