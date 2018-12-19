@@ -153,6 +153,13 @@ export default class extends Component{
                                 操作记录
                             </Button>
                         </Link>
+                        <Button
+                                className={styles.set}
+                                icon='poweroff'
+                                onClick={()=>this.singleSwitch(record.deviceId)}
+                        >
+                                阀门开关
+                            </Button>
                     </span>
                 )
             }
@@ -189,7 +196,7 @@ export default class extends Component{
                     "name": values.name,
                     "deviceId": values.deviceId,
                     "installAddrId": values.installAddrId,
-                    "relatedBuilding": values.relatedBuilding,
+                    "relatedBuildingId": values.relatedBuildingId,
                     "pageIndex": 0,
                     "pageSize": 10
                 })
@@ -358,6 +365,66 @@ export default class extends Component{
         })
     }
     //点击开关阀取消
+    switchHandleCancel(){
+        this.setState({
+            switchvisible: false,
+        });
+    }
+     //单个阀开关按钮点击
+     singleSwitch(deviceId){ 
+        //获取设备型号可执行的指令
+        fetch(instructUrl,{
+            ...postOption,
+            body: JSON.stringify({
+                "deviceTypeId":this.state.deviceTypeId
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+                .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
+                    if(v.ret==1){
+                        let cmd=v.data
+                        this.setState({
+                            cmd,
+                            switchvisible: true,
+                            deviceIds:deviceId
+                        })
+                    }
+                })
+        })
+        
+    }
+    //点击单个开关阀确定
+    switchHandleOk(){
+        const form = this.switchForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            fetch(sendCmdUrl,{
+                ...postOption,
+                body: JSON.stringify({
+                    "deviceIds":this.state.deviceIds,
+                    "strCmd":values.switch
+                })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                    .then(v=>{
+                        //超时判断
+                        timeOut(v.ret)
+                        if(v.ret==1){
+                            this.setState({
+                                switchvisible: false,
+                            });
+                            message.success("操作成功",2)
+                        }
+                    })
+            })
+        })
+    }
+    //点击单个开关阀取消
     switchHandleCancel(){
         this.setState({
             switchvisible: false,

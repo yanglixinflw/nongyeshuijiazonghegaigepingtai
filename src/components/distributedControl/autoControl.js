@@ -20,7 +20,7 @@ const delUrl=`${ENVNet}/api/Automatic/delete`;
 const tableTitle=[
     {index:"ruleId",item:"自动化编号"},
     {index:"name",item:"自动化名称"},
-    {index:"description",item:"规则"},
+    // {index:"description",item:"规则"},
     {index:"isEnabled",item:"状态"},
     {index:"updateTime",item:"更新时间"},
 ]
@@ -115,10 +115,10 @@ export default class extends Component{
                             </Link>
                             {record.isEnabled=="启用"?<Button
                                 className={styles.stop}
-                                icon='poweroff'
+                                
                                 onClick={()=>this.changeStatus(record.ruleId,record.isEnabled)}
                             >
-                                停用   
+                                 <i className={classnames('dyhsicon', 'dyhs-tingyong', `${styles.OptionIcon}`)} style={{fontSize:'14px',marginRight:"7px"}}></i><span>停用</span>  
                             </Button>:<Button
                                 className={styles.stop}
                                 icon='poweroff'

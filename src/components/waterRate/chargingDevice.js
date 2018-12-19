@@ -365,7 +365,7 @@ export default class extends Component{
                             body:JSON.stringify({
                                 "facilityId":this.state.facilityId,
                                 name,
-                                "deviceId":values.deviceId,
+                                "deviceId":this.state.deviceId,
                                 "wateringType":values.wateringType,
                                 "plantType":values.plantType
                             })
@@ -375,7 +375,6 @@ export default class extends Component{
                                 //超时判断
                                 timeOut(v.ret)
                                 if(v.ret==1){
-                                    console.log(v)
                                     this._resetForm();
                                     this.setState({
                                         editvisible: false
@@ -777,9 +776,11 @@ const EditForm = Form.create()(
                             )}
                         </Form.Item>
                         <Form.Item label="灌区类型">
-                            {getFieldDecorator('wateringType', {initialValue: `${water}`})
+                            {getFieldDecorator('wateringType', )
                             (
-                                <Select>
+                                <Select 
+                                    placeholder={`${water}`}
+                                >
                                     {
                                         wateringType.map((v,i)=>{
                                             return(
@@ -791,9 +792,11 @@ const EditForm = Form.create()(
                             )}
                         </Form.Item>
                         <Form.Item label="种植类型">
-                            {getFieldDecorator('plantType', {initialValue: `${plant}`})
+                            {getFieldDecorator('plantType')
                                 (
-                                <Select>
+                                <Select
+                                    placeholder={`${plant}`}
+                                >
                                     {
                                         plantType.map((v,i)=>{
                                             return(
