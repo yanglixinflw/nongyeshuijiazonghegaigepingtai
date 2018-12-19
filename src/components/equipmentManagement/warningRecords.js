@@ -357,6 +357,10 @@ export default class extends Component {
             if (err) {
                 return
             }
+            if(values.print==''){
+                values.print=false
+            }
+            console.log(values.print)
             //关闭预警接口
             fetch(closeWarningUrl,{
                 ...postOption,
