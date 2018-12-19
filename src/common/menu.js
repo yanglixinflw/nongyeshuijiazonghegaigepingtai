@@ -77,10 +77,7 @@ const menuData = [
     icon: 'dyhs-shuiquanjiaoyi',
     path: 'rent',
     children: [
-      {
-        name: '计费设施',
-        path: 'device'
-      },
+      
       {
         name:'小组账户',
         path:'groupAccount'
@@ -103,7 +100,11 @@ const menuData = [
       {
         name: '预警规则',
         path: 'warningRules'
-      }
+      },
+      {
+        name: '计费设施',
+        path: 'device'
+      },
     ]
   },
   {
