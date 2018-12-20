@@ -1,4 +1,4 @@
-import { getValveList } from '../services/api';
+import { getValveList,getInstallAddrList } from '../services/api';
 export default {
   namespace: 'valveControl',
   state: {},
@@ -7,19 +7,19 @@ export default {
       const data = yield call(getValveList, payload)
       yield put({ type: 'fetchOk', payload: data })
     },
-    *fetchWell({ payload }, { call, put }) {
-      const data = yield call(getValveList, payload)
-      yield put({ type: 'fetchWellOk', payload: data })
+    *fetchInstallAddr({ payload }, { call, put }) {  
+      const data = yield call(getInstallAddrList, payload)
+      yield put({ type: 'fetchInstallAddrOk', payload: data })
     },
   },
-
   reducers: {
     fetchOk(state, { payload }) {
-      return { ...state, ...payload }
+      state.ValveList=payload
+      return { ...state }
     },
-    fetchWellOk(state, { payload }) {
-      state.wellEle = payload
-      return {...state}
-    }
+    fetchInstallAddrOk (state, { payload }) {
+      state.InstallAddr=payload
+      return { ...state }
+    },
   }
 }

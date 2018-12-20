@@ -6,8 +6,6 @@ import classnames from 'classnames';
 import { timeOut } from '../../utils/timeOut';
 import _ from 'lodash';
 import {ENVNet,postOption} from '../../services/netCofig'
-//设备安装地列表
-const installAddrUrl=`${ENVNet}/api/BaseInfo/installAddrList`
 //翻页调用
 const dataUrl=`${ENVNet}/api/device/control/list`;
 //设备类型列表
@@ -36,14 +34,15 @@ const RadioGroup = Radio.Group;
 export default class extends Component{
     constructor(props) {
         super(props)
-        const {valveControl}=props;
+        const InstallAddr=props.valveControl.InstallAddr;
+        const valveControl = props.valveControl.ValveList;
         this.state={
             title:tableTitle,
             itemCount:valveControl.data.data.itemCount,//总数据数
             data:valveControl.data.data.items,//表格数据源
             columns: [],
             //设备安装地列表
-            installAddrList:[],
+            installAddrList:InstallAddr.data.data,
             //设备类型列表
             deviceTypeList:[],
             //设备类型Id
@@ -66,26 +65,6 @@ export default class extends Component{
     }
     componentDidMount() {
         this._getTableDatas(this.state.title, this.state.data);
-        //获取设备安装地数据
-        fetch(installAddrUrl, {
-            method:'GET',
-            mode:'cors',
-            credentials: "include",
-        }).then((res) => {
-            Promise.resolve(res.json())
-                .then((v) => {
-                    //超时判断
-                    timeOut(v.ret)
-                    if (v.ret == 1) {
-                        let installAddrList = v.data
-                        this.setState({
-                            installAddrList
-                        })
-                    }
-                })
-        }).catch((err) => {
-            console.log(err)
-        })
         //获取数据类型数据
         fetch(deviceTypeUrl,{
             ...postOption,
@@ -153,6 +132,13 @@ export default class extends Component{
                                 操作记录
                             </Button>
                         </Link>
+                        <Button
+                                className={styles.switchs}
+                                icon='poweroff'
+                                onClick={()=>this.singleSwitch(record.deviceId)}
+                        >
+                                阀门开关
+                            </Button>
                     </span>
                 )
             }
@@ -189,7 +175,7 @@ export default class extends Component{
                     "name": values.name,
                     "deviceId": values.deviceId,
                     "installAddrId": values.installAddrId,
-                    "relatedBuilding": values.relatedBuilding,
+                    "relatedBuildingId": values.relatedBuildingId,
                     "pageIndex": 0,
                     "pageSize": 10
                 })
@@ -358,6 +344,66 @@ export default class extends Component{
         })
     }
     //点击开关阀取消
+    switchHandleCancel(){
+        this.setState({
+            switchvisible: false,
+        });
+    }
+     //单个阀开关按钮点击
+     singleSwitch(deviceId){ 
+        //获取设备型号可执行的指令
+        fetch(instructUrl,{
+            ...postOption,
+            body: JSON.stringify({
+                "deviceTypeId":this.state.deviceTypeId
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+                .then(v=>{
+                    //超时判断
+                    timeOut(v.ret)
+                    if(v.ret==1){
+                        let cmd=v.data
+                        this.setState({
+                            cmd,
+                            switchvisible: true,
+                            deviceIds:deviceId
+                        })
+                    }
+                })
+        })
+        
+    }
+    //点击单个开关阀确定
+    switchHandleOk(){
+        const form = this.switchForm.props.form;
+        form.validateFields((err, values) => {
+            // 未定义时给空值
+            if (err) {
+                return
+            }
+            fetch(sendCmdUrl,{
+                ...postOption,
+                body: JSON.stringify({
+                    "deviceIds":this.state.deviceIds,
+                    "strCmd":values.switch
+                })
+            }).then(res=>{
+                Promise.resolve(res.json())
+                    .then(v=>{
+                        //超时判断
+                        timeOut(v.ret)
+                        if(v.ret==1){
+                            this.setState({
+                                switchvisible: false,
+                            });
+                            message.success("操作成功",2)
+                        }
+                    })
+            })
+        })
+    }
+    //点击单个开关阀取消
     switchHandleCancel(){
         this.setState({
             switchvisible: false,
