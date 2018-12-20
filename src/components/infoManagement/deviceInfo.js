@@ -535,7 +535,7 @@ export default class extends Component {
                 deviceId
             })
         }).then((res) => {
-            console.log(res)
+            // console.log(res)
             Promise.resolve(res.json())
                 .then((v) => {
                     //判断超时
