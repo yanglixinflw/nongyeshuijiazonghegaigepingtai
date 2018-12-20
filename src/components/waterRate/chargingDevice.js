@@ -17,6 +17,8 @@ const delUrl=`${ENVNet}/fee/chargeFacility/delete`;
 const buildingUrl=`${ENVNet}/api/Building/list`
 //下拉搜索设备调用
 const deviceUrl = `${ENVNet}/api/device/list`;
+//(获取未添加为计费设施的设备)
+const chargingUrl = `${ENVNet}/fee/chargeFacility/deviceList`;
 //种植类型
 const plantTypeUrl = `${ENVNet}/fee/chargeFacility/plantTypeList`;
 //灌区类型
@@ -387,7 +389,6 @@ export default class extends Component{
     }
     //点击确定添加
     addhandleOk(){
-        const {title}=this.state
         const form = this.addForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
@@ -804,12 +805,11 @@ const AddForm = Form.create()(
         }
         //下拉搜索框搜索功能
         handleSearch = (value) => {
-            fetch(deviceUrl, {
+            fetch(chargingUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "name":value,
-                    "pageIndex": 0,
-                    "pageSize": 10
+                    "keyword":value,
+                    "topNum": 10,
                 })
             }).then(res => {
                 Promise.resolve(res.json())
@@ -818,7 +818,7 @@ const AddForm = Form.create()(
                         timeOut(v.ret)
                         if (v.ret == 1) {
                             // 设置页面显示的元素
-                            let deviceList = v.data.items
+                            let deviceList = v.data
                             this.setState({
                                 deviceList,
                             })

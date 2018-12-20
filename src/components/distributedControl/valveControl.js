@@ -333,11 +333,15 @@ export default class extends Component{
                         //超时判断
                         timeOut(v.ret)
                         if(v.ret==1){
+                            this._resetForm();
                             this.setState({
                                 switchvisible: false,
                                 selectedRowKeys:[]
                             });
+                            form.resetFields();
                             message.success("操作成功",2)
+                        } else {
+                            message.error(v.msg, 2);
                         }
                     })
             })
@@ -369,6 +373,8 @@ export default class extends Component{
                             switchvisible: true,
                             deviceIds:deviceId
                         })
+                    } else {
+                        message.error(v.msg, 2);
                     }
                 })
         })
@@ -394,10 +400,14 @@ export default class extends Component{
                         //超时判断
                         timeOut(v.ret)
                         if(v.ret==1){
+                            this._resetForm();
                             this.setState({
                                 switchvisible: false,
                             });
+                            form.resetFields();
                             message.success("操作成功",2)
+                        }else {
+                            message.error(v.msg, 2);
                         }
                     })
             })
