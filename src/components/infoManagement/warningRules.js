@@ -75,7 +75,7 @@ export default class extends Component {
                         fetch(dataUrl,{
                             ...postOption,
                             body:JSON.stringify({
-                                "pageIndex": 0,
+                                "pageIndex": this.state.current-1,
                                 "pageSize": 10
                             })
                         }).then(res=>{
@@ -95,7 +95,6 @@ export default class extends Component {
                                         data,
                                         itemCount,
                                         deleteModalVisible: false,
-                                        current:1,
                                     })
                                     this._getTableDatas(this.state.title, data);
                                 }

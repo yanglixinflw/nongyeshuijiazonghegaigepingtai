@@ -167,7 +167,7 @@ export default class extends Component{
     }
     //删除的弹框点击确定
     delHandleOk(){
-        let {userId,title}=this.state;
+        let {userId,current}=this.state;
         let userIds = [];
         userIds.push(userId);
         return fetch(delUrl,{
@@ -181,7 +181,7 @@ export default class extends Component{
                   //超时判断
                 timeOut(v.ret)
                 if (v.ret == 1) {
-                    this._resetForm();
+                    this._resetForm(current);
                     this.setState({
                         delVisible: false
                     });
@@ -241,7 +241,7 @@ export default class extends Component{
     //修改用户信息的弹出框点击确定
     editOkHandler (){
         const form = this.editForm.props.form;
-        let {userId,title}=this.state;
+        let {userId,current}=this.state;
         form.validateFields((err,values) => {
             // values即为表单数据
             if (err) {
@@ -264,7 +264,7 @@ export default class extends Component{
                           //超时判断
                         timeOut(v.ret)
                         if (v.ret == 1) {
-                            this._resetForm();
+                            this._resetForm(current);
                             this.setState({
                                 editvisible: false
                             });
@@ -298,7 +298,7 @@ export default class extends Component{
     //修改密码点击确定
     editPwdOkHandler(){
         const form = this.editPwdForm.props.form;
-        let {userId,title}=this.state;
+        let {userId,current}=this.state;
         form.validateFields((err,values) => {
             // values即为表单数据
             if (err) {
@@ -316,7 +316,7 @@ export default class extends Component{
                           //超时判断
                         timeOut(v.ret)
                         if (v.ret == 1) {
-                            this._resetForm();
+                            this._resetForm(current);
                             this.setState({
                                 editPwdvisible: false
                             });
@@ -367,7 +367,7 @@ export default class extends Component{
                           //超时判断
                         timeOut(v.ret)
                         if (v.ret == 1) {
-                            this._resetForm("add");
+                            this._resetForm(1);
                             this.setState({
                                 addvisible: false
                             });
@@ -433,15 +433,15 @@ export default class extends Component{
         })
     }
     //重置
-    _resetForm(type) {
-        const { title,current } = this.state;
+    _resetForm(current=1) {
+        const { title } = this.state;
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "pageIndex": type=="add"?0:this.state.current-1,
+                "pageIndex": current-1,
                 "pageSize": 10
             })
         }).then((res) => {
@@ -461,7 +461,7 @@ export default class extends Component{
                             data,
                             itemCount,
                             searchValue:{},
-                            current:type=="add"?1:current
+                            current
                         })
                         this._getTableDatas(title, data);
                     }

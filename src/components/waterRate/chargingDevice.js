@@ -214,7 +214,7 @@ export default class extends Component{
         })
     }
     //重置
-    _resetForm() {
+    _resetForm(current=1) {
         const { title } = this.state;
         const form = this.searchForm.props.form;
         // 重置表单
@@ -222,7 +222,7 @@ export default class extends Component{
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "pageIndex": this.state.current-1,
+                "pageIndex": current-1,
                 "pageSize": 10
             })
         }).then((res) => {
@@ -242,6 +242,7 @@ export default class extends Component{
                             data,
                             itemCount,
                             searchValue:{},
+                            current
                         })
                         this._getTableDatas(title, data);
                     }
@@ -257,6 +258,7 @@ export default class extends Component{
     }
     //点击确定删除
     delOk(){
+        const {current}=this.state
         let ids=[];
         ids.push(this.state.facilityId)
         fetch(delUrl,{
@@ -270,7 +272,7 @@ export default class extends Component{
                 //超时判断
                 timeOut(v.ret)
                 if(v.ret==1){
-                    this._resetForm()
+                    this._resetForm(current)
                     this.setState({
                         delVisible:false
                     })
@@ -317,6 +319,7 @@ export default class extends Component{
     }
     //点击确定修改
     edithandleOk(){
+        const {current}=this.state
         const form = this.editForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
@@ -354,7 +357,7 @@ export default class extends Component{
                                 //超时判断
                                 timeOut(v.ret)
                                 if(v.ret==1){
-                                    this._resetForm();
+                                    this._resetForm(current);
                                     this.setState({
                                         editvisible: false
                                     });
@@ -423,7 +426,7 @@ export default class extends Component{
                                 //超时判断
                                 timeOut(v.ret)
                                 if(v.ret==1){
-                                    this._resetForm();
+                                    this._resetForm(1);
                                     message.success('添加成功', 2);
                                     form.resetFields();
                                     this.setState({
