@@ -111,7 +111,9 @@ export default class extends Component {
             modifyModalVisible: false,
             // modifyModalVisible: true,
             // 修改弹窗管理人员列表
-            modifyAdminList: []
+            modifyAdminList: [],
+            // 当前页
+            pageNumber:1
         }
     }
     componentDidMount() {
@@ -277,13 +279,23 @@ export default class extends Component {
                         this.setState({
                             deleteModalVisible: false,
                         })
+                    }else{
+                        message.error(v.msg, 3)
+                        // // 重置数据
+                        // this._resetForm()
+                        // this.setState({
+                        //     deleteModalVisible: false,
+                        // })
                     }
+                }).catch((err) => {
+                    console.log(err)
                 })
         })
     }
 
     // 翻页
     _pageChange(page) {
+        // console.log(page)
         let { searchValue, filterColumns } = this.state
         searchValue.pageIndex = page - 1
         // console.log(searchValue)
@@ -308,7 +320,8 @@ export default class extends Component {
                         })
                         this.setState({
                             itemCount,
-                            tableData: items
+                            tableData: items,
+                            pageNumber:page
                         })
                         this._getTableData(items, filterColumns);
                     }
@@ -318,8 +331,8 @@ export default class extends Component {
         })
     }
     // 重置搜索表单
-    _resetForm() {
-        const { filterColumns } = this.state
+    _resetForm(type) {
+        const { filterColumns,pageNumber } = this.state
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
@@ -331,6 +344,7 @@ export default class extends Component {
                 "installAddrId": "",
                 "warningRules": "",
                 "relatedBuildingId": "",
+                
             },
         })
         return fetch(getDataUrl, {
@@ -342,6 +356,7 @@ export default class extends Component {
                 "installAddrId": "",
                 "warningRules": "",
                 "relatedBuildingId": "",
+                "pageIndex":type=='add'?0:pageNumber
             })
         }).then((res) => {
             Promise.resolve(res.json())
@@ -353,7 +368,8 @@ export default class extends Component {
                         let { items, itemCount } = v.data
                         this.setState({
                             itemCount,
-                            data: items
+                            data: items,
+                            pageNumber:1
                         })
                         this._getTableData(items, filterColumns)
                     }
@@ -490,7 +506,7 @@ export default class extends Component {
                             timeOut(v.ret);
                             if (v.ret == 1) {
                                 message.success('添加成功', 2)
-                                this._resetForm()
+                                this._resetForm("add")
                                 this.setState({
                                     addModalVisible: false
                                 })
@@ -656,11 +672,13 @@ export default class extends Component {
             modifyDeviceId,
             modifyData,
             modifyModalVisible,
-            modifyAdminList
+            modifyAdminList,
+            pageNumber
         } = this.state
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
+            current:pageNumber,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
