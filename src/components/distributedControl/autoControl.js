@@ -191,7 +191,7 @@ export default class extends Component{
     })
 }
      //重置
-     _resetForm() {
+     _resetForm(current = 1) {
         const { title } = this.state;
         const form = this.searchForm.props.form;
         // 重置表单
@@ -199,7 +199,7 @@ export default class extends Component{
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "pageIndex": 0,
+                "pageIndex":current-1,
                 "pageSize": 10
             })
         }).then((res) => {
@@ -219,7 +219,7 @@ export default class extends Component{
                             data,
                             itemCount,
                             searchValue:{},
-                            current:1
+                            current
                         })
                         this._getTableDatas(title, data);
                     }
@@ -277,7 +277,7 @@ export default class extends Component{
     }
    //点击 停/启用 确定
     changeStatusOk(){
-        const {title}=this.state
+        const {title,current}=this.state
         return fetch(changeUrl,{
             ...postOption,
             body:JSON.stringify({
@@ -293,7 +293,7 @@ export default class extends Component{
                     return fetch(dataUrl,{
                         ...postOption,
                         body:JSON.stringify({
-                            "pageIndex": 0,
+                            "pageIndex": current-1,
                             "pageSize": 10
                         })
                     }).then(res=>{
@@ -307,7 +307,7 @@ export default class extends Component{
                                 this.setState({
                                     changeStatusVisible:false,
                                     data,
-                                    current:1
+                                    current
                                 })
                                 if(this.state.isEnabled==false){
                                     message.success("启用成功",2)
@@ -335,7 +335,6 @@ export default class extends Component{
     }
     //点击添加确定
     addhandleOk(){
-        const {title}=this.state
         const form = this.addForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
@@ -353,7 +352,7 @@ export default class extends Component{
                     //超时判断
                     timeOut(v.ret)
                     if(v.ret==1){
-                        this._resetForm();
+                        this._resetForm(1);
                         this.setState({
                             addvisible: false
                         });
@@ -386,6 +385,7 @@ export default class extends Component{
     //点击修改确定
     edithandleOk(){
         const form = this.editForm.props.form;
+        const{current}=this.state
         form.validateFields((err, values) => {
             // 未定义时给空值
             if (err) {
@@ -403,7 +403,7 @@ export default class extends Component{
                     //超时判断
                     timeOut(v.ret)
                     if(v.ret==1){
-                        this._resetForm();
+                        this._resetForm(current);
                         this.setState({
                             editvisible: false
                         });
@@ -431,6 +431,7 @@ export default class extends Component{
     }
     //点击确认删除
     delOk(){
+        const {current}=this.state
         fetch(delUrl,{
             ...postOption,
             body:JSON.stringify({
@@ -442,7 +443,7 @@ export default class extends Component{
                 //超时判断
                 timeOut(v.ret)
                 if(v.ret==1){
-                    this._resetForm();
+                    this._resetForm(current);
                     this.setState({
                         delVisible: false
                     });
