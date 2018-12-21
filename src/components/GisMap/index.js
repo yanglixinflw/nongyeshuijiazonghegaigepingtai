@@ -37,6 +37,9 @@ export default class extends Component {
             <Spin size='large'></Spin>
         </Fragment>
         // console.log(map)
+        let center = {};
+        center.longitude = props.mapGis.camera.data.data.items[0].longitude;
+        center.latitude = props.mapGis.camera.data.data.items[0].latitude;
         this.state = {
             //地图加载时过渡样式
             mapLoading,
@@ -65,7 +68,7 @@ export default class extends Component {
             //信息窗组件是否可用子组件,false即在系统默认的信息窗体外框中显示content内容
             isCustom: false,
             // 地图中心点
-            center: { longitude: 121.4719, latitude: 31.1907 },
+            center,
             // center:{},
             //多个Marker经纬度
             cameraMarkers: "",

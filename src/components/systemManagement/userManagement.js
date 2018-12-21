@@ -222,15 +222,15 @@ export default class extends Component {
         })
     }
     //重置
-    _resetForm() {
-        const { title } = this.state;
+    _resetForm(current = 1) {
+        const { title} = this.state;
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "pageIndex": 0,
+                "pageIndex":current-1,
                 "pageSize": 10
             })
         }).then((res) => {
@@ -250,7 +250,7 @@ export default class extends Component {
                             items,
                             itemCount,
                             searchValue: {},
-                            current: 1
+                            current
                         })
                         this._getTableData(title, items);
                     }
@@ -294,13 +294,13 @@ export default class extends Component {
                         timeOut(v.ret)
                         if (v.ret == 1) {
                             // console.log(v)
-                            this._resetForm();
+                            this._resetForm(1)
                             message.success('添加成功', 2);
-                            form.resetFields();
                             this.setState({
-                                addVisible: false
+                                addVisible: false,
                             })
-
+                            form.resetFields();
+                            
                         } else {
                             message.error(v.msg, 2);
                         }
@@ -356,7 +356,7 @@ export default class extends Component {
     // 修改确定
     _modifyOkHandler() {
         const form = this.modifyForm.props.form;
-        const { userId, title } = this.state;
+        const { userId, title,current } = this.state;
         form.validateFields((err, values) => {
             // values即为表单数据
             if (err) {
@@ -380,7 +380,7 @@ export default class extends Component {
                         // 判断是否超时
                         timeOut(v.ret)
                         if (v.ret == 1) {
-                            this._resetForm();
+                            this._resetForm(current);
                             this.setState({
                                 modifyVisible: false
                             });
@@ -415,7 +415,7 @@ export default class extends Component {
     }
     // 确认删除
     _deleteOkHandler() {
-        let { userId } = this.state;
+        const { userId,current } = this.state;
         let userIds = [];
         userIds.push(userId);
         return fetch(deleteUrl, {
@@ -429,7 +429,7 @@ export default class extends Component {
                     // 判断是否超时
                     timeOut(v.ret)
                     if (v.ret == 1) {
-                        this._resetForm()
+                        this._resetForm(current)
                         this.setState({
                             deleteVisible: false,
                         })
