@@ -145,7 +145,7 @@ export const getRouterData = app => {
     '/groupAccount/groupManage:id':{
       component: dynamicWrapper(app, ["groupManage"], () => import('../routes/waterRate/groupManage')),
     },
-    '/rent/device':{
+    '/messageManagement/device':{
       component: dynamicWrapper(app, ['chargingDevice'], () => import('../routes/waterRate/chargingDevice')),
     },
     // '/user': {

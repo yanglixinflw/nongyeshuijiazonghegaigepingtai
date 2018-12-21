@@ -15,13 +15,17 @@ export default class extends React.Component{
                 "pageIndex": 0,
                 "pageSize": 10
             }
-        });//type来选择请求的接口，payload为传给后台的参数
+        });
+        dispatch({
+            type: 'chargingDevice/fetchInstallAddr',
+            payload:{}
+        });
     }
     render(){
         let { chargingDevice, loading } = this.props;
         // console.log(chargingDevice)
         let arr = Object.keys(chargingDevice);
-        if (arr.length === 0) return chargingDevice = null;
+        if (arr.length <= 1) return chargingDevice = null;
         return (
             <React.Fragment>
                 <Spin size='large' spinning={loading}>

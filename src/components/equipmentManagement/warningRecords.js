@@ -8,8 +8,6 @@ import classnames from 'classnames'
 import {ENVNet,postOption} from '../../services/netCofig'
 //翻页调用
 const dataUrl = `${ENVNet}/api/DeviceWaringRule/eventList`;
-//设备安装地列表
-const installAddrUrl=`${ENVNet}/api/BaseInfo/installAddrList`;
 //关闭预警事件
 const closeWarningUrl=`${ENVNet}/api/DeviceWaringRule/eventClose`;
 //关联建筑接口
@@ -38,7 +36,8 @@ const { Option } = Select
 export default class extends Component {
     constructor(props) {
         super(props)
-        const { warningRecords } = props;
+        const warningRecords = props.warningRecords.WarningRecords;
+        const InstallAddr= props.warningRecords.InstallAddr
         this.state = {
             itemCount: warningRecords.data.data.itemCount,//总数据数
             data: warningRecords.data.data.items,//表格数据源
@@ -49,7 +48,7 @@ export default class extends Component {
             //是否弹出显示设置
             showvisible: false,
             //设备安装地列表
-            installAddrList: [],
+            installAddrList: InstallAddr.data.data,
             //搜索框初始值
             searchValue: {},
             //是否显示关闭预警显示
@@ -65,26 +64,6 @@ export default class extends Component {
     }
     componentDidMount() {
         this._getTableDatas(this.state.title, this.state.data);
-        //设备安装地
-        fetch(installAddrUrl, {
-            method: 'GET',
-            mode: 'cors',
-            credentials: "include",
-        }).then((res) => {
-            Promise.resolve(res.json())
-                .then((v) => {
-                    //超时判断
-                    timeOut(v.ret)
-                    if (v.ret == 1) {
-                        let installAddrList = v.data
-                        this.setState({
-                            installAddrList
-                        })
-                    }
-                })
-        }).catch((err) => {
-            console.log(err)
-        }),
         //获取通知人列表
         fetch(roleUrl,{
             method: 'GET',
@@ -360,7 +339,6 @@ export default class extends Component {
             if(values.print==''){
                 values.print=false
             }
-            console.log(values.print)
             //关闭预警接口
             fetch(closeWarningUrl,{
                 ...postOption,

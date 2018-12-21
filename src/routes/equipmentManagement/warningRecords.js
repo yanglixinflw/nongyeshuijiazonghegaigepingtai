@@ -16,12 +16,17 @@ export default class extends Component{
                 "pageIndex": 0,
                 "pageSize": 10
               }
-        });//type来选择请求的接口，payload为传给后台的参数
+        });
+        dispatch({
+            type: 'warningRecords/fetchInstallAddr',
+            payload:{}
+        });
     }
     render(){
         let { warningRecords,loading } = this.props;
+        // console.log(warningRecords)
         let arr = Object.keys(warningRecords);
-        if (arr.length ==0) return warningRecords = null;
+        if (arr.length <=1) return warningRecords = null;
         return(
             <React.Fragment>
                 <Spin size='large' spinning={loading}>

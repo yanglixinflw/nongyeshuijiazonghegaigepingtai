@@ -1,4 +1,4 @@
-import {getWarningRecords} from '../services/api';
+import {getWarningRecords,getInstallAddrList} from '../services/api';
 export default {
     namespace: 'warningRecords',
     state:{},
@@ -8,10 +8,19 @@ export default {
           const data = yield call(getWarningRecords, payload)
           yield put({ type: 'fetchOk', payload: data })
         },
+        *fetchInstallAddr({ payload }, { call, put }) {  
+          const data = yield call(getInstallAddrList, payload)
+          yield put({ type: 'fetchInstallAddrOk', payload: data })
+        },
       },
       reducers: {
         fetchOk (state, { payload }) {
-          return { ...state, ...payload }
+          state.WarningRecords=payload
+          return { ...state }
+        },
+        fetchInstallAddrOk (state, { payload }) {
+          state.InstallAddr=payload
+          return { ...state }
         },
       }
 }

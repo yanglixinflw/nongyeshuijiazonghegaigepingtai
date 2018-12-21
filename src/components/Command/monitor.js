@@ -304,7 +304,7 @@ export default class extends Component {
         // 操作命令(上:0,下:1,左:2,右:3,左上:4,左下:5,右上:6,右下:7,放大:8,缩小:9,近焦距:10,远焦距:11)
         // console.log(controlVideoId)
         if (controlVideoId == '') {
-            alert('请先选中控制的摄像头')
+            message.error('请先选中控制的摄像头',2)
         } else {
             fetch(contorlUrl, {
                 ...postOption,
