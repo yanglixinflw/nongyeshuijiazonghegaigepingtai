@@ -19,7 +19,7 @@ export default class extends Component {
     }
 
     componentDidMount() {
-        this._addImage();
+        // this._addImage();
         this._satelliteMap()
     }
     //地图切换成平面2D
@@ -33,19 +33,19 @@ export default class extends Component {
             });
             map.addControl(type);
         });
-        let imageLayer = new AMap.ImageLayer({
-            url: 'http://amappc.cn-hangzhou.oss-pub.aliyun-inc.com/lbs/static/img/dongwuyuan.jpg',
-            bounds: new AMap.Bounds(
-                [116.327911, 39.939229],
-                [116.342659, 39.946275]
-            ),
-            opacity: 1,
-            zIndex: 2,
-            zooms: [15, 18],
-            visible: true,
-            map: map
-        });
-        map.add(imageLayer);
+        // let imageLayer = new AMap.ImageLayer({
+        //     url: 'http://amappc.cn-hangzhou.oss-pub.aliyun-inc.com/lbs/static/img/dongwuyuan.jpg',
+        //     bounds: new AMap.Bounds(
+        //         [116.327911, 39.939229],
+        //         [116.342659, 39.946275]
+        //     ),
+        //     opacity: 1,
+        //     zIndex: 2,
+        //     zooms: [15, 18],
+        //     visible: true,
+        //     map: map
+        // });
+        // map.add(imageLayer);
         this.setState({
             flatOrSatellite:1
         })

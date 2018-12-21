@@ -7,7 +7,9 @@ const Option = Select.Option;
 const RadioGroup = Radio.Group;
 import { ENVNet, postOption } from '../../services/netCofig'
 //搜索设备调用
-const deviceUrl = `${ENVNet}/api/device/list`;
+const deviceUrl = `${ENVNet}/api/device/searchList`;
+//设备详细信息 deviceTypeId
+const deviceDetail = `${ENVNet}/api/device/details`;
 //获取设备参数列表
 const paramUrl = `${ENVNet}/api/DeviceType/deviceParameters`;
 //获取开关阀列表
@@ -41,12 +43,10 @@ export default class extends Component {
         if (conditions.length != 0) {
             //获取参数的信息
             conditions.map((val, i) => {
-                return fetch(deviceUrl, {
+                return fetch(deviceDetail, {
                     ...postOption,
                     body: JSON.stringify({
-                        "deviceId": val.deviceId,
-                        "pageIndex": 0,
-                        "pageSize": 1
+                        deviceId: val.deviceId,
                     })
                 }).then((res) => {
                     Promise.resolve(res.json())
@@ -54,7 +54,7 @@ export default class extends Component {
                             //超时判断
                             timeOut(v.ret);
                             if (v.ret == 1) {
-                                let deviceTypeId = v.data.items[0].deviceTypeId;
+                                let deviceTypeId = v.data.deviceTypeId;
                                 // console.log(deviceTypeId)
                                 //获取参数的信息
                                 fetch(paramUrl, {
@@ -93,12 +93,10 @@ export default class extends Component {
         }
         if (actions.length !== 0) {
             actions.map((val, i) => {
-                return fetch(deviceUrl, {
+                return fetch(deviceDetail, {
                     ...postOption,
                     body: JSON.stringify({
-                        "deviceId": val.deviceId,
-                        "pageIndex": 0,
-                        "pageSize": 1
+                        deviceId: val.deviceId,
                     })
                 }).then((res) => {
                     Promise.resolve(res.json())
@@ -106,7 +104,7 @@ export default class extends Component {
                             //超时判断
                             timeOut(v.ret)
                             if (v.ret == 1) {
-                                let deviceTypeId = v.data.items[0].deviceTypeId;
+                                let deviceTypeId = v.data.deviceTypeId;
                                 // console.log(deviceTypeId)
                                 return fetch(switchUrl, {
                                     ...postOption,
@@ -149,8 +147,9 @@ export default class extends Component {
                 if (typeof (values.actionDeviceId) !== 'undefined' && typeof (values.conditionDeviceId) !== 'undefined') {
                     var conditions = [];
                     values.conditionDeviceId.map((v, i) => {
+                        let deviceId= v.split('/')[0];
                         let obj = {
-                            deviceId: v,
+                            deviceId: deviceId,
                             parameterId: values.parameterId[i],
                             operator: values.operator[i],
                             compareValue: values.compareValue[i]
@@ -160,8 +159,9 @@ export default class extends Component {
                     //拼接数组actions
                     var actions = [];
                     values.actionDeviceId.map((v, i) => {
+                        let deviceId= v.split('/')[0];
                         let obj = {
-                            deviceId: v,
+                            deviceId: deviceId,
                             execCmd: values.execCmd[i]
                         }
                         actions.push(obj)
@@ -198,12 +198,10 @@ export default class extends Component {
                                                     let conditions = v.data.conditions;
                                                     if(conditions.length !==0){
                                                         conditions.map((val,i)=>{
-                                                            return fetch(deviceUrl,{
+                                                            return fetch(deviceDetail,{
                                                                 ...postOption,
                                                                 body: JSON.stringify({
-                                                                    "deviceId": val.deviceId,
-                                                                    "pageIndex": 0,
-                                                                    "pageSize": 1
+                                                                    deviceId: val.deviceId,
                                                                 })
                                                             }).then((res) => {
                                                                 Promise.resolve(res.json())
@@ -211,7 +209,7 @@ export default class extends Component {
                                                                         //超时判断
                                                                         timeOut(v.ret)
                                                                         if (v.ret == 1) {
-                                                                            let deviceTypeId = v.data.items[0].deviceTypeId;
+                                                                            let deviceTypeId = v.data.deviceTypeId;
                                                                             // console.log(deviceTypeId)
                                                                             return fetch(paramUrl, {
                                                                                 ...postOption,
@@ -244,12 +242,10 @@ export default class extends Component {
                                                     }
                                                     if(actions.length !==0){
                                                         actions.map((val, i) => {
-                                                            return fetch(deviceUrl, {
+                                                            return fetch(deviceDetail, {
                                                                 ...postOption,
                                                                 body: JSON.stringify({
-                                                                    "deviceId": val.deviceId,
-                                                                    "pageIndex": 0,
-                                                                    "pageSize": 1
+                                                                    deviceId: val.deviceId,
                                                                 })
                                                             }).then((res) => {
                                                                 Promise.resolve(res.json())
@@ -257,7 +253,7 @@ export default class extends Component {
                                                                         //超时判断
                                                                         timeOut(v.ret)
                                                                         if (v.ret == 1) {
-                                                                            let deviceTypeId = v.data.items[0].deviceTypeId;
+                                                                            let deviceTypeId = v.data.deviceTypeId;
                                                                             // console.log(deviceTypeId)
                                                                             return fetch(switchUrl, {
                                                                                 ...postOption,
@@ -389,12 +385,11 @@ export default class extends Component {
             deviceList: []
         })
         if (conditions.length != 0) {
-            fetch(deviceUrl, {
+            let deviceId= value.split('/')[0];
+            fetch(deviceDetail, {
                 ...postOption,
                 body: JSON.stringify({
-                    "deviceId": value,
-                    "pageIndex": 0,
-                    "pageSize": 1
+                    deviceId: deviceId,
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
@@ -402,7 +397,8 @@ export default class extends Component {
                         //超时判断
                         timeOut(v.ret);
                         if (v.ret == 1) {
-                            let deviceTypeId = v.data.items[0].deviceTypeId
+                            // console.log(v)
+                            let deviceTypeId = v.data.deviceTypeId
                             //获取参数的信息
                             fetch(paramUrl, {
                                 ...postOption,
@@ -450,12 +446,11 @@ export default class extends Component {
          //获取开关的信息
          if (actions.length !== 0) {
             //  console.log(actions)
-            return fetch(deviceUrl, {
+            let deviceId= value.split('/')[0];
+            return fetch(deviceDetail, {
                 ...postOption,
                 body: JSON.stringify({
-                    "deviceId":value,
-                    "pageIndex": 0,
-                    "pageSize": 1
+                    deviceId:deviceId,
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
@@ -464,7 +459,7 @@ export default class extends Component {
                         timeOut(v.ret)
                         if (v.ret == 1) {
                             // console.log(v)
-                            let deviceTypeId = v.data.items[0].deviceTypeId;
+                            let deviceTypeId = v.data.deviceTypeId;
                             return fetch(switchUrl, {
                                 ...postOption,
                                 body: JSON.stringify({
@@ -513,9 +508,7 @@ export default class extends Component {
         fetch(deviceUrl, {
             ...postOption,
             body: JSON.stringify({
-                "name": value,
-                "pageIndex": 0,
-                "pageSize": 10
+                keyword: value,
             })
         }).then(res => {
             Promise.resolve(res.json())
@@ -524,7 +517,8 @@ export default class extends Component {
                     timeOut(v.ret);
                     if (v.ret == 1) {
                         // 设置页面显示的元素
-                        let deviceList = v.data.items
+                        // console.log(v)
+                        let deviceList = v.data
                         this.setState({
                             deviceList,
                         })
@@ -640,15 +634,14 @@ const RuleForm = Form.create()(
             //条件列表渲染
             // console.log(anyConditionFireAction)
             const conditionForm = conditions.map((v, index) => {
-                // console.log(v)
                 if (v.parameterIdList){
                     return (
                         <div className={styles.line} key={index}>
                             <Form.Item className={styles.search}>
-                                <Tooltip title="设备名称/ID">
+                                <Tooltip title="设备ID/名称">
                                     {getFieldDecorator(`conditionDeviceId[${index}]`,
                                         {
-                                            initialValue: v.deviceId || [],
+                                            initialValue: v.deviceId+'/'+v.deviceName || [],
                                             rules: [{ required: true, message: '设备名称不能为空' }]
                                         }
                                     )
@@ -661,13 +654,15 @@ const RuleForm = Form.create()(
                                             onSearch={_.debounce((value) => onSearch(value), 300)}
                                             onChange={(value) => onChangeCondition(value, index)}
                                             notFoundContent={null}
-                                            placeholder='设备名称/ID'
+                                            placeholder='设备ID/名称'
 
                                         >
                                             {
                                                 deviceList.map((v, i) => {
                                                     return (
-                                                        <Option title={'设备Id/名称:'+v.deviceId+v.name} key={v.deviceId}>{v.deviceId}{v.name}</Option>
+                                                        <Option title={'设备ID/名称:'+v.deviceId+v.name} 
+                                                        key={`${v.deviceId}/${v.name}`}
+                                                        >{v.deviceId}/{v.name}</Option>
                                                     )
                                                 })
                                             }
@@ -755,16 +750,16 @@ const RuleForm = Form.create()(
                     return (
                         <div className={styles.line} key={index}>
                             <Form.Item className={styles.search}>
-                                <Tooltip title="设备名称/ID">
+                                <Tooltip title="设备ID/名称">
                                     {getFieldDecorator(`actionDeviceId[${index}]`,
                                         {
-                                            initialValue: v.deviceId || [],
+                                            initialValue: v.deviceId+'/'+v.deviceName || [],
                                             rules: [{ required: true, message: '设备名称不能为空' }]
                                         }
                                     )
                                         (
                                         <Select
-                                            placeholder='设备名称/ID'
+                                            placeholder='设备ID/名称'
                                             showSearch
                                             defaultActiveFirstOption={false}
                                             showArrow={false}
@@ -776,7 +771,7 @@ const RuleForm = Form.create()(
                                             {
                                                 deviceList.map((v, i) => {
                                                     return (
-                                                        <Option title={'设备Id/名称:'+v.deviceId+v.name} key={v.deviceId}>{v.deviceId}{v.name}</Option>
+                                                        <Option title={'设备ID/名称:'+v.deviceId+v.name}  key={`${v.deviceId}/${v.name}`}>{v.deviceId}/{v.name}</Option>
                                                     )
                                                 })
                                             }
