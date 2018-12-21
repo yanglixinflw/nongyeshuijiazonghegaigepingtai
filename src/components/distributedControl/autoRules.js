@@ -641,7 +641,7 @@ const RuleForm = Form.create()(
                                 <Tooltip title="设备ID/名称">
                                     {getFieldDecorator(`conditionDeviceId[${index}]`,
                                         {
-                                            initialValue:v.device && v.name ? `${v.deviceId}/${v.deviceName}` : [] ,
+                                            initialValue: v.deviceId  ? `${v.deviceId}/${v.deviceName}` : [] ,
                                             rules: [{ required: true, message: '设备名称不能为空' }]
                                         }
                                     )
@@ -753,7 +753,7 @@ const RuleForm = Form.create()(
                                 <Tooltip title="设备ID/名称">
                                     {getFieldDecorator(`actionDeviceId[${index}]`,
                                         {
-                                            initialValue: v.device && v.name ? `${v.deviceId}/${v.deviceName}` : [],
+                                            initialValue: v.deviceId ? `${v.deviceId}/${v.deviceName}` : [],
                                             rules: [{ required: true, message: '设备名称不能为空' }]
                                         }
                                     )
