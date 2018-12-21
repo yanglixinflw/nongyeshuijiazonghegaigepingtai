@@ -69,6 +69,8 @@ export default class extends Component{
             plant:'',
             //当前灌区类型
             water:'',
+            //当前的设备名称
+            deviceName:"",
             //初始页
             current:1
         }
@@ -304,6 +306,8 @@ export default class extends Component{
                 //超时判断
                 timeOut(v.ret)
                 if(v.ret==1){
+                    console.log(v)
+                    var deviceName=v.data.items[0].deviceName
                     var water=v.data.items[0].wateringTypeName;
                     var plant=v.data.items[0].plantTypeName
                     this.setState({
@@ -311,7 +315,8 @@ export default class extends Component{
                         facilityId,
                         editvisible:true,
                         plant,
-                        water
+                        water,
+                        deviceName
                     })
                 }
             })
@@ -488,7 +493,7 @@ export default class extends Component{
         })
     }
     render(){
-        const { columns,current,tableDatas,delVisible,editvisible,deviceId,addvisible,itemCount,wateringType,plantType,installAddrList,plant,water } = this.state;
+        const { columns,current,tableDatas,delVisible,editvisible,deviceId,addvisible,itemCount,wateringType,plantType,installAddrList,plant,water,deviceName } = this.state;
         const paginationProps = {
             current:current,
             showQuickJumper: true,
@@ -566,7 +571,7 @@ export default class extends Component{
                         visible={editvisible}
                         onCancel={() => this.edithandleCancel()}
                         onOk={() => this.edithandleOk()}
-                        {...{deviceId,wateringType,plantType,plant,water }}
+                        {...{deviceId,wateringType,plantType,plant,water,deviceName }}
                     />
                     {/* 添加弹窗 */}
                     <AddForm
@@ -733,7 +738,7 @@ const SearchForm = Form.create()(
 const EditForm = Form.create()(
     class extends React.Component {
         render() {
-            const { visible, onCancel, onOk, form, deviceId,wateringType,plantType,plant,water } = this.props;
+            const { visible, onCancel, onOk, form, deviceId,wateringType,plantType,plant,water,deviceName } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Modal
@@ -748,7 +753,7 @@ const EditForm = Form.create()(
                 >
                     <Form>
                         <Form.Item label="设备">
-                            {getFieldDecorator('id', {initialValue: `${deviceId}`})
+                            {getFieldDecorator('id', {initialValue: `${deviceId}/${deviceName}`})
                             (
                                 <Input
                                     disabled
@@ -805,7 +810,7 @@ const AddForm = Form.create()(
             name:""
         }
         //下拉搜索框搜索功能
-        handleSearch = (value) => {
+        handleSearch (value){
             fetch(chargingUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -853,13 +858,18 @@ const AddForm = Form.create()(
                                     defaultActiveFirstOption={false}
                                     showArrow={false}
                                     filterOption={false}
-                                    onSearch={_.debounce(() => this.handleSearch(),300)}
+                                    onSearch={_.debounce((value) => this.handleSearch(value),300)}
                                     notFoundContent={null}
                                 >
                                     {
                                         deviceList.map((v,i)=>{
                                             return(
-                                                <Option value={v.deviceId} key={i}>{v.name}</Option> 
+                                                <Option 
+                                                    title={'设备ID/名称:'+v.deviceId+" "+v.name} 
+                                                    key={`${v.deviceId}/${v.name}`}
+                                                 >
+                                                    {v.deviceId}/{v.name}
+                                                </Option> 
                                             )
                                         })
                                     }
