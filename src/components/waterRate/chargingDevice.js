@@ -810,7 +810,6 @@ const AddForm = Form.create()(
                 ...postOption,
                 body: JSON.stringify({
                     "keyword":value,
-                    "topNum": 10,
                 })
             }).then(res => {
                 Promise.resolve(res.json())
