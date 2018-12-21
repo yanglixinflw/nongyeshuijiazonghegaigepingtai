@@ -188,12 +188,12 @@ export default class extends Component {
     //预警模板保存
     _temSaveHandler() {
         const form = this.temRulesForm.props.form;
-        const { ruleId,} = this.state
+        const { ruleId,deviceId} = this.state
         form.validateFields((err, values) => {
             if (!err) {
                 // console.log(values)
                 // //设备Id
-                // values.deviceId = deviceId
+                values.deviceId = deviceId
                 //预警规则ID
                 values.ruleId = ruleId
                 // 设备类型ID
