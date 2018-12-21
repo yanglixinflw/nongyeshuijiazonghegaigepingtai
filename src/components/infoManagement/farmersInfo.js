@@ -367,7 +367,7 @@ export default class extends Component{
                           //超时判断
                         timeOut(v.ret)
                         if (v.ret == 1) {
-                            this._resetForm();
+                            this._resetForm("add");
                             this.setState({
                                 addvisible: false
                             });
@@ -433,15 +433,15 @@ export default class extends Component{
         })
     }
     //重置
-    _resetForm() {
-        const { title } = this.state;
+    _resetForm(type) {
+        const { title,current } = this.state;
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "pageIndex": 0,
+                "pageIndex": type=="add"?0:this.state.current-1,
                 "pageSize": 10
             })
         }).then((res) => {
@@ -461,7 +461,7 @@ export default class extends Component{
                             data,
                             itemCount,
                             searchValue:{},
-                            current:1
+                            current:type=="add"?1:current
                         })
                         this._getTableDatas(title, data);
                     }

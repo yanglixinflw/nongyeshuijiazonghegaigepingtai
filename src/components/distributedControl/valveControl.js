@@ -218,7 +218,7 @@ export default class extends Component{
             ...postOption,
             body: JSON.stringify({
                 "deviceTypeId": 1,
-                "pageIndex": 0,
+                "pageIndex": this.state.current-1,
                 "pageSize": 10
             })
         }).then((res) => {
@@ -238,7 +238,6 @@ export default class extends Component{
                             data,
                             itemCount,
                             searchValue:{},
-                            current:1
                         })
                         this._getTableDatas(title, data);
                     }

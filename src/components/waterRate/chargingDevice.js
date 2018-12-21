@@ -219,11 +219,10 @@ export default class extends Component{
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
-        this._pageChange(1)
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "pageIndex": 0,
+                "pageIndex": this.state.current-1,
                 "pageSize": 10
             })
         }).then((res) => {
@@ -243,7 +242,6 @@ export default class extends Component{
                             data,
                             itemCount,
                             searchValue:{},
-                            current:1
                         })
                         this._getTableDatas(title, data);
                     }
