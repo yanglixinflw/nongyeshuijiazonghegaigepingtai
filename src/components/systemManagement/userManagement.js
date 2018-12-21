@@ -294,7 +294,7 @@ export default class extends Component {
                         timeOut(v.ret)
                         if (v.ret == 1) {
                             // console.log(v)
-                            this._resetForm(1)
+                            this._resetForm()
                             message.success('添加成功', 2);
                             this.setState({
                                 addVisible: false,
