@@ -9,6 +9,7 @@ import classnames from 'classnames'
 import { Dropdown, Select, message } from 'antd'
 import _ from 'lodash'
 import { ENVNet, postOption } from '../../services/netCofig'
+import { timeOut } from '../../utils/timeOut';
 const Option = Select.Option
 // 控制提示信息配置
 message.config({
@@ -64,7 +65,9 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    timeOut(v.ret)
                     if (v.ret == 1) {
+                        
                         this.setState({
                             monitorArr: [
                                 {
@@ -212,6 +215,7 @@ export default class extends Component {
         }).then((res) => {
             Promise.resolve(res.json())
                 .then((v) => {
+                    timeOut(v.ret)
                     if (v.ret == 1) {
                         this.setState({
                             awaitArray: v.data
@@ -316,7 +320,7 @@ export default class extends Component {
             }).then((res) => {
                 Promise.resolve(res.json())
                     .then((v) => {
-
+                        timeOut(v.ret)
                         if (v.ret == 1) {
                             message.success(v.msg, 2)
                         } else {

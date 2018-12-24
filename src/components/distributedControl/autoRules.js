@@ -154,7 +154,7 @@ export default class extends Component {
                 if (typeof (values.actionDeviceId) !== 'undefined' && typeof (values.conditionDeviceId) !== 'undefined') {
                     var conditions = [];
                     values.conditionDeviceId.map((v, i) => {
-                        let deviceId= v.split('/')[0];
+                        let deviceId = v.split('/')[0];
                         let obj = {
                             deviceId: deviceId,
                             parameterId: values.parameterId[i],
@@ -166,7 +166,7 @@ export default class extends Component {
                     //拼接数组actions
                     var actions = [];
                     values.actionDeviceId.map((v, i) => {
-                        let deviceId= v.split('/')[0];
+                        let deviceId = v.split('/')[0];
                         let obj = {
                             deviceId: deviceId,
                             execCmd: values.execCmd[i]
@@ -286,19 +286,19 @@ export default class extends Component {
     _resetForm() {
         const form = this.ruleForm.props.form;
         this.setState({
-            actions:[],
-            anyConditionFireAction:false,
-            conditions:[],
+            actions: [],
+            anyConditionFireAction: false,
+            conditions: [],
         })
         form.setFieldsValue({
             ['anyConditionFireAction']: false
         });
 
     }
-    handlerRadioChange(e){
+    handlerRadioChange(e) {
         // console.log(e.target.value)
         this.setState({
-            anyConditionFireAction:e.target.value
+            anyConditionFireAction: e.target.value
         })
     }
     //option的value值就是设备ID
@@ -306,13 +306,13 @@ export default class extends Component {
         // console.log(value)
         // console.log(i)
         const form = this.ruleForm.props.form;
-        const { conditions} = this.state;
+        const { conditions } = this.state;
         // console.log(conditions)
         this.setState({
             deviceList: []
         })
         if (conditions.length != 0) {
-            let deviceId= value.split('/')[0];
+            let deviceId = value.split('/')[0];
             fetch(deviceDetail, {
                 ...postOption,
                 body: JSON.stringify({
@@ -345,13 +345,13 @@ export default class extends Component {
                                                     [`parameterId[${i}]`]: []
                                                 });
                                             }
-                                            conditions[i].parameterIdList=parameterIdList
+                                            conditions[i].parameterIdList = parameterIdList
                                             this.setState({
                                                 conditions,
                                             })
                                         } else {
                                             let parameterIdList = [];
-                                            conditions[i].parameterIdList=parameterIdList
+                                            conditions[i].parameterIdList = parameterIdList
                                             this.setState({
                                                 conditions,
                                             })
@@ -363,21 +363,21 @@ export default class extends Component {
             })
         }
     }
-    handlerChangeAction(value,i){
+    handlerChangeAction(value, i) {
         const form = this.ruleForm.props.form;
-        const {  actions } = this.state;
+        const { actions } = this.state;
         // console.log(conditions)
         this.setState({
             deviceList: []
         })
-         //获取开关的信息
-         if (actions.length !== 0) {
+        //获取开关的信息
+        if (actions.length !== 0) {
             //  console.log(actions)
-            let deviceId= value.split('/')[0];
+            let deviceId = value.split('/')[0];
             return fetch(deviceDetail, {
                 ...postOption,
                 body: JSON.stringify({
-                    deviceId:deviceId,
+                    deviceId: deviceId,
                 })
             }).then((res) => {
                 Promise.resolve(res.json())
@@ -460,7 +460,7 @@ export default class extends Component {
     conditionAdd() {
         const { conditions } = this.state
         let newCodition = {};
-        newCodition.parameterIdList=[]
+        newCodition.parameterIdList = []
         conditions.push(newCodition);
         this.setState({
             conditions,
@@ -497,7 +497,7 @@ export default class extends Component {
         })
     }
     render() {
-        const { anyConditionFireAction, name, conditions, actions, deviceList} = this.state;
+        const { anyConditionFireAction, name, conditions, actions, deviceList } = this.state;
         return (
             <React.Fragment>
                 <div className={styles.headers}>
@@ -522,7 +522,7 @@ export default class extends Component {
                     <RuleForm
                         wrappedComponentRef={(ruleForm) => this.ruleForm = ruleForm}
                         {...{ anyConditionFireAction, name, conditions, actions, deviceList }}
-                        radioChange={(e)=>this.handlerRadioChange(e)}
+                        radioChange={(e) => this.handlerRadioChange(e)}
                         onChangeCondition={(value, i) => this.handlerChangeCondition(value, i)}
                         onChangeAction={(value, i) => this.handlerChangeAction(value, i)}
                         onSearch={(value) => this.handlerSearch(value)}
@@ -544,16 +544,16 @@ const RuleForm = Form.create()(
         }
         render() {
             const { getFieldDecorator, getFieldValue } = this.props.form;
-            const { 
+            const {
                 anyConditionFireAction,
-                name, 
+                name,
                 radioChange,
                 onChangeCondition,
-                onChangeAction, 
-                onSearch, 
-                conditionAdd, 
-                conditionLess, 
-                actionAdd, 
+                onChangeAction,
+                onSearch,
+                conditionAdd,
+                conditionLess,
+                actionAdd,
                 actionLess,
                 deviceList,
                 actions,
@@ -561,14 +561,14 @@ const RuleForm = Form.create()(
             //条件列表渲染
             // console.log(anyConditionFireAction)
             const conditionForm = conditions.map((v, index) => {
-                if (v.parameterIdList){
+                if (v.parameterIdList) {
                     return (
                         <div className={styles.line} key={index}>
                             <Form.Item className={styles.search}>
                                 <Tooltip title="设备ID/名称">
                                     {getFieldDecorator(`conditionDeviceId[${index}]`,
                                         {
-                                            initialValue: v.deviceId  ? `${v.deviceId}/${v.deviceName}` : [] ,
+                                            initialValue: v.deviceId ? `${v.deviceId}/${v.deviceName}` : [],
                                             rules: [{ required: true, message: '设备名称不能为空' }]
                                         }
                                     )
@@ -587,8 +587,8 @@ const RuleForm = Form.create()(
                                             {
                                                 deviceList.map((v, i) => {
                                                     return (
-                                                        <Option title={'设备ID/名称:'+v.deviceId+v.name} 
-                                                        key={`${v.deviceId}/${v.name}`}
+                                                        <Option title={'设备ID/名称:' + v.deviceId + v.name}
+                                                            key={`${v.deviceId}/${v.name}`}
                                                         >{v.deviceId}/{v.name}</Option>
                                                     )
                                                 })
@@ -698,7 +698,7 @@ const RuleForm = Form.create()(
                                             {
                                                 deviceList.map((v, i) => {
                                                     return (
-                                                        <Option title={'设备ID/名称:'+v.deviceId+v.name}  key={`${v.deviceId}/${v.name}`}>{v.deviceId}/{v.name}</Option>
+                                                        <Option title={'设备ID/名称:' + v.deviceId + v.name} key={`${v.deviceId}/${v.name}`}>{v.deviceId}/{v.name}</Option>
                                                     )
                                                 })
                                             }
@@ -717,8 +717,8 @@ const RuleForm = Form.create()(
                                     (<Select
                                         placeholder='开关阀'
                                     >
-                                        {   
-                                            v.switchList.map((v, i) => {   
+                                        {
+                                            v.switchList.map((v, i) => {
                                                 return (
                                                     <Option key={v.cmd}>{v.displayName}</Option>
                                                 )
@@ -761,15 +761,15 @@ const RuleForm = Form.create()(
                         <div className={styles.if}>条件</div>
                         <Form.Item className={styles.all}>
                             {
-                                getFieldDecorator('anyConditionFireAction', { 
-                                    initialValue: anyConditionFireAction ,
+                                getFieldDecorator('anyConditionFireAction', {
+                                    initialValue: anyConditionFireAction,
                                 })
-                                (
-                                <RadioGroup onChange={(e)=>radioChange(e)}>
-                                    <Radio value={false}>全部条件</Radio>
-                                    <Radio value={true}>任一条件</Radio>
-                                </RadioGroup>
-                                )
+                                    (
+                                    <RadioGroup onChange={(e) => radioChange(e)}>
+                                        <Radio value={false}>全部条件</Radio>
+                                        <Radio value={true}>任一条件</Radio>
+                                    </RadioGroup>
+                                    )
                             }
                         </Form.Item>
                         {/* 条件的添加 */}
