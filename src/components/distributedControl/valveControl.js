@@ -168,14 +168,14 @@ export default class extends Component{
             if(values.deviceTypeId==undefined){
                 values.deviceTypeId=1
             }
+            this.setState({
+                searchValue: values
+            })
+            console.log(values)
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "deviceTypeId": values.deviceTypeId,
-                    "name": values.name,
-                    "deviceId": values.deviceId,
-                    "installAddrId": values.installAddrId,
-                    "relatedBuildingId": values.relatedBuildingId,
+                    ...values,
                     "pageIndex": 0,
                     "pageSize": 10
                 })
@@ -210,15 +210,26 @@ export default class extends Component{
         })
     }
     //重置
-    _resetForm() {
+    _resetForm(current=1,searchValue) {
         const { title } = this.state;
         const form = this.searchForm.props.form;
-        form.resetFields(); // 重置表单
+        if(searchValue){
+            this.setState({
+                searchValue
+            })
+        }else{ 
+            // 重置表单
+            form.resetFields();
+            this.setState({
+                searchValue:{}
+            })
+        }
         fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
                 "deviceTypeId": 1,
-                "pageIndex": this.state.current-1,
+                ...searchValue,
+                "pageIndex": current-1,
                 "pageSize": 10
             })
         }).then((res) => {
@@ -234,11 +245,20 @@ export default class extends Component{
                         data.map((v, i) => {
                             v.key = i
                         })
-                        this.setState({
-                            data,
-                            itemCount,
-                            searchValue:{},
-                        })
+                        if(data.length==0&&current!=1){
+                            this.setState({
+                                data,
+                                itemCount,
+                                current:current-1
+                            })
+                            this._pageChange(current - 1)
+                        }else{
+                            this.setState({
+                                data,
+                                itemCount,
+                                current
+                            })
+                        }
                         this._getTableDatas(title, data);
                     }
                 })
@@ -314,6 +334,7 @@ export default class extends Component{
     }
     //点击开关阀确定
     switchHandleOk(){
+        const{searchValue,current}=this.state
         const form = this.switchForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
@@ -332,7 +353,7 @@ export default class extends Component{
                         //超时判断
                         timeOut(v.ret)
                         if(v.ret==1){
-                            this._resetForm();
+                            this._resetForm(current,searchValue);
                             this.setState({
                                 switchvisible: false,
                                 selectedRowKeys:[]
@@ -381,6 +402,7 @@ export default class extends Component{
     }
     //点击单个开关阀确定
     switchHandleOk(){
+        const{searchValue,current}=this.state
         const form = this.switchForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
@@ -399,7 +421,7 @@ export default class extends Component{
                         //超时判断
                         timeOut(v.ret)
                         if(v.ret==1){
-                            this._resetForm();
+                            this._resetForm(current,searchValue);
                             this.setState({
                                 switchvisible: false,
                             });

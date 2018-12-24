@@ -254,14 +254,13 @@ export default class extends Component {
             if (err) {
                 return
             }
+            this.setState({
+                searchValue: values
+            })
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "waringType": values.waringType,
-                    "warningStatus": values.warningStatus,
-                    "deviceId": values.deviceId,
-                    "installAddr": values.installAddr,
-                    "building": values.building,
+                    ...values,
                     "pageIndex": 0,
                     "pageSize": 10
                 })
@@ -287,14 +286,25 @@ export default class extends Component {
         })
     }
     //重置
-    _resetForm() {
+    _resetForm(current=1,searchValue) {
         const { title } = this.state;
         const form = this.searchForm.props.form;
-        form.resetFields(); // 重置表单
+        if(searchValue){
+            this.setState({
+                searchValue
+            })
+        }else{ 
+            // 重置表单
+            form.resetFields();
+            this.setState({
+                searchValue:{}
+            })
+        }
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "pageIndex": this.state.current-1,
+                ...searchValue,
+                "pageIndex": current-1,
                 "pageSize": 10
             })
         }).then((res) => {
@@ -313,7 +323,7 @@ export default class extends Component {
                         this.setState({
                             data,
                             itemCount,
-                            searchValue: {},
+                            current
                         })
                         this._getTableDatas(title, data);
                     }
@@ -330,6 +340,7 @@ export default class extends Component {
     //确定关闭预警
     closeOk(){
         const form = this.closeWarningForm.props.form;
+        const{current,searchValue}=this.state
         form.validateFields((err, values) => {
             // 未定义时给空值
             if (err) {
@@ -353,7 +364,7 @@ export default class extends Component {
                     //超时判断
                     timeOut(v.ret)
                     if(v.ret==1){
-                        this._resetForm();
+                        this._resetForm(current,searchValue);
                         this.setState({
                             closeShowvisible: false
                         });
