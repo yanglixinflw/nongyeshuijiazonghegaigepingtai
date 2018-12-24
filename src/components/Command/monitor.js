@@ -608,7 +608,7 @@ export default class extends Component {
                                     {selectList.length === 0
                                         ? <Option key='all' value={0}>全部</Option>
                                         : selectList.map((v, i) => {
-                                            // console.log(selectList)
+                                            // console.log(v)
                                             return (
                                                 <Option key={i} value={v.buildingId}>{v.name}({v.deviceCount}个)</Option>
                                             )

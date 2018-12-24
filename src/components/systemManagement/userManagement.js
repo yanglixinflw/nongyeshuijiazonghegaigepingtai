@@ -67,7 +67,7 @@ export default class extends Component {
             //搜索框默认值、
             searchValue: {},
             //当前页
-            current:1
+            current: 1
         }
     }
     componentDidMount() {
@@ -256,14 +256,14 @@ export default class extends Component {
     }
     //重置
     _resetForm(current = 1) {
-        const { title} = this.state;
+        const { title } = this.state;
         const form = this.searchForm.props.form;
         // 重置表单
         form.resetFields();
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "pageIndex":current-1,
+                "pageIndex": current - 1,
                 "pageSize": 10
             })
         }).then((res) => {
@@ -275,52 +275,63 @@ export default class extends Component {
                         // console.log(v)
                         let items = v.data.items;
                         let itemCount = v.data.itemCount;
-                        if(items.length == 0){
-                            if(current !== 1){
-                                fetch(dataUrl,{
-                                    ...postOption,
-                                    body:JSON.stringify({
-                                        "pageIndex":current-2,
-                                        "pageSize": 10
-                                    })
-                                }).then((res)=>{
-                                    Promise.resolve(res.json())
-                                    .then((v)=>{
-                                        //判断超时
-                                        timeOut(v.ret);
-                                        if(v.ret == 1){
-                                            let items = v.data.items;
-                                            let itemCount = v.data.itemCount;
-                                            // 给每一条数据添加key
-                                            items.map((v, i) => {
-                                            v.key = i
-                                        })
-                                        this.setState({
-                                            items,
-                                            itemCount,
-                                            searchValue: {},
-                                            current:current-1
-                                        })
-                                        this._getTableData(title, items);
-                                        }
-                                    })
-                                })
-                            }
-                        }
+                        // if(items.length == 0){
+                        //     if(current !== 1){
+                        //         fetch(dataUrl,{
+                        //             ...postOption,
+                        //             body:JSON.stringify({
+                        //                 "pageIndex":current-2,
+                        //                 "pageSize": 10
+                        //             })
+                        //         }).then((res)=>{
+                        //             Promise.resolve(res.json())
+                        //             .then((v)=>{
+                        //                 //判断超时
+                        //                 timeOut(v.ret);
+                        //                 if(v.ret == 1){
+                        //                     let items = v.data.items;
+                        //                     let itemCount = v.data.itemCount;
+                        //                     // 给每一条数据添加key
+                        //                     items.map((v, i) => {
+                        //                     v.key = i
+                        //                 })
+                        //                 this.setState({
+                        //                     items,
+                        //                     itemCount,
+                        //                     searchValue: {},
+                        //                     current:current-1
+                        //                 })
+                        //                 this._getTableData(title, items);
+                        //                 }
+                        //             })
+                        //         })
+                        //     }
+                        // }
                         // 给每一条数据添加key
+                        if (items.length == 0 && current != 1) {
+                            this.setState({
+                                items,
+                                itemCount,
+                                searchValue: {},
+                                current: current - 1
+                            })
+                            this._pageChange(current - 1)
+                        } else {
+                            this.setState({
+                                items,
+                                itemCount,
+                                searchValue: {},
+                                current
+                            })
+                        }
                         items.map((v, i) => {
                             v.key = i
                         })
-                        this.setState({
-                            items,
-                            itemCount,
-                            searchValue: {},
-                            current
-                        })
+
                         this._getTableData(title, items);
                     }
                 })
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err)
         })
     }
@@ -338,8 +349,8 @@ export default class extends Component {
             if (err) {
                 return;
             }
-           
-            if(values.mobilePhone == ''){
+
+            if (values.mobilePhone == '') {
                 values.mobilePhone = null
             }
             //  console.log(values)
@@ -367,7 +378,7 @@ export default class extends Component {
                                 addVisible: false,
                             })
                             form.resetFields();
-                            
+
                         } else {
                             message.error(v.msg, 2);
                         }
@@ -423,7 +434,7 @@ export default class extends Component {
     // 修改确定
     _modifyOkHandler() {
         const form = this.modifyForm.props.form;
-        const { userId, title,current } = this.state;
+        const { userId, title, current } = this.state;
         form.validateFields((err, values) => {
             // values即为表单数据
             if (err) {
@@ -483,7 +494,7 @@ export default class extends Component {
     }
     // 确认删除
     _deleteOkHandler() {
-        const { userId,current } = this.state;
+        const { userId, current } = this.state;
         let userIds = [];
         userIds.push(userId);
         return fetch(deleteUrl, {
