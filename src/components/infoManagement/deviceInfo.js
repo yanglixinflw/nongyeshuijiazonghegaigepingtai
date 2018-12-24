@@ -354,8 +354,6 @@ export default class extends Component {
                 searchValue
             })
         }
-
-
         return fetch(getDataUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -367,14 +365,25 @@ export default class extends Component {
                 .then((v) => {
                     //判断超时
                     timeOut(v.ret);
-                    // console.log(v)
+                    
                     if (v.ret == 1) {
                         let { items, itemCount } = v.data
-                        this.setState({
-                            itemCount,
-                            data: items,
-                            pageNumber: backToZero ? 1 : pageNumber
-                        })
+                        // 当前页为最后一页且不是第一页
+                        if(items.length==0&&pageNumber!=1){
+                            this.setState({
+                                itemCount,
+                                data: items,
+                                pageNumber: pageNumber-2
+                            })
+                            this._pageChange(pageNumber-2)
+                        }else{
+                            this.setState({
+                                itemCount,
+                                data: items,
+                                pageNumber: backToZero ? 1 : pageNumber
+                            })
+                        }
+                        // console.log(items)
                         this._getTableData(items, filterColumns)
                     }
                 })
