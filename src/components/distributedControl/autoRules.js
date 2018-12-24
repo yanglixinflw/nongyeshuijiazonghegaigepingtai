@@ -40,103 +40,110 @@ export default class extends Component {
     }
     componentDidMount() {
         const { conditions, actions } = this.state;
+        // console.log(conditions)
         if (conditions.length != 0) {
-            //获取参数的信息
-            conditions.map((val, i) => {
-                return fetch(deviceDetail, {
-                    ...postOption,
-                    body: JSON.stringify({
-                        deviceId: val.deviceId,
-                    })
-                }).then((res) => {
-                    Promise.resolve(res.json())
-                        .then((v) => {
-                            //超时判断
-                            timeOut(v.ret);
-                            if (v.ret == 1) {
-                                let deviceTypeId = v.data.deviceTypeId;
-                                // console.log(deviceTypeId)
-                                //获取参数的信息
-                                fetch(paramUrl, {
-                                    ...postOption,
-                                    body: JSON.stringify({
-                                        deviceTypeId
-                                    })
-                                }).then((res) => {
-                                    Promise.resolve(res.json())
-                                        .then((v) => {
-                                            //超时判断
-                                            timeOut(v.ret);
-                                            if (v.ret == 1) {
-                                                let parameterIdList = v.data;
-                                                // console.log(parameterIdList)
-                                                val.parameterIdList=parameterIdList;
-                                                this.setState({
-                                                    conditions
-                                                })
-                                            } else {
-                                                let parameterIdList = [];
-                                                val.parameterIdList=parameterIdList;
-                                                this.setState({
-                                                    conditions
-                                                })
-                                            }
-                                        })
-                                })
-                            }
-                        })
-                }).catch(err => {
-                    console.log(err)
-                })
-            })
-            
+            //获取条件栏参数的信息
+            this._getParamList(conditions)
         }
         if (actions.length !== 0) {
-            actions.map((val, i) => {
-                return fetch(deviceDetail, {
-                    ...postOption,
-                    body: JSON.stringify({
-                        deviceId: val.deviceId,
-                    })
-                }).then((res) => {
-                    Promise.resolve(res.json())
-                        .then((v) => {
-                            //超时判断
-                            timeOut(v.ret)
-                            if (v.ret == 1) {
-                                let deviceTypeId = v.data.deviceTypeId;
-                                // console.log(deviceTypeId)
-                                return fetch(switchUrl, {
-                                    ...postOption,
-                                    body: JSON.stringify({
-                                        deviceTypeId
-                                    })
-                                }).then((res) => {
-                                    Promise.resolve(res.json())
-                                        .then((v) => {
-                                            //判断超时
-                                            timeOut(v.ret);
-                                            if (v.ret == 1) {
-                                                let switchList = v.data
-                                                // console.log(switchList)
-                                                val.switchList=switchList;
-                                                this.setState({
-                                                    actions
-                                                })
-                                            } else {
-                                                let switchList = [];
-                                                val.switchList=switchList;
-                                                this.setState({
-                                                    actions
-                                                })
-                                            }
-                                        })
-                                })
-                            }
-                        })
-                })
-            })
+            //获取执行栏参数列表
+            this._getSwitchList(actions)
         }
+    }
+    //请求条件栏参数列表
+    _getParamList(conditions){
+        conditions.map((val,i)=>{
+            // console.log(val.deviceId)
+            return fetch(deviceDetail,{
+                ...postOption,
+                body: JSON.stringify({
+                    deviceId: val.deviceId,
+                })
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        //超时判断
+                        timeOut(v.ret)
+                        if (v.ret == 1) {
+                            let deviceTypeId = v.data.deviceTypeId;
+                            // console.log(deviceTypeId)
+                            return fetch(paramUrl, {
+                                ...postOption,
+                                body: JSON.stringify({
+                                    deviceTypeId
+                                })
+                            }).then((res) => {
+                                Promise.resolve(res.json())
+                                    .then((v) => {
+                                        //超时判断
+                                        timeOut(v.ret);
+                                        if (v.ret == 1) {
+                                            let parameterIdList = v.data;
+                                            if (parameterIdList.length == 0) {
+                                                form.setFieldsValue({
+                                                    [`parameterId[${i}]`]: []
+                                                });
+                                            }
+                                            val.parameterIdList = parameterIdList;
+                                            this.setState({
+                                                conditions
+                                            })
+                                        }
+                                    })
+                            })
+                        }
+                    })
+            }).catch((err)=>{
+                console.log(err)
+            })
+        })
+    }
+    //请求执行栏参数列表
+    _getSwitchList(actions){
+        actions.map((val, i) => {
+            return fetch(deviceDetail, {
+                ...postOption,
+                body: JSON.stringify({
+                    deviceId: val.deviceId,
+                })
+            }).then((res) => {
+                Promise.resolve(res.json())
+                    .then((v) => {
+                        //超时判断
+                        timeOut(v.ret)
+                        if (v.ret == 1) {
+                            let deviceTypeId = v.data.deviceTypeId;
+                            // console.log(deviceTypeId)
+                            return fetch(switchUrl, {
+                                ...postOption,
+                                body: JSON.stringify({
+                                    deviceTypeId
+                                })
+                            }).then((res) => {
+                                Promise.resolve(res.json())
+                                    .then((v) => {
+                                        //超时判断
+                                        timeOut(v.ret);
+                                        if (v.ret == 1) {
+                                            let switchList = v.data;
+                                            if (switchList.length == 0) {
+                                                form.setFieldsValue({
+                                                    [`execCmd[${i}]`]: []
+                                                });
+                                            }
+                                            val.switchList = switchList;
+                                            this.setState({
+                                                actions
+                                            })
+                                        }
+                                    })
+                            })
+                        }
+                    })
+            }).catch((err)=>{
+                console.log(err)
+            })
+        })
     }
     //保存
     _save() {
@@ -183,6 +190,7 @@ export default class extends Component {
                                 timeOut(v.ret);
                                 if (v.ret == 1) {
                                     //重新获取页面
+                                    message.success(`${values.name}保存成功`, 2);
                                     fetch(ruleUrl, {
                                         ...postOption,
                                         body: JSON.stringify({
@@ -194,95 +202,14 @@ export default class extends Component {
                                                 //超时判断
                                                 timeOut(v.ret);
                                                 if (v.ret == 1) {
-                                                    message.success(`${values.name}保存成功`, 2);
                                                     let conditions = v.data.conditions;
                                                     if(conditions.length !==0){
-                                                        conditions.map((val,i)=>{
-                                                            return fetch(deviceDetail,{
-                                                                ...postOption,
-                                                                body: JSON.stringify({
-                                                                    deviceId: val.deviceId,
-                                                                })
-                                                            }).then((res) => {
-                                                                Promise.resolve(res.json())
-                                                                    .then((v) => {
-                                                                        //超时判断
-                                                                        timeOut(v.ret)
-                                                                        if (v.ret == 1) {
-                                                                            let deviceTypeId = v.data.deviceTypeId;
-                                                                            // console.log(deviceTypeId)
-                                                                            return fetch(paramUrl, {
-                                                                                ...postOption,
-                                                                                body: JSON.stringify({
-                                                                                    deviceTypeId
-                                                                                })
-                                                                            }).then((res) => {
-                                                                                Promise.resolve(res.json())
-                                                                                    .then((v) => {
-                                                                                        //超时判断
-                                                                                        timeOut(v.ret);
-                                                                                        if (v.ret == 1) {
-                                                                                            let parameterIdList = v.data;
-                                                                                            if (parameterIdList.length == 0) {
-                                                                                                form.setFieldsValue({
-                                                                                                    [`parameterId[${i}]`]: []
-                                                                                                });
-                                                                                            }
-                                                                                            val.parameterIdList = parameterIdList;
-                                                                                            this.setState({
-                                                                                                conditions
-                                                                                            })
-                                                                                        }
-                                                                                    })
-                                                                            })
-                                                                        }
-                                                                    })
-                                                            })
-                                                        })
+                                                        //获取条件栏参数的信息
+                                                        this._getParamList(conditions)
                                                     }
                                                     if(actions.length !==0){
-                                                        actions.map((val, i) => {
-                                                            return fetch(deviceDetail, {
-                                                                ...postOption,
-                                                                body: JSON.stringify({
-                                                                    deviceId: val.deviceId,
-                                                                })
-                                                            }).then((res) => {
-                                                                Promise.resolve(res.json())
-                                                                    .then((v) => {
-                                                                        //超时判断
-                                                                        timeOut(v.ret)
-                                                                        if (v.ret == 1) {
-                                                                            let deviceTypeId = v.data.deviceTypeId;
-                                                                            // console.log(deviceTypeId)
-                                                                            return fetch(switchUrl, {
-                                                                                ...postOption,
-                                                                                body: JSON.stringify({
-                                                                                    deviceTypeId
-                                                                                })
-                                                                            }).then((res) => {
-                                                                                Promise.resolve(res.json())
-                                                                                    .then((v) => {
-                                                                                        //超时判断
-                                                                                        timeOut(v.ret);
-                                                                                        if (v.ret == 1) {
-                                                                                            let switchList = v.data;
-                                                                                            if (switchList.length == 0) {
-                                                                                                form.setFieldsValue({
-                                                                                                    [`execCmd[${i}]`]: []
-                                                                                                });
-                                                                                            }
-                                                                                            val.switchList = switchList;
-                                                                                            this.setState({
-                                                                                                actions
-                                                                                            })
-                                                                                        }
-                                                                                    })
-                                                                            })
-                                                                        }
-                                                                    })
-                                                            })
-                                                        })
+                                                        //获取执行栏参数列表
+                                                        this._getSwitchList(actions)
                                                     }
                                                     this.setState({
                                                         anyConditionFireAction: v.data.anyConditionFireAction,
@@ -323,6 +250,7 @@ export default class extends Component {
                                     timeOut(v.ret);
                                     if (v.ret == 1) {
                                         //重新获取页面
+                                        message.success(`${values.name}保存成功`, 2);
                                         fetch(ruleUrl, {
                                             ...postOption,
                                             body: JSON.stringify({
@@ -333,8 +261,7 @@ export default class extends Component {
                                                 .then(v => {
                                                     //超时判断
                                                     timeOut(v.ret);
-                                                    if (v.ret == 1) {
-                                                        message.success(`${values.name}保存成功`, 2);
+                                                    if (v.ret == 1) {     
                                                         this.setState({
                                                             anyConditionFireAction: v.data.anyConditionFireAction,
                                                             name: v.data.name,

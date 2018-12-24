@@ -25,7 +25,7 @@ export default class extends React.Component{
             type: 'autoRules/fetch',
             payload:{
                 ruleId
-              }
+            }
         });//type来选择请求的接口，payload为传给后台的参数
         this.setState({
             ruleId
@@ -34,9 +34,9 @@ export default class extends React.Component{
     render(){
         let { autoRules, loading } = this.props;
         let { ruleId } = this.state;
-        // console.log(autoRules)
         let arr = Object.keys(autoRules);
         if (arr.length === 0) return autoRules = null;
+        if(ruleId == '') return  null;
         return (
             <React.Fragment>
                 <Spin size='large' spinning={loading}>
