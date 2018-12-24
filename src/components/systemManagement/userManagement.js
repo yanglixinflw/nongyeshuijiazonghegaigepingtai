@@ -178,14 +178,14 @@ export default class extends Component {
         // console.log(columns[4])
     }
     //搜索功能
-    _searchTableData( curren = 1) {
+    _searchTableData() {
         const { title } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
                 return
             }
-            values.pageIndex = curren-1;
+            values.pageIndex = 0;
             values.pageSize = 10;
             // console.log(values)
             //保存搜索框信息
@@ -205,38 +205,6 @@ export default class extends Component {
                         if (v.ret == 1) {
                             let items = v.data.items;
                             let itemCount = v.data.itemCount;
-                            if(items.length == 0){
-                                if(current !== 1){
-                                    fetch(dataUrl,{
-                                        ...postOption,
-                                        body:JSON.stringify({
-                                            "pageIndex":current-2,
-                                            "pageSize": 10
-                                        })
-                                    }).then((res)=>{
-                                        Promise.resolve(res.json())
-                                        .then((v)=>{
-                                            //判断超时
-                                            timeOut(v.ret);
-                                            if(v.ret == 1){
-                                                let items = v.data.items;
-                                                let itemCount = v.data.itemCount;
-                                                // 给每一条数据添加key
-                                                items.map((v, i) => {
-                                                v.key = i
-                                            })
-                                            this.setState({
-                                                items,
-                                                itemCount,
-                                                searchValue: {},
-                                                current:current-1
-                                            })
-                                            this._getTableData(title, items);
-                                            }
-                                        })
-                                    })
-                                }
-                            }
                             // 给每一条数据添加key
                             items.map((v, i) => {
                                 v.key = i
@@ -244,7 +212,7 @@ export default class extends Component {
                             this.setState({
                                 itemCount,
                                 items,
-                                current:current-1
+                                current:1
                             })
                             this._getTableData(title, items)
                         }
@@ -255,14 +223,32 @@ export default class extends Component {
         })
     }
     //重置
-    _resetForm(current = 1) {
+    _resetForm(current = 1,searchValue) {
         const { title } = this.state;
         const form = this.searchForm.props.form;
-        // 重置表单
-        form.resetFields();
+        if(searchValue){
+            this.setState({
+                searchValue
+            })
+        }else{
+            let searchValue = {
+                "deviceId": "",
+                "name": "",
+                "deviceTypeId": "",
+                "installAddrId": "",
+                "warningRules": "",
+                "relatedBuildingId": "",
+            }
+            // 重置表单
+            form.resetFields();
+            this.setState({
+                searchValue
+            })
+        }
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
+                ...searchValue,
                 "pageIndex": current - 1,
                 "pageSize": 10
             })
@@ -275,44 +261,14 @@ export default class extends Component {
                         // console.log(v)
                         let items = v.data.items;
                         let itemCount = v.data.itemCount;
-                        // if(items.length == 0){
-                        //     if(current !== 1){
-                        //         fetch(dataUrl,{
-                        //             ...postOption,
-                        //             body:JSON.stringify({
-                        //                 "pageIndex":current-2,
-                        //                 "pageSize": 10
-                        //             })
-                        //         }).then((res)=>{
-                        //             Promise.resolve(res.json())
-                        //             .then((v)=>{
-                        //                 //判断超时
-                        //                 timeOut(v.ret);
-                        //                 if(v.ret == 1){
-                        //                     let items = v.data.items;
-                        //                     let itemCount = v.data.itemCount;
-                        //                     // 给每一条数据添加key
-                        //                     items.map((v, i) => {
-                        //                     v.key = i
-                        //                 })
-                        //                 this.setState({
-                        //                     items,
-                        //                     itemCount,
-                        //                     searchValue: {},
-                        //                     current:current-1
-                        //                 })
-                        //                 this._getTableData(title, items);
-                        //                 }
-                        //             })
-                        //         })
-                        //     }
-                        // }
                         // 给每一条数据添加key
+                        items.map((v, i) => {
+                            v.key = i
+                        })
                         if (items.length == 0 && current != 1) {
                             this.setState({
                                 items,
                                 itemCount,
-                                searchValue: {},
                                 current: current - 1
                             })
                             this._pageChange(current - 1)
@@ -320,13 +276,10 @@ export default class extends Component {
                             this.setState({
                                 items,
                                 itemCount,
-                                searchValue: {},
                                 current
                             })
                         }
-                        items.map((v, i) => {
-                            v.key = i
-                        })
+                        
 
                         this._getTableData(title, items);
                     }
@@ -434,7 +387,7 @@ export default class extends Component {
     // 修改确定
     _modifyOkHandler() {
         const form = this.modifyForm.props.form;
-        const { userId, title, current } = this.state;
+        const { userId, title, current,searchValue } = this.state;
         form.validateFields((err, values) => {
             // values即为表单数据
             if (err) {
@@ -458,8 +411,8 @@ export default class extends Component {
                         // 判断是否超时
                         timeOut(v.ret)
                         if (v.ret == 1) {
-                            // this._resetForm(current);
-                            this._searchTableData(current);
+                            this._resetForm(current,searchValue);
+                            // this._searchTableData(current);
                             this.setState({
                                 modifyVisible: false
                             });
@@ -494,7 +447,7 @@ export default class extends Component {
     }
     // 确认删除
     _deleteOkHandler() {
-        const { userId, current } = this.state;
+        const { userId, current, searchValue} = this.state;
         let userIds = [];
         userIds.push(userId);
         return fetch(deleteUrl, {
@@ -508,8 +461,8 @@ export default class extends Component {
                     // 判断是否超时
                     timeOut(v.ret)
                     if (v.ret == 1) {
-                        // this._resetForm(current)
-                        this._searchTableData(current);
+                        this._resetForm(current,searchValue)
+                        // this._searchTableData(current);
                         this.setState({
                             deleteVisible: false,
                         })
