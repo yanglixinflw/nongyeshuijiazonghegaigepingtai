@@ -178,14 +178,14 @@ export default class extends Component {
         // console.log(columns[4])
     }
     //搜索功能
-    _searchTableData() {
+    _searchTableData( curren = 1) {
         const { title } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
                 return
             }
-            values.pageIndex = 0;
+            values.pageIndex = curren-1;
             values.pageSize = 10;
             // console.log(values)
             //保存搜索框信息
@@ -205,13 +205,46 @@ export default class extends Component {
                         if (v.ret == 1) {
                             let items = v.data.items;
                             let itemCount = v.data.itemCount;
+                            if(items.length == 0){
+                                if(current !== 1){
+                                    fetch(dataUrl,{
+                                        ...postOption,
+                                        body:JSON.stringify({
+                                            "pageIndex":current-2,
+                                            "pageSize": 10
+                                        })
+                                    }).then((res)=>{
+                                        Promise.resolve(res.json())
+                                        .then((v)=>{
+                                            //判断超时
+                                            timeOut(v.ret);
+                                            if(v.ret == 1){
+                                                let items = v.data.items;
+                                                let itemCount = v.data.itemCount;
+                                                // 给每一条数据添加key
+                                                items.map((v, i) => {
+                                                v.key = i
+                                            })
+                                            this.setState({
+                                                items,
+                                                itemCount,
+                                                searchValue: {},
+                                                current:current-1
+                                            })
+                                            this._getTableData(title, items);
+                                            }
+                                        })
+                                    })
+                                }
+                            }
                             // 给每一条数据添加key
                             items.map((v, i) => {
                                 v.key = i
                             })
                             this.setState({
                                 itemCount,
-                                items
+                                items,
+                                current:current-1
                             })
                             this._getTableData(title, items)
                         }
@@ -414,7 +447,8 @@ export default class extends Component {
                         // 判断是否超时
                         timeOut(v.ret)
                         if (v.ret == 1) {
-                            this._resetForm(current);
+                            // this._resetForm(current);
+                            this._searchTableData(current);
                             this.setState({
                                 modifyVisible: false
                             });
@@ -463,7 +497,8 @@ export default class extends Component {
                     // 判断是否超时
                     timeOut(v.ret)
                     if (v.ret == 1) {
-                        this._resetForm(current)
+                        // this._resetForm(current)
+                        this._searchTableData(current);
                         this.setState({
                             deleteVisible: false,
                         })
