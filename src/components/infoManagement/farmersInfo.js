@@ -185,7 +185,6 @@ export default class extends Component{
                     this.setState({
                         delVisible: false
                     });
-                    form.resetFields();
                     message.success('删除成功', 2);
                 } else {
                     message.error(v.msg, 2);
@@ -203,11 +202,12 @@ export default class extends Component{
     }
     //修改用户信息的弹出框
     editInfo(index){
-        // console.log(userId)
+        const{searchValue}=this.state
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "userId":index
+                "userId":index,
+                ...searchValue
             })
         }).then((res) => {
             Promise.resolve(res.json())
@@ -400,6 +400,9 @@ export default class extends Component{
             if (err) {
                 return
             }
+            this.setState({
+                searchValue: values
+            })
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -433,14 +436,26 @@ export default class extends Component{
         })
     }
     //重置
-    _resetForm(current=1) {
+    _resetForm(current=1,searchValue) {
         const { title } = this.state;
         const form = this.searchForm.props.form;
         // 重置表单
+        if(searchValue){
+            this.setState({
+                searchValue
+            })
+        }else{ 
+            // 重置表单
+            form.resetFields();
+            this.setState({
+                searchValue:{}
+            })
+        }
         form.resetFields();
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
+                ...searchValue,
                 "pageIndex": current-1,
                 "pageSize": 10
             })
@@ -453,15 +468,25 @@ export default class extends Component{
                         // console.log(v)
                         let data = v.data.items;
                         let itemCount = v.data.itemCount;
+                        if(data.length==0&&current!=1){
+                            this.setState({
+                                data,
+                                itemCount,
+                                searchValue:{},
+                                current:current-1
+                            })
+                            this._pageChange(current - 1)
+                        }else{
+                            this.setState({
+                                data,
+                                itemCount,
+                                searchValue:{},
+                                current
+                            })
+                        }
                         // 给每一条数据添加key
                         data.map((v, i) => {
                             v.key = i
-                        })
-                        this.setState({
-                            data,
-                            itemCount,
-                            searchValue:{},
-                            current
                         })
                         this._getTableDatas(title, data);
                     }
