@@ -14,7 +14,7 @@ import {
     Col,
     DatePicker,
     message,
-    Divider 
+    Divider
 } from 'antd'
 import moment from 'moment'
 import { Link } from 'dva/router';
@@ -113,7 +113,7 @@ export default class extends Component {
             // 修改弹窗管理人员列表
             modifyAdminList: [],
             // 当前页
-            pageNumber:1
+            pageNumber: 1
         }
     }
     componentDidMount() {
@@ -260,7 +260,7 @@ export default class extends Component {
     }
     // 确认删除
     _deleteOk() {
-        const { modifyDeviceId } = this.state
+        const { modifyDeviceId, searchValue } = this.state
         let deviceIds = modifyDeviceId
         return fetch(deleteUrl, {
             ...postOption,
@@ -275,11 +275,11 @@ export default class extends Component {
                     if (v.ret == 1) {
                         message.success('删除成功', 2)
                         // 重置数据
-                        this._resetForm()
+                        this._resetForm(false, searchValue)
                         this.setState({
                             deleteModalVisible: false,
                         })
-                    }else{
+                    } else {
                         message.error(v.msg, 3)
                         // // 重置数据
                         // this._resetForm()
@@ -321,7 +321,7 @@ export default class extends Component {
                         this.setState({
                             itemCount,
                             tableData: items,
-                            pageNumber:page
+                            pageNumber: page
                         })
                         this._getTableData(items, filterColumns);
                     }
@@ -331,32 +331,36 @@ export default class extends Component {
         })
     }
     // 重置搜索表单
-    _resetForm(type) {
-        const { filterColumns,pageNumber } = this.state
+    _resetForm(backToZero, searchValue) {
+        const { filterColumns, pageNumber } = this.state
+        // console.log(searchValue)
         const form = this.searchForm.props.form;
-        // 重置表单
-        form.resetFields();
-        this.setState({
-            searchValue: {
+        if (searchValue) {
+            this.setState({
+                searchValue
+            })
+        } else {
+            let searchValue = {
                 "deviceId": "",
                 "name": "",
                 "deviceTypeId": "",
                 "installAddrId": "",
                 "warningRules": "",
                 "relatedBuildingId": "",
-                
-            },
-        })
+            }
+            // 重置表单
+            form.resetFields();
+            this.setState({
+                searchValue
+            })
+        }
+
+
         return fetch(getDataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "deviceId": "",
-                "name": "",
-                "deviceTypeId": "",
-                "installAddrId": "",
-                "warningRules": "",
-                "relatedBuildingId": "",
-                "pageIndex":type=='add'?0:pageNumber
+                ...searchValue,
+                "pageIndex": backToZero ? 0 : pageNumber - 1
             })
         }).then((res) => {
             Promise.resolve(res.json())
@@ -369,7 +373,7 @@ export default class extends Component {
                         this.setState({
                             itemCount,
                             data: items,
-                            pageNumber:1
+                            pageNumber: backToZero ? 1 : pageNumber
                         })
                         this._getTableData(items, filterColumns)
                     }
@@ -407,13 +411,15 @@ export default class extends Component {
                 Promise.resolve(res.json())
                     .then((v) => {
                         // console.log(v)
-                         //判断超时
+                        //判断超时
                         timeOut(v.ret);
                         if (v.ret == 1) {
                             let { items, itemCount } = v.data
                             this.setState({
                                 itemCount,
-                                data: items
+                                data: items,
+                                // 重置当前页码
+                                pageNumber: 0
                             })
                             this._getTableData(items, filterColumns)
                         }
@@ -506,14 +512,14 @@ export default class extends Component {
                             timeOut(v.ret);
                             if (v.ret == 1) {
                                 message.success('添加成功', 2)
-                                this._resetForm("add")
+                                this._resetForm(true)
                                 this.setState({
                                     addModalVisible: false
                                 })
                             }
                         })
                 }).catch((err) => {
-                    message.error('服务器出错',2)
+                    message.error('服务器出错', 2)
                 })
             }
         })
@@ -575,15 +581,15 @@ export default class extends Component {
                                 })
                         }).catch((err) => {
                             // console.log(err)
-                            message.error('服务器出错',2)
+                            message.error('服务器出错', 2)
                         })
                         this.setState({
                             modifyModalVisible: true,
                             modifyDeviceId: deviceId,
                             modifyData: v.data,
                         })
-                    }else{
-                        
+                    } else {
+
                     }
                 })
         })
@@ -592,6 +598,7 @@ export default class extends Component {
     }
     // 确认修改
     _modifyOk() {
+        const { searchValue } = this.state
         const form = this.modifyForm.props.form;
         form.validateFields((err, values) => {
             if (err) {
@@ -612,7 +619,8 @@ export default class extends Component {
                             timeOut(v.ret);
                             if (v.ret == 1) {
                                 message.success('修改成功', 2)
-                                this._resetForm()
+                                // console.log(searchValue)
+                                this._resetForm(false, searchValue)
                                 this.setState({
                                     modifyModalVisible: false
                                 })
@@ -642,8 +650,8 @@ export default class extends Component {
         }).then(res => {
             Promise.resolve(res.json())
                 .then(v => {
-                     //判断超时
-                     timeOut(v.ret);
+                    //判断超时
+                    timeOut(v.ret);
                     if (v.ret == 1) {
                         // 设置页面显示的元素
                         // console.log(v.data)
@@ -678,7 +686,7 @@ export default class extends Component {
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
-            current:pageNumber,
+            current: pageNumber,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
@@ -700,7 +708,7 @@ export default class extends Component {
                     deviceTypeList={deviceTypeList}
                     relatedBuilding={relatedBuilding}
                     companyList={companyList}
-                    handleSearch={(v)=>this.handleSearch(v)}
+                    handleSearch={(v) => this.handleSearch(v)}
                 />
                 {/* 删除弹窗 */}
                 <Modal
@@ -740,7 +748,7 @@ export default class extends Component {
                     relatedBuilding={relatedBuilding}
                     companyList={companyList}
                     modifyAdminList={modifyAdminList}
-                    handleSearch={(v)=>this.handleSearch(v)}
+                    handleSearch={(v) => this.handleSearch(v)}
                     setAdminList={(v) => this.setAdminList(v)}
                 />
                 <div className={styles.header}>
@@ -751,7 +759,7 @@ export default class extends Component {
                         wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
                         installAddress={installAddress}
                         deviceTypeList={deviceTypeList}
-                        handleSearch={(v)=>this.handleSearch(v)}
+                        handleSearch={(v) => this.handleSearch(v)}
                         relatedBuilding={relatedBuilding}
                     />
                     <div className={styles.buttonGroup}>
@@ -766,7 +774,7 @@ export default class extends Component {
                         <Button
                             // icon='reload'
                             className={styles.searchButton}
-                            onClick={() => this._resetForm()}
+                            onClick={() => this._resetForm(true)}
                         >
                             <i className={classnames('dyhsicon', 'dyhs-zhongzhi', `${styles.resetIcon}`)}></i>
                             重置</Button>
@@ -815,8 +823,8 @@ export default class extends Component {
 const SearchForm = Form.create()(
     class extends Component {
         render() {
-            const { form, 
-                installAddress, 
+            const { form,
+                installAddress,
                 deviceTypeList,
                 relatedBuilding,
                 handleSearch } = this.props;
@@ -1012,7 +1020,7 @@ const AddForm = Form.create()(
             // 关联建筑物列表
             relatedBuilding: []
         }
-        
+
         showAdmin(id) {
             if (id != '') {
                 fetch(`${getManagerUserUrl}?orgId=${id}`, {
@@ -1023,8 +1031,8 @@ const AddForm = Form.create()(
                     Promise.resolve(res.json())
                         .then((v) => {
                             if (v.ret == 1) {
-                                 //判断超时
-                    timeOut(v.ret);
+                                //判断超时
+                                timeOut(v.ret);
                                 // console.log(v);
                                 this.setState({
                                     selectCompany: true,
@@ -1222,7 +1230,7 @@ const AddForm = Form.create()(
                                 )
                             }
                         </Item>
-                        <Divider></Divider> 
+                        <Divider></Divider>
                         <Item label="运维公司">
                             {getFieldDecorator('managedCompanyId', {
                                 // rules: [{ required: true, message: '运维公司不能为空' }]
@@ -1280,7 +1288,7 @@ const AddForm = Form.create()(
                                 </Item>
                                 : null
                         }
-                        <Divider></Divider> 
+                        <Divider></Divider>
                         <Item label='网关ID'>
                             {getFieldDecorator('gatewayAddr',
                                 {
@@ -1327,8 +1335,8 @@ const ModifyForm = Form.create()(
                 }).then((res) => {
                     Promise.resolve(res.json())
                         .then((v) => {
-                             //判断超时
-                    timeOut(v.ret);
+                            //判断超时
+                            timeOut(v.ret);
                             if (v.ret == 1) {
                                 // console.log(v);
                                 callBack(v)
@@ -1364,7 +1372,7 @@ const ModifyForm = Form.create()(
             });
         }
         render() {
-            const { 
+            const {
                 visible,
                 onOk,
                 onCancel,
@@ -1508,7 +1516,7 @@ const ModifyForm = Form.create()(
                                 initialValue: modifyData.relatedBuildingId
                             })
                                 (
-                                    <Select
+                                <Select
                                     placeholder='关联建筑物'
                                     className={styles.formInput}
                                     defaultActiveFirstOption={false}
@@ -1568,7 +1576,7 @@ const ModifyForm = Form.create()(
                             }
                         </Item>
                         {/* 分割线 */}
-                        <Divider></Divider> 
+                        <Divider></Divider>
                         <Item label="运维公司">
                             {getFieldDecorator('managedCompanyId', {
                                 // rules: [{ required: true, message: '运维公司不能为空' }],
@@ -1627,7 +1635,7 @@ const ModifyForm = Form.create()(
                                 )
                             }
                         </Item>
-                        <Divider></Divider> 
+                        <Divider></Divider>
                         <Item label='网关ID'>
                             {getFieldDecorator('gatewayAddr',
                                 {

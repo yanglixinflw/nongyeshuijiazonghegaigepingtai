@@ -208,6 +208,7 @@ export default class extends Component {
                                 "pageIndex": 0,
                                 "pageSize": 10
                             },
+                            pageNumber:0
                         })
                         this._getTableData(items, filterColumns)
                     }
@@ -292,7 +293,8 @@ export default class extends Component {
                         })
                         this.setState({
                             itemCount,
-                            tableData: items
+                            tableData: items,
+                            pageNumber:page
                         })
                         this._getTableData(items, filterColumns);
                     }
@@ -309,10 +311,12 @@ export default class extends Component {
             itemCount,
             pageTitle,
             installAddress,
-            commonColumns } = this.state;
+            commonColumns ,pageNumber} = this.state;
+            // console.log(pageNumber)
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
+            current:pageNumber||1,
             // 传递页码
             onChange: (page) => this._pageChange(page)
         };
