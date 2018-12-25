@@ -182,15 +182,13 @@ export default class extends Component{
             if (err) {
                 return
             }
+            this.setState({
+                searchValue: values
+            })
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "deviceId": values.deviceId,
-                    "deviceName": values.name,
-                    "installAddrId": values.installAddr,
-                    "relatedBuilding": values.relatedBuilding,
-                    "wateringType": values.wateringType,
-                    "plantType": values.plantType,
+                    ...values,
                     "pageIndex": 0,
                     "pageSize": 10
                 })
@@ -200,6 +198,7 @@ export default class extends Component{
                         //超时判断
                         timeOut(v.ret)
                         if (v.ret == 1) {
+                            console.log(v)
                             // 设置页面显示的元素
                             let itemCount = v.data.itemCount
                             let data = v.data.items
@@ -216,14 +215,24 @@ export default class extends Component{
         })
     }
     //重置
-    _resetForm(current=1) {
+    _resetForm(current=1,searchValue) {
         const { title } = this.state;
         const form = this.searchForm.props.form;
-        // 重置表单
-        form.resetFields();
+        if(searchValue){
+            this.setState({
+                searchValue
+            })
+        }else{ 
+            // 重置表单
+            form.resetFields();
+            this.setState({
+                searchValue:{}
+            })
+        }
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
+                ...searchValue,
                 "pageIndex": current-1,
                 "pageSize": 10
             })
@@ -236,15 +245,23 @@ export default class extends Component{
                         // console.log(v)
                         let data = v.data.items;
                         let itemCount = v.data.itemCount;
+                        if(data.length==0&&current!=1){
+                            this.setState({
+                                data,
+                                itemCount,
+                                current:current-1
+                            })
+                            this._pageChange(current - 1)
+                        }else{
+                            this.setState({
+                                data,
+                                itemCount,
+                                current
+                            })
+                        }
                         // 给每一条数据添加key
                         data.map((v, i) => {
                             v.key = i
-                        })
-                        this.setState({
-                            data,
-                            itemCount,
-                            searchValue:{},
-                            current
                         })
                         this._getTableDatas(title, data);
                     }
@@ -260,7 +277,7 @@ export default class extends Component{
     }
     //点击确定删除
     delOk(){
-        const {current}=this.state
+        const {current,searchValue}=this.state
         let ids=[];
         ids.push(this.state.facilityId)
         fetch(delUrl,{
@@ -274,7 +291,7 @@ export default class extends Component{
                 //超时判断
                 timeOut(v.ret)
                 if(v.ret==1){
-                    this._resetForm(current)
+                    this._resetForm(current,searchValue)
                     this.setState({
                         delVisible:false
                     })
@@ -306,7 +323,6 @@ export default class extends Component{
                 //超时判断
                 timeOut(v.ret)
                 if(v.ret==1){
-                    console.log(v)
                     var deviceName=v.data.items[0].deviceName
                     var water=v.data.items[0].wateringTypeName;
                     var plant=v.data.items[0].plantTypeName
@@ -324,7 +340,7 @@ export default class extends Component{
     }
     //点击确定修改
     edithandleOk(){
-        const {current}=this.state
+        const {current,searchValue}=this.state
         const form = this.editForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
@@ -362,7 +378,7 @@ export default class extends Component{
                                 //超时判断
                                 timeOut(v.ret)
                                 if(v.ret==1){
-                                    this._resetForm(current);
+                                    this._resetForm(current,searchValue);
                                     this.setState({
                                         editvisible: false
                                     });
@@ -401,13 +417,16 @@ export default class extends Component{
             if (err) {
                 return
             }
-            //通过接口获取到name值
-            fetch(deviceUrl,{
+            let deviceId=values.deviceId.split('/')[0]
+            let name=values.deviceId.split('/')[1]
+            //请求添加接口
+            fetch(addUrl,{
                 ...postOption,
                 body:JSON.stringify({
-                    "deviceId":values.deviceId,
-                    "pageIndex": 0,
-                    "pageSize": 1
+                    name,
+                    deviceId,
+                    "wateringType":values.wateringType,
+                    "plantType":values.plantType
                 })
             }).then(res=>{
                 Promise.resolve(res.json())
@@ -415,34 +434,15 @@ export default class extends Component{
                     //超时判断
                     timeOut(v.ret)
                     if(v.ret==1){
-                        let name=v.data.items.name
-                        //请求添加接口
-                        fetch(addUrl,{
-                            ...postOption,
-                            body:JSON.stringify({
-                                name,
-                                "deviceId":values.deviceId,
-                                "wateringType":values.wateringType,
-                                "plantType":values.plantType
-                            })
-                        }).then(res=>{
-                            Promise.resolve(res.json())
-                            .then(v=>{
-                                //超时判断
-                                timeOut(v.ret)
-                                if(v.ret==1){
-                                    this._resetForm(1);
-                                    message.success('添加成功', 2);
-                                    form.resetFields();
-                                    this.setState({
-                                        addvisible: false
-                                    })
-                                } else {
-                                    message.error(v.msg, 2);
-                                } 
-                            })
+                        this._resetForm(1);
+                        message.success('添加成功', 2);
+                        form.resetFields();
+                        this.setState({
+                            addvisible: false
                         })
-                    }
+                    } else {
+                        message.error(v.msg, 2);
+                    } 
                 })
             })
         })
@@ -645,7 +645,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('name', {})
+                        {getFieldDecorator('deviceName', {})
                             (
                             <Input
                                 placeholder='设备名称'
@@ -655,7 +655,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('installAddr', {})
+                        {getFieldDecorator('installAddrId', {})
                             (
                             <Select
                                 placeholder='设备安装地'

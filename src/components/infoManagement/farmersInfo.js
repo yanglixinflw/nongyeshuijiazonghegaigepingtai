@@ -167,7 +167,7 @@ export default class extends Component{
     }
     //删除的弹框点击确定
     delHandleOk(){
-        let {userId,current}=this.state;
+        let {userId,current,searchValue}=this.state;
         let userIds = [];
         userIds.push(userId);
         return fetch(delUrl,{
@@ -181,11 +181,10 @@ export default class extends Component{
                   //超时判断
                 timeOut(v.ret)
                 if (v.ret == 1) {
-                    this._resetForm(current);
+                    this._resetForm(current,searchValue);
                     this.setState({
                         delVisible: false
                     });
-                    form.resetFields();
                     message.success('删除成功', 2);
                 } else {
                     message.error(v.msg, 2);
@@ -203,11 +202,12 @@ export default class extends Component{
     }
     //修改用户信息的弹出框
     editInfo(index){
-        // console.log(userId)
+        const{searchValue}=this.state
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "userId":index
+                "userId":index,
+                ...searchValue
             })
         }).then((res) => {
             Promise.resolve(res.json())
@@ -241,7 +241,7 @@ export default class extends Component{
     //修改用户信息的弹出框点击确定
     editOkHandler (){
         const form = this.editForm.props.form;
-        let {userId,current}=this.state;
+        let {userId,current,searchValue}=this.state;
         form.validateFields((err,values) => {
             // values即为表单数据
             if (err) {
@@ -264,7 +264,7 @@ export default class extends Component{
                           //超时判断
                         timeOut(v.ret)
                         if (v.ret == 1) {
-                            this._resetForm(current);
+                            this._resetForm(current,searchValue);
                             this.setState({
                                 editvisible: false
                             });
@@ -298,7 +298,7 @@ export default class extends Component{
     //修改密码点击确定
     editPwdOkHandler(){
         const form = this.editPwdForm.props.form;
-        let {userId,current}=this.state;
+        let {userId,current,searchValue}=this.state;
         form.validateFields((err,values) => {
             // values即为表单数据
             if (err) {
@@ -316,7 +316,7 @@ export default class extends Component{
                           //超时判断
                         timeOut(v.ret)
                         if (v.ret == 1) {
-                            this._resetForm(current);
+                            this._resetForm(current,searchValue);
                             this.setState({
                                 editPwdvisible: false
                             });
@@ -400,14 +400,13 @@ export default class extends Component{
             if (err) {
                 return
             }
+            this.setState({
+                searchValue: values
+            })
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "name": values.realName,
-                    "mobile": values.mobilePhone,
-                    "idCard": values.idCard,
-                    "areaId": values.areaId,
-                    "isActivated": values.isActivated,
+                    ...values,
                     "pageIndex": 0,
                     "pageSize": 10
                 })
@@ -433,14 +432,24 @@ export default class extends Component{
         })
     }
     //重置
-    _resetForm(current=1) {
+    _resetForm(current=1,searchValue) {
         const { title } = this.state;
         const form = this.searchForm.props.form;
-        // 重置表单
-        form.resetFields();
+        if(searchValue){
+            this.setState({
+                searchValue
+            })
+        }else{ 
+            // 重置表单
+            form.resetFields();
+            this.setState({
+                searchValue:{}
+            })
+        }
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
+                ...searchValue,
                 "pageIndex": current-1,
                 "pageSize": 10
             })
@@ -453,15 +462,23 @@ export default class extends Component{
                         // console.log(v)
                         let data = v.data.items;
                         let itemCount = v.data.itemCount;
+                        if(data.length==0&&current!=1){
+                            this.setState({
+                                data,
+                                itemCount,
+                                current:current-1
+                            })
+                            this._pageChange(current - 1)
+                        }else{
+                            this.setState({
+                                data,
+                                itemCount,
+                                current
+                            })
+                        }
                         // 给每一条数据添加key
                         data.map((v, i) => {
                             v.key = i
-                        })
-                        this.setState({
-                            data,
-                            itemCount,
-                            searchValue:{},
-                            current
                         })
                         this._getTableDatas(title, data);
                     }
@@ -631,7 +648,7 @@ const SearchForm = Form.create()(
                         marginRight:'10px'
                     }}>
                     <Form.Item>
-                        {getFieldDecorator('realName', {})
+                        {getFieldDecorator('name', {})
                             (
                             <Input
                                 placeholder='姓名'
@@ -641,7 +658,7 @@ const SearchForm = Form.create()(
                         }
                     </Form.Item>
                     <Form.Item>
-                        {getFieldDecorator('mobilePhone', {})
+                        {getFieldDecorator('mobile', {})
                             (
                             <Input
                                 placeholder='手机'

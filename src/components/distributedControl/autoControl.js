@@ -162,10 +162,13 @@ export default class extends Component{
         if (err) {
             return
         }
+        this.setState({
+            searchValue: values
+        })
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "name": values.name,
+                ...values,
                 "pageIndex": 0,
                 "pageSize": 10
             })
@@ -191,14 +194,24 @@ export default class extends Component{
     })
 }
      //重置
-     _resetForm(current = 1) {
+     _resetForm(current = 1,searchValue) {
         const { title } = this.state;
         const form = this.searchForm.props.form;
-        // 重置表单
-        form.resetFields();
+        if(searchValue){
+            this.setState({
+                searchValue
+            })
+        }else{ 
+            // 重置表单
+            form.resetFields();
+            this.setState({
+                searchValue:{}
+            })
+        }
         return fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
+                ...searchValue,
                 "pageIndex":current-1,
                 "pageSize": 10
             })
@@ -215,12 +228,20 @@ export default class extends Component{
                         data.map((v, i) => {
                             v.key = i
                         })
-                        this.setState({
-                            data,
-                            itemCount,
-                            searchValue:{},
-                            current
-                        })
+                        if(data.length==0&&current!=1){
+                            this.setState({
+                                data,
+                                itemCount,
+                                current:current-1
+                            })
+                            this._pageChange(current - 1)
+                        }else{
+                            this.setState({
+                                data,
+                                itemCount,
+                                current
+                            })
+                        }
                         this._getTableDatas(title, data);
                     }
                 })
@@ -277,7 +298,7 @@ export default class extends Component{
     }
    //点击 停/启用 确定
     changeStatusOk(){
-        const {title,current}=this.state
+        const {title,current,searchValue}=this.state
         return fetch(changeUrl,{
             ...postOption,
             body:JSON.stringify({
@@ -313,7 +334,10 @@ export default class extends Component{
                                     message.success("启用成功",2)
                                 }else{
                                     message.success("停用成功",2)
-                                }    
+                                }
+                                this._resetForm(current,searchValue);    
+                            }else{
+                                message.error(v.msg, 2);
                             }
                         })
                     })
@@ -431,7 +455,7 @@ export default class extends Component{
     }
     //点击确认删除
     delOk(){
-        const {current}=this.state
+        const {current,searchValue}=this.state
         fetch(delUrl,{
             ...postOption,
             body:JSON.stringify({
@@ -443,7 +467,7 @@ export default class extends Component{
                 //超时判断
                 timeOut(v.ret)
                 if(v.ret==1){
-                    this._resetForm(current);
+                    this._resetForm(current,searchValue);
                     this.setState({
                         delVisible: false
                     });
