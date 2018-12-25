@@ -140,7 +140,8 @@ export default class extends Component {
             render: (record) => {
                 return (
                     <span>
-                        <Button
+                        <Button 
+                            title=' '
                             icon='check'
                             className={styles.btnModify}
                             onClick={() => this._modifyHandler(record.userId)}
@@ -562,6 +563,7 @@ export default class extends Component {
                         {...{ roleList }}
                     />
                     <Button
+                         title='搜索'
                         className={styles.addBtn}
                         icon="plus"
                         onClick={() => this._addHandler()}
