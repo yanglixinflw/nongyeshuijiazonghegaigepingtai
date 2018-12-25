@@ -51,7 +51,6 @@ export default class extends React.Component {
             ...postOption,
             body: JSON.stringify({
                 "pageIndex": 0,
-                //只判断了一页
                 "pageSize":5
             })
         }).then(res => {
