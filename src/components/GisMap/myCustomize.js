@@ -19,8 +19,8 @@ export default class extends Component {
     }
 
     componentDidMount() {
-        // this._addImage();
-        this._satelliteMap()
+        this._satelliteMap();
+       
     }
     //地图切换成平面2D
     _flatMap() {
@@ -33,19 +33,10 @@ export default class extends Component {
             });
             map.addControl(type);
         });
-        // let imageLayer = new AMap.ImageLayer({
-        //     url: 'http://amappc.cn-hangzhou.oss-pub.aliyun-inc.com/lbs/static/img/dongwuyuan.jpg',
-        //     bounds: new AMap.Bounds(
-        //         [116.327911, 39.939229],
-        //         [116.342659, 39.946275]
-        //     ),
-        //     opacity: 1,
-        //     zIndex: 2,
-        //     zooms: [15, 18],
-        //     visible: true,
-        //     map: map
-        // });
-        // map.add(imageLayer);
+        //添加图层
+        // this._addImage();
+        //添加文本
+        // this._addText();
         this.setState({
             flatOrSatellite:1
         })
@@ -60,32 +51,16 @@ export default class extends Component {
             });
             map.addControl(type);
         });
-        let imageLayer = new AMap.ImageLayer({
-            url: 'http://amappc.cn-hangzhou.oss-pub.aliyun-inc.com/lbs/static/img/dongwuyuan.jpg',
-            bounds: new AMap.Bounds(
-                [116.327911, 39.939229],
-                [116.342659, 39.946275]
-            ),
-            opacity: 1,
-            zIndex: 2,
-            zooms: [15, 18],
-            visible: true,
-            map: map
-        });
-        // debugger
-        map.add(imageLayer);
+        //添加图层
+        // this._addImage();
+        //添加文本
+        // this._addText();
+        //添加矩形覆盖层
+        // this._addRectangle()
         this.setState({
             flatOrSatellite:2
         })
     }
-    // //地图重置
-    // _mapReset(){
-    //     const { map } = this.state;
-    //     // map.setZoomAndCenter(15, [116.33719, 39.942384]);
-    //     console.log(map)
-    //     // map.refreshSize()
-    //     // map.re();
-    // }
     //地图放大
     _zoomIn() {
         const { map } = this.state;
@@ -114,6 +89,57 @@ export default class extends Component {
         });
         map.add(imageLayer);
     }
+    //添加纯文本标记
+    _addText(){
+        const {map} = this.state;
+        let txt = new AMap.Text({
+            text:'233323',
+            textAlign:'center', // 'left' 'right', 'center',
+            verticalAlign:'middle', //middle 、bottom
+            // draggable:true,
+            cursor:'pointer',
+            // angle:10,
+            style:{
+                'padding': '.75rem 1.25rem',
+                'margin-bottom': '1rem',
+                'border-radius': '.25rem',
+                'background-color': 'rgba(0,0,0,0)',
+                'width': '15rem',
+                'border-width': 0,
+                'box-shadow': '0 2px 6px 0 rgba(114, 124, 245, .5)',
+                'text-align': 'center',
+                'font-size': '20px',
+                'color': 'white'
+            },
+            position: [116.396923,39.918203],
+            zooms:[13,19],
+        });
+    
+        txt.setMap(map);
+        
+    }
+    //添加矩形覆盖层
+    _addRectangle(){
+        const {map} = this.state;
+        var southWest = new AMap.LngLat(116.356449, 39.900809)  //西南角 左下角
+        var northEast = new AMap.LngLat(116.417901, 39.935560)  //东北角 右上角
+        var bounds = new AMap.Bounds(southWest, northEast)
+        let rectangle = new AMap.Rectangle({
+            bounds: bounds,
+            strokeColor:'red',
+            strokeWeight: 6,
+            strokeOpacity:0.5,
+            strokeDasharray: [30,10],
+            // strokeStyle还支持 solid
+            strokeStyle: 'dashed',
+            fillColor:'blue',
+            fillOpacity:0.5,
+            cursor:'pointer',
+            zIndex:50,
+        })
+    
+        rectangle.setMap(map)
+    }
     render() {
         const {flatOrSatellite} = this.state;
         return (
@@ -128,12 +154,6 @@ export default class extends Component {
 
                 </div>
                 <div className={styles.btnMapZoom}>
-                    {/* <Button
-                        className={styles.btnReset}
-                        onClick={() => this._mapReset()}
-                    >
-                        <i className={classnames('dyhsicon', 'dyhs-dituzhongzhi', `${styles.resetIcon}`)}></i>
-                    </Button> */}
                     <Button
                         className={styles.btnPlus}
                         onClick={() => this._zoomIn()}
