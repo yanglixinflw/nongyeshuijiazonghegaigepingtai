@@ -5,6 +5,7 @@ import BreadcrumbView from '../../components/PageHeader/breadcrumb';
 import { parse } from 'qs';
 import History from '../../components/DeviceData/deviceDataHistory';
 import {ENVNet,postOption} from '../../services/netCofig'
+import {timeOut} from '../../utils/timeOut'
 //请求title url
 const getTitle = `${ENVNet}/api/DeviceData/columns`;
 @connect(({ deviceDataHistory, loading }) => ({

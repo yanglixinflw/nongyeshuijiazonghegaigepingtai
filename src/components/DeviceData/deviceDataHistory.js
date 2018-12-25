@@ -196,6 +196,7 @@ export default class extends Component {
                     </div>
                     <Button
                         // icon='eye'
+                        title=""
                         className={styles.showSet}
                         onClick={() => this._showSetHandler(true)}
                     >
