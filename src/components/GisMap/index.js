@@ -725,6 +725,8 @@ export default class extends Component {
                 //地图显示的缩放级别
                 zoom={15}
                 events={this.mapEvents}
+                version='1.4.11'
+                preloadMode={true}
             >
                 <Geolocation
                     {...pluginProps}
