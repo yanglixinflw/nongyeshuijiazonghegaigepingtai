@@ -222,4 +222,21 @@
     .action {
         padding:0 8px !important;
     }
+    @media(max-width:1100px) {
+        .searchForm {
+            :global {
+                .ant-input,.ant-form-item,.ant-select-selection,.ant-select-selection--single{
+                    min-width: 115px;
+                    width: 115px;
+                    margin-right: 20px;
+                }
+            }
+            .buttonGroup{
+                .fnButton{
+                    margin-left: 220px;
+                    margin-right: -200px;
+                }
+            }
+        } 
+    }
 }

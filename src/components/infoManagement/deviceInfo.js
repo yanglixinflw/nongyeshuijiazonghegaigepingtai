@@ -1398,7 +1398,7 @@ const ModifyForm = Form.create()(
             // console.log(this.props.modifyAdminList)
             // console.log(relatedBuilding)
             // console.log(installAddress)
-            // console.log(modifyData.relatedBuildingId)
+            console.log(modifyData.enableTime)
             return (
                 <Modal
                     visible={visible}
@@ -1506,7 +1506,7 @@ const ModifyForm = Form.create()(
                                 {
                                     // rules: [{ required: true }],
                                     initialValue:
-                                        modifyData.enableTime == 'null' ?
+                                        modifyData.enableTime == null ?
                                             ""
                                             : moment(modifyData.enableTime)
                                 }
