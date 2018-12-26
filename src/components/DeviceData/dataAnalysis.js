@@ -1,42 +1,44 @@
 import React, { Component } from 'react';
 import styles from './dataAnalysis.less';
 import { Row, Col } from 'antd';
-// import ElectricTable from './electric';
-// import WaterTable from './water';
-// import UnderGround from './underGround';
-// import WatchInfo from './watchInfo';
+import ElectricTable from './electric';
+import WaterTable from './water';
+import UnderGround from './underGround';
+import WatchInfo from './watchInfo';
 export default class extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     const { data } = this.props
-    //     const percent = data.Usage.RegisterRate == null ? '0' : data.Usage.RegisterRate * 100
-    //     this.state = {
-    //       //接入情况
-    //       usage: data.Usage,
-    //       //电量
-    //       powerChart: data.PowerChart,
-    //       //水量
-    //       waterChart: data.WaterChart,
-    //       //墒情
-    //       shangQing: data.ShangQing,
-    //       //风情表
-    //       windChart: data.WindChart,
-    //       //气象表
-    //       weatherChart: data.WeatherChart,
-    //       percent,
-    //       //groundSit
-    //     };
-    // }
+    constructor(props) {
+        super(props)
+        const { ...whatever } = this.props
+        const {data}=whatever.data
+        // console.log(data.Usage.WaterYearTotal.toFixed(2))
+        const percent = data.Usage.RegisterRate == null ? '0' : data.Usage.RegisterRate * 100
+        this.state = {
+          //接入情况
+          usage: data.Usage,
+          //电量
+          powerChart: data.PowerChart,
+          //水量
+          waterChart: data.WaterChart,
+          //墒情
+          shangQing: data.ShangQing,
+          //风情表
+          windChart: data.WindChart,
+          //气象表
+          weatherChart: data.WeatherChart,
+          percent,
+          //groundSit
+        };
+    }
     render() {
-        // const {
-        //     usage,
-        //     powerChart,
-        //     waterChart,
-        //     shangQing,
-        //     weatherChart,
-        //     windChart,
-        //     percent,
-        // } = this.state
+        const {
+            usage,
+            powerChart,
+            waterChart,
+            shangQing,
+            weatherChart,
+            windChart,
+            percent,
+        } = this.state
         return (
             <div>
                 <div className={styles.header}>
@@ -58,13 +60,13 @@ export default class extends Component {
                                 </div>
                                 <div className={styles.wAData}>
                                     <div>
-                                        {/* <div className={styles.yellowdata}>{usage.WaterMonthTotal}m³</div> */}
-                                        <div className={styles.yellowdata}>1111m³</div>
+                                        <div className={styles.yellowdata}>{usage.WaterMonthTotal.toFixed(2)}m³</div>
+                                        {/* <div className={styles.yellowdata}>1111m³</div> */}
                                         <div className={styles.dataName}>本月用水</div>
                                     </div>
                                     <div>
-                                        {/* <div className={styles.yellowdata}>{usage.WaterYearTotal}m³</div> */}
-                                        <div className={styles.yellowdata}>123m³</div>
+                                        <div className={styles.yellowdata}>{usage.WaterYearTotal.toFixed(2)}m³</div>
+                                        {/* <div className={styles.yellowdata}>123m³</div> */}
                                         <div className={styles.dataName}>本年用水</div>
                                     </div>
                                 </div>
@@ -77,18 +79,18 @@ export default class extends Component {
                                     <div className={styles.wATitle}>
                                         <span></span>  灌溉农户
                         </div>
-                                    {/* <div className={styles.wAafter}>{usage.PeasantUnRegisterTotal}家未接入</div> */}
-                                    <div className={styles.wAafter}>456家未接入</div>
+                                    <div className={styles.wAafter}>{usage.PeasantUnRegisterTotal}家未接入</div>
+                                    {/* <div className={styles.wAafter}>456家未接入</div> */}
                                 </div>
                                 <div className={styles.wAData}>
                                     <div>
-                                        {/* <div className={styles.yellowdata}>{usage.PeasantRegisterTotal}</div> */}
-                                        <div className={styles.yellowdata}>789</div>
+                                        <div className={styles.yellowdata}>{usage.PeasantRegisterTotal}</div>
+                                        {/* <div className={styles.yellowdata}>789</div> */}
                                         <div className={styles.dataName}>开通量</div>
                                     </div>
                                     <div>
-                                        {/* <div className={styles.yellowdata}>{percent}%</div> */}
-                                        <div className={styles.yellowdata}>88%</div>
+                                        <div className={styles.yellowdata}>{percent}%</div>
+                                        {/* <div className={styles.yellowdata}>88%</div> */}
                                         <div className={styles.dataName}>开通率</div>
                                     </div>
                                 </div>
@@ -104,14 +106,14 @@ export default class extends Component {
                                 <img className={styles.lfimg} src={require("../../assets/jt.png")} />
                                 <span className={styles.lfTitle}>电量(kw·h)</span>
                                 <div className={styles.smallTable}>
-                                    {/* <ElectricTable {...{ powerChart }} /> */}
+                                    <ElectricTable {...{ powerChart }} />
                                 </div>
                             </div>
                             <div className={styles.water}>
                                 <img className={styles.lfimg} src={require("../../assets/jt.png")} />
                                 <span className={styles.lfTitle}>水量(m³)</span>
                                 <div className={styles.smallTable}>
-                                    {/* <WaterTable {...{ waterChart }} /> */}
+                                    <WaterTable {...{ waterChart }} />
                                 </div>
                             </div>
                         </div>
@@ -135,7 +137,7 @@ export default class extends Component {
                                 <div className={styles.point7}></div>
                                 <div className={styles.point8}></div>
                             </div>
-                            {/* <UnderGround {...{ shangQing }} /> */}
+                            <UnderGround {...{ shangQing }} />
                         </div>
                     </Col>
                     <Col className={styles.right} lg={24} xl={8}>
@@ -146,10 +148,10 @@ export default class extends Component {
                         <div className={styles.rightbody}>
                             <div className={styles.lb}></div>
                             <div className={styles.rb}></div>
-                            {/* <WatchInfo
+                            <WatchInfo
                                 {...{ weatherChart, windChart }}
                             //{...groundSit}
-                            /> */}
+                            />
                         </div>
                     </Col>
                 </Row>

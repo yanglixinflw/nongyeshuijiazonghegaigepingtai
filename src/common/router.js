@@ -79,7 +79,7 @@ export const getRouterData = app => {
       component: dynamicWrapper(app, ['mapGis'], () => import('../routes/gisMap')),
     },
     '/deviceData/dataCenter':{
-      component: dynamicWrapper(app, [], () => import('../routes/deviceData/dataCenter')),
+      component: dynamicWrapper(app, ['dataAnalysis'], () => import('../routes/deviceData/dataCenter')),
     },
     '/deviceData/device:id':{
       component: dynamicWrapper(app, ['deviceData'], () => import('../routes/deviceData/deviceData')),
