@@ -55,7 +55,7 @@ export default class extends Component {
         let childrenName=breadcrumbData[0].children
         // 匹配到name
         let title=childrenName.filter(item=>item.path===pathName)
-        // console.log(title[0].name)
+        console.log(title)
         this.setState({
             deviceTypeId,
             pageTitle:title[0].name

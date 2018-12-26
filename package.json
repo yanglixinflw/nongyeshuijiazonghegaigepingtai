@@ -7,6 +7,7 @@
     "lint": "eslint --ext .js src test"
   },
   "dependencies": {
+    "@antv/data-set": "^0.10.1",
     "antd": "^3.9.2",
     "babel-plugin-import": "^1.9.1",
     "classnames": "^2.2.6",

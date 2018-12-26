@@ -58,6 +58,10 @@ const menuData = [
       {
         name: '智能球阀',
         path: 'device:1'
+      },
+      {
+        name:'演示数据',
+        path:"device:10"
       }
     ]
   },

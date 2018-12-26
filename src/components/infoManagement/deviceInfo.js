@@ -1398,7 +1398,7 @@ const ModifyForm = Form.create()(
             // console.log(this.props.modifyAdminList)
             // console.log(relatedBuilding)
             // console.log(installAddress)
-            console.log(modifyData.enableTime)
+            // console.log(modifyData.enableTime)
             return (
                 <Modal
                     visible={visible}
