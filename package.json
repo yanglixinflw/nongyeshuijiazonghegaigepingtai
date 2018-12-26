@@ -10,6 +10,7 @@
     "@antv/data-set": "^0.10.1",
     "antd": "^3.9.2",
     "babel-plugin-import": "^1.9.1",
+    "bizcharts": "^3.4.1",
     "classnames": "^2.2.6",
     "cross-env": "^5.2.0",
     "dva": "^2.4.0",

@@ -1,0 +1,564 @@
+.header {
+    color: #05fff1;
+    font-size: 30px;
+    text-align: center;
+    height: 56px;
+    background: url('../../assets/top.png') no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+.section {
+    margin-top: 1rem;
+    color: white;
+    .leftTop {
+        height: 46px;
+        width: 100%;
+        background: url('../../assets/title.png') no-repeat;
+        background-size: 100% 85%;
+        font-size: 20px;
+    }
+    .leftCenter {
+        height: 170px;
+        margin-top: -7px;
+        background: url('../../assets/leftcenter.png') no-repeat;
+        background-size: 100% 100%;
+        display: flex;
+        justify-content: space-around;
+        .waterAnalysis {
+            width: 40%;
+            height: 100%;
+            .wATitle {
+                color: #05fff1;
+                font-size: 18px;
+                text-align: center;
+                margin-top: 15px;
+                span {
+                    display: inline-block;
+                    height: 6px;
+                    width: 6px;
+                    border: 1px #05FFF1 solid;
+                    border-radius: 11px;
+                    background: #05FFF1;
+                    position: relative;
+                    top: -3px;
+                    box-shadow: 0 0 18px 3px #05FFF1;
+                    margin-right: 6px;
+                }
+            }
+            .wAafter {
+                color: #336bbc;
+                font-size: 16px;
+                text-align: center
+            }
+            .wAData {
+                display: flex;
+                justify-content: space-around;
+                margin-top: 10%;
+                .yellowdata {
+                    color: #f5e807;
+                    font-size: 22px;
+                    text-align: center;
+                }
+                .dataName {
+                    text-align: center;
+                }
+            }
+        }
+        .wALine {
+            height: 50%;
+            width: 2px;
+            background: #05FFF1;
+            position: relative;
+            top: 25%;
+        }
+    }
+    .title {
+        font-size: 80%;
+        position: relative;
+        left: 8%;
+        top: 6%;
+    }
+    .leftFooter {
+        border: 1px #076379 solid;
+        margin-top: 1rem;
+        box-shadow: inset 0 0 14px 0px #07526b;
+        position: relative;
+        .lt {
+            width: 14px;
+            height: 14px;
+            border-left: 1px #05fff1 solid;
+            border-top: 1px #05fff1 solid;
+            position: absolute;
+            left: -1px;
+            top: -1px;
+        }
+        .rt {
+            width: 14px;
+            height: 14px;
+            border-right: 1px #05fff1 solid;
+            border-top: 1px #05fff1 solid;
+            position: absolute;
+            right: -1px;
+            top: -1px;
+        }
+        .lb {
+            width: 14px;
+            height: 14px;
+            border-left: 1px #05fff1 solid;
+            border-bottom: 1px #05fff1 solid;
+            position: absolute;
+            left: -1px;
+            bottom: -1px;
+        }
+        .rb {
+            width: 14px;
+            height: 14px;
+            border-right: 1px #05fff1 solid;
+            border-bottom: 1px #05fff1 solid;
+            position: absolute;
+            right: -1px;
+            bottom: -1px;
+        }
+        .electric {
+            height: 50%;
+        }
+        .water {
+            height: 50%;
+        }
+        .lfTitle {
+            font-size: 18px;
+            padding-left: 30px;
+            margin-top: 14px;
+            display: inline-block;
+        }
+    }
+    .centerBody {
+        background: url('../../assets/centerbg.png') no-repeat;
+        background-size: 100% 80%;
+        background-position: 0px 80%;
+        position: relative;
+        .flashPoint1 {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 30px;
+            left: 70%;
+            top: 20%;
+            background: #074D68;
+            .point1 {
+                border: 1px #05FFF1 solid;
+                animation: flashPoint1 3s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                border-radius: 50%;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .point2 {
+                border: 1px #05FFF1 solid;
+                animation: flashPoint1 3s;
+                animation-delay: 1s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                border-radius: 50%;
+                position: absolute;
+            }
+        }
+        .flashPoint2 {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 30px;
+            left: 26%;
+            top: 40%;
+            background: #074D68;
+            .point3 {
+                border: 1px #05FFF1 solid;
+                animation: flashPoint1 3s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                border-radius: 50%;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .point4 {
+                border: 1px #05FFF1 solid;
+                animation: flashPoint1 3s;
+                animation-delay: 1s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                border-radius: 50%;
+                position: absolute;
+            }
+        }
+        .flashPoint3 {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 30px;
+            left: 70%;
+            top: 50%;
+            background: #074D68;
+            .point5 {
+                border: 1px #05FFF1 solid;
+                animation: flashPoint1 3s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                border-radius: 50%;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .point6 {
+                border: 1px #05FFF1 solid;
+                animation: flashPoint1 3s;
+                animation-delay: 1s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                border-radius: 50%;
+                position: absolute;
+            }
+        }
+        .flashPoint4 {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 30px;
+            left: 20%;
+            top: 70%;
+            background: #074D68;
+            .point7 {
+                border: 1px #05FFF1 solid;
+                animation: flashPoint1 3s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                border-radius: 50%;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .point8 {
+                border: 1px #05FFF1 solid;
+                animation: flashPoint1 3s;
+                animation-delay: 1s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                border-radius: 50%;
+                position: absolute;
+            }
+        }
+        .centerhead {
+            background: url('../../assets/st.png') no-repeat;
+            width: 140px;
+            background-size: contain;
+            position: relative;
+            top: 5%;
+            :global {
+                .ant-select {
+                    top: 6px;
+                    width: 120px;
+                    left: 10px;
+                }
+                .ant-select-selection--single {
+                    background: none;
+                    color: white;
+                    border-color: #05fff1;
+                }
+                .ant-select-arrow {
+                    color: #05fff1;
+                }
+            }
+        }
+        .groundData {
+            margin-top: 88px;
+            img {
+                width: 98%;
+            }
+            .surface {
+                color: #13CEC9;
+                font-size: 18px;
+                position: relative;
+                .item1 {
+                    position: absolute;
+                    right: 5%;
+                    top: -12px;
+                }
+            }
+            .under {
+                color: #13CEC9;
+                font-size: 18px;
+                position: relative;
+                margin: 15px 0;
+                .item2 {
+                    position: absolute;
+                    top: -6px;
+                    left: -2%;
+                }
+                .wet {
+                    color: #e0d512;
+                }
+            }
+            .heightLight{
+                color:#05FFF1
+            }
+        }
+    }
+    .right {
+        padding: 0 2%;
+        .rightTitle {
+            background: url('../../assets/righttitle.png') no-repeat;
+            height: 46px;
+            background-size: 100% 100%;
+            .rtimg {
+                position: relative;
+                left: 4%;
+                top: 10px;
+            }
+            span {
+                font-size: 1rem;
+                position: relative;
+                left: 5%;
+                top: 12px;
+            }
+        }
+        .rightbody {
+            border: 1px #076379 solid;
+            box-shadow: inset 0 0 14px 0px #07526b;
+            position: relative;
+            .lb {
+                width: 14px;
+                height: 14px;
+                border-left: 1px #05fff1 solid;
+                border-bottom: 1px #05fff1 solid;
+                position: absolute;
+                left: -1px;
+                bottom: -1px;
+            }
+            .rb {
+                width: 14px;
+                height: 14px;
+                border-right: 1px #05fff1 solid;
+                border-bottom: 1px #05fff1 solid;
+                position: absolute;
+                right: -1px;
+                bottom: -1px;
+            }
+            .rightHead {
+                background: url('../../assets/st.png') no-repeat;
+                width: 140px;
+                background-size: contain;
+                position: absolute;
+                right: 2%;
+                margin-top: 20px;
+                :global {
+                    .ant-select {
+                        top: 6px;
+                        width: 120px;
+                        left: 10px;
+                    }
+                    .ant-select-selection--single {
+                        background: none;
+                        color: white;
+                        border-color: #05fff1;
+                    }
+                    .ant-select-arrow {
+                        color: #05fff1;
+                    }
+                }
+            }
+            .windrose {
+                margin-top: 60px;
+                .wrt {
+                    font-size: 18px;
+                    border-left: 1px #05FFF1 solid;
+                    padding-left: 10px;
+                    margin-left: 10px;
+                }
+                .wrtable{
+                    height: 300px;
+                }
+            }
+            .classdata{
+                margin-top: 4px;
+                .wrt {
+                    font-size: 18px;
+                    border-left: 1px #05FFF1 solid;
+                    padding-left: 10px;
+                    margin-left: 10px;
+                }
+                .classtable{
+                    position: relative;
+                    left: 0px;
+                }
+            }
+            
+        }
+    }
+}
+
+@keyframes flashPoint1 {
+    0% {
+        width: 16px;
+        height: 16px;
+        opacity: 1;
+        top: 0;
+        left: 0;
+    }
+    25% {
+        width: 32px;
+        height: 32px;
+        top: -8px;
+        left: -8px;
+        opacity: 0.75
+    }
+    50% {
+        width: 48px;
+        height: 48px;
+        top: -16px;
+        left: -16px;
+        opacity: 0.5
+    }
+    75% {
+        width: 64px;
+        height: 64px;
+        top: -24px;
+        left: -24px;
+        opacity: 0.25
+    }
+    100% {
+        width: 80px;
+        height: 80px;
+        top: -32px;
+        left: -32px;
+        opacity: 0
+    }
+}
+
+// 大屏模式
+@media (min-width: 1200px) {
+    .left {
+        padding-left: 2%;
+        padding-right: 2%;
+    }
+    .section {
+        height: 88%;
+        background: url('../../assets/bgbox.png');
+    }
+    .center {
+        height: 95%;
+        padding: 0 20px;
+    }
+    .centerBody {
+        height: 790px;
+    }
+    .lfimg {
+        position: relative;
+        left: 5%;
+        top: -4px;
+    }
+    .smallTable {
+        height: 238px;
+        position: relative;
+        left: -18px;
+    }
+    .tem{
+        font-size: 14px;
+    }
+    .wet {
+        font-size: 14px;
+    }
+    .item3 {
+        position: absolute;
+        top: -6px;
+        right: -2%;
+    }
+    .item4 {
+        position: absolute;
+        bottom: -54px;
+        right: 0;
+    }
+}
+
+// 小屏模式
+@media (max-width:1199px) {
+    .left {
+        padding: 0 10%;
+        background: #08173E;
+    }
+    .center {
+        padding: 0 10%;
+        background: #08173E;
+        height: 1000px;
+    }
+    .centerBody {
+        height: 1000px;
+    }
+    .lfimg {
+        position: relative;
+        left: 3%;
+        top: -4px;
+    }
+    .right {
+        padding: 0 10%;
+        margin-top: 50px;
+    }
+    .wet {
+        font-size: 16px;
+    }
+    .item3 {
+        position: absolute;
+        top: 4px;
+        right: 4%;
+    }
+    .item4 {
+        position: absolute;
+        bottom: -60px;
+        right: 6%;
+    }
+}
+.chartBox{
+    background: white;
+    margin:1rem 0;
+    .chartTitle{
+        border-left: #1ABC9C 2px solid;
+        font-size: 18px;
+        display: inline-block;
+        margin: 1rem;
+        padding-left: 1rem;
+    }
+    :global{
+        .echarts-for-react {
+            height: 412px !important;
+        }
+    }
+    
+}
+.searchForm{
+    float: right;
+    margin: 1rem;
+    :global{
+    .ant-select-focused .ant-select-selection, .ant-select-selection:focus, .ant-select-selection:active,.ant-select-selection:hover{
+        border-color: #1ABC9C;
+    }
+    .ant-calendar-picker{
+        
+        .ant-calendar-picker-input{
+            &:hover{
+                border-color: #1ABC9C
+            }
+        }
+    }
+    .ant-btn{
+        background: #1ABC9C;
+        color:white;
+        &:hover{
+            border-color: #1ABC9C
+        }
+        &:focus{
+            border-color: #1ABC9C
+        }
+    }
+}
+}
