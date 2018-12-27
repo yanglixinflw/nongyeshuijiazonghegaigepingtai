@@ -151,6 +151,9 @@ export const getRouterData = app => {
     '/messageManagement/device':{
       component: dynamicWrapper(app, ['chargingDevice'], () => import('../routes/waterRate/chargingDevice')),
     },
+    '/command/demoChartsFour':{
+      component: dynamicWrapper(app, [], () => import('../routes/command/demoCharts4')),
+    },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     // },
