@@ -61,7 +61,7 @@ export default class extends React.Component {
                     }}
                     grid={{
                         lineStyle: {
-                            stroke: '#076F82', // 网格线的颜色}
+                            stroke: '#214082', // 网格线的颜色}
                         }
                     }}
                 />
