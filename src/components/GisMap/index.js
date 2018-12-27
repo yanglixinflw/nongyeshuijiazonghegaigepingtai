@@ -435,7 +435,8 @@ export default class extends Component {
         // console.log(allCameraMarkers)
         this.refs.searchInput.input.value='';
         allCameraMarkers.map((v, i) => {
-            if (v.Pg.visible == true) {
+            // console.log(v)
+            if (v.Le.visible == true) {
                 let deviceTypeId = '';
                 v.hide();
                 this.setState({
@@ -477,7 +478,7 @@ export default class extends Component {
         // console.log(allWaterMeterMarkers)
         this.refs.searchInput.input.value='';
         allWaterMeterMarkers.map((v, i) => {
-            if (v.Pg.visible == true) {
+            if (v.Le.visible == true) {
                 let deviceTypeId = '';
                 v.hide();
                 this.setState({
@@ -517,7 +518,7 @@ export default class extends Component {
         const { allWaterValveMarkers, allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
         this.refs.searchInput.input.value='';
         allEleMeterMarkers.map((v, i) => {
-            if (v.Pg.visible == true) {
+            if (v.Le.visible == true) {
                 let deviceTypeId = '';
                 v.hide();
                 this.setState({
@@ -557,7 +558,7 @@ export default class extends Component {
         const { allWaterValveMarkers, allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
         this.refs.searchInput.input.value='';
         allWaterValveMarkers.map((v, i) => {
-            if (v.Pg.visible == true) {
+            if (v.Le.visible == true) {
                 let deviceTypeId = '';
                 v.hide();
                 this.setState({
