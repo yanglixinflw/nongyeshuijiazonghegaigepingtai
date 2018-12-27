@@ -644,6 +644,9 @@ export default class extends Component {
     }
     // 取消修改
     _modifyCancel() {
+        const form = this.modifyForm.props.form;
+        // 重置表单
+        form.resetFields();
         this.setState({
             modifyModalVisible: false,
             modifyDeviceId: '',
@@ -1214,7 +1217,7 @@ const AddForm = Form.create()(
                         <Item label='地理经度'>
                             {getFieldDecorator('longitude',
                                 {
-                                    // rules: [{ required: true, message: '地理经度不能为空' }]
+                                    rules: [{ pattern:"^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理经度精确到小数点后7位' }],
                                 }
                             )
                                 (
@@ -1228,7 +1231,7 @@ const AddForm = Form.create()(
                         <Item label='地理纬度'>
                             {getFieldDecorator('latitude',
                                 {
-                                    // rules: [{ required: true, message: '地理纬度不能为空' }]
+                                    rules: [{ pattern:"^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理纬度精确到小数点后7位' }],
                                 }
                             )
                                 (
@@ -1398,7 +1401,7 @@ const ModifyForm = Form.create()(
             // console.log(this.props.modifyAdminList)
             // console.log(relatedBuilding)
             // console.log(installAddress)
-            console.log(modifyData.enableTime)
+            // console.log(modifyData.enableTime)
             return (
                 <Modal
                     visible={visible}
@@ -1557,7 +1560,7 @@ const ModifyForm = Form.create()(
                         <Item label='地理经度'>
                             {getFieldDecorator('longitude',
                                 {
-                                    // rules: [{ required: true, message: '地理经度不能为空' }],
+                                    rules: [{ pattern:"^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理经度精确到小数点后7位' }],
                                     initialValue: modifyData.longitude
                                 }
                             )
@@ -1572,7 +1575,7 @@ const ModifyForm = Form.create()(
                         <Item label='地理纬度'>
                             {getFieldDecorator('latitude',
                                 {
-                                    // rules: [{ required: true, message: '地理纬度不能为空' }],
+                                    rules: [{ pattern:"^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理纬度精确到小数点后7位' }],
                                     initialValue: modifyData.latitude
                                 }
                             )
