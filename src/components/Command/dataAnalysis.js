@@ -9,24 +9,24 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { ...whatever } = this.props
-        const {data}=whatever.data
+        const { data } = whatever.data
         // console.log(data.Usage.WaterYearTotal.toFixed(2))
         const percent = data.Usage.RegisterRate == null ? '0' : data.Usage.RegisterRate * 100
         this.state = {
-          //接入情况
-          usage: data.Usage,
-          //电量
-          powerChart: data.PowerChart,
-          //水量
-          waterChart: data.WaterChart,
-          //墒情
-          shangQing: data.ShangQing,
-          //风情表
-          windChart: data.WindChart,
-          //气象表
-          weatherChart: data.WeatherChart,
-          percent,
-          //groundSit
+            //接入情况
+            usage: data.Usage,
+            //电量
+            powerChart: data.PowerChart,
+            //水量
+            waterChart: data.WaterChart,
+            //墒情
+            shangQing: data.ShangQing,
+            //风情表
+            windChart: data.WindChart,
+            //气象表
+            weatherChart: data.WeatherChart,
+            percent,
+            //groundSit
         };
     }
     render() {
@@ -55,7 +55,7 @@ export default class extends Component {
                                 <div>
                                     <div className={styles.wATitle}>
                                         <span></span> 用水分析
-                        </div>
+                                    </div>
                                     <div className={styles.wAafter}>2018年度</div>
                                 </div>
                                 <div className={styles.wAData}>
