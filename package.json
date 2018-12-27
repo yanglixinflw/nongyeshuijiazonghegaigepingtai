@@ -15,7 +15,7 @@
     "cross-env": "^5.2.0",
     "dva": "^2.4.0",
     "dva-loading": "^2.0.5",
-    "echarts": "^4.2.0-rc.1",
+    "echarts": "^4.2.0-rc.2",
     "echarts-for-react": "^2.0.15-beta.0",
     "esri-loader": "^2.5.0",
     "events": "^3.0.0",
