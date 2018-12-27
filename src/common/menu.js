@@ -20,6 +20,10 @@ const menuData = [
       {
         name: '视频监控',
         path: 'videoMonitoring'
+      },
+      {
+        name: '数据分析',
+        path: 'dataCenter'
       }
     ]
   },

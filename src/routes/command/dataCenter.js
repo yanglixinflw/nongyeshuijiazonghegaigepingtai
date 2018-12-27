@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Analysis from '../../components/DeviceData/dataAnalysis'
+import Analysis from '../../components/Command/dataAnalysis'
 import { connect } from 'dva';
 import {timeOut} from '../../utils/timeOut'
 import {Spin} from 'antd'
