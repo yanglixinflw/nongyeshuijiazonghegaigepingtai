@@ -40,7 +40,7 @@ export default class extends Component {
             percent,
         } = this.state
         return (
-            <div>
+            <div style={{background:'#151836'}}>
                 <div className={styles.header}>
                     数据分析平台
                 </div>
