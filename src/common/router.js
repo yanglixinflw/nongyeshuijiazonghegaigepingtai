@@ -151,6 +151,10 @@ export const getRouterData = app => {
     '/messageManagement/device':{
       component: dynamicWrapper(app, ['chargingDevice'], () => import('../routes/waterRate/chargingDevice')),
     },
+    //数据分析第二卡片
+    '/command/demochartsTwo':{
+      component: dynamicWrapper(app, [], () => import('../routes/command/displayData/demoCharts2')),
+    },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     // },
