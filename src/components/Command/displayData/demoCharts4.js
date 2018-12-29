@@ -1,8 +1,10 @@
 import React,{Component} from 'react'
+import styles from './demoCharts4.less'
 import ReactEcharts from 'echarts-for-react'
-import { Card } from 'antd';
+import { Card,Select } from 'antd';
 import * as echarts from 'echarts'
 var data=[{id:1,name:"项家窝堡村"}]
+const Option = Select.Option;
 export default class extends Component{
     _getData4(){
         return(
@@ -133,7 +135,7 @@ export default class extends Component{
                             areaStyle: {normal: {}},
                             lineStyle: {
                                 normal: {
-                                    width: 1
+                                    width: 2
                                 }
                             },                                                       
                             data:[60,20,50,60,30,50,90]
@@ -170,7 +172,7 @@ export default class extends Component{
                             areaStyle: {normal: {}},
                             lineStyle: {
                                 normal: {
-                                    width: 1
+                                    width: 2
                                 },                            
                             },
                             data:[50,30,80,50,20,70,80]
@@ -182,14 +184,14 @@ export default class extends Component{
     }
     render(){
         return(
-            <div style={{display:"flex"}}>
+            <div className={styles.demoCharts4} style={{display:"flex"}}>
                 <Card
                     title="xxx"
-                    extra={<select>{data.map((v,i)=>{
+                    extra={<Select placeholder="项家窝堡村">{data.map((v,i)=>{
                         return(
-                            <option value={v.id} key={i}>{v.name}</option>
+                            <Option value={v.id} key={i}>{v.name}</Option>
                         )
-                    })}</select>}
+                    })}</Select>}
                     style={{width:"388px",height:'308px',background:"#1c2241",color:"#327df4"}}
                 >
                     <div style={{marginTop:"-50px"}}>
@@ -200,11 +202,11 @@ export default class extends Component{
                 </Card>
                 <Card
                     title="xxx"
-                    extra={<select>{data.map((v,i)=>{
+                    extra={<Select placeholder="项家窝堡村">{data.map((v,i)=>{
                         return(
-                            <option value={v.id} key={i}>{v.name}</option>
+                            <Option value={v.id} key={i}>{v.name}</Option>
                         )
-                    })}</select>}
+                    })}</Select>}
                     style={{width:"388px",height:'308px',background:"#1c2241",color:"#327df4"}}
                 >
                     <div style={{marginTop:"-50px"}}>

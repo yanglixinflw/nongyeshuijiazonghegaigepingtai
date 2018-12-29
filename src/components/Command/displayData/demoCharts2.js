@@ -81,7 +81,7 @@ export default class extends Component{
     _getDataSix(){
         return(
             {
-                grid:{},
+                
                 tooltip: {
                     trigger: 'item',
                     formatter: "{b}: {c} ({d}%)",
@@ -95,7 +95,7 @@ export default class extends Component{
                     orient: 'vertical',
                     // x: 'right',
                     top:50,
-                    right:30,
+                    right:40,
                     // height:34,
                     itemGap:43,
                     padding:[10,22],
@@ -106,15 +106,15 @@ export default class extends Component{
                         color :'#71BBF8',
                         fontSize:16
                     },
-                    shadowColor: 'rgba(0, 0, 0, 0.5)',
-                    shadowBlur: 10
+                    
                 },
                 series: [
                     {
                         name:'访问来源',
                         type:'pie',
-                        radius: ['50%', '70%'],
-                        avoidLabelOverlap: false,
+                        center:['30%','50%'],
+                        radius: ['45%', '70%'],
+                        // avoidLabelOverlap: false,
                         label: {
                             normal: {
                                 show: false,
@@ -134,7 +134,14 @@ export default class extends Component{
                             {value:310, name:'邮件营销'},
                             {value:234, name:'联盟广告'},
                             {value:135, name:'视频广告'},
-                        ]
+                        ],
+                        itemStyle:{
+                            // shadowColor: '#2B335E',
+                            // shadowBlur: 10,
+                            // shadowOffsetY:10,
+                            // shadowOffsetX:10
+                        }
+                        
                     }
                 ]
             }
