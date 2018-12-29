@@ -145,7 +145,11 @@ export default class extends Component{
                             <Option value={v.id} key={i}>{v.name}</Option>
                         )
                     })}</Select>}
-                    style={{width:"388px",height:'308px',background:"#1c2241",color:"#327df4"}}
+                    style={{
+                        width:"100%",
+                    height:'308px',
+                    background:"#1c2241",
+                    color:"#327df4"}}
                 >
                     <div style={{marginTop:"-50px"}}>
                         <ReactEcharts 

@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import styles from './demoPage.less';
+import { Row, Col } from 'antd';
+import classnames from 'classnames'
 import DemoCharts1 from './demoCharts1'
 import DemoCharts2 from './demoCharts2'
 import DemoCharts3 from './demoCharts3'
@@ -14,24 +16,35 @@ export default class extends Component {
                     <span>|</span>数据结算
                 </div>
                 <section>
-                    <div className={styles.card}>
-                    <DemoCharts1/>
+                <Row type="flex" justify="space-between">
+                    <Col xs={24} sm={12} md={12} lg={12} xl={6} className={styles.card}><DemoCharts1 /></Col>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={6} className={styles.card}><DemoCharts2 /></Col>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={6} className={styles.card}><DemoCharts3 /></Col>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={6} className={styles.card}><DemoCharts4 /></Col>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={16} className={styles.card}><DemoCharts5 /></Col>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={8} className={styles.card}><DemoCharts6 /></Col>
+                </Row>
+                </section>
+                <section>
+
+                    {/* <div className={classnames(`${styles.card}`, `${styles.card1}`)}>
+                        <DemoCharts1 />
                     </div>
                     <div className={styles.card}>
-                    <DemoCharts2/>
+                        <DemoCharts2 />
                     </div>
                     <div className={styles.card}>
-                    <DemoCharts3/>
+                        <DemoCharts3 />
                     </div>
                     <div className={styles.card}>
-                    <DemoCharts4/>
+                        <DemoCharts4 />
+                    </div> */}
+                    {/* <div className={styles.card}>
+                        <DemoCharts5 />
                     </div>
                     <div className={styles.card}>
-                    <DemoCharts5/>
-                    </div>
-                    <div className={styles.card}>
-                    <DemoCharts6/>
-                    </div>
+                        <DemoCharts6 />
+                    </div> */}
                     {/* <DemoCharts6></DemoCharts6> */}
                 </section>
             </Fragment>
