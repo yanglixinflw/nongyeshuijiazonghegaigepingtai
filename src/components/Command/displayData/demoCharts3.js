@@ -6,53 +6,6 @@ import * as echarts from 'echarts'
 var data=[{id:1,name:"项家窝堡村"}]
 const Option = Select.Option;
 export default class extends Component{
-    _getData4(){
-        return(
-            {
-                color:"#327df4",
-                xAxis: {
-                    type: 'category',
-                    data: ['8-1', '8-1', '8-1', '8-1', '8-1', '8-1', '8-1'],
-                    //不显示坐标轴轴线
-                    axisLine:{show:false},
-                    //不显示坐标刻度
-                    axisTick:{show:false},
-                    //刻度字体的颜色
-                    axisLabel:{color:"#327df4"}
-                },
-                yAxis: {
-                    type: 'value',
-                    axisLine:{show:false},
-                    axisTick:{show:false},
-                    //分割线的颜色
-                    splitLine:{lineStyle:{color:['#1c2241']}},
-                    axisLabel:{color:"#327df4"}
-                },
-                series: [{
-                    type: 'bar',
-                    itemStyle: {
-                        normal: {
-                            color: '#38437b'
-                        }
-                    },
-                    silent: true,
-                    barWidth: 19,
-                    barGap: '-100%', // Make series be overlap
-                    data: [60, 60, 60, 60,60,60,60]
-                }, {
-                    type: 'bar',
-                    barWidth: 19,
-                    data: [45, 60, 13, 25,30,10,50]
-                }],
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'cross'
-                    }
-                }
-            }
-        )
-    }
     _getData3(){
         return(
             {
@@ -196,7 +149,7 @@ export default class extends Component{
                 >
                     <div style={{marginTop:"-50px"}}>
                         <ReactEcharts 
-                            option= {this._getData4()}
+                            option= {this._getData3()}
                         />
                     </div>
                 </Card>

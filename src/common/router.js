@@ -157,6 +157,9 @@ export const getRouterData = app => {
     '/command/demochartsTwo':{
       component: dynamicWrapper(app, [], () => import('../routes/command/displayData/demoCharts2')),
     },
+    '/command/dataAnalyse':{
+      component: dynamicWrapper(app, [], () => import('../routes/command/displayData/demoPage')),
+    },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
     // },

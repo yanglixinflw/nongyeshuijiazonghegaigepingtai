@@ -24,6 +24,10 @@ const menuData = [
       {
         name: '数据分析',
         path: 'dataCenter'
+      },
+      {
+        name: '数据结算',
+        path: 'dataAnalyse'
       }
     ]
   },
