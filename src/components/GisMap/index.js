@@ -38,8 +38,13 @@ export default class extends Component {
         </Fragment>
         // console.log(map)
         let center = {};
-        center.longitude = props.mapGis.camera.data.data.items[0].longitude;
-        center.latitude = props.mapGis.camera.data.data.items[0].latitude;
+        if(props.mapGis.camera.data.data.items.length !==0){
+            center.longitude = props.mapGis.camera.data.data.items[0].longitude;
+            center.latitude = props.mapGis.camera.data.data.items[0].latitude;
+        }else{
+            center = ''
+        }
+        
         this.state = {
             //地图加载时过渡样式
             mapLoading,
