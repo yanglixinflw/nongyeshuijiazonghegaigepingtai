@@ -21,5 +21,8 @@ export default {
           state.farmersInfo = payload
           return { ...state }
         },
+        clear(){
+          return {}
+        }
     }
 }

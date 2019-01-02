@@ -10,6 +10,9 @@ export default class extends React.Component{
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch({
+            type:'groupAccount/clear'
+        })
+        dispatch({
             type: 'groupAccount/fetch',
             payload:{
 

@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import styles from "./groupManage.less"
-import { Input, Button, Form,Select,message,Icon,Checkbox, Row, Col,} from 'antd';
+import { Input, Button, Form,Select,message,Icon,Checkbox, Row, Col} from 'antd';
 import { Link } from 'dva/router';
 import classnames from 'classnames'
 import { parse } from 'qs';
@@ -84,10 +84,11 @@ export default class extends Component{
     }
     // 处理滚动监听
     handleScroll(){
-        const {itemCount,data} = this.state;
+        const {itemCount,data,groupMember} = this.state;
+        console.log(itemCount,groupMember.length)
         let pageIndex=this.state.pageIndex;
         pageIndex=++pageIndex
-        if (data.length > itemCount) {
+        if (data.length+groupMember.length == itemCount) {
             message.warning('已加载完全');
             this.setState({
             hasMore: false,
@@ -379,8 +380,8 @@ export default class extends Component{
                             </div>
                         </div>
                         <div className={styles.middle}>
-                            <Button type="primary" className={styles.btnL} onClick={()=>this.push()}><i className={classnames('dyhsicon', 'dyhs-xiangyou1', `${styles.btnRIcon}`)}></i></Button>
-                            <Button type="primary" className={styles.btnR} onClick={()=>this.remove()}><i className={classnames('dyhsicon', 'dyhs-xiangyou1', `${styles.btnLIcon}`)}></i></Button>
+                            <Button type="primary" className={styles.btnL} onClick={()=>this.push()}><i className={classnames('dyhsicon', 'dyhs-xiangyou1')}></i></Button>
+                            <Button type="primary" className={styles.btnR} onClick={()=>this.remove()}><i className={classnames('dyhsicon', 'dyhs-xiangyou1')}></i></Button>
                         </div>
                         <div className={styles.mright}>
                             <div className={styles.title}>
