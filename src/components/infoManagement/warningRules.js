@@ -4,7 +4,7 @@ import { Button, Select, Table, Modal, message } from 'antd';
 import { routerRedux } from 'dva/router';
 import { Link } from 'dva/router';
 import { timeOut } from '../../utils/timeOut';
-import {ENVNet,postOption} from '../../services/netCofig'
+import { ENVNet, postOption } from '../../services/netCofig'
 //翻页调用
 const dataUrl = `${ENVNet}/api/DeviceWaringRule/ruleList`;
 // 删除调用
@@ -39,16 +39,16 @@ export default class extends Component {
             // 删除Id
             deleteId: '',
             //初始页
-            current:1
+            current: 1
         };
     }
     componentDidMount() {
         this._getTableDatas(this.state.title, this.state.data);
     }
     //保存当前设备的类型ID
-    _saveDeviceTypeId(deviceTypeId){
+    _saveDeviceTypeId(deviceTypeId) {
         // console.log(deviceTypeId)
-        localStorage.setItem('selectDeviceTypeId',deviceTypeId)
+        localStorage.setItem('selectDeviceTypeId', deviceTypeId)
     }
     // 删除规则
     delete(deleteId) {
@@ -60,7 +60,13 @@ export default class extends Component {
     }
     //点击确定删除
     _deleteOk() {
-        const { deleteId } = this.state
+        const { deleteId, current } = this.state
+        // console.log(current)
+        // this.setState({
+        //     current: current - 1,
+        //     deleteModalVisible: false,
+        // })
+        // this._pageChange(current - 1)
         return fetch(deleteUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -72,34 +78,46 @@ export default class extends Component {
                     //判断超时
                     timeOut(v.ret);
                     if (v.ret == 1) {
-                        fetch(dataUrl,{
+                        fetch(dataUrl, {
                             ...postOption,
-                            body:JSON.stringify({
-                                "pageIndex": this.state.current-1,
+                            body: JSON.stringify({
+                                "pageIndex": current - 1,
                                 "pageSize": 10
                             })
-                        }).then(res=>{
+                        }).then(res => {
                             Promise.resolve(res.json())
-                            .then(v=>{
-                                //判断超时
-                                timeOut(v.ret);
-                                if(v.ret==1){
-                                    let data=v.data.items;
-                                    let itemCount = v.data.itemCount;
-                                    // 给每一条数据添加key
-                                    data.map((v, i) => {
-                                        v.key = i
-                                    })
-                                    message.success('删除成功', 2)
-                                    this.setState({
-                                        data,
-                                        itemCount,
-                                        deleteModalVisible: false,
-                                    })
-                                    this._getTableDatas(this.state.title, data);
-                                }
-                            })
-                        }) 
+                                .then(v => {
+                                    //判断超时
+                                    timeOut(v.ret);
+                                    if (v.ret == 1) {
+                                        let data = v.data.items;
+                                        let itemCount = v.data.itemCount;
+                                        // 给每一条数据添加key
+                                        data.map((v, i) => {
+                                            v.key = i
+                                        })
+                                        message.success('删除成功', 2)
+                                        // console.log(current)
+                                        // 前一页无数据
+                                        if (data.length == 0 && current != 1) {
+                                            this.setState({
+                                                data,
+                                                itemCount,
+                                                deleteModalVisible: false,
+                                                current: current - 1,
+                                            })
+                                            this._pageChange(current - 1)
+                                        } else {
+                                            this.setState({
+                                                data,
+                                                itemCount,
+                                                deleteModalVisible: false,
+                                            })
+                                        }
+                                        this._getTableDatas(this.state.title, data);
+                                    }
+                                })
+                        })
                     }
                 })
         })
@@ -138,7 +156,7 @@ export default class extends Component {
                             <Button
                                 className={styles.edit}
                                 icon='file-text'
-                                onClick={()=>this._saveDeviceTypeId(record.deviceTypeId)}
+                                onClick={() => this._saveDeviceTypeId(record.deviceTypeId)}
                             >
                                 规则详情
                             </Button>
@@ -168,7 +186,7 @@ export default class extends Component {
                 deviceTypeName: v.deviceTypeName,
                 name: v.name,
                 ruleId: v.ruleId,
-                deviceTypeId:v.deviceTypeId,
+                deviceTypeId: v.deviceTypeId,
                 key: i,
             });
         })
@@ -208,6 +226,7 @@ export default class extends Component {
             addVisible: false,
             selectDeviceId: ''
         })
+
     }
     // 翻页功能
     _pageChange(page) {
@@ -238,7 +257,7 @@ export default class extends Component {
                         this.setState({
                             itemCount: v.data.itemCount,
                             data,
-                            current:page
+                            current: page
                         })
                         this._getTableDatas(this.state.title, data);
                     }
@@ -249,9 +268,16 @@ export default class extends Component {
         })
     }
     render() {
-        const {columns,tableDatas,current,itemCount,addVisible,deviceTypeList,deleteModalVisible} = this.state;
+        const { columns,
+            tableDatas,
+            current,
+            itemCount,
+            addVisible,
+            deviceTypeList,
+            deleteModalVisible,
+            selectDeviceId } = this.state;
         const paginationProps = {
-            current:current,
+            current: current,
             showQuickJumper: true,
             total: itemCount,
             // 传递页码
@@ -306,7 +332,8 @@ export default class extends Component {
                         <span className={styles.title}>设备类型</span>
                         <Select
                             onChange={(value) => this.selectDeviceType(value)}
-                            placeholder='请选择设备类型'
+                            value={selectDeviceId || "请选择设备类型"}
+                        // placeholder='请选择设备类型'
                         >
                             {
                                 deviceTypeList.map((v, i) => {
