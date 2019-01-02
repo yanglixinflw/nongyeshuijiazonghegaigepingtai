@@ -381,6 +381,9 @@ export default class extends Component {
     }
     //取消关闭预警
     closeCancel() {
+        const form = this.closeWarningForm.props.form;
+        // 重置表单
+        form.resetFields();
         this.setState({
             closeShowvisible: false
         })

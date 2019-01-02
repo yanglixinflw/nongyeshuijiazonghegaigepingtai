@@ -235,6 +235,9 @@ export default class extends Component{
     }
     //点击修改
     edit(name,userId){
+        if(name==null){
+            name=''
+        }
         this.setState({
             editvisible:true,
             name,
@@ -583,7 +586,7 @@ const EditForm = Form.create()(
                 >
                     <Form>
                         <Form.Item label="小组名称">
-                            {getFieldDecorator('name', {initialValue: `${name}`})
+                            {getFieldDecorator('name', {initialValue: `${name}`||''})
                             (
                                 <Input
                                     placeholder='请输入要修改的小组名称'

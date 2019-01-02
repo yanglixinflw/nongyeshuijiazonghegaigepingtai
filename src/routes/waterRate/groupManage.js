@@ -12,11 +12,14 @@ export default class extends React.Component{
         let userId = parse(window.location.href.split(':'))[3];
         const { dispatch } = this.props;
         dispatch({
+            type:'groupManage/clear'
+        })
+        dispatch({
             type: 'groupManage/fetchGroup',
             payload:{
                 "groupUserId":userId
             }
-        });
+        })
         dispatch({
             type: 'groupManage/fetchFarmer',
             payload:{
