@@ -118,6 +118,7 @@ export default class extends Component {
                 v.key = i
             }
         })
+        // console.log(tableData)
         this.setState({
             columns,
             tableData
