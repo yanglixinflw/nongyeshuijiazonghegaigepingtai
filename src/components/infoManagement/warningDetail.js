@@ -1558,7 +1558,7 @@ const ModifyRulesForm = Form.create()(
                             <div className={styles.itemName2}>通知内容</div>
                             <Form.Item label='通知内容' >
                                 {getFieldDecorator('notifyMsgContent', {
-                                    initialValue: modifyData.notifyMsgConten,
+                                    initialValue: modifyData.notifyMsgContent,
                                     rules: [{ required: true, message: '通知内容不能为空' },],
                                 })(
                                     <Input
@@ -2047,7 +2047,7 @@ const TemRulesForm = Form.create()(
                             <div className={styles.itemName2}>通知内容</div>
                             <Form.Item label='通知内容' >
                                 {getFieldDecorator('notifyMsgContent', {
-                                    initialValue: TemRulesData.notifyMsgConten,
+                                    initialValue: TemRulesData.notifyMsgContent,
                                     rules: [{ required: true, message: '通知内容不能为空' },],
                                 })(
                                     <Input
