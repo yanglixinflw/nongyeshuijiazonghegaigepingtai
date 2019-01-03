@@ -32,11 +32,9 @@ export default class extends Component {
             templateVisible: false,
             //添加自定义规则表单可见性
             addVisible: false,
-            //修改规则表单可见性
-            modifyVisible: false,
             //修改/删除 预警规则Id
             ruleIds: [],
-            // 修改对应ruleId的预警规则
+            // 修改对应ruleId的预警规则数组
             modifyDatas: [],
             //设备Id
             deviceId,
@@ -88,9 +86,10 @@ export default class extends Component {
         })
     }
     //保存完之后的刷新自定义规则列表
-    _refreshList(newRuleIds) {
+    _refreshList(newRuleIds=[]) {
         const { deviceId} = this.state;
-        console.log(newRuleIds)
+        //还在修改中的ruleIds
+        // console.log(newRuleIds)
         Promise.resolve(queryWarningDetail({deviceId}))
             .then((v) => {
                 //超时判断
@@ -98,12 +97,14 @@ export default class extends Component {
                 // console.log(v)
                 if (v.data.ret == 1) {
                     // console.log(v)
-                    let data = v.data.data
-                    // console.log(data);
-                    // console.log(i)
-                    data = data.filter(item => item.ruleId==ruleId)
+                    let data = v.data.data;
+                    newRuleIds.map((v,i)=>{
+                        return data = data.filter(item => item.ruleId !==v)
+                    })
+                    // console.log(data)
                     this.setState({
-                        data
+                        data,
+                        ruleIds:newRuleIds
                     })
                 }else{
                     this.setState({
@@ -359,20 +360,26 @@ export default class extends Component {
         })
     }
     //修改表单取消
-    _modifyCancelHandler() {
-        const form = this.modifyRulesForm.props.form;
+    _modifyCancelHandler(i) {
+        const { ruleIds,modifyDatas,modifyRulesForms } = this.state;
+        //过滤出剩下未取消还在修改中的ruleId
+        let newRuleIds = ruleIds.filter(item => item!==ruleIds[i]);
+         //过滤出剩下未取消的还在修改的数据数组
+        let newModifyDatas=modifyDatas.filter(item => item.ruleId !==ruleIds[i]);
+        const form = modifyRulesForms[i].props.form;
         // 重置表单
         form.resetFields();
-        this._refreshList();
+        this._refreshList(newRuleIds);
         this.setState({
-            modifyVisible: false
+            modifyDatas:newModifyDatas
         })
     }
     //修改表单保存
     _modifySaveHandler(i) {
         const { ruleIds,modifyDatas,modifyRulesForms } = this.state;
         const form = modifyRulesForms[i].props.form;
-        let newRuleIds = ruleIds.filter(item => item==ruleIds[i])
+        //过滤出剩下未保存还在修改中的ruleId
+        let newRuleIds = ruleIds.filter(item => item!==ruleIds[i]);
         form.validateFields((err, values) => {
             if (!err) {
                 // console.log(values)
@@ -391,7 +398,7 @@ export default class extends Component {
                 } else {
                     values.smsNotify = {
                         frequency: values.SMSfrequency,
-                        receiverIds: values.SMSreceiverIds,
+                        receiverIds: [values.SMSreceiverIds],
                         othersMobile: values.SMSInformer
                     }
                 }
@@ -405,7 +412,7 @@ export default class extends Component {
                 } else {
                     values.phoneNotify = {
                         frequency: values.TELfrequency,
-                        receiverIds: values.TELreceiverIds,
+                        receiverIds: [values.TELreceiverIds],
                         othersMobile: values.TELInformer
                     }
                 }
@@ -428,9 +435,8 @@ export default class extends Component {
                             timeOut(v.ret)
                             if (v.ret == 1) {  
                                 this._refreshList(newRuleIds);
-                                let newModifyDatas=modifyDatas.filter(item => item.ruleId !==ruleIds[i])
+                                let newModifyDatas=modifyDatas.filter(item => item.ruleId !==ruleIds[i]);
                                 this.setState({
-                                    modifyVisible: false,
                                     modifyDatas:newModifyDatas
                                 })
                                 message.success('修改成功', 2)
@@ -449,6 +455,7 @@ export default class extends Component {
         const { data, modifyDatas,ruleIds} = this.state;
         // console.log(modifyRulesForms[0])
         ruleIds.push(ruleId);
+        //过滤正要修改的数据
         let newData = data.filter(item=>item.ruleId !== ruleId);
         // console.log(newData)
         return fetch(detailUrl, {
@@ -467,7 +474,6 @@ export default class extends Component {
                         this.setState({
                             ruleIds,
                             modifyDatas,
-                            modifyVisible: true,
                             data:newData,
                         })
                     }else{
@@ -527,7 +533,6 @@ export default class extends Component {
             selectVisible,
             deleteVisible,
             addVisible,
-            modifyVisible,
             modifyDatas,
             TemRulesDatas,
             parameterList,
@@ -613,7 +618,7 @@ export default class extends Component {
                         : null
                     }
                     {/* 修改表单 */}
-                    {modifyVisible ?
+                    {modifyDatas.length !==0 ?
                         modifyDatas.map((modifyData,i)=>{
                             return (
                                 <ModifyRulesForm
@@ -622,7 +627,7 @@ export default class extends Component {
                                         modifyRulesForms[i]=modifyRulesForm 
                                     }
                                     }
-                                    onCancel={() => this._modifyCancelHandler()}
+                                    onCancel={() => this._modifyCancelHandler(i)}
                                     onSave={() => this._modifySaveHandler(i)}
                                     parameterList={parameterList}
                                     roleList={roleList}
