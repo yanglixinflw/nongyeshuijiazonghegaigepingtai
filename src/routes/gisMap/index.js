@@ -43,9 +43,16 @@ class IndexPage extends React.Component {
     })
   }
   render() {
+    // let mapGis = {};
     let { mapGis, loading } = this.props;
     let arr = Object.keys(mapGis);
-    if (arr.length <= 3) return mapGis = null
+    // console.log(arr) 
+    // if(arr.length == 0){
+    //   return mapGis = {};
+    // }else
+     if (arr.length <= 3) {
+      return mapGis = null
+    }
     // console.log(mapGis)
     return (
       <div className={styles.map}>
