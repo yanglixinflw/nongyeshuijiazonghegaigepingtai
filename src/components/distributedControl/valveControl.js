@@ -37,7 +37,6 @@ export default class extends Component{
         const InstallAddr=props.valveControl.InstallAddr;
         const valveControl = props.valveControl.ValveList;
         const {deviceTypeIds}=props
-        // console.log(deviceTypeIds)
         this.state={
             title:tableTitle,
             itemCount:valveControl.data.data.itemCount,//总数据数
