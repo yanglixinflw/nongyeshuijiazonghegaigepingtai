@@ -15,10 +15,11 @@ const updateUrl = `${ENVNet}/api/DeviceWaringRule/update`;
 const deleteUrl = `${ENVNet}/api/DeviceWaringRule/delete`;
 //获取预警模板
 const TemRulesListUrl = `${ENVNet}/api/DeviceWaringRule/ruleList`
+
 export default class extends Component {
     constructor(props) {
         super(props)
-        const { warningDetail, deviceId } = props
+        const { warningDetail, deviceId } = props;
         this.state = {
             //数据源
             data: warningDetail.data.data,
@@ -34,19 +35,21 @@ export default class extends Component {
             //修改规则表单可见性
             modifyVisible: false,
             //修改/删除 预警规则Id
-            ruleId: '',
+            ruleIds: [],
             // 修改对应ruleId的预警规则
-            modifyData: [],
+            modifyDatas: [],
             //设备Id
             deviceId,
             //添加表单设备名称搜索值
             addSearchValue: '',
             //模板预警表单数据
-            TemRulesData: '',
+            TemRulesDatas: [],
             //通知人列表
             receiverList: [],
             //预警规则模板列表
             TemRulesList: [],
+            //修改表单数组
+            modifyRulesForms:[]
         }
         // console.log(this.state.data)
     }
@@ -85,8 +88,9 @@ export default class extends Component {
         })
     }
     //保存完之后的刷新自定义规则列表
-    _refreshList() {
-        const { deviceId } = this.state;
+    _refreshList(newRuleIds) {
+        const { deviceId} = this.state;
+        console.log(newRuleIds)
         Promise.resolve(queryWarningDetail({deviceId}))
             .then((v) => {
                 //超时判断
@@ -95,6 +99,9 @@ export default class extends Component {
                 if (v.data.ret == 1) {
                     // console.log(v)
                     let data = v.data.data
+                    // console.log(data);
+                    // console.log(i)
+                    data = data.filter(item => item.ruleId==ruleId)
                     this.setState({
                         data
                     })
@@ -148,6 +155,7 @@ export default class extends Component {
     //选择预警规则模板
     _SelectTem(ruleId) {
         // console.log(ruleId)
+        const {TemRulesDatas} = this.state;
         return fetch(detailUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -160,15 +168,16 @@ export default class extends Component {
                     timeOut(v.ret)
                     if (v.ret == 1) {
                         let TemRulesData = v.data;
+                        TemRulesDatas.push(TemRulesData)
                         this.setState({
                             ruleId,
-                            TemRulesData,
+                            TemRulesDatas,
                             selectVisible: false,
                             templateVisible: true
                         })
                     } else {
                         this.setState({
-                            TemRulesData: []
+                            TemRulesDatas: []
                         })
                     }
                 })
@@ -354,19 +363,21 @@ export default class extends Component {
         const form = this.modifyRulesForm.props.form;
         // 重置表单
         form.resetFields();
+        this._refreshList();
         this.setState({
             modifyVisible: false
         })
     }
     //修改表单保存
-    _modifySaveHandler() {
-        const form = this.modifyRulesForm.props.form;
-        const { ruleId } = this.state
+    _modifySaveHandler(i) {
+        const { ruleIds,modifyDatas,modifyRulesForms } = this.state;
+        const form = modifyRulesForms[i].props.form;
+        let newRuleIds = ruleIds.filter(item => item==ruleIds[i])
         form.validateFields((err, values) => {
             if (!err) {
                 // console.log(values)
                 //预警规则ID
-                values.ruleId = ruleId
+                values.ruleId = ruleIds[i]
                 // 设备类型ID
                 values.deviceTypeId = localStorage.getItem('selectDeviceTypeId')
                 // 短信是否通知
@@ -415,10 +426,12 @@ export default class extends Component {
                         .then((v) => {
                             //超时判断
                             timeOut(v.ret)
-                            if (v.ret == 1) {
-                                this._refreshList()
+                            if (v.ret == 1) {  
+                                this._refreshList(newRuleIds);
+                                let newModifyDatas=modifyDatas.filter(item => item.ruleId !==ruleIds[i])
                                 this.setState({
-                                    modifyVisible: false
+                                    modifyVisible: false,
+                                    modifyDatas:newModifyDatas
                                 })
                                 message.success('修改成功', 2)
                                 // 重置表单
@@ -433,6 +446,11 @@ export default class extends Component {
     }
     //已有预警规则点击修改 //请求规则详情并保存ruleId
     _modifyHandler(ruleId) {
+        const { data, modifyDatas,ruleIds} = this.state;
+        // console.log(modifyRulesForms[0])
+        ruleIds.push(ruleId);
+        let newData = data.filter(item=>item.ruleId !== ruleId);
+        // console.log(newData)
         return fetch(detailUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -445,14 +463,16 @@ export default class extends Component {
                     timeOut(v.ret)
                     if (v.ret == 1) {
                         let modifyData = v.data;
+                        modifyDatas.push(modifyData)
                         this.setState({
-                            ruleId,
-                            modifyData,
-                            modifyVisible: true
+                            ruleIds,
+                            modifyDatas,
+                            modifyVisible: true,
+                            data:newData,
                         })
                     }else{
                         this.setState({
-                            modifyData:[]
+                            modifyDatas:[]
                         })
                     }
                 })
@@ -462,16 +482,16 @@ export default class extends Component {
     }
     //已有预警规则点击删除
     _deleteHandler(ruleId) {
+        const {ruleIds} = this.state;
+        ruleIds.push(ruleId);
         this.setState({
             deleteVisible: true,
-            ruleId
+            ruleIds
         })
     }
     //确认删除已有预警规则
     _deleteOkHandler() {
-        const { ruleId } = this.state;
-        let ruleIds = [];
-        ruleIds.push(ruleId);
+        const { ruleIds } = this.state;
         return fetch(deleteUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -508,11 +528,12 @@ export default class extends Component {
             deleteVisible,
             addVisible,
             modifyVisible,
-            modifyData,
-            TemRulesData,
+            modifyDatas,
+            TemRulesDatas,
             parameterList,
             roleList,
             TemRulesList,
+            modifyRulesForms
         } = this.state;
         // const Option = Select.Option;
         return (
@@ -564,14 +585,20 @@ export default class extends Component {
                     >添加自定义规则</Button>
                     {/* 预警模板表单 */}
                     {templateVisible ?
-                        <TemRulesForm
-                            wrappedComponentRef={(temRulesForm) => this.temRulesForm = temRulesForm}
-                            onCancel={() => this._temCancelHandler()}
-                            onSave={() => this._temSaveHandler()}
-                            parameterList={parameterList}
-                            roleList={roleList}
-                            {...{ TemRulesData }}
-                        />
+                        TemRulesDatas.map((TemRulesData,i)=>{
+                            return (
+                                <TemRulesForm
+                                    key={i}
+                                    wrappedComponentRef={(temRulesForm) => this.temRulesForm = temRulesForm}
+                                    onCancel={() => this._temCancelHandler()}
+                                    onSave={() => this._temSaveHandler()}
+                                    parameterList={parameterList}
+                                    roleList={roleList}
+                                    {...{ TemRulesData }}
+                                />
+                            )
+                        })
+                        
                         : null
                     }
                     {/* 添加表单 */}
@@ -587,14 +614,23 @@ export default class extends Component {
                     }
                     {/* 修改表单 */}
                     {modifyVisible ?
-                        <ModifyRulesForm
-                            wrappedComponentRef={(modifyRulesForm) => this.modifyRulesForm = modifyRulesForm}
-                            onCancel={() => this._modifyCancelHandler()}
-                            onSave={() => this._modifySaveHandler()}
-                            parameterList={parameterList}
-                            roleList={roleList}
-                            {...{ modifyData }}
-                        />
+                        modifyDatas.map((modifyData,i)=>{
+                            return (
+                                <ModifyRulesForm
+                                    key={i}
+                                    wrappedComponentRef={(modifyRulesForm) => {
+                                        modifyRulesForms[i]=modifyRulesForm 
+                                    }
+                                    }
+                                    onCancel={() => this._modifyCancelHandler()}
+                                    onSave={() => this._modifySaveHandler(i)}
+                                    parameterList={parameterList}
+                                    roleList={roleList}
+                                    {...{ modifyData,i }}
+                                />
+                            )
+                        })
+                        
                         : null
                     }
                     <div className={styles.customizeForm}>
