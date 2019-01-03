@@ -439,34 +439,44 @@ export default class extends Component {
         const { allCameraMarkers, allWaterValveMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
         // console.log(allCameraMarkers)
         this.refs.searchInput.input.value='';
-        allCameraMarkers.map((v, i) => {
-            // console.log(v)
-            if (v.Le.visible == true) {
-                let deviceTypeId = '';
-                v.hide();
-                this.setState({
-                    isActive1: false,
-                    deviceTypeId,
-                    cameraVisible: false,
-                    dataList: null
-                })
+        if(allCameraMarkers.length !==0){
+            allCameraMarkers.map((v, i) => {
+                // console.log(v)
+                if (v.Le.visible == true) {
+                    let deviceTypeId = '';
+                    v.hide();
+                    this.setState({
+                        isActive1: false,
+                        deviceTypeId,
+                        cameraVisible: false,
+                        dataList: null
+                    })
 
-            } else {
-                let deviceTypeId = 5;
-                v.show();
-                this.setState({
-                    isActive1: true,
-                    isActive2: false,
-                    isActive3: false,
-                    isActive4: false,
-                    deviceTypeId,
-                    cameraVisible: true,
-                    waterValveVisible: false,
-                    eleMeterVisible: false,
-                    waterMeterVisible: false
-                }, this._changeHandler)
-            }
-        })
+                } else {
+                    let deviceTypeId = 5;
+                    v.show();
+                    this.setState({
+                        isActive1: true,
+                        isActive2: false,
+                        isActive3: false,
+                        isActive4: false,
+                        deviceTypeId,
+                        cameraVisible: true,
+                        waterValveVisible: false,
+                        eleMeterVisible: false,
+                        waterMeterVisible: false
+                    }, this._changeHandler)
+                }
+            })
+        }else{
+            this.setState({
+                isActive1: !this.state.isActive1,
+                isActive2: false,
+                isActive3: false,
+                isActive4: false,
+            })
+        }
+        
         allWaterValveMarkers.map((v, i) => {
             v.hide();
         })
@@ -482,32 +492,41 @@ export default class extends Component {
         const { allCameraMarkers, allWaterValveMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
         // console.log(allWaterMeterMarkers)
         this.refs.searchInput.input.value='';
-        allWaterMeterMarkers.map((v, i) => {
-            if (v.Le.visible == true) {
-                let deviceTypeId = '';
-                v.hide();
-                this.setState({
-                    isActive2: false,
-                    deviceTypeId,
-                    waterMeterVisible: false,
-                    dataList: null
-                })
-            } else {
-                let deviceTypeId = 2;
-                v.show();
-                this.setState({
-                    isActive1: false,
-                    isActive2: true,
-                    isActive3: false,
-                    isActive4: false,
-                    deviceTypeId,
-                    cameraVisible: false,
-                    waterValveVisible: false,
-                    eleMeterVisible: false,
-                    waterMeterVisible: true
-                }, this._changeHandler)
-            }
-        })
+        if(allWaterMeterMarkers.length !==0){
+            allWaterMeterMarkers.map((v, i) => {
+                if (v.Le.visible == true) {
+                    let deviceTypeId = '';
+                    v.hide();
+                    this.setState({
+                        isActive2: false,
+                        deviceTypeId,
+                        waterMeterVisible: false,
+                        dataList: null
+                    })
+                } else {
+                    let deviceTypeId = 2;
+                    v.show();
+                    this.setState({
+                        isActive1: false,
+                        isActive2: true,
+                        isActive3: false,
+                        isActive4: false,
+                        deviceTypeId,
+                        cameraVisible: false,
+                        waterValveVisible: false,
+                        eleMeterVisible: false,
+                        waterMeterVisible: true
+                    }, this._changeHandler)
+                }
+            })
+        }else{
+            this.setState({
+                isActive1: false,
+                isActive2:!this.state.isActive2,
+                isActive3: false,
+                isActive4: false,
+            })
+        }
         allCameraMarkers.map((v, i) => {
             v.hide()
         })
@@ -522,32 +541,42 @@ export default class extends Component {
     _ElectricmeterHandler() {
         const { allWaterValveMarkers, allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
         this.refs.searchInput.input.value='';
-        allEleMeterMarkers.map((v, i) => {
-            if (v.Le.visible == true) {
-                let deviceTypeId = '';
-                v.hide();
-                this.setState({
-                    isActive3: false,
-                    deviceTypeId,
-                    eleMeterVisible: false,
-                    dataList: null
-                })
-            } else {
-                let deviceTypeId = 3;
-                v.show();
-                this.setState({
-                    isActive1: false,
-                    isActive2: false,
-                    isActive3: true,
-                    isActive4: false,
-                    deviceTypeId,
-                    cameraVisible: false,
-                    waterMeterVisible: false,
-                    waterValveVisible: false,
-                    eleMeterVisible: true
-                }, this._changeHandler)
-            }
-        })
+        if(allEleMeterMarkers.length !==0){
+            allEleMeterMarkers.map((v, i) => {
+                if (v.Le.visible == true) {
+                    let deviceTypeId = '';
+                    v.hide();
+                    this.setState({
+                        isActive3: false,
+                        deviceTypeId,
+                        eleMeterVisible: false,
+                        dataList: null
+                    })
+                } else {
+                    let deviceTypeId = 3;
+                    v.show();
+                    this.setState({
+                        isActive1: false,
+                        isActive2: false,
+                        isActive3: true,
+                        isActive4: false,
+                        deviceTypeId,
+                        cameraVisible: false,
+                        waterMeterVisible: false,
+                        waterValveVisible: false,
+                        eleMeterVisible: true
+                    }, this._changeHandler)
+                }
+            })
+        }else{
+            this.setState({
+                isActive1: false,
+                isActive2: false,
+                isActive3: !this.state.isActive3,
+                isActive4: false,
+            })
+        }
+        
         allCameraMarkers.map((v, i) => {
             v.hide()
         })
@@ -562,32 +591,42 @@ export default class extends Component {
     _WatervalveHandler() {
         const { allWaterValveMarkers, allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
         this.refs.searchInput.input.value='';
-        allWaterValveMarkers.map((v, i) => {
-            if (v.Le.visible == true) {
-                let deviceTypeId = '';
-                v.hide();
-                this.setState({
-                    isActive4: false,
-                    deviceTypeId,
-                    waterValveVisible: false,
-                    dataList: null
-                })
-            } else {
-                let deviceTypeId = 1;
-                v.show();
-                this.setState({
-                    isActive1: false,
-                    isActive2: false,
-                    isActive3: false,
-                    isActive4: true,
-                    deviceTypeId,
-                    cameraVisible: false,
-                    waterMeterVisible: false,
-                    eleMeterVisible: false,
-                    waterValveVisible: true
-                }, this._changeHandler)
-            }
-        })
+        if(allWaterValveMarkers.length !==0){
+            allWaterValveMarkers.map((v, i) => {
+                if (v.Le.visible == true) {
+                    let deviceTypeId = '';
+                    v.hide();
+                    this.setState({
+                        isActive4: false,
+                        deviceTypeId,
+                        waterValveVisible: false,
+                        dataList: null
+                    })
+                } else {
+                    let deviceTypeId = 1;
+                    v.show();
+                    this.setState({
+                        isActive1: false,
+                        isActive2: false,
+                        isActive3: false,
+                        isActive4: true,
+                        deviceTypeId,
+                        cameraVisible: false,
+                        waterMeterVisible: false,
+                        eleMeterVisible: false,
+                        waterValveVisible: true
+                    }, this._changeHandler)
+                }
+            })
+        }else{
+            this.setState({
+                isActive1: false,
+                isActive2: false,
+                isActive3: false,
+                isActive4: !this.state.isActive4,
+            })
+        }
+        
         allCameraMarkers.map((v, i) => {
             v.hide()
         })
