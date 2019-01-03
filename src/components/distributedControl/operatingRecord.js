@@ -29,7 +29,7 @@ export default class extends Component{
             //当前设备id
             deviceId,
             //默认搜索框
-            searchValue:{},
+            searchValue:{}
         }
     }
     componentDidMount() {
@@ -72,8 +72,7 @@ export default class extends Component{
             if (err) {
                 return
             }
-            console.log(fieldsValue['range-time-picker'])
-          if(fieldsValue['range-time-picker']!=[]){
+          if(fieldsValue['range-time-picker'].length!=0){
             const rangeTimeValue = fieldsValue['range-time-picker'];
             const values = {
               ...fieldsValue,
@@ -88,7 +87,6 @@ export default class extends Component{
           }else{
             var val=["",""]
           }
-          console.log(val[0],val[1])
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({

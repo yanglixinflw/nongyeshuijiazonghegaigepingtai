@@ -110,10 +110,13 @@ export default class extends Component {
         // 操作数据源
         tableData.map((v, i) => {
             if (v.realTimeData != null) {
+                
                 let realTimeKeys = Object.keys(v.realTimeData)
                 let realTimeData = Object.values(v.realTimeData)
                 realTimeKeys.map((val, i) => {
-                    v[val] = realTimeData[i]
+                    v[val] = realTimeData[i]==true?'开':realTimeData[i]==false?'关':realTimeData[i]
+                    // realTimeData[i]=realTimeData[i]==true?'开':'关'
+                    // console.log(realTimeData[i])
                 })
                 v.key = i
             }

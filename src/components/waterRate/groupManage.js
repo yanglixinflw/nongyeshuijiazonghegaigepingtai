@@ -55,9 +55,6 @@ export default class extends Component{
             indeterminate: true,
             //选中农户的数组
             checkedList: [],
-            // //所有农户成员数组
-            // plainOptions
-
         }  
     }
     componentDidMount() {       
@@ -85,13 +82,12 @@ export default class extends Component{
     // 处理滚动监听
     handleScroll(){
         const {itemCount,data,groupMember} = this.state;
-        console.log(itemCount,groupMember.length)
         let pageIndex=this.state.pageIndex;
         pageIndex=++pageIndex
         if (data.length+groupMember.length == itemCount) {
-            message.warning('已加载完全');
+            // message.warning('已全部加载');
             this.setState({
-            hasMore: false,
+                hasMore: false,
             });
             return;
         }
