@@ -631,7 +631,7 @@ export default class extends Component {
                                     onSave={() => this._modifySaveHandler(i)}
                                     parameterList={parameterList}
                                     roleList={roleList}
-                                    {...{ modifyData,i }}
+                                    {...{ modifyData }}
                                 />
                             )
                         })
@@ -718,7 +718,30 @@ const RulesForm = Form.create()(
 //添加自定义规则表单
 const AddRulesForm = Form.create()(
     class extends React.Component {
-        state = {
+        // constructor(props){
+        //     super(props)
+        //     this. state = {
+        //         // 短信通知人
+        //         SMSreceiver: '',
+        //         TELreceiver: '',
+        //        // 短信通知人列表
+        //        SMSreceiverData: props.data.smsNotify.receivers,
+        //        TELreceiverData: props.data.phoneNotify.receivers,
+        //         // 通知人是否为必填项
+        //         SMSreceiverRequired: false,
+        //         TELreceiverRequired: false,
+        //          // 设备数据列表
+        //          deviceData: [{
+        //             deviceId: props.data.deviceId,
+        //             name: props.data.fireControlDeviceName
+        //         }],
+        //         // 设备操作指令列表
+        //         controlList: []
+        //     }
+        //     // 初始化获取指令列表
+        //     this.deviceChange(props.data.deviceId)
+        // }
+       state = {
             // 短信通知人
             SMSreceiver: '',
             TELreceiver: '',
@@ -1137,7 +1160,8 @@ const AddRulesForm = Form.create()(
                                             filterOption={false}
                                             // onSearch={(value) => this.deviceSearch(value)}
                                             onSearch={_.debounce((value) => this.deviceSearch(value),300)}
-                                            onChange={(value) => this.deviceChange(value)}
+                                            // onChange={(value) => this.deviceChange(value)}
+                                            onSelect={(value) => this.deviceChange(value)}
                                         >
                                             {
                                                 deviceData.length == 0 ? null :
@@ -1199,20 +1223,28 @@ const AddRulesForm = Form.create()(
 //修改自定义规则表单
 const ModifyRulesForm = Form.create()(
     class extends React.Component {
-        state = {
-            // 短信通知人
-            SMSreceiver: '',
-            TELreceiver: '',
-            // 短信通知人列表
-            SMSreceiverData: [],
-            TELreceiverData: [],
-            // 通知人是否为必填项
-            SMSreceiverRequired: false,
-            TELreceiverRequired: false,
-            // 设备数据列表
-            deviceData: [],
-            // 设备操作指令列表
-            controlList: []
+        constructor(props){
+            super(props)
+            this.state = {
+                // 短信通知人
+                SMSreceiver: '',
+                TELreceiver: '',
+                // 短信通知人列表
+                SMSreceiverData: props.modifyData.smsNotify.receivers,
+                TELreceiverData: props.modifyData.phoneNotify.receivers,
+                // 通知人是否为必填项
+                SMSreceiverRequired: false,
+                TELreceiverRequired: false,
+                // 设备数据列表
+                deviceData: [{
+                    deviceId: props.modifyData.deviceId,
+                    name: props.modifyData.fireControlDeviceName
+                }],
+                // 设备操作指令列表
+                controlList: []
+            }
+            // 初始化获取指令列表
+            this.deviceChange(props.modifyData.deviceId)
         }
         // 搜索获取通知人列表
         handleSearch(value, type) {
@@ -1625,7 +1657,8 @@ const ModifyRulesForm = Form.create()(
                                             filterOption={false}
                                             // onSearch={(value) => this.deviceSearch(value)}
                                             onSearch={_.debounce((value) => this.deviceSearch(value),300)}
-                                            onChange={(value) => this.deviceChange(value)}
+                                            // onChange={(value) => this.deviceChange(value)}
+                                            onSelect={(value) => this.deviceChange(value)}
                                         >
                                             {
                                                 deviceData.length == 0 ? null :
@@ -1688,20 +1721,29 @@ const ModifyRulesForm = Form.create()(
 //预警规则已有模板表单
 const TemRulesForm = Form.create()(
     class extends React.Component {
-        state = {
-            // 短信通知人
-            SMSreceiver: '',
-            TELreceiver: '',
-            // 短信通知人列表
-            SMSreceiverData: [],
-            TELreceiverData: [],
-            // 通知人是否为必填项
-            SMSreceiverRequired: false,
-            TELreceiverRequired: false,
-            // 设备数据列表
-            deviceData: [],
-            // 设备操作指令列表
-            controlList: []
+        constructor(props) {
+            super(props)
+            // console.log(props.data)
+            this.state = {
+                // 短信通知人
+                SMSreceiver: '',
+                TELreceiver: '',
+                // 短信通知人列表
+                SMSreceiverData: props.data.smsNotify.receivers,
+                TELreceiverData: props.data.phoneNotify.receivers,
+                // 通知人是否为必填项
+                SMSreceiverRequired: false,
+                TELreceiverRequired: false,
+                // 设备数据列表
+                deviceData: [{
+                    deviceId: props.data.deviceId,
+                    name: props.data.fireControlDeviceName
+                }],
+                // 设备操作指令列表
+                controlList: []
+            }
+            // 初始化获取指令列表
+            this.deviceChange(props.data.deviceId)
         }
         // 搜索获取通知人列表
         handleSearch(value, type) {
@@ -2114,7 +2156,8 @@ const TemRulesForm = Form.create()(
                                             filterOption={false}
                                             // onSearch={(value) => this.deviceSearch(value)}
                                             onSearch={_.debounce((value) => this.deviceSearch(value),300)}
-                                            onChange={(value) => this.deviceChange(value)}
+                                            // onChange={(value) => this.deviceChange(value)}
+                                            onSelect={(value) => this.deviceChange(value)}
                                         >
                                             {
                                                 deviceData.length == 0 ? null :
