@@ -1,4 +1,4 @@
-import { getValveList,getInstallAddrList } from '../services/api';
+import { getValveList,getInstallAddrList} from '../services/api';
 export default {
   namespace: 'valveControl',
   state: {},
@@ -21,5 +21,8 @@ export default {
       state.InstallAddr=payload
       return { ...state }
     },
+    clear(){
+      return {}
+    }
   }
 }

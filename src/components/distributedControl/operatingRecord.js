@@ -29,7 +29,7 @@ export default class extends Component{
             //当前设备id
             deviceId,
             //默认搜索框
-            searchValue:{}
+            searchValue:{},
         }
     }
     componentDidMount() {
@@ -72,8 +72,8 @@ export default class extends Component{
             if (err) {
                 return
             }
-            // console.log(fieldsValue)
-          if(fieldsValue['range-time-picker']!==undefined){
+            console.log(fieldsValue['range-time-picker'])
+          if(fieldsValue['range-time-picker']!=[]){
             const rangeTimeValue = fieldsValue['range-time-picker'];
             const values = {
               ...fieldsValue,
@@ -88,6 +88,7 @@ export default class extends Component{
           }else{
             var val=["",""]
           }
+          console.log(val[0],val[1])
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -155,8 +156,50 @@ export default class extends Component{
                 })
         })
     }
+    //换页
+    _pageChange(page){
+        const { title,searchValue,deviceId } = this.state;
+        searchValue.pageIndex = page - 1;
+        searchValue.pageSize=10
+        return fetch(dataUrl, {
+            ...postOption,
+            body: JSON.stringify({
+                deviceId,
+                ...searchValue
+            })
+        }).then(res=>{
+            Promise.resolve(res.json())
+            .then(v=>{
+                  //超时判断
+                timeOut(v.ret)
+                if(v.ret==1){
+                    // console.log(v);
+                    // 设置页面显示的元素
+                    let data = v.data.items;
+                    //添加key
+                    data.map((v, i) => {
+                        v.key = i
+                    })
+                    this.setState({
+                        itemCount:v.data.itemCount,
+                        data
+                    })
+                    this._getTableDatas(title, data);
+                }
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+        })
+    }
     render(){
-        const {tableDatas,columns,deviceId} = this.state;
+        const {tableDatas,columns,deviceId,itemCount} = this.state;
+        const paginationProps = {
+            showQuickJumper: true,
+            total:itemCount,
+            // 传递页码
+            onChange: (page) => this._pageChange(page)
+        };
         return(
             <React.Fragment>
                 <div className={styles.operatingRecord}>
@@ -204,6 +247,7 @@ export default class extends Component{
                         columns={columns}
                         className={styles.table}
                         dataSource={tableDatas}
+                        pagination={paginationProps}
                         // scroll={{ x: 1300 }}
                     />
                 </div>

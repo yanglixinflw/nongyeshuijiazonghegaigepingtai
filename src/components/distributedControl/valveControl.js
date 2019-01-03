@@ -36,6 +36,8 @@ export default class extends Component{
         super(props)
         const InstallAddr=props.valveControl.InstallAddr;
         const valveControl = props.valveControl.ValveList;
+        const {deviceTypeIds}=props
+        // console.log(deviceTypeIds)
         this.state={
             title:tableTitle,
             itemCount:valveControl.data.data.itemCount,//总数据数
@@ -46,7 +48,9 @@ export default class extends Component{
             //设备类型列表
             deviceTypeList:[],
             //设备类型Id
-            deviceTypeId:1,
+            deviceTypeId:deviceTypeIds[0].deviceTypeId,
+            //设备类型名称
+            name:deviceTypeIds[0].name,
             //开关阀携带信息
             deviceIdList:[],
             //设备ID
@@ -158,7 +162,7 @@ export default class extends Component{
     }
      // 搜索功能
      _searchTableData() {
-        const { title } = this.state;
+        const { title,deviceTypeId } = this.state;
         const form = this.searchForm.props.form;
         form.validateFields((err, values) => {
             // 未定义时给空值
@@ -166,12 +170,11 @@ export default class extends Component{
                 return
             }
             if(values.deviceTypeId==undefined){
-                values.deviceTypeId=1
+                values.deviceTypeId=deviceTypeId
             }
             this.setState({
                 searchValue: values
             })
-            console.log(values)
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
@@ -188,18 +191,10 @@ export default class extends Component{
                             // 设置页面显示的元素
                             let itemCount = v.data.itemCount
                             let data = v.data.items
-                            if(data.length!=0){
-                                var deviceTypeId=''
-                                if(data[0].deviceTypeName=='井电双控'){
-                                    deviceTypeId=2
-                                }else if(data[0].deviceTypeName=='智能球阀'){
-                                    deviceTypeId=1
-                                }
-                            }
                             this.setState({
                                 itemCount,
                                 data,
-                                deviceTypeId
+                                deviceTypeId:values.deviceTypeId
                             })
                             this._getTableDatas(title,data);
                         }
@@ -211,7 +206,7 @@ export default class extends Component{
     }
     //重置
     _resetForm(current=1,searchValue) {
-        const { title } = this.state;
+        const { title,deviceTypeId } = this.state;
         const form = this.searchForm.props.form;
         if(searchValue){
             this.setState({
@@ -227,7 +222,7 @@ export default class extends Component{
         fetch(dataUrl, {
             ...postOption,
             body: JSON.stringify({
-                "deviceTypeId": 1,
+                deviceTypeId,
                 ...searchValue,
                 "pageIndex": current-1,
                 "pageSize": 10
@@ -441,7 +436,7 @@ export default class extends Component{
         });
     }
     render(){
-        const { columns,itemCount, current, tableDatas, installAddrList,deviceTypeList,switchvisible,cmd,selectedRowKeys} = this.state;
+        const { columns,itemCount, current, tableDatas, installAddrList,deviceTypeList,switchvisible,cmd,selectedRowKeys,name} = this.state;
         const paginationProps = {
             showQuickJumper: true,
             total: itemCount,
@@ -463,7 +458,7 @@ export default class extends Component{
                         {/* 表单信息 */}
                         <SearchForm
                             wrappedComponentRef={(searchForm) => this.searchForm = searchForm}
-                            {...{installAddrList,deviceTypeList}}
+                            {...{installAddrList,deviceTypeList,name}}
                         />
                         <div className={styles.buttonGroup}>
                             <Button
@@ -556,7 +551,7 @@ const SearchForm = Form.create()(
             })
         }
         render() {
-            const { form,installAddrList,deviceTypeList} = this.props;
+            const { form,installAddrList,deviceTypeList,name} = this.props;
             const { getFieldDecorator } = form;
             const {buildingList}=this.state
             return (
@@ -572,7 +567,7 @@ const SearchForm = Form.create()(
                         {getFieldDecorator('deviceTypeId', {})
                             (
                             <Select
-                                placeholder="智能球阀"
+                                placeholder={`${name}`}
                             >
                                 {
                                     deviceTypeList.map((v,i)=>{
