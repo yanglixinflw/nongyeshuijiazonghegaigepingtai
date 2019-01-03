@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Form, Select, Input, InputNumber, Button, message } from 'antd';
 import styles from './rulesDetail.less';
-import { Link,routerRedux } from 'dva/router';
+import { Link, routerRedux } from 'dva/router';
 import store from '../../index'
 import { timeOut } from '../../utils/timeOut';
 import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList } from '../../services/api';
 import _ from 'lodash';
-import {ENVNet,postOption} from '../../services/netCofig'
+import { ENVNet, postOption } from '../../services/netCofig'
 //修改预警规则Url
 const updateUrl = `${ENVNet}/api/DeviceWaringRule/update`;
 export default class extends Component {
@@ -93,7 +93,7 @@ export default class extends Component {
                     } else {
                         values.smsNotify = {
                             frequency: values.SMSfrequency,
-                            receiverIds: values.SMSreceiverIds,
+                            receiverIds: [values.SMSreceiverIds],
                             othersMobile: values.SMSInformer
                         }
                     }
@@ -107,7 +107,7 @@ export default class extends Component {
                     } else {
                         values.phoneNotify = {
                             frequency: values.TELfrequency,
-                            receiverIds: values.TELreceiverIds,
+                            receiverIds: [values.TELreceiverIds],
                             othersMobile: values.TELInformer
                         }
                     }
@@ -117,7 +117,7 @@ export default class extends Component {
                         receiverIds: values.informRange,
                         othersMobile: ""
                     }
-                    // console.log(values)
+                    // console.log(values.informRange)
                     fetch(updateUrl, {
                         ...postOption,
                         body: JSON.stringify({
@@ -163,21 +163,45 @@ export default class extends Component {
 }
 const RulesDetailForm = Form.create()(
     class extends React.Component {
-        state = {
-            // 短信通知人
-            SMSreceiver: '',
-            TELreceiver: '',
-            // 短信通知人列表
-            SMSreceiverData: [],
-            TELreceiverData: [],
-            // 通知人是否为必填项
-            SMSreceiverRequired: false,
-            TELreceiverRequired: false,
-            // 设备数据列表
-            deviceData: [],
-            // 设备操作指令列表
-            controlList: []
+        constructor(props) {
+            super(props)
+            // console.log(props.data)
+            this.state = {
+                // 短信通知人
+                SMSreceiver: '',
+                TELreceiver: '',
+                // 短信通知人列表
+                SMSreceiverData: props.data.smsNotify.receivers,
+                TELreceiverData: props.data.phoneNotify.receivers,
+                // 通知人是否为必填项
+                SMSreceiverRequired: false,
+                TELreceiverRequired: false,
+                // 设备数据列表
+                deviceData: [{
+                    deviceId: props.data.deviceId,
+                    name: props.data.fireControlDeviceName
+                }],
+                // 设备操作指令列表
+                controlList: []
+            }
+            // 初始化获取指令列表
+            this.deviceChange(props.data.deviceId)
         }
+        // state = {
+        //     // 短信通知人
+        //     SMSreceiver: '',
+        //     TELreceiver: '',
+        //     // 短信通知人列表
+        //     SMSreceiverData: [],
+        //     TELreceiverData: [],
+        //     // 通知人是否为必填项
+        //     SMSreceiverRequired: false,
+        //     TELreceiverRequired: false,
+        //     // 设备数据列表
+        //     deviceData: [],
+        //     // 设备操作指令列表
+        //     controlList: []
+        // }
         // 搜索获取通知人列表
         handleSearch(value, type) {
             let UserList = getUserList(value)
@@ -251,6 +275,7 @@ const RulesDetailForm = Form.create()(
         }
         // 搜索设备
         deviceSearch(value) {
+            // console.log(value)
             Promise.resolve(getSimpleList({
                 "name": value,
                 "pageIndex": 0,
@@ -264,7 +289,7 @@ const RulesDetailForm = Form.create()(
                             deviceData: v.data.data.items
                         })
                     }
-                    // console.log(v.data)
+                    // console.log(v.data.data.items)
                 })
         }
         // 选中设备后
@@ -285,8 +310,9 @@ const RulesDetailForm = Form.create()(
         }
         render() {
             const { form, onSave, parameterList, roleList, data } = this.props;
-            // console.log(data)
-            const { SMSreceiver,
+            // console.log(data.deviceId)
+            const {
+                SMSreceiver,
                 TELreceiver,
                 SMSreceiverData,
                 TELreceiverData,
@@ -309,6 +335,7 @@ const RulesDetailForm = Form.create()(
                             </Select.Option>
                         )
                     })
+            // console.log(SMSreceiverData)
             // 手机通知人列表
             const TELreceiverList =
                 TELreceiverData.length == 0 ?
@@ -452,7 +479,7 @@ const RulesDetailForm = Form.create()(
                                             filterOption={false}
                                             notFoundContent={null}
                                             // onSearch={(value) => this.handleSearch(value, 'sms')}
-                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'),300)}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'), 300)}
                                             onChange={(value) => this.receiverChange(value, 'sms')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -506,7 +533,7 @@ const RulesDetailForm = Form.create()(
                                             filterOption={false}
                                             notFoundContent={null}
                                             // onSearch={(value) => this.handleSearch(value, 'TEL')}
-                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'),300)}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'), 300)}
                                             onChange={(value) => this.receiverChange(value, 'TEL')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -563,7 +590,7 @@ const RulesDetailForm = Form.create()(
                             <div className={styles.itemName2}>通知内容</div>
                             <Form.Item label='通知内容' >
                                 {getFieldDecorator('notifyMsgContent', {
-                                    initialValue: data.notifyMsgConten,
+                                    initialValue: data.notifyMsgContent,
                                     rules: [{ required: true, message: '通知内容不能为空' },],
                                 })(
                                     <Input
@@ -580,6 +607,7 @@ const RulesDetailForm = Form.create()(
                                     {getFieldDecorator('fireControlDeviceId', {
                                         initialValue: data.fireControlDeviceId,
                                     })(
+                                        
                                         <Select
                                             //可搜索
                                             showSearch={true}
@@ -588,8 +616,9 @@ const RulesDetailForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             // onSearch={(value) => this.deviceSearch(value)}
-                                            onSearch={_.debounce((value) => this.deviceSearch(value),300)}
-                                            onChange={(value) => this.deviceChange(value)}
+                                            onSearch={_.debounce((value) => this.deviceSearch(value), 300)}
+                                            // onChange={(value) => this.deviceChange(value)}
+                                            onSelect={(value) => this.deviceChange(value)}
                                         >
                                             {
                                                 deviceData.length == 0 ? null :
@@ -599,11 +628,12 @@ const RulesDetailForm = Form.create()(
                                                             <Option
                                                                 key={v.deviceId}
                                                             >
-                                                                {v.name}({v.deviceTypeName})
-                                                    </Option>)
+                                                                {v.name}{v.deviceTypeName?(v.deviceTypeName):null}
+                                                            </Option>)
                                                     })
                                             }
                                         </Select>
+                                    
                                     )}
                                 </Form.Item>
                                 <Form.Item>
