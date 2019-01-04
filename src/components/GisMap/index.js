@@ -42,7 +42,7 @@ export default class extends Component {
             center.longitude = props.mapGis.camera.data.data.items[0].longitude;
             center.latitude = props.mapGis.camera.data.data.items[0].latitude;
         }else{
-            center = ''
+            center=null
         }
         
         this.state = {
@@ -178,6 +178,9 @@ export default class extends Component {
         this.mapEvents = {
             created: (ins) => {
                 // console.log(ins)
+                if(this.props.mapGis.camera.data.data.items.length !==0){
+                    ins.setCenter([this.props.mapGis.camera.data.data.items[0].longitude, this.props.mapGis.camera.data.data.items[0].latitude])
+                }
             },
             click: () => {
                 if (this.state.infoVisible == true) {
@@ -749,7 +752,8 @@ export default class extends Component {
             mapLoading,
             pluginProps,
             dataList,
-            plugins, center,
+            plugins,
+            //  center,
             //useCluster,
             isActive1, isActive2, isActive3, isActive4,
             cameraVisible, waterMeterVisible, eleMeterVisible, waterValveVisible,
@@ -766,7 +770,7 @@ export default class extends Component {
                 //地图控件 插件
                 plugins={plugins}
                 // 地图中心点设置
-                center={center}
+                // center={center}
                 //地图显示的缩放级别
                 zoom={15}
                 events={this.mapEvents}
