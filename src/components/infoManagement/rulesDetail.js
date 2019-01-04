@@ -423,7 +423,7 @@ const RulesDetailForm = Form.create()(
                                             className={styles.judge}
                                             placeholder='判断符'
                                         >
-                                            <Option value=''>判断</Option>
+                                            {/* <Option value=''>判断</Option> */}
                                             <Option key='='>=</Option>
                                             <Option key='>'>></Option>
                                             <Option key='<'>{'<'}</Option>
