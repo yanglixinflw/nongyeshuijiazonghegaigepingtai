@@ -4,7 +4,7 @@ import { Select, Button, Form, Modal, Input, message, InputNumber } from 'antd';
 import { timeOut } from '../../utils/timeOut';
 import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList, queryWarningDetail } from '../../services/api'
 import _ from 'lodash';
-import {ENVNet,postOption} from '../../services/netCofig'
+import { ENVNet, postOption } from '../../services/netCofig'
 //保存/添加预警规则Url
 const addUrl = `${ENVNet}/api/DeviceWaringRule/add`;
 //获取修改预警规则详情
@@ -32,7 +32,9 @@ export default class extends Component {
             templateVisible: false,
             //添加自定义规则表单可见性
             addVisible: false,
-            //修改/删除 预警规则Id
+            //当前正在执行修改或删除操作的规则Id
+            ruleId: '',
+            //修改/删除 预警规则Id数组
             ruleIds: [],
             // 修改对应ruleId的预警规则数组
             modifyDatas: [],
@@ -41,13 +43,19 @@ export default class extends Component {
             //添加表单设备名称搜索值
             addSearchValue: '',
             //模板预警表单数据
-            TemRulesDatas: [],
+            temRulesDatas: [],
             //通知人列表
             receiverList: [],
             //预警规则模板列表
             TemRulesList: [],
             //修改表单数组
-            modifyRulesForms:[]
+            modifyRulesForms: [],
+            //模板表单数组
+            temRulesForms: [],
+            //编辑模板规则Id
+            templateRuleId: '',
+            //编辑模板规则Id数组
+            templateRuleIds: [],
         }
         // console.log(this.state.data)
     }
@@ -86,11 +94,11 @@ export default class extends Component {
         })
     }
     //保存完之后的刷新自定义规则列表
-    _refreshList(newRuleIds=[]) {
-        const { deviceId} = this.state;
+    _refreshList(newRuleIds = [], type = '') {
+        const { deviceId } = this.state;
         //还在修改中的ruleIds
         // console.log(newRuleIds)
-        Promise.resolve(queryWarningDetail({deviceId}))
+        Promise.resolve(queryWarningDetail({ deviceId }))
             .then((v) => {
                 //超时判断
                 timeOut(v.data.ret)
@@ -98,22 +106,29 @@ export default class extends Component {
                 if (v.data.ret == 1) {
                     // console.log(v)
                     let data = v.data.data;
-                    newRuleIds.map((v,i)=>{
-                        return data = data.filter(item => item.ruleId !==v)
+                    newRuleIds.map((v, i) => {
+                        return data = data.filter(item => item.ruleId !== v)
                     })
                     // console.log(data)
+                    if (type == 'template') {
+                        this.setState({
+                            data,
+                            templateRuleIds: newRuleIds
+                        })
+                    } else {
+                        this.setState({
+                            data,
+                            ruleIds: newRuleIds
+                        })
+                    }
+                } else {
                     this.setState({
-                        data,
-                        ruleIds:newRuleIds
-                    })
-                }else{
-                    this.setState({
-                        data:[]
+                        data: []
                     })
                 }
             })
     }
-    //选择预警模板
+    //点击选择预警模板
     _SelectTemplate() {
         let deviceTypeId = localStorage.getItem('selectDeviceTypeId');
         return fetch(TemRulesListUrl, {
@@ -137,13 +152,13 @@ export default class extends Component {
                             TemRulesList,
                             selectVisible: true
                         })
-                    }else{
+                    } else {
                         this.setState({
-                            TemRulesList:[]
+                            TemRulesList: []
                         })
                     }
                 })
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err)
         })
     }
@@ -153,10 +168,12 @@ export default class extends Component {
             selectVisible: false
         })
     }
-    //选择预警规则模板
+    //确定选择预警规则模板
     _SelectTem(ruleId) {
         // console.log(ruleId)
-        const {TemRulesDatas} = this.state;
+        const { templateRuleIds } = this.state;
+        templateRuleIds.push(ruleId);
+        const { temRulesDatas } = this.state;
         return fetch(detailUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -168,17 +185,17 @@ export default class extends Component {
                     // 判断是否超时
                     timeOut(v.ret)
                     if (v.ret == 1) {
-                        let TemRulesData = v.data;
-                        TemRulesDatas.push(TemRulesData)
+                        let temRulesData = v.data;
+                        temRulesDatas.push(temRulesData)
                         this.setState({
-                            ruleId,
-                            TemRulesDatas,
+                            templateRuleIds,
+                            templateRuleId: ruleId,
+                            temRulesDatas,
                             selectVisible: false,
-                            templateVisible: true
                         })
                     } else {
                         this.setState({
-                            TemRulesDatas: []
+                            temRulesDatas: []
                         })
                     }
                 })
@@ -187,25 +204,33 @@ export default class extends Component {
         })
     }
     //取消预警模板
-    _temCancelHandler() {
-        const form = this.temRulesForm.props.form;
+    _temCancelHandler(i) {
+        const { templateRuleIds, temRulesForms, temRulesDatas } = this.state;
+        const form = temRulesForms[i].props.form;
+        //过滤出剩下未取消还在修改中的ruleId
+        let newTemplateRuleIds = templateRuleIds.filter(item => item !== templateRuleIds[i]);
+        //过滤出剩下未取消的还在修改的数据数组
+        let newTemRulesDatas = temRulesDatas.filter(item => item.ruleId !== templateRuleIds[i]);
         // 重置表单
         form.resetFields();
+        this._refreshList(newTemplateRuleIds, 'template');
         this.setState({
-            templateVisible: false
+            temRulesDatas: newTemRulesDatas
         })
     }
     //预警模板保存
-    _temSaveHandler() {
-        const form = this.temRulesForm.props.form;
-        const { ruleId,deviceId} = this.state
+    _temSaveHandler(i) {
+        const { templateRuleIds, deviceId, temRulesForms, temRulesDatas } = this.state;
+        const form = temRulesForms[i].props.form;
+        //过滤出剩下未保存还在编辑中的ruleId
+        let newTemplateRuleIds = templateRuleIds.filter(item => item !== templateRuleIds[i]);
         form.validateFields((err, values) => {
             if (!err) {
                 // console.log(values)
                 // //设备Id
                 values.deviceId = deviceId
                 //预警规则ID
-                values.ruleId = ruleId
+                values.ruleId = templateRuleIds[i]
                 // 设备类型ID
                 values.deviceTypeId = localStorage.getItem('selectDeviceTypeId')
                 // 短信是否通知
@@ -219,7 +244,7 @@ export default class extends Component {
                 } else {
                     values.smsNotify = {
                         frequency: values.SMSfrequency,
-                        receiverIds: values.SMSreceiverIds,
+                        receiverIds: [values.SMSreceiverIds],
                         othersMobile: values.SMSInformer
                     }
                 }
@@ -233,7 +258,7 @@ export default class extends Component {
                 } else {
                     values.phoneNotify = {
                         frequency: values.TELfrequency,
-                        receiverIds: values.TELreceiverIds,
+                        receiverIds: [values.TELreceiverIds],
                         othersMobile: values.TELInformer
                     }
                 }
@@ -255,16 +280,18 @@ export default class extends Component {
                             //超时判断
                             timeOut(v.ret)
                             if (v.ret == 1) {
-                                this._refreshList()
+                                this._refreshList(newTemplateRuleIds, 'template');
+                                let newTemRulesDatas = temRulesDatas.filter(item => item.ruleId !== templateRuleIds[i]);
                                 this.setState({
-                                    templateVisible: false
+                                    templateVisible: false,
+                                    temRulesDatas: newTemRulesDatas
                                 })
                                 message.success('修改成功', 2)
                                 // 重置表单
                                 form.resetFields();
                             }
                         })
-                }).catch((err)=>{
+                }).catch((err) => {
                     console.log(err)
                 })
             }
@@ -272,9 +299,13 @@ export default class extends Component {
     }
     //点击添加自定义规则
     _addRules() {
-        this.setState({
-            addVisible: true
-        })
+        if (this.state.addVisible == false) {
+            this.setState({
+                addVisible: true
+            })
+        } else {
+            message.info('请先保存当前正在编辑的自定义规则', 2)
+        }
     }
     // 添加取消
     _addCancelHandler() {
@@ -289,7 +320,7 @@ export default class extends Component {
     //添加保存
     _addSaveHandler() {
         const form = this.addRulesForm.props.form;
-        const {deviceId} = this.state;
+        const { deviceId } = this.state;
         form.validateFields((err, values) => {
             if (!err) {
                 // console.log(values)
@@ -308,7 +339,7 @@ export default class extends Component {
                 } else {
                     values.smsNotify = {
                         frequency: values.SMSfrequency,
-                        receiverIds: values.SMSreceiverIds,
+                        receiverIds: [values.SMSreceiverIds],
                         othersMobile: values.SMSInformer
                     }
                 }
@@ -322,7 +353,7 @@ export default class extends Component {
                 } else {
                     values.phoneNotify = {
                         frequency: values.TELfrequency,
-                        receiverIds: values.TELreceiverIds,
+                        receiverIds: [values.TELreceiverIds],
                         othersMobile: values.TELInformer
                     }
                 }
@@ -353,7 +384,7 @@ export default class extends Component {
                                 form.resetFields();
                             }
                         })
-                }).catch((err)=>{
+                }).catch((err) => {
                     console.log(err)
                 })
             }
@@ -361,25 +392,25 @@ export default class extends Component {
     }
     //修改表单取消
     _modifyCancelHandler(i) {
-        const { ruleIds,modifyDatas,modifyRulesForms } = this.state;
+        const { ruleIds, modifyDatas, modifyRulesForms } = this.state;
         //过滤出剩下未取消还在修改中的ruleId
-        let newRuleIds = ruleIds.filter(item => item!==ruleIds[i]);
-         //过滤出剩下未取消的还在修改的数据数组
-        let newModifyDatas=modifyDatas.filter(item => item.ruleId !==ruleIds[i]);
+        let newRuleIds = ruleIds.filter(item => item !== ruleIds[i]);
+        //过滤出剩下未取消的还在修改的数据数组
+        let newModifyDatas = modifyDatas.filter(item => item.ruleId !== ruleIds[i]);
         const form = modifyRulesForms[i].props.form;
         // 重置表单
         form.resetFields();
         this._refreshList(newRuleIds);
         this.setState({
-            modifyDatas:newModifyDatas
+            modifyDatas: newModifyDatas
         })
     }
     //修改表单保存
     _modifySaveHandler(i) {
-        const { ruleIds,modifyDatas,modifyRulesForms } = this.state;
+        const { ruleIds, modifyDatas, modifyRulesForms } = this.state;
         const form = modifyRulesForms[i].props.form;
         //过滤出剩下未保存还在修改中的ruleId
-        let newRuleIds = ruleIds.filter(item => item!==ruleIds[i]);
+        let newRuleIds = ruleIds.filter(item => item !== ruleIds[i]);
         form.validateFields((err, values) => {
             if (!err) {
                 // console.log(values)
@@ -433,18 +464,18 @@ export default class extends Component {
                         .then((v) => {
                             //超时判断
                             timeOut(v.ret)
-                            if (v.ret == 1) {  
+                            if (v.ret == 1) {
                                 this._refreshList(newRuleIds);
-                                let newModifyDatas=modifyDatas.filter(item => item.ruleId !==ruleIds[i]);
+                                let newModifyDatas = modifyDatas.filter(item => item.ruleId !== ruleIds[i]);
                                 this.setState({
-                                    modifyDatas:newModifyDatas
+                                    modifyDatas: newModifyDatas
                                 })
                                 message.success('修改成功', 2)
                                 // 重置表单
                                 form.resetFields();
                             }
                         })
-                }).catch((err)=>{
+                }).catch((err) => {
                     console.log(err)
                 })
             }
@@ -452,11 +483,11 @@ export default class extends Component {
     }
     //已有预警规则点击修改 //请求规则详情并保存ruleId
     _modifyHandler(ruleId) {
-        const { data, modifyDatas,ruleIds} = this.state;
+        const { data, modifyDatas, ruleIds } = this.state;
         // console.log(modifyRulesForms[0])
         ruleIds.push(ruleId);
         //过滤正要修改的数据
-        let newData = data.filter(item=>item.ruleId !== ruleId);
+        let newData = data.filter(item => item.ruleId !== ruleId);
         // console.log(newData)
         return fetch(detailUrl, {
             ...postOption,
@@ -472,13 +503,14 @@ export default class extends Component {
                         let modifyData = v.data;
                         modifyDatas.push(modifyData)
                         this.setState({
+                            ruleId,
                             ruleIds,
                             modifyDatas,
-                            data:newData,
+                            data: newData,
                         })
-                    }else{
+                    } else {
                         this.setState({
-                            modifyDatas:[]
+                            modifyDatas: []
                         })
                     }
                 })
@@ -488,16 +520,20 @@ export default class extends Component {
     }
     //已有预警规则点击删除
     _deleteHandler(ruleId) {
-        const {ruleIds} = this.state;
+        const { ruleIds } = this.state;
         ruleIds.push(ruleId);
         this.setState({
             deleteVisible: true,
-            ruleIds
+            ruleIds,
+            ruleId
         })
     }
     //确认删除已有预警规则
     _deleteOkHandler() {
-        const { ruleIds } = this.state;
+        const { ruleIds,ruleId } = this.state;
+        //将当前取消的ruleId从ruleIds中去除
+        let newRuleIds = ruleIds.filter(item => item !== ruleId);
+        // console.log(ruleIds)
         return fetch(deleteUrl, {
             ...postOption,
             body: JSON.stringify({
@@ -511,34 +547,39 @@ export default class extends Component {
                     if (v.ret == 1) {
                         this._refreshList();
                         this.setState({
-                            deleteVisible: false
+                            deleteVisible: false,
+                            ruleIds: newRuleIds
                         })
                         message.success('删除成功', 2)
                     }
                 })
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err)
         })
     }
     //取消删除预警规则
     _deleteCancelHandler() {
+        const { ruleIds, ruleId } = this.state;
+        //将当前取消的ruleId从ruleIds中去除
+        let newRuleIds = ruleIds.filter(item => item !== ruleId);
         this.setState({
-            deleteVisible: false
+            deleteVisible: false,
+            ruleIds: newRuleIds
         })
     }
     render() {
         const {
             data,
-            templateVisible,
             selectVisible,
             deleteVisible,
             addVisible,
             modifyDatas,
-            TemRulesDatas,
+            temRulesDatas,
             parameterList,
             roleList,
             TemRulesList,
-            modifyRulesForms
+            modifyRulesForms,
+            temRulesForms
         } = this.state;
         // const Option = Select.Option;
         return (
@@ -589,21 +630,21 @@ export default class extends Component {
                         onClick={() => this._addRules()}
                     >添加自定义规则</Button>
                     {/* 预警模板表单 */}
-                    {templateVisible ?
-                        TemRulesDatas.map((TemRulesData,i)=>{
+                    {temRulesDatas.length !== 0 ?
+                        temRulesDatas.map((TemRulesData, i) => {
                             return (
                                 <TemRulesForm
                                     key={i}
-                                    wrappedComponentRef={(temRulesForm) => this.temRulesForm = temRulesForm}
-                                    onCancel={() => this._temCancelHandler()}
-                                    onSave={() => this._temSaveHandler()}
+                                    wrappedComponentRef={(temRulesForm) => temRulesForms[i] = temRulesForm}
+                                    onCancel={() => this._temCancelHandler(i)}
+                                    onSave={() => this._temSaveHandler(i)}
                                     parameterList={parameterList}
                                     roleList={roleList}
                                     {...{ TemRulesData }}
                                 />
                             )
                         })
-                        
+
                         : null
                     }
                     {/* 添加表单 */}
@@ -618,15 +659,12 @@ export default class extends Component {
                         : null
                     }
                     {/* 修改表单 */}
-                    {modifyDatas.length !==0 ?
-                        modifyDatas.map((modifyData,i)=>{
+                    {modifyDatas.length !== 0 ?
+                        modifyDatas.map((modifyData, i) => {
                             return (
                                 <ModifyRulesForm
                                     key={i}
-                                    wrappedComponentRef={(modifyRulesForm) => {
-                                        modifyRulesForms[i]=modifyRulesForm 
-                                    }
-                                    }
+                                    wrappedComponentRef={(modifyRulesForm) => { modifyRulesForms[i] = modifyRulesForm }}
                                     onCancel={() => this._modifyCancelHandler(i)}
                                     onSave={() => this._modifySaveHandler(i)}
                                     parameterList={parameterList}
@@ -635,7 +673,7 @@ export default class extends Component {
                                 />
                             )
                         })
-                        
+
                         : null
                     }
                     <div className={styles.customizeForm}>
@@ -718,31 +756,10 @@ const RulesForm = Form.create()(
 //添加自定义规则表单
 const AddRulesForm = Form.create()(
     class extends React.Component {
-        // constructor(props){
-        //     super(props)
-        //     this. state = {
-        //         // 短信通知人
-        //         SMSreceiver: '',
-        //         TELreceiver: '',
-        //        // 短信通知人列表
-        //        SMSreceiverData: props.data.smsNotify.receivers,
-        //        TELreceiverData: props.data.phoneNotify.receivers,
-        //         // 通知人是否为必填项
-        //         SMSreceiverRequired: false,
-        //         TELreceiverRequired: false,
-        //          // 设备数据列表
-        //          deviceData: [{
-        //             deviceId: props.data.deviceId,
-        //             name: props.data.fireControlDeviceName
-        //         }],
-        //         // 设备操作指令列表
-        //         controlList: []
-        //     }
-        //     // 初始化获取指令列表
-        //     this.deviceChange(props.data.deviceId)
-        // }
-       state = {
-            // 短信通知人
+        constructor(props){
+            super(props)
+            this. state = {
+                 // 短信通知人
             SMSreceiver: '',
             TELreceiver: '',
             // 短信通知人列表
@@ -755,7 +772,25 @@ const AddRulesForm = Form.create()(
             deviceData: [],
             // 设备操作指令列表
             controlList: []
+            }
+            // // 初始化获取指令列表
+            // this.deviceChange(props.data.deviceId)
         }
+        // state = {
+        //     // 短信通知人
+        //     SMSreceiver: '',
+        //     TELreceiver: '',
+        //     // 短信通知人列表
+        //     SMSreceiverData: [],
+        //     TELreceiverData: [],
+        //     // 通知人是否为必填项
+        //     SMSreceiverRequired: false,
+        //     TELreceiverRequired: false,
+        //     // 设备数据列表
+        //     deviceData: [],
+        //     // 设备操作指令列表
+        //     controlList: []
+        // }
         // 搜索获取通知人列表
         handleSearch(value, type) {
             let UserList = getUserList(value)
@@ -972,7 +1007,6 @@ const AddRulesForm = Form.create()(
                                             className={styles.judge}
                                             placeholder='判断符'
                                         >
-                                            <Option value=''>判断</Option>
                                             <Option key='='>=</Option>
                                             <Option key='>'>></Option>
                                             <Option key='<'>{'<'}</Option>
@@ -1026,7 +1060,7 @@ const AddRulesForm = Form.create()(
                                             filterOption={false}
                                             notFoundContent={null}
                                             // onSearch={(value) => this.handleSearch(value, 'sms')}
-                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'),300)}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'), 300)}
                                             onChange={(value) => this.receiverChange(value, 'sms')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -1079,7 +1113,7 @@ const AddRulesForm = Form.create()(
                                             filterOption={false}
                                             notFoundContent={null}
                                             // onSearch={(value) => this.handleSearch(value, 'TEL')}
-                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'),300)}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'), 300)}
                                             onChange={(value) => this.receiverChange(value, 'TEL')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -1159,7 +1193,7 @@ const AddRulesForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             // onSearch={(value) => this.deviceSearch(value)}
-                                            onSearch={_.debounce((value) => this.deviceSearch(value),300)}
+                                            onSearch={_.debounce((value) => this.deviceSearch(value), 300)}
                                             // onChange={(value) => this.deviceChange(value)}
                                             onSelect={(value) => this.deviceChange(value)}
                                         >
@@ -1223,7 +1257,7 @@ const AddRulesForm = Form.create()(
 //修改自定义规则表单
 const ModifyRulesForm = Form.create()(
     class extends React.Component {
-        constructor(props){
+        constructor(props) {
             super(props)
             this.state = {
                 // 短信通知人
@@ -1464,7 +1498,6 @@ const ModifyRulesForm = Form.create()(
                                             className={styles.judge}
                                             placeholder='判断符'
                                         >
-                                            <Option value=''>判断</Option>
                                             <Option key='='>=</Option>
                                             <Option key='>'>></Option>
                                             <Option key='<'>{'<'}</Option>
@@ -1520,7 +1553,7 @@ const ModifyRulesForm = Form.create()(
                                             filterOption={false}
                                             notFoundContent={null}
                                             // onSearch={(value) => this.handleSearch(value, 'sms')}
-                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'),300)}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'), 300)}
                                             onChange={(value) => this.receiverChange(value, 'sms')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -1574,7 +1607,7 @@ const ModifyRulesForm = Form.create()(
                                             filterOption={false}
                                             notFoundContent={null}
                                             // onSearch={(value) => this.handleSearch(value, 'TEL')}
-                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'),300)}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'), 300)}
                                             onChange={(value) => this.receiverChange(value, 'TEL')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -1656,7 +1689,7 @@ const ModifyRulesForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             // onSearch={(value) => this.deviceSearch(value)}
-                                            onSearch={_.debounce((value) => this.deviceSearch(value),300)}
+                                            onSearch={_.debounce((value) => this.deviceSearch(value), 300)}
                                             // onChange={(value) => this.deviceChange(value)}
                                             onSelect={(value) => this.deviceChange(value)}
                                         >
@@ -1729,21 +1762,21 @@ const TemRulesForm = Form.create()(
                 SMSreceiver: '',
                 TELreceiver: '',
                 // 短信通知人列表
-                SMSreceiverData: props.data.smsNotify.receivers,
-                TELreceiverData: props.data.phoneNotify.receivers,
+                SMSreceiverData: props.TemRulesData.smsNotify.receivers,
+                TELreceiverData: props.TemRulesData.phoneNotify.receivers,
                 // 通知人是否为必填项
                 SMSreceiverRequired: false,
                 TELreceiverRequired: false,
                 // 设备数据列表
                 deviceData: [{
-                    deviceId: props.data.deviceId,
-                    name: props.data.fireControlDeviceName
+                    deviceId: props.TemRulesData.deviceId,
+                    name: props.TemRulesData.fireControlDeviceName
                 }],
                 // 设备操作指令列表
                 controlList: []
             }
             // 初始化获取指令列表
-            this.deviceChange(props.data.deviceId)
+            this.deviceChange(props.TemRulesData.deviceId)
         }
         // 搜索获取通知人列表
         handleSearch(value, type) {
@@ -1963,7 +1996,6 @@ const TemRulesForm = Form.create()(
                                             className={styles.judge}
                                             placeholder='判断符'
                                         >
-                                            <Option value=''>判断</Option>
                                             <Option key='='>=</Option>
                                             <Option key='>'>></Option>
                                             <Option key='<'>{'<'}</Option>
@@ -2019,7 +2051,7 @@ const TemRulesForm = Form.create()(
                                             filterOption={false}
                                             notFoundContent={null}
                                             // onSearch={(value) => this.handleSearch(value, 'sms')}
-                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'),300)}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'sms'), 300)}
                                             onChange={(value) => this.receiverChange(value, 'sms')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -2073,7 +2105,7 @@ const TemRulesForm = Form.create()(
                                             filterOption={false}
                                             notFoundContent={null}
                                             // onSearch={(value) => this.handleSearch(value, 'TEL')}
-                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'),300)}
+                                            onSearch={_.debounce((value) => this.handleSearch(value, 'TEL'), 300)}
                                             onChange={(value) => this.receiverChange(value, 'TEL')}
                                             dropdownClassName={styles.searchDropDown}
                                         >
@@ -2155,7 +2187,7 @@ const TemRulesForm = Form.create()(
                                             showArrow={false}
                                             filterOption={false}
                                             // onSearch={(value) => this.deviceSearch(value)}
-                                            onSearch={_.debounce((value) => this.deviceSearch(value),300)}
+                                            onSearch={_.debounce((value) => this.deviceSearch(value), 300)}
                                             // onChange={(value) => this.deviceChange(value)}
                                             onSelect={(value) => this.deviceChange(value)}
                                         >
