@@ -62,6 +62,21 @@ export default class extends Component {
         })
         // columns[columns.length - 1].fixed = columns.length > 10 ? 'right' : null;
         tableData.map((v, i) => {
+            let valueArray=Object.values(tableData[i])
+            let keysArray=Object.keys(tableData[i])
+            // console.log(Object.values(tableData[i]))
+            // console.log(Object.keys(tableData[i]))
+            valueArray.map((val,i)=>{
+                // console.log(val)
+                v[keysArray[i]]=val===true?"开":val===false?"关":val
+            })
+            // console.log(v)
+            // Object.values(tableData[i])
+            // let 
+            // tableData[i].map((value,index)=>{
+            //     console.log(value)
+            // })
+            // tableData[i] = realTimeData[i]==true?'开':realTimeData[i]==false?'关':realTimeData[i]
             v.key = i
         })
         // console.log(tableData)

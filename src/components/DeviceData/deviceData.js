@@ -114,9 +114,9 @@ export default class extends Component {
                 let realTimeKeys = Object.keys(v.realTimeData)
                 let realTimeData = Object.values(v.realTimeData)
                 realTimeKeys.map((val, i) => {
-                    v[val] = realTimeData[i]==true?'开':realTimeData[i]==false?'关':realTimeData[i]
+                    v[val] = realTimeData[i]===true?'开':realTimeData[i]===false?'关':realTimeData[i]
                     // realTimeData[i]=realTimeData[i]==true?'开':'关'
-                    // console.log(realTimeData[i])
+                    console.log(v[val])
                 })
                 v.key = i
             }
