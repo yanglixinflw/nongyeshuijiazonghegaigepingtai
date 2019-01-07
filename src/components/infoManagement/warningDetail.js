@@ -1402,7 +1402,7 @@ const ModifyRulesForm = Form.create()(
                 deviceData,
                 controlList=[]
             } = this.state
-            console.log(deviceData)
+            // console.log(deviceData)
             const { getFieldDecorator } = form;
             // 短信联系人通知列表
             const SMSreceiverList =
@@ -1700,7 +1700,7 @@ const ModifyRulesForm = Form.create()(
                                             onSelect={(value) => this.deviceChange(value)}
                                         >
                                             {
-                                                deviceData.length == 0 ? null :
+                                                deviceData[0].deviceTypeName == null ? null :
                                                     deviceData.map((v, i) => {
                                                         // console.log(v)
                                                         return (
