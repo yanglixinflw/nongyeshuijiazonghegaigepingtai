@@ -483,8 +483,6 @@ export default class extends Component {
     }
     //标记正常时渲染方法
     renderMarker(extData) {
-        // const {map} = this.state;
-        // console.log(map)
         return <MarkerExterior markers={extData} chosenMarker={false} />
     }
     //标记被选中时渲染方法
