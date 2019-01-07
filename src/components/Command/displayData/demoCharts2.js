@@ -12,7 +12,7 @@ export default class extends Component{
         }
     }
     _onChangeDate(date,dateString){
-        console.log(date, dateString);
+        // console.log(date, dateString);
     }
     _getDataTwo(){
         const {data} = this.state;
@@ -45,9 +45,9 @@ export default class extends Component{
                 },
                 grid:{
                     left:'30%',
-                    top:8,  
-                    bottom:46,
-                    right:14
+                    top:20,  
+                    bottom:30,
+                    right:24
                 },
                 xAxis: {
                     show:false,
@@ -64,7 +64,7 @@ export default class extends Component{
                         show:false,
                     },
                     axisLabel:{
-                        color:'#327DF4',
+                        color:'#71BBF8',
                         align:'left',
                         margin:95,
                         fontSize:14

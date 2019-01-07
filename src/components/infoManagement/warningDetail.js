@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styles from './warningDetail.less';
 import { Select, Button, Form, Modal, Input, message, InputNumber } from 'antd';
 import { timeOut } from '../../utils/timeOut';
-import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList, queryWarningDetail } from '../../services/api'
+import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList, queryWarningDetail } from '../../services/api';
 import _ from 'lodash';
 import { ENVNet, postOption } from '../../services/netCofig'
 //保存/添加预警规则Url
@@ -891,7 +891,7 @@ const AddRulesForm = Form.create()(
                 timeOut(v.data.ret)
                 if (v.data.ret == 1) {
                     this.setState({
-                        controlList: v.data.data
+                        controlList: v.data.data || []
                     })
                     // console.log(v.data.data.items)
                     // console.log(v.data.data)
@@ -1379,7 +1379,7 @@ const ModifyRulesForm = Form.create()(
                 timeOut(v.data.ret)
                 if (v.data.ret == 1) {
                     this.setState({
-                        controlList: v.data.data||[]
+                        controlList: v.data.data || []
                     })
                     // console.log(v.data.data.items)
                     // console.log(v.data.data)
@@ -1402,7 +1402,8 @@ const ModifyRulesForm = Form.create()(
                 deviceData,
                 controlList=[]
             } = this.state
-            // console.log(deviceData)
+            // console.log(deviceData);
+            // console.log(modifyData)
             const { getFieldDecorator } = form;
             // 短信联系人通知列表
             const SMSreceiverList =
@@ -1707,7 +1708,7 @@ const ModifyRulesForm = Form.create()(
                                                             <Option
                                                                 key={v.deviceId}
                                                             >
-                                                                {v.deviceId}
+                                                                {v.name}({v.deviceTypeName})
                                                     </Option>)
                                                     })
                                             }
@@ -1762,7 +1763,7 @@ const TemRulesForm = Form.create()(
     class extends React.Component {
         constructor(props) {
             super(props)
-            console.log(props.TemRulesData)
+            // console.log(props.TemRulesData)
             this.state = {
                 // 短信通知人
                 SMSreceiver: '',
@@ -1775,14 +1776,14 @@ const TemRulesForm = Form.create()(
                 TELreceiverRequired: false,
                 // 设备数据列表
                 deviceData: [{
-                    deviceId: props.TemRulesData.deviceId,
+                    deviceId: props.TemRulesData.fireControlDeviceId,
                     name: props.TemRulesData.fireControlDeviceName
                 }],
                 // 设备操作指令列表
                 controlList: []
             }
             // 初始化获取指令列表
-            this.deviceChange(props.TemRulesData.deviceId)
+            this.deviceChange(props.TemRulesData.fireControlDeviceId)
         }
         // 搜索获取通知人列表
         handleSearch(value, type) {
@@ -1882,10 +1883,10 @@ const TemRulesForm = Form.create()(
                     //超时判断
                     timeOut(v.data.ret)
                     this.setState({
-                        controlList: v.data.data
+                        controlList: v.data.data || []
                     })
                     // console.log(v.data.data.items)
-                    console.log(v.data.data)
+                    // console.log(v.data.data)
                 }
             })
         }
@@ -2199,7 +2200,7 @@ const TemRulesForm = Form.create()(
                                             onSelect={(value) => this.deviceChange(value)}
                                         >
                                             {
-                                                deviceData.length == 0 ? null :
+                                                deviceData[0].deviceTypeName == null ? null :
                                                     deviceData.map((v, i) => {
                                                         // console.log(v)
                                                         return (

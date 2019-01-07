@@ -10,10 +10,12 @@ export default class extends Component{
         return(
             {
                 grid: {
-                        left: '12%',
-                        right: '4%',
-                        top: '16%',
-                    },
+                        left: 62,
+                        right:24,
+                        top: 35,
+                        height:192,
+                        width:280
+                        },
                     tooltip : {
                         trigger: 'axis',
                         axisPointer: {
@@ -25,14 +27,15 @@ export default class extends Component{
                             axisLabel: {
                                 show: true,
                                 textStyle: {
-                                    color: '#92b1d8'                
+                                    color: '#6bb1ec'                
                                 },
+                                fontSize:14
                             },
                             type : 'category',
                             boundaryGap : false,
                             axisLine:{show:false},
                             axisTick:{show:false},
-                            data: ['1.1','1.2','1.3','1.4','1.5','1.6','1.7']
+                            data: ['1.2','1.3','1.4','1.5','1.6','1.7','1.8']
                         }
                     ],
                     yAxis: [
@@ -42,8 +45,9 @@ export default class extends Component{
                             axisLabel: {
                                     show: true,
                                     textStyle: {
-                                        color: '#92b1d8'
+                                        color: '#6bb1ec'
                                     },
+                                    fontSize:14
                             },
                             splitLine: {
                                 lineStyle: {
@@ -91,7 +95,7 @@ export default class extends Component{
                                     width: 2
                                 }
                             },                                                       
-                            data:[0.3,0.1,0.4,0.2,0.3,0.5,0.2]
+                            data:[0.4,0,0.1,0.3,0,0.2,0.1]
                         },    
 //                         {
 //                             name:'上网人数',
