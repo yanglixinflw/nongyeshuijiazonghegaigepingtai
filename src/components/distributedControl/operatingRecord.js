@@ -11,7 +11,7 @@ const dataUrl=`${ENVNet}/api/device/control/operateLogs`;
 const tableTitle=[
     {index:"operateUserName",item:"操作员"},
     {index:"cmdName",item:"动作"},
-    {index:"result",item:"状态"},
+    {index:"operateStatus",item:"状态"},
     {index:"createTime",item:"操作时间"},
     {index:"executeTime",item:"执行时间"},
 ]
@@ -20,7 +20,6 @@ export default class extends Component{
     constructor(props) {
         super(props)
         const {operatingRecord}=props;
-        console.log(operatingRecord.data.data.items)
         let deviceId = parse(window.location.href.split(':'))[3];
         this.state={
             title:tableTitle,
@@ -50,14 +49,44 @@ export default class extends Component{
         //把数据都push到tableDatas里
         let tableDatas = [];
         data.map((v, i) => {
-            tableDatas.push({
-                operateUserName:v.operateUserName||"系统自动化",
-                cmdName:v.cmdName,
-                result:v.result,
-                createTime:v.createTime,
-                executeTime:v.executeTime,
-                key: i,
-            });
+            if(v.operateStatus==0){
+                tableDatas.push({
+                    operateUserName:v.operateUserName||"系统自动化",
+                    cmdName:v.cmdName,
+                    operateStatus:'无操作',
+                    createTime:v.createTime,
+                    executeTime:v.executeTime,
+                    key: i,
+                });
+            }else if(v.operateStatus==1){
+                tableDatas.push({
+                    operateUserName:v.operateUserName||"系统自动化",
+                    cmdName:v.cmdName,
+                    operateStatus:'正在执行中',
+                    createTime:v.createTime,
+                    executeTime:v.executeTime,
+                    key: i,
+                });
+            }else if(v.operateStatus==2){
+                tableDatas.push({
+                    operateUserName:v.operateUserName||"系统自动化",
+                    cmdName:v.cmdName,
+                    operateStatus:'执行成功',
+                    createTime:v.createTime,
+                    executeTime:v.executeTime,
+                    key: i,
+                });
+            }else if(v.operateStatus==3){
+                tableDatas.push({
+                    operateUserName:v.operateUserName||"系统自动化",
+                    cmdName:v.cmdName,
+                    operateStatus:'执行失败',
+                    createTime:v.createTime,
+                    executeTime:v.executeTime,
+                    key: i,
+                });
+            }
+            
         })
         this.setState({
             columns,
