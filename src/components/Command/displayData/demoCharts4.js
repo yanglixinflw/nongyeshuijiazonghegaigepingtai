@@ -12,10 +12,9 @@ export default class extends Component {
                 color: "#327df4",
                 grid: {
                         left: 49,
-                        right:24,
                         top: 33,
                         height:192,
-                        width:301
+                        // width:301
                     },
                 xAxis: {
                     type: 'category',

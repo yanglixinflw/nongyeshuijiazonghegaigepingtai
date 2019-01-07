@@ -178,7 +178,7 @@ const RulesDetailForm = Form.create()(
                 TELreceiverRequired: false,
                 // 设备数据列表
                 deviceData: [{
-                    deviceId: props.data.deviceId,
+                    deviceId: props.data.fireControlDeviceId,
                     name: props.data.fireControlDeviceName
                 }],
                 // 设备操作指令列表
@@ -301,10 +301,14 @@ const RulesDetailForm = Form.create()(
                 timeOut(v.data.ret)
                 if (v.data.ret == 1) {
                     this.setState({
-                        controlList: v.data.data
+                        controlList: v.data.data||[]
                     })
                     // console.log(v.data.data.items)
                     // console.log(v.data.data)
+                }else{
+                    this.setState({
+                        controlList: []
+                    })
                 }
             })
         }
@@ -321,6 +325,7 @@ const RulesDetailForm = Form.create()(
                 deviceData,
                 controlList
             } = this.state
+            // console.log(deviceData)
             const { getFieldDecorator } = form;
             // 短信联系人通知列表
             const SMSreceiverList =
@@ -621,7 +626,7 @@ const RulesDetailForm = Form.create()(
                                             onSelect={(value) => this.deviceChange(value)}
                                         >
                                             {
-                                                deviceData.length == 0 ? null :
+                                                deviceData[0].deviceTypeName == null ? null :
                                                     deviceData.map((v, i) => {
                                                         // console.log(v)
                                                         return (

@@ -67,22 +67,20 @@ export default class extends Component {
                 .then((v) => {
                     timeOut(v.ret)
                     if (v.ret == 1) {
-                        
+                        let monitorArr=[]
+                        // let numberArray=[]
+                        // numberArray.length=localStorage.getItem('monitorNum')
+                        for(let i=0;i<localStorage.getItem('monitorNum');i++){
+                            monitorArr.push({
+                                order:i+1
+                            })
+                        }
+                        monitorArr[0]={
+                            order: 1, 
+                            video: [v.data]
+                        }
                         this.setState({
-                            monitorArr: [
-                                {
-                                    order: 1, 
-                                    video: [v.data]
-                                },
-                                { order: 2 },
-                                { order: 3 },
-                                { order: 4 },
-                                { order: 5 },
-                                { order: 6 },
-                                { order: 7 },
-                                { order: 8 },
-                                { order: 9 }
-                            ]
+                            monitorArr
                         })
                     }
                 })

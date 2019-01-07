@@ -1,4 +1,4 @@
-import { getWarningRules ,getDeviceTypeList} from '../services/api';
+import { getWarningRules ,getWarningDeviceTypeList} from '../services/api';
 export default {
     namespace: 'warningRules',
     state:{},
@@ -8,7 +8,7 @@ export default {
           yield put({ type: 'fetchOk', payload: data })
         },
         *fetchDeviceTypeList({payload},{call,put}){
-          const deviceTypeList = yield call(getDeviceTypeList, payload)
+          const deviceTypeList = yield call(getWarningDeviceTypeList, payload)
           yield put({ type: 'deviceTypeList', payload: deviceTypeList })
         }
       },

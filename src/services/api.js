@@ -101,6 +101,17 @@ export function getWarningRecords(params){
 // 设备类型列表
 export function getDeviceTypeList(params){
   return request(`${ENVNet}/api/DeviceType/list`,{
+  // return request(`${ENVNet}/api/DeviceWaringRule/deviceTypeList`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
+// 设备可预警类型列表
+export function getWarningDeviceTypeList(params){
+  // return request(`${ENVNet}/api/DeviceType/list`,{
+  return request(`${ENVNet}/api/DeviceWaringRule/deviceTypeList`,{
     ...postOption,
     body:JSON.stringify(
       params
@@ -286,7 +297,7 @@ export function getRulesDetail(params){
 }
 //数据分析中心 用的是线上环境！！
 export async function dataAnalysis(params){
-  return request('http://192.168.30.180/api/bigDataAnalysis/allData', {
+  return request('http://tl.huishuiyun.com/api/bigDataAnalysis/allData', {
     ...postOption,
     body: JSON.stringify(params),
   });

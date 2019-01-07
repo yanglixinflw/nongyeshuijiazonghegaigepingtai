@@ -121,25 +121,6 @@ export default class extends Component {
     componentDidMount() {
         // 初始化处理表单数据
         this._getTableData(this.state.data, this.state.filterColumns)
-        // 测试修改弹窗
-        // fetch(detailsUrl, {
-        //     ...postOption,
-        //     body: JSON.stringify({
-        //         deviceId:'E69E8FF2-6896-4807-BB88-4CC501A7ED6B'
-        //     })
-        // }).then((res) => {
-        //     Promise.resolve(res.json())
-        //         .then((v) => {
-        //             // console.log(v)
-        //             if (v.ret == 1) {
-        //                 this.setState({
-        //                     modifyModalVisible: true,
-        //                     // modifyDeviceId: deviceId,
-        //                     modifyData: v.data
-        //                 })
-        //             }
-        //         })
-        // })
     }
     //保存当前设备的类型ID
     _saveDeviceTypeId(deviceTypeId,deviceId) {
@@ -1236,7 +1217,7 @@ const AddForm = Form.create()(
                         <Item label='地理经度'>
                             {getFieldDecorator('longitude',
                                 {
-                                    rules: [{ pattern: "^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理经度精确到小数点后7位' }],
+                                    rules: [{ pattern:"^\\d+\\.?\\d{7,}$", message: '地理经度精确到小数点后7位' }],
                                 }
                             )
                                 (
@@ -1250,7 +1231,7 @@ const AddForm = Form.create()(
                         <Item label='地理纬度'>
                             {getFieldDecorator('latitude',
                                 {
-                                    rules: [{ pattern: "^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理纬度精确到小数点后7位' }],
+                                    rules: [{ pattern:"^\\d+\\.?\\d{7,}$", message: '地理纬度精确到小数点后7位' }],
                                 }
                             )
                                 (
@@ -1579,8 +1560,8 @@ const ModifyForm = Form.create()(
                         <Item label='地理经度'>
                             {getFieldDecorator('longitude',
                                 {
-                                    rules: [{ pattern: "^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理经度精确到小数点后7位' }],
-                                    initialValue: modifyData.longitude
+                                    rules: [{ pattern:"^\\d+\\.?\\d{7,}$", message: '地理经度精确到小数点后7位' }],
+                                    initialValue: `${modifyData.longitude}`
                                 }
                             )
                                 (
@@ -1594,15 +1575,21 @@ const ModifyForm = Form.create()(
                         <Item label='地理纬度'>
                             {getFieldDecorator('latitude',
                                 {
-                                    rules: [{ pattern: "^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理纬度精确到小数点后7位' }],
-                                    initialValue: modifyData.latitude
+                                    rules: [{ pattern:"^\\d+\\.?\\d{7,}$", message: '地理纬度精确到小数点后7位' }],
+                                    initialValue: `${modifyData.latitude}`
                                 }
                             )
                                 (
-                                    <Input
-                                        className={styles.formInput}
-                                        placeholder='请输入地理纬度'
-                                    />
+                                <Input
+                                    className={styles.formInput}
+                                    placeholder='请输入地理纬度'
+                                    // onChange={()=>{
+                                    //     const form = this.props.form
+                                    //     form.validateFields((err, values) => {
+                                    //         console.log(values)
+                                    //     })
+                                    // }}
+                                />
                                 )
                             }
                         </Item>
