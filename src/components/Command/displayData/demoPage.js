@@ -13,7 +13,7 @@ export default class extends Component {
         return (
             <Fragment>
                 <div className={styles.header}>
-                    <span>|</span>数据结算
+                    <span>|</span>运行监控
                 </div>
                 <section>
                 <Row type="flex" justify="space-between">

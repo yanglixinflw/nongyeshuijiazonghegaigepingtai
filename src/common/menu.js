@@ -22,11 +22,11 @@ const menuData = [
         path: 'videoMonitoring'
       },
       {
-        name: '数据分析',
+        name: '环境监控',
         path: 'dataCenter'
       },
       {
-        name: '数据结算',
+        name: '运行监控',
         path: 'dataAnalyse'
       }
     ]
@@ -37,7 +37,7 @@ const menuData = [
     path: 'dcs',
     children: [
       {
-        name: '阀门控制',
+        name: '设备控制',
         path: 'valveControl'
       },
       {
@@ -52,15 +52,15 @@ const menuData = [
     path: 'deviceData',
     children: [
       {
-        name: '开创井电',
+        name: '井电双控',
         path: 'device:2'
       },
       {
-        name: '清易气象',
+        name: '气象站',
         path: 'device:3'
       },
       {
-        name: '某某墒情',
+        name: '土壤墒情',
         path: 'device:4'
       },
       {
@@ -68,7 +68,7 @@ const menuData = [
         path: 'device:1'
       },
       {
-        name:'演示数据',
+        name:'演示设备',
         path:"device:10"
       }
     ]

@@ -140,7 +140,7 @@ export default class extends Component{
                                 icon='poweroff'
                                 onClick={()=>this.singleSwitch(record.deviceId)}
                         >
-                                阀门开关
+                                选择指令
                             </Button>
                     </span>
                 )
@@ -481,7 +481,7 @@ export default class extends Component{
                                 className={styles.fnButton2}
                                 onClick={()=>this.valveSwitch()}
                             >
-                                阀门开关
+                                选择指令
                             </Button>
                             <Link to={`/valveControl/map`} target='_blank'>
                                 <Button
@@ -653,7 +653,7 @@ const SwitchForm = Form.create()(
                     centered={true}
                     className={styles.switchModal}
                     visible={visible}
-                    title="阀门开关"
+                    title="选择指令"
                     onCancel={onCancel}
                     onOk={onOk}
                     cancelText='取消'

@@ -42,7 +42,7 @@ export default class extends Component {
         return (
             <div style={{background:'#151836'}}>
                 <div className={styles.header}>
-                    数据分析平台
+                    灌区环境监控平台
                 </div>
                 <Row className={styles.section}>
                     <Col className={styles.left} lg={24} xl={8}>
