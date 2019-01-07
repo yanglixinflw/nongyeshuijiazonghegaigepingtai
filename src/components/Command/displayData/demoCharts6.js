@@ -9,7 +9,6 @@ export default class extends Component{
     _getDataSix(){
         return(
             {
-                
                 tooltip: {
                     trigger: 'item',
                     formatter: "{b}: {c} ({d}%)",
