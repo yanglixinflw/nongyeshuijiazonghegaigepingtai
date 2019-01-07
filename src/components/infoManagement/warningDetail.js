@@ -20,6 +20,7 @@ export default class extends Component {
     constructor(props) {
         super(props)
         const { warningDetail, deviceId } = props;
+        // console.log(deviceId)
         this.state = {
             //数据源
             data: warningDetail.data.data,
@@ -270,7 +271,7 @@ export default class extends Component {
                     othersMobile: ""
                 }
                 // console.log(...values)
-                fetch(updateUrl, {
+                fetch(addUrl, {
                     ...postOption,
                     body: JSON.stringify({
                         ...values

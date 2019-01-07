@@ -142,7 +142,7 @@ export default class extends Component {
         // })
     }
     //保存当前设备的类型ID
-    _saveDeviceTypeId(deviceTypeId) {
+    _saveDeviceTypeId(deviceTypeId,deviceId) {
         // console.log(deviceTypeId)
         let parameterList = getDeviceParameters(
             {
@@ -158,7 +158,7 @@ export default class extends Component {
                 } else {
                     const {dispatch} = this.props;
                     localStorage.setItem('selectDeviceTypeId', deviceTypeId)
-                    dispatch(routerRedux.push(`/deviceInformation/warningDetail:${deviceTypeId}`))
+                    dispatch(routerRedux.push(`/deviceInformation/warningDetail:${deviceId}`))
                 }
             }
 
@@ -200,7 +200,7 @@ export default class extends Component {
                         <Button
                             className={styles.warn}
                             icon='exception'
-                            onClick={() => this._saveDeviceTypeId(record.deviceTypeId)}
+                            onClick={() => this._saveDeviceTypeId(record.deviceTypeId,record.deviceId)}
                         >
                             预警机制
                         </Button>
