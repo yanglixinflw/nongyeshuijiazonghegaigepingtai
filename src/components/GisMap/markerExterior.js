@@ -17,7 +17,7 @@ export default class extends Component {
     render(){
         const {markers,deviceTypeId} = this.state;
         const {chosenMarker} = this.props;
-        // console.log(info)
+        // console.log(deviceTypeId)
         if(deviceTypeId==5){
             return (
                 <div className={styles.markerCamera}>
@@ -93,6 +93,30 @@ export default class extends Component {
         }else if(deviceTypeId==1){
             return (
                 <div className={styles.markerWaterV}>
+                    {
+                        chosenMarker?
+                            <i className={styles.chosen}>
+                                <div className={styles.chosenAnimation1}></div>
+                                <div className={styles.chosenAnimation2}></div>
+                                <div className={styles.chosenAnimation3}></div>
+                            </i> 
+                        :
+                        markers.isWarning?
+                            <i className={styles.warning}>
+                                <div className={styles.warningAnimation1}></div>
+                                <div className={styles.warningAnimation2}></div>
+                                <div className={styles.warningAnimation3}></div>
+                            </i> 
+                        : 
+                            <i className={styles.normal}></i>
+                        
+                    }
+                </div>
+               
+            )
+        }else if(deviceTypeId==10){
+            return (
+                <div className={styles.markerDemoDevice}>
                     {
                         chosenMarker?
                             <i className={styles.chosen}>

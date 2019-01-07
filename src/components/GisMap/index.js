@@ -37,14 +37,6 @@ export default class extends Component {
             <Spin size='large'></Spin>
         </Fragment>
         // console.log(map)
-        let center = {};
-        if(props.mapGis.camera.data.data.items.length !==0){
-            center.longitude = props.mapGis.camera.data.data.items[0].longitude;
-            center.latitude = props.mapGis.camera.data.data.items[0].latitude;
-        }else{
-            center=null
-        }
-        
         this.state = {
             //地图加载时过渡样式
             mapLoading,
@@ -64,7 +56,7 @@ export default class extends Component {
             //摄像头信息窗位置，根据点击marker时 赋值
             infoPositionCamera: '',
             //水表/电表/水阀信息窗
-            infoPositionWaterValve: '',
+            infoPositionDevice: '',
             //信息窗大小
             size: {
                 width: 285,
@@ -72,14 +64,11 @@ export default class extends Component {
             },
             //信息窗组件是否可用子组件,false即在系统默认的信息窗体外框中显示content内容
             isCustom: false,
-            // 地图中心点
-            center,
-            // center:{},
-            //多个Marker经纬度
-            cameraMarkers: "",
-            waterMeterMarkers: "",
-            eleMeterMarkers: "",
-            waterValveMarkers: "",
+            //多个Marker经纬度数据
+            cameraData: "",
+            waterMeterData: "",
+            eleMeterData: "",
+            waterValveData: "",
             //所有摄像头markers实例
             allCameraMarkers: '',
             //所有水表markers实例
@@ -94,7 +83,7 @@ export default class extends Component {
             dataList: null,
             //搜索关键字
             keyword: '',
-            //当前设备类型ID
+            //当前设备类型ID 默认为摄像头
             deviceTypeId: 5,
             //信息窗展示数据
             infoData: null,
@@ -102,10 +91,16 @@ export default class extends Component {
             isActive2: false,
             isActive3: false,
             isActive4: false,
+            //演示设备实例
+            demoDeviceMarkers:'',
+            //演示设备数据
+            demoDeviceData:'',
+            isActive5: false,
+            //演示设备弹窗可见性
+            demoDeviceVisible:false,
 
         }
         //console.log(this.state.markers)
-
     }
     componentDidMount() {
         let { dataList, keyword, } = this.state
@@ -113,11 +108,13 @@ export default class extends Component {
         let waterMeterPosition = [];
         let eleMeterPosition = [];
         let waterValvePosition = [];
+        let demoDevicePosition = [];
         let { mapGis } = this.props;
         let camera = mapGis.camera.data.data.items;
         let waterMeter = mapGis.waterMeter.data.data.items;
         let eleMeter = mapGis.eleMeter.data.data.items;
         let waterValve = mapGis.waterValve.data.data.items;
+        let demoDevice = mapGis.demoDevice.data.data.items;
         //将拿到的数据做处理
         camera.map((v, i) => {
             let position = {};
@@ -165,11 +162,23 @@ export default class extends Component {
                 deviceId: v.deviceId
             })
         })
+        demoDevice.map((v,i)=>{
+            let position = {};
+            position.longitude = v.longitude;
+            position.latitude = v.latitude;
+            demoDevicePosition.push({
+                position,
+                deviceTypeId: v.deviceTypeId,
+                name: v.name,
+                deviceId: v.deviceId
+            })
+        })
         this.setState({
-            cameraMarkers: cameraPosition,
-            waterMeterMarkers: waterMeterPosition,
-            eleMeterMarkers: eleMeterPosition,
-            waterValveMarkers: waterValvePosition,
+            cameraData: cameraPosition,
+            waterMeterData: waterMeterPosition,
+            eleMeterData: eleMeterPosition,
+            waterValveData: waterValvePosition,
+            demoDeviceData: demoDevicePosition,
         })
         if (dataList !== null) {
             this._getDataList(dataList, keyword)
@@ -273,7 +282,7 @@ export default class extends Component {
                     }
                 })
                 this.setState({
-                    infoPositionWaterValve: marker.getExtData().position,
+                    infoPositionDevice: marker.getExtData().position,
                     infoVisible: true,
                     isClicked: true
                 })
@@ -284,7 +293,7 @@ export default class extends Component {
                 let deviceId = marker.getExtData().deviceId
                 this._getRealTimeData(deviceId)
                 this.setState({
-                    infoPositionWaterValve: marker.getExtData().position,
+                    infoPositionDevice: marker.getExtData().position,
                     infoVisible: true
                 })
             },
@@ -320,7 +329,7 @@ export default class extends Component {
                     }
                 })
                 this.setState({
-                    infoPositionWaterValve: marker.getExtData().position,
+                    infoPositionDevice: marker.getExtData().position,
                     infoVisible: true,
                     isClicked: true
                 })
@@ -330,7 +339,7 @@ export default class extends Component {
                 let deviceId = marker.getExtData().deviceId
                 this._getRealTimeData(deviceId)
                 this.setState({
-                    infoPositionWaterValve: marker.getExtData().position,
+                    infoPositionDevice: marker.getExtData().position,
                     infoVisible: true
                 })
             },
@@ -366,7 +375,7 @@ export default class extends Component {
                     }
                 })
                 this.setState({
-                    infoPositionWaterValve: marker.getExtData().position,
+                    infoPositionDevice: marker.getExtData().position,
                     infoVisible: true,
                     isClicked: true
                 })
@@ -376,7 +385,51 @@ export default class extends Component {
                 let deviceId = marker.getExtData().deviceId
                 this._getRealTimeData(deviceId)
                 this.setState({
-                    infoPositionWaterValve: marker.getExtData().position,
+                    infoPositionDevice: marker.getExtData().position,
+                    infoVisible: true
+                })
+            },
+            mouseout: (MapsOption, marker) => {
+                if (this.state.isClicked) {
+                    this.setState({
+                        infoVisible: true
+                    })
+                } else {
+                    this.setState({
+                        infoVisible: false
+                    })
+                }
+            }
+        }
+        //演示设备标记触发事件
+        this.demoDeviceEvents = {
+            created: (demoDeviceMarkers) => {
+                this.setState({
+                    demoDeviceMarkers
+                })
+            },
+            click: (MapsOption, marker) => {
+                const {demoDeviceMarkers} = this.state;
+                demoDeviceMarkers.map((v,i)=>{
+                    if(v.getExtData().deviceId == marker.getExtData().deviceId ){
+                        v.render(this.renderMarkerChosen)
+                    }else{
+                        v.render(this.renderMarker)
+                    }
+                })
+                this.setState({
+                    infoPositionDevice: marker.getExtData().position,
+                    infoVisible: true,
+                    isClicked: true
+                })
+            },
+            dragend: (MapsOption, marker) => { /* ... */ },
+            mouseover: (MapsOption, marker) => {
+                let deviceId = marker.getExtData().deviceId;
+                // console.log(deviceId)
+                this._getRealTimeData(deviceId)
+                this.setState({
+                    infoPositionDevice: marker.getExtData().position,
                     infoVisible: true
                 })
             },
@@ -439,13 +492,13 @@ export default class extends Component {
     //图标记显示/隐藏
     //摄像头
     _cameraHandler() {
-        const { allCameraMarkers, allWaterValveMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
+        const { allCameraMarkers, allWaterValveMarkers, allWaterMeterMarkers, allEleMeterMarkers,demoDeviceMarkers,cameraVisible } = this.state;
         // console.log(allCameraMarkers)
         this.refs.searchInput.input.value='';
         if(allCameraMarkers.length !==0){
             allCameraMarkers.map((v, i) => {
                 // console.log(v)
-                if (v.Le.visible == true) {
+                if (cameraVisible == true) {
                     let deviceTypeId = '';
                     v.hide();
                     this.setState({
@@ -463,11 +516,13 @@ export default class extends Component {
                         isActive2: false,
                         isActive3: false,
                         isActive4: false,
+                        isActive5: false,
                         deviceTypeId,
                         cameraVisible: true,
                         waterValveVisible: false,
                         eleMeterVisible: false,
-                        waterMeterVisible: false
+                        waterMeterVisible: false,
+                        demoDeviceVisible: false,
                     }, this._changeHandler)
                 }
             })
@@ -477,9 +532,9 @@ export default class extends Component {
                 isActive2: false,
                 isActive3: false,
                 isActive4: false,
+                isActive5: false,
             })
         }
-        
         allWaterValveMarkers.map((v, i) => {
             v.hide();
         })
@@ -489,15 +544,18 @@ export default class extends Component {
         allEleMeterMarkers.map((v, i) => {
             v.hide()
         })
+        demoDeviceMarkers.map((v,i)=>{
+            v.hide()
+        })
     }
     //水表
     _WatermeterHandler() {
-        const { allCameraMarkers, allWaterValveMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
+        const { allCameraMarkers, allWaterValveMarkers, allWaterMeterMarkers, allEleMeterMarkers,demoDeviceMarkers,waterMeterVisible } = this.state;
         // console.log(allWaterMeterMarkers)
         this.refs.searchInput.input.value='';
         if(allWaterMeterMarkers.length !==0){
             allWaterMeterMarkers.map((v, i) => {
-                if (v.Le.visible == true) {
+                if (waterMeterVisible == true) {
                     let deviceTypeId = '';
                     v.hide();
                     this.setState({
@@ -514,11 +572,13 @@ export default class extends Component {
                         isActive2: true,
                         isActive3: false,
                         isActive4: false,
+                        isActive5: false,
                         deviceTypeId,
                         cameraVisible: false,
                         waterValveVisible: false,
                         eleMeterVisible: false,
-                        waterMeterVisible: true
+                        waterMeterVisible: true,
+                        demoDeviceVisible: false,
                     }, this._changeHandler)
                 }
             })
@@ -528,6 +588,7 @@ export default class extends Component {
                 isActive2:!this.state.isActive2,
                 isActive3: false,
                 isActive4: false,
+                isActive5: false,
             })
         }
         allCameraMarkers.map((v, i) => {
@@ -539,14 +600,17 @@ export default class extends Component {
         allEleMeterMarkers.map((v, i) => {
             v.hide()
         })
+        demoDeviceMarkers.map((v,i)=>{
+            v.hide()
+        })
     }
     //电表
     _ElectricmeterHandler() {
-        const { allWaterValveMarkers, allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
+        const { allWaterValveMarkers, allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers,demoDeviceMarkers,eleMeterVisible } = this.state;
         this.refs.searchInput.input.value='';
         if(allEleMeterMarkers.length !==0){
             allEleMeterMarkers.map((v, i) => {
-                if (v.Le.visible == true) {
+                if (eleMeterVisible == true) {
                     let deviceTypeId = '';
                     v.hide();
                     this.setState({
@@ -563,11 +627,13 @@ export default class extends Component {
                         isActive2: false,
                         isActive3: true,
                         isActive4: false,
+                        isActive5: false,
                         deviceTypeId,
                         cameraVisible: false,
                         waterMeterVisible: false,
                         waterValveVisible: false,
-                        eleMeterVisible: true
+                        eleMeterVisible: true,
+                        demoDeviceVisible: false,
                     }, this._changeHandler)
                 }
             })
@@ -577,9 +643,9 @@ export default class extends Component {
                 isActive2: false,
                 isActive3: !this.state.isActive3,
                 isActive4: false,
+                isActive5: false,
             })
-        }
-        
+        }   
         allCameraMarkers.map((v, i) => {
             v.hide()
         })
@@ -589,14 +655,17 @@ export default class extends Component {
         allWaterValveMarkers.map((v, i) => {
             v.hide()
         })
+        demoDeviceMarkers.map((v,i)=>{
+            v.hide()
+        })
     }
     //水阀
     _WatervalveHandler() {
-        const { allWaterValveMarkers, allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers } = this.state;
+        const { allWaterValveMarkers, allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers,demoDeviceMarkers,waterValveVisible } = this.state;
         this.refs.searchInput.input.value='';
         if(allWaterValveMarkers.length !==0){
             allWaterValveMarkers.map((v, i) => {
-                if (v.Le.visible == true) {
+                if (waterValveVisible == true) {
                     let deviceTypeId = '';
                     v.hide();
                     this.setState({
@@ -613,11 +682,13 @@ export default class extends Component {
                         isActive2: false,
                         isActive3: false,
                         isActive4: true,
+                        isActive5: false,
                         deviceTypeId,
                         cameraVisible: false,
                         waterMeterVisible: false,
                         eleMeterVisible: false,
-                        waterValveVisible: true
+                        waterValveVisible: true,
+                        demoDeviceVisible: false,
                     }, this._changeHandler)
                 }
             })
@@ -627,9 +698,9 @@ export default class extends Component {
                 isActive2: false,
                 isActive3: false,
                 isActive4: !this.state.isActive4,
+                isActive5: false,
             })
         }
-        
         allCameraMarkers.map((v, i) => {
             v.hide()
         })
@@ -639,6 +710,64 @@ export default class extends Component {
         allEleMeterMarkers.map((v, i) => {
             v.hide()
         })
+        demoDeviceMarkers.map((v,i)=>{
+            v.hide()
+        })
+    }
+    //演示设备
+    _demoDeviceHandler(){
+        const { allWaterValveMarkers, allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers,demoDeviceMarkers,demoDeviceVisible } = this.state;
+        this.refs.searchInput.input.value='';
+        if(demoDeviceMarkers.length !==0){
+            demoDeviceMarkers.map((v, i) => {
+                if (demoDeviceVisible == true) {
+                    let deviceTypeId = '';
+                    v.hide();
+                    this.setState({
+                        isActive5: false,
+                        deviceTypeId,
+                        demoDeviceVisible: false,
+                        dataList: null
+                    })
+                } else {
+                    let deviceTypeId = 10;
+                    v.show();
+                    this.setState({
+                        isActive1: false,
+                        isActive2: false,
+                        isActive3: false,
+                        isActive4: false,
+                        isActive5: true,
+                        deviceTypeId,
+                        cameraVisible: false,
+                        waterMeterVisible: false,
+                        eleMeterVisible: false,
+                        waterValveVisible: false,
+                        demoDeviceVisible: true,
+                    }, this._changeHandler)
+                }
+            })
+        }else{
+            this.setState({
+                isActive1: false,
+                isActive2: false,
+                isActive3: false,
+                isActive4: false,
+                isActive5: !this.state.isActive5,
+            })
+        }
+        allCameraMarkers.map((v, i) => {
+            v.hide()
+        })
+        allWaterMeterMarkers.map((v, i) => {
+            v.hide()
+        })
+        allEleMeterMarkers.map((v, i) => {
+            v.hide()
+        })
+        allWaterValveMarkers.map((v, i) => {
+            v.hide()
+        }) 
     }
     //搜索
     _changeHandler() {
@@ -682,7 +811,7 @@ export default class extends Component {
     }
     //选择设备后定位
     _chosenHandler(item) {
-        const { allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers, allWaterValveMarkers, infoWindow } = this.state;
+        const { allCameraMarkers, allWaterMeterMarkers, allEleMeterMarkers, allWaterValveMarkers, demoDeviceMarkers } = this.state;
         let center = { longitude: item.longitude, latitude: item.latitude };
         this.setState({
             center,
@@ -727,6 +856,16 @@ export default class extends Component {
                 v.render(this.renderMarker)
             }
         })
+        //演示设备
+        demoDeviceMarkers.map((v, i) => {
+            let position = v.getExtData().position;
+            if (position.longitude == center.longitude && position.latitude == center.latitude) {
+                v.render(this.renderMarkerChosen)
+                this.WaterValveEvents.click('', v)
+            } else {
+                v.render(this.renderMarker)
+            }
+        })
     }
     _onFocusHandler(e) {
         // console.log(e)
@@ -755,14 +894,14 @@ export default class extends Component {
             plugins,
             //  center,
             //useCluster,
-            isActive1, isActive2, isActive3, isActive4,
-            cameraVisible, waterMeterVisible, eleMeterVisible, waterValveVisible,
-            cameraMarkers, waterMeterMarkers, eleMeterMarkers, waterValveMarkers,
+            isActive1, isActive2, isActive3, isActive4,isActive5,
+            cameraVisible, waterMeterVisible, eleMeterVisible, waterValveVisible,demoDeviceVisible,
+            cameraData, waterMeterData, eleMeterData, waterValveData,demoDeviceData,
             infoVisible,
-            infoOffset, isCustom, size, infoPositionCamera, infoPositionWaterValve,
+            infoOffset, isCustom, size, infoPositionCamera, infoPositionDevice,
             infoData,
         } = this.state;
-        // console.log(center)
+        // console.log(demoDeviceData)
         return (
             <Map
                 loading={mapLoading}
@@ -772,7 +911,7 @@ export default class extends Component {
                 // 地图中心点设置
                 // center={center}
                 //地图显示的缩放级别
-                zoom={15}
+                zoom={16}
                 events={this.mapEvents}
                 version='1.4.11'
                 preloadMode={true}
@@ -831,7 +970,7 @@ export default class extends Component {
                         <i className={styles.camera}></i>
                         <span>摄像头</span>
                     </Button>
-                    <Button
+                    {/* <Button
                         className={isActive2 ? styles.onActive : styles.offActive}
                         onClick={() => this._WatermeterHandler()}
                     >
@@ -851,10 +990,17 @@ export default class extends Component {
                     >
                         <i className={styles.waterValve}></i>
                         <span>水阀</span>
+                    </Button> */}
+                    <Button
+                        className={isActive5 ? styles.onActive : styles.offActive}
+                        onClick={() => this._demoDeviceHandler()}
+                    >
+                        <i className={styles.demoDevice}></i>
+                        <span>演示设备</span>
                     </Button>
                 </div>
                 {/* 摄像头信息窗 高德地图规定同时最多只能显示一个信息窗*/}
-                {cameraVisible && cameraMarkers ?
+                {cameraVisible && cameraData ?
                     <InfoWindow
                         position={infoPositionCamera}
                         visible={infoVisible}
@@ -864,21 +1010,21 @@ export default class extends Component {
                         events={this.windowEvents}
                     >
                         <IwContent
-                            deviceInfo={cameraMarkers.filter(item => item.position == infoPositionCamera)}
+                            deviceInfo={cameraData.filter(item => item.position == infoPositionCamera)}
                         />
                     </InfoWindow>
                     : null
                 }
                 {/* 摄像头marker */}
                 <Markers
-                    markers={cameraMarkers}
+                    markers={cameraData}
                     render={(extData) => this.renderMarker(extData)}
                     events={this.cameraEvents}
                 />
                 {/* 水阀信息窗 高德地图规定同时最多只能显示一个信息窗*/}
-                {waterValveVisible && waterValveMarkers && infoData ?
+                {waterValveVisible && waterValveData && infoData ?
                     <InfoWindow
-                        position={infoPositionWaterValve}
+                        position={infoPositionDevice}
                         visible={infoVisible}
                         offset={infoOffset}
                         isCustom={isCustom}
@@ -886,7 +1032,7 @@ export default class extends Component {
                         events={this.windowEvents}
                     >
                         <IwContent
-                            deviceInfo={waterValveMarkers.filter(item => item.position == infoPositionWaterValve)}
+                            deviceInfo={waterValveData.filter(item => item.position == infoPositionDevice)}
                             {...{ infoData }}
                         />
                     </InfoWindow>
@@ -894,15 +1040,15 @@ export default class extends Component {
                 }
                 {/* 水阀Marker */}
                 <Markers
-                    markers={waterValveMarkers}
+                    markers={waterValveData}
                     render={(extData) => this.renderMarker(extData)}
                     events={this.WaterValveEvents}
                     visible={waterValveVisible}
                 />
                 {/* 水表信息窗 高德地图规定同时最多只能显示一个信息窗*/}
-                {waterMeterVisible && waterMeterMarkers && infoData ?
+                {waterMeterVisible && waterMeterData && infoData ?
                     <InfoWindow
-                        position={infoPositionWaterValve}
+                        position={infoPositionDevice}
                         visible={infoVisible}
                         offset={infoOffset}
                         isCustom={isCustom}
@@ -910,7 +1056,7 @@ export default class extends Component {
                         events={this.windowEvents}
                     >
                         <IwContent
-                            deviceInfo={waterMeterMarkers.filter(item => item.position == infoPositionWaterValve)}
+                            deviceInfo={waterMeterData.filter(item => item.position == infoPositionDevice)}
                             {...{ infoData }}
                         />
                     </InfoWindow>
@@ -918,15 +1064,15 @@ export default class extends Component {
                 }
                 {/* 水表Marker */}
                 <Markers
-                    markers={waterMeterMarkers}
+                    markers={waterMeterData}
                     events={this.WaterMeterEvents}
                     render={(extData) => this.renderMarker(extData)}
                     visible={waterMeterVisible}
                 />
                 {/* 电表信息窗 高德地图规定同时最多只能显示一个信息窗*/}
-                {eleMeterVisible && eleMeterMarkers && infoData ?
+                {eleMeterVisible && eleMeterData && infoData ?
                     <InfoWindow
-                        position={infoPositionWaterValve}
+                        position={infoPositionDevice}
                         visible={infoVisible}
                         offset={infoOffset}
                         isCustom={isCustom}
@@ -934,7 +1080,7 @@ export default class extends Component {
                         events={this.windowEvents}
                     >
                         <IwContent
-                            deviceInfo={eleMeterMarkers.filter(item => item.position == infoPositionWaterValve)}
+                            deviceInfo={eleMeterData.filter(item => item.position == infoPositionDevice)}
                             {...{ infoData }}
                         />
                     </InfoWindow>
@@ -942,10 +1088,34 @@ export default class extends Component {
                 }
                 {/* 电表Marker */}
                 <Markers
-                    markers={eleMeterMarkers}
+                    markers={eleMeterData}
                     visible={eleMeterVisible}
                     render={(extData) => this.renderMarker(extData)}
                     events={this.eleMeterEvents}
+                />
+                {/* 演示设备信息窗 高德地图规定同时最多只能显示一个信息窗 */}
+                {demoDeviceVisible && demoDeviceData && infoData ?
+                    <InfoWindow
+                        position={infoPositionDevice}
+                        visible={infoVisible}
+                        offset={infoOffset}
+                        isCustom={isCustom}
+                        size={size}
+                        events={this.windowEvents}
+                    >
+                        <IwContent
+                            deviceInfo={demoDeviceData.filter(item => item.position == infoPositionDevice)}
+                            {...{ infoData }}
+                        />
+                    </InfoWindow>
+                    : null
+                }
+                {/* 演示设备Marker */}
+                <Markers
+                    markers={demoDeviceData}
+                    visible={demoDeviceVisible}
+                    render={(extData) => this.renderMarker(extData)}
+                    events={this.demoDeviceEvents}
                 />
                 {/* 自定义地图控件 */}
                 <MyCustomize />
