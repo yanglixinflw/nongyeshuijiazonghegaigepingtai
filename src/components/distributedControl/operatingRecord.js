@@ -20,6 +20,7 @@ export default class extends Component{
     constructor(props) {
         super(props)
         const {operatingRecord}=props;
+        console.log(operatingRecord.data.data.items)
         let deviceId = parse(window.location.href.split(':'))[3];
         this.state={
             title:tableTitle,
@@ -72,28 +73,34 @@ export default class extends Component{
             if (err) {
                 return
             }
-          if(fieldsValue['range-time-picker'].length!=0){
-            const rangeTimeValue = fieldsValue['range-time-picker'];
-            const values = {
-              ...fieldsValue,
-              'range-time-picker': [
-                rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
-                rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
-              ]
-            };
-            for(var i in values){
-              var val=values[i]
+            if(fieldsValue['range-time-picker'].length!=0){
+                const rangeTimeValue = fieldsValue['range-time-picker'];
+                const values = {
+                ...fieldsValue,
+                'range-time-picker': [
+                    rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
+                    rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
+                ]
+                };
+                for(var i in values){
+                var val=values[i]
+                }
+            }else{
+                var val=["",""]
             }
-          }else{
-            var val=["",""]
-          }
+            var searchValue={
+                "deviceId": this.state.deviceId,
+                "operateUserName":fieldsValue.operateUserName,
+                "beginTime": val[0],
+                "endTime": val[1]
+            }
+            this.setState({
+                searchValue
+            })
             return fetch(dataUrl, {
                 ...postOption,
                 body: JSON.stringify({
-                    "deviceId": this.state.deviceId,
-                    "operateUserName":fieldsValue.operateUserName,
-                    "beginTime": val[0],
-                    "endTime": val[1],
+                    ...searchValue,
                     "pageIndex": 0,
                     "pageSize": 10
                 })

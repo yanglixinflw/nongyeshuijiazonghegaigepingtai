@@ -16,7 +16,7 @@ export default class extends Component {
                     },
                 xAxis: {
                     type: 'category',
-                    data: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7'],
+                    data: ['1.2','1.3','1.4','1.5','1.6','1.7','1.8'],
                     //不显示坐标轴轴线
                     axisLine: { show: false },
                     //不显示坐标刻度
@@ -46,20 +46,27 @@ export default class extends Component {
                 }, {
                     type: 'bar',
                     barWidth: 19,
-                    data: [0.1, 0.3, 0.5, 0.2, 0.4, 0.2, 0.3]
+                    data: [0.4,0,0.1,0.3,0,0.2,0.1]
                 }],
                 tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'cross'
-                    }
+                    trigger:'axis',
+                    backgroundColor:'#171A39',
+                    formatter:'{c1}',
+                    textStyle:{
+                        color:'#327DF4',
+                        fontSize:14
+                    },
+                    axisPointer:{
+                        type:'none'
+                    },
+                    extraCssText:'width:40px;text-align:center'
                 }
             }
         )
     }
     render() {
         return (
-            <div className={styles.demoCharts4} style={{ display: "flex" }}>
+            <div className={styles.demoCharts4} style={{ display: "flex"}}>
                 <Card
                     title="本周用水量(m³)"
                     // extra={<Select placeholder="项家窝堡村">{data.map((v, i) => {
