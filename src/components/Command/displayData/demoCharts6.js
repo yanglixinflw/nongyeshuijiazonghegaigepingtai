@@ -41,7 +41,6 @@ export default class extends Component {
         })
         return (
             {
-
                 tooltip: {
                     trigger: 'item',
                     formatter: "{b}: {c} ({d}%)",

@@ -40,6 +40,7 @@ export default class extends React.Component {
   //气象
   getWeatherChart() {
     const { weatherChart } = this.state;
+    // console.log(weatherChart)
     let xData = [];
     let AirTemperature = [];
     let AirHumidity = [];
