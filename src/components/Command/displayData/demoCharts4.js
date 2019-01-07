@@ -61,25 +61,22 @@ export default class extends Component {
         return (
             <div className={styles.demoCharts4} style={{ display: "flex" }}>
                 <Card
-                    title="本周用水量"
+                    title="本周用水量(m³)"
                     // extra={<Select placeholder="项家窝堡村">{data.map((v, i) => {
                     //     return (
                     //         <Option value={v.id} key={i}>{v.name}</Option>
                     //     )
                     // })}</Select>}
                     style={{
-                        // width:"388px",
                         width: "100%",
                         height: '308px',
                         background: "#1c2241",
                         color: "#327df4"
                     }}
                 >
-                    {/* <div style={{ marginTop: "-50px" }}> */}
-                        <ReactEcharts
-                            option={this._getData4()}
-                        />
-                    {/* </div> */}
+                    <ReactEcharts
+                        option={this._getData4()}
+                    />
                 </Card>
             </div>
         )
