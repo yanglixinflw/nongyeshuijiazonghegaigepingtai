@@ -715,7 +715,7 @@ const RuleForm = Form.create()(
                                     }
                                 )
                                     (<Select
-                                        placeholder='开关阀'
+                                        placeholder='操作指令'
                                     >
                                         {
                                             v.switchList.map((v, i) => {

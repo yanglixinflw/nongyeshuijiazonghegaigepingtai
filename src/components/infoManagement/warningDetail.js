@@ -1685,7 +1685,7 @@ const ModifyRulesForm = Form.create()(
                             <Form.Item label='关联设备' >
                                 <Form.Item>
                                     {getFieldDecorator('fireControlDeviceId', {
-                                        initialValue: modifyData.fireControlDeviceId,
+                                        initialValue: modifyData.deviceId,
                                     })(
                                         <Select
                                             //可搜索
@@ -1707,7 +1707,7 @@ const ModifyRulesForm = Form.create()(
                                                             <Option
                                                                 key={v.deviceId}
                                                             >
-                                                                {v.name}({v.deviceTypeName})
+                                                                {v.deviceId}
                                                     </Option>)
                                                     })
                                             }
@@ -1762,7 +1762,7 @@ const TemRulesForm = Form.create()(
     class extends React.Component {
         constructor(props) {
             super(props)
-            // console.log(props.data)
+            console.log(props.TemRulesData)
             this.state = {
                 // 短信通知人
                 SMSreceiver: '',
@@ -1885,7 +1885,7 @@ const TemRulesForm = Form.create()(
                         controlList: v.data.data
                     })
                     // console.log(v.data.data.items)
-                    // console.log(v.data.data)
+                    console.log(v.data.data)
                 }
             })
         }
@@ -1900,7 +1900,8 @@ const TemRulesForm = Form.create()(
                 TELreceiverRequired,
                 deviceData,
                 controlList
-            } = this.state
+            } = this.state;
+            // console.log(controlList)
             const { getFieldDecorator } = form;
             // 短信联系人通知列表
             const SMSreceiverList =
