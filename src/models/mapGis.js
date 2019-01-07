@@ -19,6 +19,10 @@ export default {
           const data = yield call(getMapDevice, payload)
           yield put({ type: 'fetchWVOk', payload: data })
         },
+        *fetchDemoDevice({ payload }, { call, put }) {  
+          const data = yield call(getMapDevice, payload)
+          yield put({ type: 'fetchDDOk', payload: data })
+        },
       },
     
       reducers: {
@@ -37,6 +41,10 @@ export default {
         fetchWVOk (state, { payload }){
           state.waterValve = payload
           return { ...state }
-        }
+        },
+        fetchDDOk (state, { payload }){
+          state.demoDevice = payload
+          return { ...state }
+        },
       }
 }
