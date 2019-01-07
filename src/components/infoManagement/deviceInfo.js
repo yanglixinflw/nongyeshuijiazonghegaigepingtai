@@ -17,9 +17,10 @@ import {
     Divider
 } from 'antd'
 import moment from 'moment'
-import { Link } from 'dva/router';
+import {routerRedux} from 'dva/router'
 import { timeOut } from '../../utils/timeOut';
-import _ from 'lodash'
+import _ from 'lodash';
+import {  getDeviceParameters, } from '../../services/api';
 const Item = Form.Item
 const Option = Select.Option
 import { ENVNet, postOption } from '../../services/netCofig'
@@ -57,11 +58,12 @@ sourceColumns.map((v, i) => {
 export default class extends Component {
     constructor(props) {
         super(props)
+        // console.log(props)
         const { DeviceTypeList,
             InstallList,
             CompanyList,
             RelatedBuilding
-        } = this.props
+        } = this.props.deviceInformation
         // console.log(RelatedBuilding)
         this.state = {
             // 显示设置可见
@@ -70,9 +72,9 @@ export default class extends Component {
             // 表头
             columns: [],
             // 数据总数
-            itemCount: props.data.data.itemCount,
+            itemCount: props.deviceInformation.data.data.itemCount,
             // 表格数据源
-            data: props.data.data.items,
+            data: props.deviceInformation.data.data.items,
             // 表格数据
             tableData: [],
             // 搜索框默认值
@@ -142,7 +144,26 @@ export default class extends Component {
     //保存当前设备的类型ID
     _saveDeviceTypeId(deviceTypeId) {
         // console.log(deviceTypeId)
-        localStorage.setItem('selectDeviceTypeId', deviceTypeId)
+        let parameterList = getDeviceParameters(
+            {
+                deviceTypeId:deviceTypeId
+            })
+        Promise.resolve(parameterList).then((v) => {
+            // console.log(v)
+            //超时判断
+            timeOut(v.data.ret)
+            if (v.data.ret === 1) {
+                if (v.data.data.length == 0) {
+                    alert('该设备暂不支持预警规则设置')
+                } else {
+                    const {dispatch} = this.props;
+                    localStorage.setItem('selectDeviceTypeId', deviceTypeId)
+                    dispatch(routerRedux.push(`/deviceInformation/warningDetail:${deviceTypeId}`))
+                }
+            }
+
+        })
+
     }
     // 获取表单数据
     _getTableData(data, sourceColumns) {
@@ -176,15 +197,13 @@ export default class extends Component {
                         >
                             生成二维码
                         </Button>
-                        <Link to={`/deviceInformation/warningDetail:${record.deviceId}`}>
-                            <Button
-                                className={styles.warn}
-                                icon='exception'
-                                onClick={() => this._saveDeviceTypeId(record.deviceTypeId)}
-                            >
-                                预警机制
+                        <Button
+                            className={styles.warn}
+                            icon='exception'
+                            onClick={() => this._saveDeviceTypeId(record.deviceTypeId)}
+                        >
+                            预警机制
                         </Button>
-                        </Link>
                         <Button
                             className={styles.edit}
                             icon='edit'
@@ -365,18 +384,18 @@ export default class extends Component {
                 .then((v) => {
                     //判断超时
                     timeOut(v.ret);
-                    
+
                     if (v.ret == 1) {
                         let { items, itemCount } = v.data
                         // 当前页为最后一页且不是第一页
-                        if(items.length==0&&pageNumber!=1){
+                        if (items.length == 0 && pageNumber != 1) {
                             this.setState({
                                 itemCount,
                                 data: items,
-                                pageNumber: pageNumber-2
+                                pageNumber: pageNumber - 2
                             })
-                            this._pageChange(pageNumber-2)
-                        }else{
+                            this._pageChange(pageNumber - 2)
+                        } else {
                             this.setState({
                                 itemCount,
                                 data: items,
@@ -857,10 +876,10 @@ const SearchForm = Form.create()(
                             initialValue: ''
                         })
                             (
-                            <Input
-                                placeholder='设备ID'
-                                type='text'
-                            />
+                                <Input
+                                    placeholder='设备ID'
+                                    type='text'
+                                />
                             )
                         }
                     </Item>
@@ -868,24 +887,24 @@ const SearchForm = Form.create()(
                         {getFieldDecorator('deviceTypeId', {
                         })
                             (
-                            <Select
-                                placeholder='设备类型'
-                            >
-                                <Option value=''>全部</Option>
-                                {
-                                    deviceTypeList.length === 0 ? null
-                                        :
-                                        deviceTypeList.map((v, i) => {
-                                            return (
-                                                <Option
-                                                    value={v.deviceTypeId}
-                                                    key={v.deviceTypeId}>
-                                                    {v.name}
-                                                </Option>
-                                            )
-                                        })
-                                }
-                            </Select>
+                                <Select
+                                    placeholder='设备类型'
+                                >
+                                    <Option value=''>全部</Option>
+                                    {
+                                        deviceTypeList.length === 0 ? null
+                                            :
+                                            deviceTypeList.map((v, i) => {
+                                                return (
+                                                    <Option
+                                                        value={v.deviceTypeId}
+                                                        key={v.deviceTypeId}>
+                                                        {v.name}
+                                                    </Option>
+                                                )
+                                            })
+                                    }
+                                </Select>
                             )
                         }
                     </Item>
@@ -894,10 +913,10 @@ const SearchForm = Form.create()(
                             initialValue: ''
                         })
                             (
-                            <Input
-                                placeholder='设备名称'
-                                type='text'
-                            />
+                                <Input
+                                    placeholder='设备名称'
+                                    type='text'
+                                />
                             )
                         }
                     </Item>
@@ -905,57 +924,57 @@ const SearchForm = Form.create()(
                         {getFieldDecorator('installAddrId', {
                         })
                             (
-                            <Select
-                                placeholder='设备安装地'
-                            >
-                                <Option value=''>全部</Option>
-                                {
-                                    installAddress.length === 0 ? null
-                                        :
-                                        installAddress.map((v, i) => {
-                                            return (
-                                                <Option
-                                                    value={v.id}
-                                                    key={v.id}>
-                                                    {v.addr}
-                                                </Option>
-                                            )
+                                <Select
+                                    placeholder='设备安装地'
+                                >
+                                    <Option value=''>全部</Option>
+                                    {
+                                        installAddress.length === 0 ? null
+                                            :
+                                            installAddress.map((v, i) => {
+                                                return (
+                                                    <Option
+                                                        value={v.id}
+                                                        key={v.id}>
+                                                        {v.addr}
+                                                    </Option>
+                                                )
 
-                                        })
-                                }
-                            </Select>
+                                            })
+                                    }
+                                </Select>
                             )
                         }
                     </Item>
                     <Item>
                         {getFieldDecorator('relatedBuildingId')
                             (
-                            <Select
-                                placeholder='关联建筑物'
-                                defaultActiveFirstOption={false}
-                                showArrow={false}
-                                showSearch
-                                filterOption={false}
-                                onSearch={_.debounce((value) => handleSearch(value), 300)}
-                                notFoundContent={null}
-                            >
-                                <Option value=''>全部</Option>
-                                {
-                                    relatedBuilding.length === 0 ? null
-                                        :
-                                        relatedBuilding.map((v, i) => {
-                                            // console.log(v)
-                                            return (
-                                                <Option
-                                                    value={v.buildingId}
-                                                    key={v.buildingId}>
-                                                    {v.name}
-                                                </Option>
-                                            )
+                                <Select
+                                    placeholder='关联建筑物'
+                                    defaultActiveFirstOption={false}
+                                    showArrow={false}
+                                    showSearch
+                                    filterOption={false}
+                                    onSearch={_.debounce((value) => handleSearch(value), 300)}
+                                    notFoundContent={null}
+                                >
+                                    <Option value=''>全部</Option>
+                                    {
+                                        relatedBuilding.length === 0 ? null
+                                            :
+                                            relatedBuilding.map((v, i) => {
+                                                // console.log(v)
+                                                return (
+                                                    <Option
+                                                        value={v.buildingId}
+                                                        key={v.buildingId}>
+                                                        {v.name}
+                                                    </Option>
+                                                )
 
-                                        })
-                                }
-                            </Select>
+                                            })
+                                    }
+                                </Select>
                             )
                         }
                     </Item>
@@ -963,13 +982,13 @@ const SearchForm = Form.create()(
                         {getFieldDecorator('warningRules', {
                         })
                             (
-                            <Select
-                                placeholder='预警规则'
-                            >
-                                <Option value=''>全部</Option>
-                                <Option value={true}>有</Option>
-                                <Option value={false}>无</Option>
-                            </Select>
+                                <Select
+                                    placeholder='预警规则'
+                                >
+                                    <Option value=''>全部</Option>
+                                    <Option value={true}>有</Option>
+                                    <Option value={false}>无</Option>
+                                </Select>
                             )
                         }
                     </Item>
@@ -1001,17 +1020,17 @@ const ShowSetForm = Form.create()(
                             initialValue: sourceColumns
                         })
                             (
-                            <CheckboxGroup>
-                                <Row>
-                                    {sourceColumns.map((v, i) => {
-                                        return (
-                                            <Col key={i} span={8}>
-                                                <Checkbox value={sourceColumns[i]}>{v.title}</Checkbox>
-                                            </Col>
-                                        )
-                                    })}
-                                </Row>
-                            </CheckboxGroup>
+                                <CheckboxGroup>
+                                    <Row>
+                                        {sourceColumns.map((v, i) => {
+                                            return (
+                                                <Col key={i} span={8}>
+                                                    <Checkbox value={sourceColumns[i]}>{v.title}</Checkbox>
+                                                </Col>
+                                            )
+                                        })}
+                                    </Row>
+                                </CheckboxGroup>
                             )
                         }
 
@@ -1104,22 +1123,22 @@ const AddForm = Form.create()(
                                 }
                             )
                                 (
-                                <Select
-                                    className={styles.formInput}
-                                    placeholder='设备类型'
-                                >
-                                    {
-                                        deviceTypeList.map((v, i) => {
-                                            return (
-                                                <Option
-                                                    value={v.deviceTypeId}
-                                                    key={v.deviceTypeId}>
-                                                    {v.name}
-                                                </Option>
-                                            )
-                                        })
-                                    }
-                                </Select>
+                                    <Select
+                                        className={styles.formInput}
+                                        placeholder='设备类型'
+                                    >
+                                        {
+                                            deviceTypeList.map((v, i) => {
+                                                return (
+                                                    <Option
+                                                        value={v.deviceTypeId}
+                                                        key={v.deviceTypeId}>
+                                                        {v.name}
+                                                    </Option>
+                                                )
+                                            })
+                                        }
+                                    </Select>
                                 )
                             }
                         </Item>
@@ -1131,10 +1150,10 @@ const AddForm = Form.create()(
                                 }
                             )
                                 (
-                                <Input
-                                    className={styles.formInput}
-                                    placeholder='请输入设备名称'
-                                />
+                                    <Input
+                                        className={styles.formInput}
+                                        placeholder='请输入设备名称'
+                                    />
                                 )
                             }
                         </Item>
@@ -1145,23 +1164,23 @@ const AddForm = Form.create()(
                                 }
                             )
                                 (
-                                <Select
-                                    className={styles.formInput}
-                                    placeholder='设备安装地'
-                                >
-                                    {
-                                        installAddress.map((v, i) => {
-                                            return (
-                                                <Option
-                                                    value={v.id}
-                                                    key={v.id}>
-                                                    {v.addr}
-                                                </Option>
-                                            )
-                                        })
-                                    }
+                                    <Select
+                                        className={styles.formInput}
+                                        placeholder='设备安装地'
+                                    >
+                                        {
+                                            installAddress.map((v, i) => {
+                                                return (
+                                                    <Option
+                                                        value={v.id}
+                                                        key={v.id}>
+                                                        {v.addr}
+                                                    </Option>
+                                                )
+                                            })
+                                        }
 
-                                </Select>
+                                    </Select>
                                 )
                             }
                         </Item>
@@ -1173,10 +1192,10 @@ const AddForm = Form.create()(
                                 }
                             )
                                 (
-                                <DatePicker
-                                    className={styles.formInput}
-                                    allowClear={false}
-                                />
+                                    <DatePicker
+                                        className={styles.formInput}
+                                        allowClear={false}
+                                    />
                                 )
                             }
                         </Item>
@@ -1185,60 +1204,60 @@ const AddForm = Form.create()(
                                 // rules: [{ required: true, message: '设备安装地不能为空' }]
                             })
                                 (
-                                <Select
-                                    placeholder='关联建筑物'
-                                    className={styles.formInput}
-                                    defaultActiveFirstOption={false}
-                                    showArrow={false}
-                                    showSearch
-                                    filterOption={false}
-                                    onSearch={_.debounce((value) => handleSearch(value), 300)}
-                                    notFoundContent={null}
-                                >
-                                    {
-                                        relatedBuilding.length === 0 ? null
-                                            :
-                                            relatedBuilding.map((v, i) => {
-                                                // console.log(v)
-                                                return (
-                                                    <Option
-                                                        value={v.buildingId}
-                                                        key={v.buildingId}>
-                                                        {v.name}
-                                                    </Option>
-                                                )
+                                    <Select
+                                        placeholder='关联建筑物'
+                                        className={styles.formInput}
+                                        defaultActiveFirstOption={false}
+                                        showArrow={false}
+                                        showSearch
+                                        filterOption={false}
+                                        onSearch={_.debounce((value) => handleSearch(value), 300)}
+                                        notFoundContent={null}
+                                    >
+                                        {
+                                            relatedBuilding.length === 0 ? null
+                                                :
+                                                relatedBuilding.map((v, i) => {
+                                                    // console.log(v)
+                                                    return (
+                                                        <Option
+                                                            value={v.buildingId}
+                                                            key={v.buildingId}>
+                                                            {v.name}
+                                                        </Option>
+                                                    )
 
-                                            })
-                                    }
-                                </Select>
+                                                })
+                                        }
+                                    </Select>
                                 )
                             }
                         </Item>
                         <Item label='地理经度'>
                             {getFieldDecorator('longitude',
                                 {
-                                    rules: [{ pattern:"^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理经度精确到小数点后7位' }],
+                                    rules: [{ pattern: "^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理经度精确到小数点后7位' }],
                                 }
                             )
                                 (
-                                <Input
-                                    className={styles.formInput}
-                                    placeholder='请输入地理经度'
-                                />
+                                    <Input
+                                        className={styles.formInput}
+                                        placeholder='请输入地理经度'
+                                    />
                                 )
                             }
                         </Item>
                         <Item label='地理纬度'>
                             {getFieldDecorator('latitude',
                                 {
-                                    rules: [{ pattern:"^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理纬度精确到小数点后7位' }],
+                                    rules: [{ pattern: "^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理纬度精确到小数点后7位' }],
                                 }
                             )
                                 (
-                                <Input
-                                    className={styles.formInput}
-                                    placeholder='请输入地理纬度'
-                                />
+                                    <Input
+                                        className={styles.formInput}
+                                        placeholder='请输入地理纬度'
+                                    />
                                 )
                             }
                         </Item>
@@ -1248,25 +1267,25 @@ const AddForm = Form.create()(
                                 // rules: [{ required: true, message: '运维公司不能为空' }]
                             })
                                 (
-                                <Select
-                                    placeholder='运维公司'
-                                    className={styles.formInput}
-                                    onChange={id => this.showAdmin(id)}
-                                    onSelect={() => this.resetManager()}
-                                >
-                                    {
-                                        companyList.map((v, i) => {
-                                            return (
-                                                <Option
-                                                    value={v.id}
-                                                    key={v.id}>
-                                                    {v.name}
-                                                </Option>
-                                            )
+                                    <Select
+                                        placeholder='运维公司'
+                                        className={styles.formInput}
+                                        onChange={id => this.showAdmin(id)}
+                                        onSelect={() => this.resetManager()}
+                                    >
+                                        {
+                                            companyList.map((v, i) => {
+                                                return (
+                                                    <Option
+                                                        value={v.id}
+                                                        key={v.id}>
+                                                        {v.name}
+                                                    </Option>
+                                                )
 
-                                        })
-                                    }
-                                </Select>
+                                            })
+                                        }
+                                    </Select>
                                 )
                             }
                         </Item>
@@ -1277,24 +1296,24 @@ const AddForm = Form.create()(
                                         // rules: [{ required: true, message: '管护人员不能为空' }]
                                     })
                                         (
-                                        <Select
-                                            placeholder='管护人员'
-                                            className={styles.formInput}
+                                            <Select
+                                                placeholder='管护人员'
+                                                className={styles.formInput}
 
-                                        >
-                                            {
-                                                adminList.map((v, i) => {
-                                                    return (
-                                                        <Option
-                                                            value={v.id}
-                                                            key={v.id}>
-                                                            {v.name}
-                                                        </Option>
-                                                    )
+                                            >
+                                                {
+                                                    adminList.map((v, i) => {
+                                                        return (
+                                                            <Option
+                                                                value={v.id}
+                                                                key={v.id}>
+                                                                {v.name}
+                                                            </Option>
+                                                        )
 
-                                                })
-                                            }
-                                        </Select>
+                                                    })
+                                                }
+                                            </Select>
                                         )
                                     }
                                 </Item>
@@ -1308,10 +1327,10 @@ const AddForm = Form.create()(
                                 }
                             )
                                 (
-                                <Input
-                                    className={styles.formInput}
-                                    placeholder='请输入网关ID'
-                                />
+                                    <Input
+                                        className={styles.formInput}
+                                        placeholder='请输入网关ID'
+                                    />
                                 )
                             }
                         </Item>
@@ -1322,10 +1341,10 @@ const AddForm = Form.create()(
                                 }
                             )
                                 (
-                                <Input
-                                    className={styles.formInput}
-                                    placeholder='请输入出厂编号'
-                                />
+                                    <Input
+                                        className={styles.formInput}
+                                        placeholder='请输入出厂编号'
+                                    />
                                 )
                             }
                         </Item>
@@ -1424,12 +1443,12 @@ const ModifyForm = Form.create()(
                                 }
                             )
                                 (
-                                <Input
-                                    className={styles.formInput}
-                                    // placeholder={modifyData.deviceId}
-                                    disabled
-                                >
-                                </Input>
+                                    <Input
+                                        className={styles.formInput}
+                                        // placeholder={modifyData.deviceId}
+                                        disabled
+                                    >
+                                    </Input>
                                 )
                             }
                         </Item>
@@ -1441,22 +1460,22 @@ const ModifyForm = Form.create()(
                                 }
                             )
                                 (
-                                <Select
-                                    className={styles.formInput}
-                                    placeholder='设备类型'
-                                >
-                                    {
-                                        deviceTypeList.map((v, i) => {
-                                            return (
-                                                <Option
-                                                    value={v.deviceTypeId}
-                                                    key={v.deviceTypeId}>
-                                                    {v.name}
-                                                </Option>
-                                            )
-                                        })
-                                    }
-                                </Select>
+                                    <Select
+                                        className={styles.formInput}
+                                        placeholder='设备类型'
+                                    >
+                                        {
+                                            deviceTypeList.map((v, i) => {
+                                                return (
+                                                    <Option
+                                                        value={v.deviceTypeId}
+                                                        key={v.deviceTypeId}>
+                                                        {v.name}
+                                                    </Option>
+                                                )
+                                            })
+                                        }
+                                    </Select>
                                 )
                             }
                         </Item>
@@ -1469,10 +1488,10 @@ const ModifyForm = Form.create()(
                                 }
                             )
                                 (
-                                <Input
-                                    className={styles.formInput}
-                                    placeholder='请输入设备名称'
-                                />
+                                    <Input
+                                        className={styles.formInput}
+                                        placeholder='请输入设备名称'
+                                    />
                                 )
                             }
                         </Item>
@@ -1484,23 +1503,23 @@ const ModifyForm = Form.create()(
                                 }
                             )
                                 (
-                                <Select
-                                    className={styles.formInput}
-                                    placeholder='设备安装地'
-                                >
-                                    {
-                                        installAddress.map((v, i) => {
-                                            return (
-                                                <Option
-                                                    value={v.id}
-                                                    key={v.id}>
-                                                    {v.addr}
-                                                </Option>
-                                            )
-                                        })
-                                    }
+                                    <Select
+                                        className={styles.formInput}
+                                        placeholder='设备安装地'
+                                    >
+                                        {
+                                            installAddress.map((v, i) => {
+                                                return (
+                                                    <Option
+                                                        value={v.id}
+                                                        key={v.id}>
+                                                        {v.addr}
+                                                    </Option>
+                                                )
+                                            })
+                                        }
 
-                                </Select>
+                                    </Select>
                                 )
                             }
                         </Item>
@@ -1515,10 +1534,10 @@ const ModifyForm = Form.create()(
                                 }
                             )
                                 (
-                                <DatePicker
-                                    className={styles.formInput}
-                                    allowClear={false}
-                                />
+                                    <DatePicker
+                                        className={styles.formInput}
+                                        allowClear={false}
+                                    />
                                 )
                             }
                         </Item>
@@ -1528,62 +1547,62 @@ const ModifyForm = Form.create()(
                                 initialValue: modifyData.relatedBuildingId
                             })
                                 (
-                                <Select
-                                    placeholder='关联建筑物'
-                                    className={styles.formInput}
-                                    defaultActiveFirstOption={false}
-                                    showArrow={false}
-                                    showSearch
-                                    filterOption={false}
-                                    onSearch={_.debounce((value) => handleSearch(value), 300)}
-                                    notFoundContent={null}
-                                >
-                                    {
-                                        relatedBuilding.length === 0 ? null
-                                            :
-                                            relatedBuilding.map((v, i) => {
-                                                // console.log(v)
-                                                return (
-                                                    <Option
-                                                        value={v.buildingId}
-                                                        key={v.buildingId}>
-                                                        {v.name}
-                                                    </Option>
-                                                )
+                                    <Select
+                                        placeholder='关联建筑物'
+                                        className={styles.formInput}
+                                        defaultActiveFirstOption={false}
+                                        showArrow={false}
+                                        showSearch
+                                        filterOption={false}
+                                        onSearch={_.debounce((value) => handleSearch(value), 300)}
+                                        notFoundContent={null}
+                                    >
+                                        {
+                                            relatedBuilding.length === 0 ? null
+                                                :
+                                                relatedBuilding.map((v, i) => {
+                                                    // console.log(v)
+                                                    return (
+                                                        <Option
+                                                            value={v.buildingId}
+                                                            key={v.buildingId}>
+                                                            {v.name}
+                                                        </Option>
+                                                    )
 
-                                            })
-                                    }
-                                </Select>
+                                                })
+                                        }
+                                    </Select>
                                 )
                             }
                         </Item>
                         <Item label='地理经度'>
                             {getFieldDecorator('longitude',
                                 {
-                                    rules: [{ pattern:"^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理经度精确到小数点后7位' }],
+                                    rules: [{ pattern: "^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理经度精确到小数点后7位' }],
                                     initialValue: modifyData.longitude
                                 }
                             )
                                 (
-                                <Input
-                                    className={styles.formInput}
-                                    placeholder='请输入地理经度'
-                                />
+                                    <Input
+                                        className={styles.formInput}
+                                        placeholder='请输入地理经度'
+                                    />
                                 )
                             }
                         </Item>
                         <Item label='地理纬度'>
                             {getFieldDecorator('latitude',
                                 {
-                                    rules: [{ pattern:"^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理纬度精确到小数点后7位' }],
+                                    rules: [{ pattern: "^[0-9]{1,}\.{0,1}[0-9]{0,7}$", message: '地理纬度精确到小数点后7位' }],
                                     initialValue: modifyData.latitude
                                 }
                             )
                                 (
-                                <Input
-                                    className={styles.formInput}
-                                    placeholder='请输入地理纬度'
-                                />
+                                    <Input
+                                        className={styles.formInput}
+                                        placeholder='请输入地理纬度'
+                                    />
                                 )
                             }
                         </Item>
@@ -1596,25 +1615,25 @@ const ModifyForm = Form.create()(
                                 // initialValue: modifyData.managedCompanyName
                             })
                                 (
-                                <Select
-                                    placeholder='运维公司'
-                                    className={styles.formInput}
-                                    // 选择运维公司时重置管护人员
-                                    onSelect={() => this.resetManager()}
-                                >
-                                    {
-                                        companyList.map((v, i) => {
-                                            return (
-                                                <Option
-                                                    value={v.id}
-                                                    key={v.id}>
-                                                    {v.name}
-                                                </Option>
-                                            )
+                                    <Select
+                                        placeholder='运维公司'
+                                        className={styles.formInput}
+                                        // 选择运维公司时重置管护人员
+                                        onSelect={() => this.resetManager()}
+                                    >
+                                        {
+                                            companyList.map((v, i) => {
+                                                return (
+                                                    <Option
+                                                        value={v.id}
+                                                        key={v.id}>
+                                                        {v.name}
+                                                    </Option>
+                                                )
 
-                                        })
-                                    }
-                                </Select>
+                                            })
+                                        }
+                                    </Select>
                                 )
                             }
                         </Item>
@@ -1626,24 +1645,24 @@ const ModifyForm = Form.create()(
                                 // initialValue: modifyData.managerUserName,
                             })
                                 (
-                                <Select
-                                    placeholder='管护人员'
-                                    className={styles.formInput}
-                                    onMouseEnter={() => this.getManagerPersons()}
-                                >
-                                    {
-                                        modifyAdminList.map((v, i) => {
-                                            return (
-                                                <Option
-                                                    value={v.id}
-                                                    key={v.id}>
-                                                    {v.name}
-                                                </Option>
-                                            )
+                                    <Select
+                                        placeholder='管护人员'
+                                        className={styles.formInput}
+                                        onMouseEnter={() => this.getManagerPersons()}
+                                    >
+                                        {
+                                            modifyAdminList.map((v, i) => {
+                                                return (
+                                                    <Option
+                                                        value={v.id}
+                                                        key={v.id}>
+                                                        {v.name}
+                                                    </Option>
+                                                )
 
-                                        })
-                                    }
-                                </Select>
+                                            })
+                                        }
+                                    </Select>
                                 )
                             }
                         </Item>
@@ -1656,10 +1675,10 @@ const ModifyForm = Form.create()(
                                 }
                             )
                                 (
-                                <Input
-                                    className={styles.formInput}
-                                    placeholder='请输入网关ID'
-                                />
+                                    <Input
+                                        className={styles.formInput}
+                                        placeholder='请输入网关ID'
+                                    />
                                 )
                             }
                         </Item>
@@ -1671,10 +1690,10 @@ const ModifyForm = Form.create()(
                                 }
                             )
                                 (
-                                <Input
-                                    className={styles.formInput}
-                                    placeholder='请输入出厂编号'
-                                />
+                                    <Input
+                                        className={styles.formInput}
+                                        placeholder='请输入出厂编号'
+                                    />
                                 )
                             }
                         </Item>

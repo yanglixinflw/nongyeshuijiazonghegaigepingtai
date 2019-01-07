@@ -46,7 +46,7 @@ export default class extends React.Component {
     })
   }
   render() {
-    let { deviceInformation ,loading} = this.props
+    let { deviceInformation ,loading,dispatch} = this.props
     // console.log(deviceInformation)
     let arr = Object.keys(deviceInformation)
     if (arr.length <=4) return deviceInformation = null
@@ -55,7 +55,8 @@ export default class extends React.Component {
       <Fragment>
         <Spin size='large' spinning={loading}>
         <DeviceInfo
-          {...deviceInformation}
+          {...{deviceInformation,dispatch}}
+          // {...deviceInformation}
         />
         </Spin>
         </Fragment>
