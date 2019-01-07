@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styles from './warningDetail.less';
 import { Select, Button, Form, Modal, Input, message, InputNumber } from 'antd';
 import { timeOut } from '../../utils/timeOut';
-import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList, queryWarningDetail } from '../../services/api'
+import { getUserList, getDeviceParameters, getRoleList, getSimpleList, getControlList, queryWarningDetail } from '../../services/api';
 import _ from 'lodash';
 import { ENVNet, postOption } from '../../services/netCofig'
 //保存/添加预警规则Url
