@@ -9,7 +9,19 @@ import DemoCharts4 from './demoCharts4'
 import DemoCharts5 from './demoCharts5'
 import DemoCharts6 from './demoCharts6'
 export default class extends Component {
+    constructor(props){
+        super(props)
+        // console.log(props)
+        const {deviceCount,operateCount} = props;
+        this.state = {
+            //设备数量
+            deviceCount,
+            //设备操作次数
+            operateCount,
+        }
+    }
     render() {
+        const {deviceCount,operateCount} = this.state;
         return (
             <Fragment>
                 <div className={styles.header}>
@@ -18,11 +30,11 @@ export default class extends Component {
                 <section>
                 <Row type="flex" justify="space-between">
                     <Col xs={24} sm={12} md={12} lg={12} xl={6} className={styles.card}><DemoCharts1 /></Col>
-                    <Col xs={24} sm={12} md={12} lg={12} xl={6} className={styles.card}><DemoCharts2 /></Col>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={6} className={styles.card}><DemoCharts2 {...deviceCount} /></Col>
                     <Col xs={24} sm={12} md={12} lg={12} xl={6} className={styles.card}><DemoCharts3 /></Col>
                     <Col xs={24} sm={12} md={12} lg={12} xl={6} className={styles.card}><DemoCharts4 /></Col>
                     <Col xs={24} sm={24} md={24} lg={24} xl={16} className={styles.card}><DemoCharts5 /></Col>
-                    <Col xs={24} sm={24} md={24} lg={24} xl={8} className={styles.card}><DemoCharts6 /></Col>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={8} className={styles.card}><DemoCharts6 {...operateCount}/></Col>
                 </Row>
                 </section>
                 <section>

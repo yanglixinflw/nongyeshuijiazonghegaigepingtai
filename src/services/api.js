@@ -291,3 +291,21 @@ export async function dataAnalysis(params){
     body: JSON.stringify(params),
   });
 }
+//运行监控设备数量
+export function getDeviceCount(params){
+  return request(`${ENVNet}/api/DeviceType/list`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
+//运行监控操作统计
+export function getDeviceOperateCount(params){
+  return request(`${ENVNet}/api/chartData/deviceOperateCount`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}

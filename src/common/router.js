@@ -153,12 +153,8 @@ export const getRouterData = app => {
     },
     '/command/demoChartsFour':{
       component: dynamicWrapper(app, [], () => import('../routes/command/demoCharts4')),},
-    //数据分析第二卡片
-    '/command/demochartsTwo':{
-      component: dynamicWrapper(app, [], () => import('../routes/command/displayData/demoCharts2')),
-    },
     '/command/dataAnalyse':{
-      component: dynamicWrapper(app, [], () => import('../routes/command/displayData/demoPage')),
+      component: dynamicWrapper(app, ['displayData'], () => import('../routes/command/displayData/demoPage')),
     },
     // '/user': {
     //   component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
