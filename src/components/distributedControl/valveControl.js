@@ -451,7 +451,7 @@ export default class extends Component{
             <React.Fragment>
                 <div className={styles.valveControl}>
                     <div className={styles.header}>
-                        <span>|</span>阀门控制
+                        <span>|</span>设备控制
                     </div>
                     <div className={styles.searchForm}>
                         {/* 表单信息 */}

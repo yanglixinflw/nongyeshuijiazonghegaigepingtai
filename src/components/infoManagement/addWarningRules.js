@@ -18,7 +18,6 @@ export default class extends Component {
         roleList: []
     }
     componentDidMount() {
-
         // 获取设备参数列表
         let parameterList = getDeviceParameters(
             {
@@ -31,6 +30,7 @@ export default class extends Component {
             if (v.data.ret === 1) {
                 if (v.data.data.length == 0) {
                     alert('该设备暂不支持预警规则设置')
+                    // console.log('该设备暂不支持预警规则设置')
                 } else {
                     this.setState({
                         parameterList: v.data.data
