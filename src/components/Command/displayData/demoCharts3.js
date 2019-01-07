@@ -10,10 +10,12 @@ export default class extends Component{
         return(
             {
                 grid: {
-                        left: '12%',
-                        right: '4%',
-                        top: '16%',
-                    },
+                        left: 62,
+                        right:24,
+                        top: 35,
+                        height:192,
+                        width:280
+                        },
                     tooltip : {
                         trigger: 'axis',
                         axisPointer: {
@@ -25,8 +27,9 @@ export default class extends Component{
                             axisLabel: {
                                 show: true,
                                 textStyle: {
-                                    color: '#92b1d8'                
+                                    color: '#6bb1ec'                
                                 },
+                                fontSize:14
                             },
                             type : 'category',
                             boundaryGap : false,
@@ -42,8 +45,9 @@ export default class extends Component{
                             axisLabel: {
                                     show: true,
                                     textStyle: {
-                                        color: '#92b1d8'
+                                        color: '#6bb1ec'
                                     },
+                                    fontSize:14
                             },
                             splitLine: {
                                 lineStyle: {
