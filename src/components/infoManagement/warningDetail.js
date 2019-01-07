@@ -232,7 +232,7 @@ export default class extends Component {
                 // //设备Id
                 values.deviceId = deviceId
                 //预警规则ID
-                values.ruleId = templateRuleIds[i]
+                // values.ruleId = templateRuleIds[i]
                 // 设备类型ID
                 values.deviceTypeId = localStorage.getItem('selectDeviceTypeId')
                 // 短信是否通知
@@ -1261,12 +1261,13 @@ const ModifyRulesForm = Form.create()(
     class extends React.Component {
         constructor(props) {
             super(props)
+            // console.log(props.modifyData)
             this.state = {
                 // 短信通知人
                 SMSreceiver: '',
                 TELreceiver: '',
                 // 短信通知人列表
-                SMSreceiverData: props.modifyData.smsNotify.receivers,
+                SMSreceiverData: props.modifyData.smsNotify.receivers||[],
                 TELreceiverData: props.modifyData.phoneNotify.receivers,
                 // 通知人是否为必填项
                 SMSreceiverRequired: false,
@@ -1718,7 +1719,7 @@ const ModifyRulesForm = Form.create()(
                                 </Form.Item>
                                 <Form.Item>
                                     {getFieldDecorator('fireControlCmd', {
-                                        initialValue: modifyData.fireControlCmd||[],
+                                        initialValue: modifyData.fireControlCmd,
                                     })(
                                         <Select
                                             placeholder='选择指令'
@@ -1764,7 +1765,7 @@ const TemRulesForm = Form.create()(
     class extends React.Component {
         constructor(props) {
             super(props)
-            // console.log(props.TemRulesData)
+            console.log(props.TemRulesData)
             this.state = {
                 // 短信通知人
                 SMSreceiver: '',
