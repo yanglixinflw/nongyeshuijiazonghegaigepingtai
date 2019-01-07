@@ -51,7 +51,7 @@ export default class extends Component{
         let tableDatas = [];
         data.map((v, i) => {
             tableDatas.push({
-                operateUserName:v.operateUserName,
+                operateUserName:v.operateUserName||"系统自动化",
                 cmdName:v.cmdName,
                 result:v.result,
                 createTime:v.createTime,

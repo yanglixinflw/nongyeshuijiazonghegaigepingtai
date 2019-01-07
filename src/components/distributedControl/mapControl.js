@@ -34,12 +34,7 @@ export default class extends Component {
                 },
             },
         ]
-        let center = {};
-        center.longitude = props.mapGis.waterValve.data.data.items[0].longitude;
-        center.latitude = props.mapGis.waterValve.data.data.items[0].latitude;
         this.state = {
-            // 地图中心点
-            center,
             //控件插件
             plugins,
             //球阀position
@@ -89,6 +84,23 @@ export default class extends Component {
             openCount,
             closeCount
         })
+        //地图触发事件
+        this.mapEvents = {
+            created: (ins) => {
+                // console.log(ins)
+                if(ballData.length !==0){
+                    ins.setCenter([ballData[0].longitude, ballData[0].latitude])
+                }
+            },
+            click: () => {
+                if (this.state.infoVisible == true) {
+                    this.setState({
+                        infoVisible: false,
+                    })
+                }
+
+            },
+        }
         //阀门标记触发事件
         this.valveEvents = {
             click: (MapsOption, marker) => {
@@ -201,7 +213,7 @@ export default class extends Component {
 
     render() {
         const {
-            plugins, center,
+            plugins,
             ballPosition,
             modalVisible,
             //该球阀开或关
@@ -231,10 +243,9 @@ export default class extends Component {
                     amapkey={MY_AMAP_KEY}
                     //地图控件 插件
                     plugins={plugins}
-                    // 地图中心点设置
-                    center={center}
                     //地图显示的缩放级别
                     zoom={16}
+                    events={this.mapEvents}
                 >
                     {/* marker */}
                     <Markers

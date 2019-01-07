@@ -7,23 +7,23 @@ export default class extends Component{
             <Fragment>
                 <div className={styles.firstCard}>
                     <Card
-                    title="XXXX"
+                    title="水量统计"
                     >
                         <header>
-                            xxx
+                            宁围灌区
                         </header>
                         <div className={styles.seaction}>
                             <div className={styles.data1}>
-                                <div className={styles.title}>XXXX</div>
-                                <div className={styles.content}>xxxxxx</div>
+                                <div className={styles.title}>2m³</div>
+                                <div className={styles.content}>本年</div>
                             </div>
                             <div className={styles.data2}>
-                                <div className={styles.title}>XXXX</div>
-                                <div className={styles.content}>xxxxxx</div>
+                                <div className={styles.title}>2m³</div>
+                                <div className={styles.content}>本月</div>
                             </div>
                             <div className={styles.data3}>
-                                <div className={styles.title}>XXXX</div>
-                                <div className={styles.content}>xxxxxx</div>
+                                <div className={styles.title}>0m³</div>
+                                <div className={styles.content}>本周</div>
                             </div>
                         </div>
                     </Card>

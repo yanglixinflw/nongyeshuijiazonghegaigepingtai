@@ -3,10 +3,32 @@ import ReactEcharts from 'echarts-for-react';
 import { Card,DatePicker } from 'antd';
 import styles from './demoCharts2.less';
 export default class extends Component{
+    constructor(props){
+        super(props)
+        const {data} = props.data;
+        // console.log(data)
+        this.state = {
+            data
+        }
+    }
     _onChangeDate(date,dateString){
         console.log(date, dateString);
     }
     _getDataTwo(){
+        const {data} = this.state;
+        let nameData = [];
+        let countData = [];
+        let maxCountData = [];
+        data.map((v,i)=>{
+            nameData.push(v.name);
+            countData.push(v.deviceCount)
+        })
+        let maxCount = countData.reduce((a,b)=>{
+            return b>a?b:a
+        })
+        countData.map((v,i)=>{
+            maxCountData.push(maxCount)
+        })
         return(
             {   
                 tooltip:{
@@ -22,7 +44,7 @@ export default class extends Component{
                     }
                 },
                 grid:{
-                    left:90,
+                    left:'30%',
                     top:8,  
                     bottom:46,
                     right:14
@@ -34,7 +56,7 @@ export default class extends Component{
                 },
                 yAxis: {
                     type: 'category',
-                    data: ['巴西','印尼','美国','印度','中国'],
+                    data: nameData,
                     axisLine:{
                         show:false,
                     },
@@ -43,15 +65,15 @@ export default class extends Component{
                     },
                     axisLabel:{
                         color:'#327DF4',
-                        align:'right',
-                        margin:35,
+                        align:'left',
+                        margin:95,
                         fontSize:14
                     },
                 },
                 series: [
                     {
                         type: 'bar', 
-                        data: [131744, 131744, 131744, 131744, 131744],
+                        data: maxCountData,
                         barGap: '-100%',
                         barWidth: 13,
                         color:'#38437B',
@@ -60,13 +82,13 @@ export default class extends Component{
                     {
                         name: '2011年',
                         type: 'bar',
-                        data: [18203, 23489, 29034, 104970, 131744],
+                        data: countData,
                         barWidth: 13,
                         itemStyle:{
                             normal:{
                                 color: (params)=>{
                                     const colorList = [
-                                        '#13C4FD','#F2B344','#F7A88B','#F2698B','#327DF4',
+                                        '#13C4FD','#F2B344','#F7A88B','#F2698B','#327DF4','#4FD6D2'
                                     ];
                                     return colorList[params.dataIndex]
                                 }
@@ -85,8 +107,8 @@ export default class extends Component{
                     className={styles.demoCharts2}
                     >
                     <Card
-                        title="XXX"
-                        extra={<DatePicker onChange={(date,dateString)=>this._onChangeDate(date,dateString)} />}
+                        title="设备数量"
+                        // extra={<DatePicker onChange={(date,dateString)=>this._onChangeDate(date,dateString)} />}
                     >
                         <ReactEcharts 
                             opts={{height:256}}

@@ -136,9 +136,8 @@
         border: 0;
         width: 68px;
         height: 68px;
-        margin-left: 7px;
         font-size: 12px;
-        padding: 0px 5px;
+        padding: 8px 10px;
         overflow: hidden;
         vertical-align: middle;
         white-space: pre-wrap; 
@@ -157,9 +156,8 @@
         color: #BBC5D2;
         width: 68px;
         height: 68px;
-        margin-left: 7px;
         font-size: 12px;
-        padding: 0px 5px;
+        padding: 8px 10px;
         overflow: hidden;
         vertical-align: middle;
         white-space: pre-wrap; 
@@ -170,39 +168,41 @@
         }
     }
     .camera {
-        margin: 0 7px;
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 38px;
+        height: 38px;
         background: url(../../assets/camera.png) center no-repeat;
+        margin: auto;
+        position: relative;
+        right: 2px;
     }
     .waterMeter {
-        margin: 0 7px;
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 38px;
+        height: 38px;
         background: url(../../assets/waterMeter.png) center no-repeat;
+        margin: auto;
     }
     .eleMeter {
-        margin: 0 7px;
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 38px;
+        height: 38px;
         background: url(../../assets/eleMeter.png) center no-repeat;
+        margin: auto;
     }
     .waterValve {
-        margin: 0px 7px;
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 38px;
+        height: 38px;
         background: url(../../assets/waterValve.png) center no-repeat;
+        margin: auto;
     }
     .demoDevice {
-        margin: 0px 7px;
         display: block;
-        width: 44px;
-        height: 44px;
-        background: url(../../assets/waterValve.png) center no-repeat;
+        width: 34px;
+        height: 34px;
+        background: url(../../assets/demoDevice.png) center no-repeat;
+        margin: auto;
     }
 }
 
@@ -677,7 +677,7 @@
         display: block;
         width: 44px;
         height: 56px;
-        background: url(../../assets/ssWValve.png) no-repeat;
+        background: url(../../assets/ssDemoDevice.png) no-repeat;
         .chosenAnimation1 {
             position: absolute;
             top: 33px;
@@ -720,7 +720,7 @@
         display: block;
         width: 44px;
         height: 56px;
-        background: url(../../assets/normalWValve.png) no-repeat;
+        background: url(../../assets/normalDemoDevice.png) no-repeat;
     }
 }
 
@@ -974,13 +974,13 @@
 }
 
 //媒体查询
-@media(max-width:1299px) {
+@media(max-width:1399px) {
     .btnGroup {
         right: 195px;
     }
 }
 
-@media(max-width:1199px) {
+@media(max-width:1299px) {
     .btnGroup {
         :global {
             .ant-btn {
@@ -990,7 +990,7 @@
     }
 }
 
-@media(max-width:1099px) {
+@media(max-width:1199px) {
     .search {
         :global {
             .ant-input {
@@ -1012,8 +1012,8 @@
     .btnGroup {
         :global {
             .ant-btn {
-                width: 58px;
-                height: 58px;
+                width: 68px;
+                height: 68px;
                 margin-right: 10px;
             }
         }

@@ -3,8 +3,47 @@ import styles from './demoCharts5.less';
 import { Card } from 'antd'
 import ReactEcharts from 'echarts-for-react'
 import * as echarts from 'echarts'
+import {ENVNet,postOption} from '../../../services/netCofig'
+const dataUrl=`${ENVNet}/api/chartData/totalFlows`
 export default class extends Component {
+    state={
+        // 时间
+        timeArray:[],
+        // 压力
+        pressArray:[],
+        // 液位
+        waterLevelArray:[],
+    }
+    componentDidMount(){
+        fetch(dataUrl,{
+            ...postOption,
+            body:JSON.stringify({
+                countMinutes:6
+            })
+        }).then((res)=>{
+            // console.log(res.json())
+            Promise.resolve(res.json()).then((v)=>{
+                if(v.ret==1){
+                    // console.log(v.data)
+                    let dataArray=v.data
+                    let timeArray=[]
+                    let pressArray=[]
+                    let waterLevelArray=[]
+                    dataArray.map((v,i)=>{
+                        timeArray[i]=v.reTime
+                        pressArray[i]=v.press
+                        waterLevelArray[i]=v.waterLevel
+                    })
+                    this.setState({
+                        timeArray,pressArray,waterLevelArray
+                    })
+                }
+            })
+        })
+    }
     _getData3() {
+        let {timeArray,pressArray,waterLevelArray}=this.state
+        // console.log(timeArray)
         return (
             {
                 grid: {
@@ -13,9 +52,18 @@ export default class extends Component {
                     top: '16%',
                 },
                 tooltip: {
+                    show: true,
                     trigger: 'axis',
                     axisPointer: {
-                        animation: false
+                        animation: true,
+                        show:true
+                    }
+                },
+                legend: {
+                    data:['压力(kpa)','液位(cm)'],
+                    bottom:0,
+                    textStyle:{
+                        color :'#71BBF8',
                     }
                 },
                 xAxis: [
@@ -30,7 +78,7 @@ export default class extends Component {
                         boundaryGap: false,
                         axisLine: { show: false },
                         axisTick: { show: false },
-                        data: ['12.4', '12.5', '12.6', '12.7', '12.8', '12.9', '12.10', '12.13']
+                        data: timeArray
                     }
                 ],
                 yAxis: [
@@ -55,7 +103,7 @@ export default class extends Component {
                 ],
                 series: [
                     {
-                        name: '开通用户',
+                        name: '压力(kpa)',
                         type: 'line',
                         showSymbol: false,
                         itemStyle: {
@@ -89,10 +137,10 @@ export default class extends Component {
                                 width: 2
                             }
                         },
-                        data: [60, 20, 50, 60, 30, 50, 90,70,60]
+                        data: pressArray
                     },
                     {
-                        name: '登录人数',
+                        name: '液位(cm)',
                         type: 'line',
                         showSymbol: false,
                         itemStyle: {
@@ -126,7 +174,7 @@ export default class extends Component {
                                 width: 2
                             },
                         },
-                        data: [50, 30, 80, 50, 20, 70, 80,20,100]
+                        data: waterLevelArray
                     },
                 ],
 
@@ -134,11 +182,12 @@ export default class extends Component {
         )
     }
     render() {
+        // let {timeArray,pressArray,waterLevelArray}=this.state
         return (
             <Fragment>
                 <div className={styles.fiveCard}>
                     <Card
-                        title="XXXX"
+                        title="实时数据"
                     >
 
                         <ReactEcharts
