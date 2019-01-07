@@ -11,7 +11,7 @@ export default class extends Component {
             {
                 color: "#327df4",
                 grid: {
-                        left: 62,
+                        left: 49,
                         right:24,
                         top: 33,
                         height:192,
