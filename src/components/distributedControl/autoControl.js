@@ -120,7 +120,7 @@ export default class extends Component{
                             >
                                  <i className={classnames('dyhsicon', 'dyhs-tingyong', `${styles.OptionIcon}`)} style={{fontSize:'14px',marginRight:"7px"}}></i><span>停用</span>  
                             </Button>:<Button
-                                className={styles.stop}
+                                className={styles.start}
                                 icon='poweroff'
                                 onClick={()=>this.changeStatus(record.ruleId,record.isEnabled)}
                             >
