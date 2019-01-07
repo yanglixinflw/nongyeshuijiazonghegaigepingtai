@@ -41,6 +41,13 @@ class IndexPage extends React.Component {
         pageSize: 100
       }
     })
+    dispatch({
+      type: 'mapGis/fetchDemoDevice',
+      payload: {
+        deviceTypeId: 10,
+        pageSize: 100
+      }
+    })
   }
   render() {
     // let mapGis = {};
@@ -50,7 +57,7 @@ class IndexPage extends React.Component {
     // if(arr.length == 0){
     //   return mapGis = {};
     // }else
-     if (arr.length <= 3) {
+     if (arr.length <= 4) {
       return mapGis = null
     }
     // console.log(mapGis)

@@ -58,7 +58,7 @@ export default class extends Component {
                                     infoData.map((v, i) => {
                                         return (
 
-                                            <p className={styles.labelName} key={i}>{v.displayName}{v.unit}<span>{v.value}</span></p>
+                                            <p className={styles.labelName} key={i}>{v.displayName} {v.unit}<span>{v.value}</span></p>
 
                                         )
                                     })
@@ -92,7 +92,7 @@ export default class extends Component {
                                     infoData.map((v, i) => {
                                         return (
 
-                                            <p className={styles.labelName} key={i}>{v.displayName}{v.unit}<span>{v.value}</span></p>
+                                            <p className={styles.labelName} key={i}>{v.displayName} {v.unit}<span>{v.value}</span></p>
 
                                         )
                                     })
@@ -127,7 +127,42 @@ export default class extends Component {
                                     infoData.map((v, i) => {
                                         return (
 
-                                            <p className={styles.labelName} key={i}>{v.displayName}{v.unit}<span>{v.value}</span></p>
+                                            <p className={styles.labelName} key={i}>{v.displayName} {v.unit}<span>{v.value}</span></p>
+
+                                        )
+                                    })
+
+                            }
+                            {/* <p className={styles.labelName}>
+                                控制开关
+                            <Switch defaultChecked />
+                            </p> */}
+                            <p className={styles.checkMore}><a>点击查看更多信息<span>>></span></a></p>
+                        </div>
+                    }
+                </div>
+            )
+        }else if (deviceInfo[0].deviceTypeId == 10) { //演示设备
+            return (
+                <div>
+                    <div className={styles.infoTitle}>
+                        <p className={styles.deviceName}>{deviceInfo[0].name}</p>
+                    </div>
+                    {deviceInfo[0].isWarning ?
+                        <div className={styles.infoContent}>
+                            <p className={styles.warinngMsg}>设备网络断开，请重新连接网络</p>
+                            <p className={styles.checkMore}><a>点击查看更多信息<span>>></span></a></p>
+                        </div>
+                        :
+                        <div className={styles.infoContent}>
+                            {
+                                infoData.length == 0 ?
+                                    <p>暂无数据</p>
+                                    :
+                                    infoData.map((v, i) => {
+                                        return (
+
+                                            <p className={styles.labelName} key={i}>{v.displayName} {v.unit}<span>{v.value===true?'开':v.value===false?'关':v.value}</span></p>
 
                                         )
                                     })
