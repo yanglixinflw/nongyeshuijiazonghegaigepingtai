@@ -11,8 +11,11 @@ export default class extends Component {
             {
                 color: "#327df4",
                 grid: {
-                        left: '12%',
-                        top: '16%',
+                        left: 62,
+                        right:24,
+                        top: 33,
+                        height:192,
+                        width:301
                     },
                 xAxis: {
                     type: 'category',
@@ -22,7 +25,7 @@ export default class extends Component {
                     //不显示坐标刻度
                     axisTick: { show: false },
                     //刻度字体的颜色
-                    axisLabel: { color: "#327df4" }
+                    axisLabel: { color: "#6bb1ec", fontSize:14 }
                 },
                 yAxis: {
                     type: 'value',
@@ -30,7 +33,7 @@ export default class extends Component {
                     axisTick: { show: false },
                     //分割线的颜色
                     splitLine: { lineStyle: { color: ['#1c2241'] } },
-                    axisLabel: { color: "#327df4" }
+                    axisLabel: { color: "#6bb1ec",fontSize:14 }
                 },
                 series: [{
                     type: 'bar',
