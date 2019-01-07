@@ -890,7 +890,7 @@ const AddRulesForm = Form.create()(
                 timeOut(v.data.ret)
                 if (v.data.ret == 1) {
                     this.setState({
-                        controlList: v.data.data
+                        controlList: v.data.data || []
                     })
                     // console.log(v.data.data.items)
                     // console.log(v.data.data)
@@ -1271,14 +1271,14 @@ const ModifyRulesForm = Form.create()(
                 TELreceiverRequired: false,
                 // 设备数据列表
                 deviceData: [{
-                    deviceId: props.modifyData.deviceId,
+                    deviceId: props.modifyData.fireControlDeviceId,
                     name: props.modifyData.fireControlDeviceName
                 }],
                 // 设备操作指令列表
                 controlList: []
             }
             // 初始化获取指令列表
-            this.deviceChange(props.modifyData.deviceId)
+            this.deviceChange(props.modifyData.fireControlDeviceId)
         }
         // 搜索获取通知人列表
         handleSearch(value, type) {
@@ -1378,7 +1378,7 @@ const ModifyRulesForm = Form.create()(
                 timeOut(v.data.ret)
                 if (v.data.ret == 1) {
                     this.setState({
-                        controlList: v.data.data
+                        controlList: v.data.data || []
                     })
                     // console.log(v.data.data.items)
                     // console.log(v.data.data)
@@ -1397,8 +1397,8 @@ const ModifyRulesForm = Form.create()(
                 deviceData,
                 controlList
             } = this.state
-            console.log(deviceData);
-            console.log(modifyData)
+            // console.log(deviceData);
+            // console.log(modifyData)
             const { getFieldDecorator } = form;
             // 短信联系人通知列表
             const SMSreceiverList =
@@ -1681,7 +1681,7 @@ const ModifyRulesForm = Form.create()(
                             <Form.Item label='关联设备' >
                                 <Form.Item>
                                     {getFieldDecorator('fireControlDeviceId', {
-                                        initialValue: modifyData.deviceId,
+                                        initialValue: modifyData.fireControlDeviceId,
                                     })(
                                         <Select
                                             //可搜索
@@ -1696,14 +1696,14 @@ const ModifyRulesForm = Form.create()(
                                             onSelect={(value) => this.deviceChange(value)}
                                         >
                                             {
-                                                deviceData.length == 0 ? null :
+                                                deviceData[0].displayName == null ? null :
                                                     deviceData.map((v, i) => {
                                                         // console.log(v)
                                                         return (
                                                             <Option
                                                                 key={v.deviceId}
                                                             >
-                                                                {v.deviceId}
+                                                                {v.name}({v.deviceTypeName})
                                                     </Option>)
                                                     })
                                             }
@@ -1758,7 +1758,7 @@ const TemRulesForm = Form.create()(
     class extends React.Component {
         constructor(props) {
             super(props)
-            console.log(props.TemRulesData)
+            // console.log(props.TemRulesData)
             this.state = {
                 // 短信通知人
                 SMSreceiver: '',
@@ -1771,14 +1771,14 @@ const TemRulesForm = Form.create()(
                 TELreceiverRequired: false,
                 // 设备数据列表
                 deviceData: [{
-                    deviceId: props.TemRulesData.deviceId,
+                    deviceId: props.TemRulesData.fireControlDeviceId,
                     name: props.TemRulesData.fireControlDeviceName
                 }],
                 // 设备操作指令列表
                 controlList: []
             }
             // 初始化获取指令列表
-            this.deviceChange(props.TemRulesData.deviceId)
+            this.deviceChange(props.TemRulesData.fireControlDeviceId)
         }
         // 搜索获取通知人列表
         handleSearch(value, type) {
@@ -1878,10 +1878,10 @@ const TemRulesForm = Form.create()(
                     //超时判断
                     timeOut(v.data.ret)
                     this.setState({
-                        controlList: v.data.data
+                        controlList: v.data.data || []
                     })
                     // console.log(v.data.data.items)
-                    console.log(v.data.data)
+                    // console.log(v.data.data)
                 }
             })
         }
@@ -2195,7 +2195,7 @@ const TemRulesForm = Form.create()(
                                             onSelect={(value) => this.deviceChange(value)}
                                         >
                                             {
-                                                deviceData.length == 0 ? null :
+                                                deviceData[0].deviceTypeName == null ? null :
                                                     deviceData.map((v, i) => {
                                                         // console.log(v)
                                                         return (
