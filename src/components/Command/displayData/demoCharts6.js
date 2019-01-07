@@ -54,7 +54,7 @@ export default class extends Component {
                 legend: {
                     orient: 'vertical',
                     top: 50,
-                    right: 10,
+                    right: 43,
                     itemGap: 43,
                     padding: [10, 22],
                     data: legendData,
