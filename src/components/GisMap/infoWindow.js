@@ -27,7 +27,7 @@ export default class extends Component {
                         <div 
                             className={styles.cameraWindow}
                         >
-                            <div style={{ background: `url(${deviceInfo[0].photoUrl})`, backgroundSize: 'cover',width:'285px',height:'169px' }}>
+                            <div style={{ background: `url(${deviceInfo[0].photoUrl}) 0% 0% / 285px 169px`,width:'285px',height:'169px' }}>
                             <a href={`/#/command/videoMonitoring:${deviceInfo[0].deviceId}`} target='_blank'>
                                 <i className={classnames('dyhsicon', 'dyhs-bofang', `${styles.playIcon}`)}></i>
                             </a>
