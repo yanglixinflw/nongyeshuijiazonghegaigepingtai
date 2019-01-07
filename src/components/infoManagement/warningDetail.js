@@ -1685,7 +1685,7 @@ const ModifyRulesForm = Form.create()(
                             <Form.Item label='关联设备' >
                                 <Form.Item>
                                     {getFieldDecorator('fireControlDeviceId', {
-                                        initialValue: modifyData.deviceId,
+                                        initialValue: modifyData.fireControlDeviceId,
                                     })(
                                         <Select
                                             //可搜索

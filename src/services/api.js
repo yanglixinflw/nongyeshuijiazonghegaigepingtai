@@ -101,6 +101,17 @@ export function getWarningRecords(params){
 // 设备类型列表
 export function getDeviceTypeList(params){
   return request(`${ENVNet}/api/DeviceType/list`,{
+  // return request(`${ENVNet}/api/DeviceWaringRule/deviceTypeList`,{
+    ...postOption,
+    body:JSON.stringify(
+      params
+    )
+  })
+}
+// 设备可预警类型列表
+export function getWarningDeviceTypeList(params){
+  // return request(`${ENVNet}/api/DeviceType/list`,{
+  return request(`${ENVNet}/api/DeviceWaringRule/deviceTypeList`,{
     ...postOption,
     body:JSON.stringify(
       params
