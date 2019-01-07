@@ -10,7 +10,7 @@ export default class extends Component{
         return(
             {
                 grid: {
-                        left: 62,
+                        left: 64,
                         right:24,
                         top: 35,
                         height:192,
@@ -47,7 +47,8 @@ export default class extends Component{
                                     textStyle: {
                                         color: '#6bb1ec'
                                     },
-                                    fontSize:14
+                                    fontSize:14,
+                                    margin:20
                             },
                             splitLine: {
                                 lineStyle: {
