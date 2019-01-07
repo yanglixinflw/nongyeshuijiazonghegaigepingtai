@@ -72,6 +72,7 @@ export default class extends Component {
             if (v.data.ret === 1) {
                 if (v.data.data.length == 0) {
                     alert('该设备暂不支持预警规则设置')
+                    // history.back()
                 } else {
                     this.setState({
                         parameterList: v.data.data
@@ -1269,7 +1270,7 @@ const ModifyRulesForm = Form.create()(
                 // 通知人是否为必填项
                 SMSreceiverRequired: false,
                 TELreceiverRequired: false,
-                // 设备数据列表
+                // 关联设备数据列表
                 deviceData: [{
                     deviceId: props.modifyData.fireControlDeviceId,
                     name: props.modifyData.fireControlDeviceName
@@ -1382,6 +1383,10 @@ const ModifyRulesForm = Form.create()(
                     })
                     // console.log(v.data.data.items)
                     // console.log(v.data.data)
+                }else{
+                    this.setState({
+                        controlList:[]
+                    })
                 }
             })
         }
@@ -1395,7 +1400,7 @@ const ModifyRulesForm = Form.create()(
                 SMSreceiverRequired,
                 TELreceiverRequired,
                 deviceData,
-                controlList
+                controlList=[]
             } = this.state
             // console.log(deviceData);
             // console.log(modifyData)
@@ -1696,7 +1701,7 @@ const ModifyRulesForm = Form.create()(
                                             onSelect={(value) => this.deviceChange(value)}
                                         >
                                             {
-                                                deviceData[0].displayName == null ? null :
+                                                deviceData[0].deviceTypeName == null ? null :
                                                     deviceData.map((v, i) => {
                                                         // console.log(v)
                                                         return (
@@ -1712,7 +1717,7 @@ const ModifyRulesForm = Form.create()(
                                 </Form.Item>
                                 <Form.Item>
                                     {getFieldDecorator('fireControlCmd', {
-                                        initialValue: modifyData.fireControlCmd,
+                                        initialValue: modifyData.fireControlCmd||[],
                                     })(
                                         <Select
                                             placeholder='选择指令'
