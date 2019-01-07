@@ -67,19 +67,14 @@ export default class extends Component {
                 .then((v) => {
                     timeOut(v.ret)
                     if (v.ret == 1) {
-                        
-                        let numberArray=[]
+                        let monitorArr=[]
+                        // let numberArray=[]
                         // numberArray.length=localStorage.getItem('monitorNum')
                         for(let i=0;i<localStorage.getItem('monitorNum');i++){
-                            numberArray.push(i)
-                        }
-                        // console.log(numberArray)
-                        let monitorArr=[]
-                        numberArray.map((v,i)=>{
-                            monitorArr[i]={
+                            monitorArr.push({
                                 order:i+1
-                            }
-                        })
+                            })
+                        }
                         monitorArr[0]={
                             order: 1, 
                             video: [v.data]
