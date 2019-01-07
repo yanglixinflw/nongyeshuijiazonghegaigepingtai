@@ -3,14 +3,14 @@ import styles from './demoCharts4.less'
 import ReactEcharts from 'echarts-for-react'
 import { Card,Select } from 'antd';
 import * as echarts from 'echarts'
-var data=[{id:1,name:"项家窝堡村"}]
-const Option = Select.Option;
+// var data=[{id:1,name:"项家窝堡村"}]
+// const Option = Select.Option;
 export default class extends Component{
     _getData3(){
         return(
             {
                 grid: {
-                        left: '8%',
+                        left: '12%',
                         right: '4%',
                         top: '16%',
                     },
@@ -32,7 +32,7 @@ export default class extends Component{
                             boundaryGap : false,
                             axisLine:{show:false},
                             axisTick:{show:false},
-                            data: ['4.4','4.5','4.6','4.7','4.8','4.9','4.10']
+                            data: ['1.1','1.2','1.3','1.4','1.5','1.6','1.7']
                         }
                     ],
                     yAxis: [
@@ -91,7 +91,7 @@ export default class extends Component{
                                     width: 2
                                 }
                             },                                                       
-                            data:[60,20,50,60,30,50,90]
+                            data:[0.3,0.1,0.4,0.2,0.3,0.5,0.2]
                         },    
                         {
                             name:'上网人数',
@@ -128,10 +128,9 @@ export default class extends Component{
                                     width: 2
                                 },                            
                             },
-                            data:[50,30,80,50,20,70,80]
+                            data:[0.4,0.3,0.1,0.5,0.2,0.1,0.4]
                         },                        
                     ],
-
             }
         )
     }
@@ -139,23 +138,21 @@ export default class extends Component{
         return(
             <div className={styles.demoCharts4} style={{display:"flex"}}>
                 <Card
-                    title="xxx"
-                    extra={<Select placeholder="项家窝堡村">{data.map((v,i)=>{
-                        return(
-                            <Option value={v.id} key={i}>{v.name}</Option>
-                        )
-                    })}</Select>}
+                    title="本周用水量"
+                    // extra={<Select placeholder="项家窝堡村">{data.map((v,i)=>{
+                    //     return(
+                    //         <Option value={v.id} key={i}>{v.name}</Option>
+                    //     )
+                    // })}</Select>}
                     style={{
                         width:"100%",
-                    height:'308px',
-                    background:"#1c2241",
-                    color:"#327df4"}}
+                        height:'308px',
+                        background:"#1c2241",
+                        color:"#327df4"}}
                 >
-                    <div style={{marginTop:"-50px"}}>
-                        <ReactEcharts 
-                            option= {this._getData3()}
-                        />
-                    </div>
+                    <ReactEcharts 
+                        option= {this._getData3()}
+                    />
                 </Card>
             </div>
         ) 
