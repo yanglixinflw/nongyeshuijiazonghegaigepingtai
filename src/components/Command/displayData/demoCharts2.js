@@ -44,7 +44,7 @@ export default class extends Component{
                     }
                 },
                 grid:{
-                    left:'30%',
+                    left:115,
                     top:20,  
                     bottom:30,
                     right:24
