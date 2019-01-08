@@ -11,6 +11,7 @@ export default class extends Component{
             {
                 grid: {
                         left: 64,
+                        right:24,
                         top: 35,
                         height:192,
                         // width:280
