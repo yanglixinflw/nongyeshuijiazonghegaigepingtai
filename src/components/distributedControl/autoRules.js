@@ -640,7 +640,7 @@ const RuleForm = Form.create()(
                             <Form.Item className={styles.end}>
                                 {getFieldDecorator(`compareValue[${index}]`,
                                     {
-                                        initialValue: v.compareValue || '',
+                                        initialValue: `${v.compareValue}` || '',
                                         rules: [{ required: true, message: '判断值不能为空' }]
                                     }
                                 )
