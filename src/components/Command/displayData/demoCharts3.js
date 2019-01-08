@@ -20,7 +20,9 @@ export default class extends Component{
                         trigger: 'axis',
                         axisPointer: {
                             animation: false
-                        }
+                        },
+                        backgroundColor:'#171a39',
+                        extraCssText:'width:200px;'
                     },
                     xAxis : [
                         {   
