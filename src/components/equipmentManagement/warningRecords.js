@@ -443,20 +443,6 @@ export default class extends Component {
             showvisible: false
         })
     }
-    // onChange() {
-    //     const form = this.closeWarningForm.props.form;
-    //     form.validateFields((err, values) => {
-    //         // 未定义时给空值
-    //         if (err) {
-    //             return
-    //         }
-    //         console.log(values.print)
-    //         this.setState({
-    //             print:values.print
-    //         })
-    //     })
-        
-    // }
     render() {
         const { columns, current, tableDatas, itemCount, showvisible, installAddrList, closeShowvisible,roleList} = this.state;
         const paginationProps = {
@@ -523,7 +509,6 @@ export default class extends Component {
                     <CloseWarningForm
                         wrappedComponentRef={(closeWarningForm) => this.closeWarningForm = closeWarningForm}
                         visible={closeShowvisible}
-                        // onChange={()=>this.onChange()}
                         onCancel={() => this.closeCancel()}
                         onOk={() => this.closeOk()}
                         {...{roleList}}
@@ -758,7 +743,7 @@ const CloseWarningForm = Form.create()(
                             }
                         </Form.Item >
                         {
-                            print==true?<div style={{display:'flex'}} className={styles.inline}>
+                        print==true?<div style={{display:'flex'}} className={styles.inline}>
                             <Form.Item label='报修订单' className={styles.print}>
                                 {getFieldDecorator('print', {initialValue:''})
                                 (
